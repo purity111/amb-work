@@ -4,7 +4,7 @@ import Spinner from "@/components/common/Spinner";
 import JobFilterModal from "@/components/modal/JobFilterModal";
 import { useGetBookmarkedJobs } from "@/hooks/useGetBookmarkedJobs";
 import { useGetJobs } from "@/hooks/useGetJobs";
-import { bookmarkJob } from "@/lib/api";
+import { bookmarkJob, createApplication, getApplicationsByRole } from "@/lib/api";
 import { getFirstFullImage } from "@/utils/helper";
 import { BookmarkJob, FeatureItem, JobDetail, PickOption } from "@/utils/types";
 import { useMutation } from "@tanstack/react-query";
@@ -17,6 +17,8 @@ import { JobFilterFormValue } from "./JobFilterForm";
 import { useAuthContext } from "@/app/layout";
 import { useGetFeatures } from "@/hooks/useGetFeatures";
 import { MapData } from "@/utils/constants";
+import LoginModal from "@/components/modal/Login";
+import Dialog from '@/components/Dialog';
 
 const now = new Date();
 
@@ -31,6 +33,11 @@ export default function JobList() {
     const [prefectures, setPrefectures] = useState<string[]>([]);
     const [features, setFeatures] = useState<string[]>([]);
     const [searchTags, setSearchTags] = useState<PickOption[]>([]);
+    const [loginModalShown, setLoginModalShown] = useState(false);
+    const [applyModalShown, setApplyModalShown] = useState(false);
+    const [selectedJobId, setSelectedJobId] = useState<number | null>(null);
+    const [isApplying, setIsApplying] = useState(false);
+    const [jobseekerApplications, setJobseekerApplications] = useState<number[]>([]);
 
     const router = useRouter()
 
@@ -51,13 +58,13 @@ export default function JobList() {
         onSuccess: (data) => {
             // Optionally invalidate or refetch queries here
             if (!data.success) return;
-            if (data.data) toast.success('お気に入り登録しました。');
-            else toast.success('お気に入り解除しました。')
+            if (data.data) toast.success('お気に入りの登録に成功しました。');
+            else toast.success('お気に入りを排除しました。')
             refetch()
         },
         onError: (error) => {
-            console.error('Error with creating new job:', error);
-            toast.error('お気に入り登録に失敗しました。')
+            console.error('Error with registering favorite:', error);
+            toast.error('お気に入りをご登録できません。')
         },
     });
 
@@ -65,6 +72,8 @@ export default function JobList() {
         if (isLoading) return;
         if (data?.success && data.data) {
             const { jobs, pagination } = data.data;
+            console.log('jobs', jobs);
+            
             setJobData(jobs || []);
             setTotalJobCount(pagination?.total || 0)
             setTotalPageCount(pagination?.totalPages || 0)
@@ -170,6 +179,33 @@ export default function JobList() {
         setPrefectures(pTemp);
     }
 
+    useEffect(() => {
+        // Build title from current filters
+        const prefectureNames = getPrefecturesParam.split(',').filter(Boolean);
+        const featureNames = getFeaturesParam.split(',').filter(Boolean);
+        let title = 'リユース転職の';
+        if (prefectureNames.length > 0) {
+            title += prefectureNames.join('、') + '地域で';
+        }
+        if (featureNames.length > 0) {
+            title += '「' + featureNames.join('」、「') + '」の求人';
+        } else {
+            title += '求人';
+        }
+        document.title = title;
+    }, [getPrefecturesParam, getFeaturesParam]);
+
+    useEffect(() => {
+        // Fetch applications for the current jobseeker
+        if (profile?.role === 'JobSeeker' && profile?.id) {
+            getApplicationsByRole({ job_seeker_id: profile.id, page: 1, limit: 1000 }).then(res => {
+                if (res?.data?.applications) {
+                    setJobseekerApplications(res.data.applications.map((a: any) => a.job_info_id));
+                }
+            });
+        }
+    }, [profile]);
+
     if (isLoading) {
         return (
             <Spinner />
@@ -211,6 +247,7 @@ export default function JobList() {
 
     const isBookmarked = (id: number) => bookmarkedSet.has(id);
 
+    const isLoggedIn = !!profile?.role;
 
     const renderEmploymentTypeTags = (features: FeatureItem[]) => {
         const filtered = features.filter(i => i.parent_id === 4);
@@ -220,7 +257,9 @@ export default function JobList() {
     }
 
     const renderPagination = () => {
-        if (!data?.length) return null;
+        if (!jobData?.length && totalPageCount <= 1) {
+            return null;
+        }
         return (
             <div className="flex justify-center my-4">
                 <Pagination
@@ -232,11 +271,46 @@ export default function JobList() {
         )
     }
 
+    const handleApply = (jobId: number) => {
+        setSelectedJobId(jobId);
+        setApplyModalShown(true);
+    };
 
+    const handleConfirmApply = async () => {
+        if (!selectedJobId) return;
+        setIsApplying(true);
+        try {
+            const profileStr = localStorage.getItem('profile');
+            let jobSeekerId = null;
+            if (profileStr) {
+                try {
+                    const parsed = JSON.parse(profileStr);
+                    jobSeekerId = parsed?.id;
+                } catch (e) {}
+            }
+            if (!jobSeekerId) {
+                toast.error('求職者IDが見つかりません。ログインし直してください。');
+                setIsApplying(false);
+                setApplyModalShown(false);
+                return;
+            }
+            const res = await createApplication({ job_info_id: selectedJobId, job_seeker_id: Number(jobSeekerId) });
+            if (res.success) {
+                toast.success('応募が完了しました。');
+                setJobseekerApplications(prev => [...prev, selectedJobId]);
+            } else {
+                toast.error(res.message || '応募に失敗しました。');
+            }
+        } catch (e) {
+            toast.error('応募に失敗しました。');
+        }
+        setIsApplying(false);
+        setApplyModalShown(false);
+    };
 
     return (
         <div className="pb-30">
-            <div className="py-2 sticky top-25 bg-white z-10 border-b-2 border-gray-700">
+            <div className="py-2 sticky top-20 md:top-25 bg-white z-10 border-b-2 border-gray-700">
                 <div className="flex flex-row justify-between items-center">
                     <p className="text-lg">
                         {`検索結果：${totalJobCount}件`}
@@ -264,6 +338,16 @@ export default function JobList() {
             {!jobData?.length && <p className="text-gray-600 mt-4">No results</p>}
             {renderPagination()}
             {jobData.map((job: JobDetail) => {
+                const alreadyApplied = jobseekerApplications.includes(job.id);
+                const isTemplate2 = job.job_detail_page_template_id === 2;
+                const applyButtonText = alreadyApplied
+                    ? "応募済み"
+                    : isTemplate2
+                        ? "転職支援サービスに応募する"
+                        : "直接応募する";
+                const applyButtonClass = alreadyApplied
+                    ? 'w-full text-white rounded-sm bg-gray-400 cursor-not-allowed'
+                    : `w-full text-white rounded-sm ${isTemplate2 ? 'bg-orange' : 'bg-blue'}`;
                 return (
                     <div key={job.id} className="py-10">
                         <div className="flex flex-row space-x-4">
@@ -297,7 +381,7 @@ export default function JobList() {
                                         <p>最寄り駅</p>
                                     </div>
                                     <div className="flex-3">
-                                        <p>{job.employer.closest_station || 'None'}</p>
+                                        <p>{job.employer.closest_station || ''}</p>
                                     </div>
                                 </div>
                                 <div className="flex flex-row py-4 border-b-1 border-gray-700">
@@ -311,13 +395,16 @@ export default function JobList() {
                             </div>
 
                         </div>
-                        <div className="flex flex-col md:flex-row p-4 md:p-8 bg-gray-800 rounded-md">
+                        <div className="flex flex-col md:flex-row p-2 sm:p-4 md:p-8 bg-gray-800 rounded-md">
                             <div className="flex-1 md:flex-4 flex flex-row space-x-4 md:space-x-8">
                                 <CButton
-                                    text="詳細を見る"
-                                    className={`flex-1 border-2 border-yellow text-yellow rounded-sm ${bookmarkShouldBeDisabled ? '!cursor-not-allowed' : 'cursor-pointer'}`}
-                                    onClick={() => onToggleBookmark(job.id)}
-                                    disabled={bookmarkShouldBeDisabled}
+                                    text={isBookmarked(job.id) ? "お気に入り解除" : "お気に入り登録"}
+                                    className={`flex-1 border-2 border-yellow text-yellow rounded-sm ${!isLoggedIn ? 'cursor-pointer' : bookmarkShouldBeDisabled ? '!cursor-not-allowed' : 'cursor-pointer'}`}
+                                    onClick={() => {
+                                        if (!isLoggedIn) setLoginModalShown(true);
+                                        else onToggleBookmark(job.id);
+                                    }}
+                                    disabled={bookmark.isPending}
                                     rightIcon={
                                         bookmark.isPending ?
                                             <Spinner size={4} color="orange" />
@@ -334,14 +421,14 @@ export default function JobList() {
                             </div>
                             <div className="flex-1 md:flex-3 flex flex-row pt-4 md:pt-0 md:pl-8">
                                 <CButton
-                                    text="転職支援サービスに応募する"
+                                    text={applyButtonText}
                                     hasNavIcon
-                                    disabled={bookmarkShouldBeDisabled}
-                                    className={`
-                                        w-full text-white rounded-sm
-                                        ${job.job_detail_page_template_id === 1 ? 'bg-blue' : 'bg-orange'}
-                                        ${bookmarkShouldBeDisabled ? '!cursor-not-allowed' : 'cursor-pointer'}
-                                    `}
+                                    onClick={() => {
+                                        if (!isLoggedIn) setLoginModalShown(true);
+                                        else if (profile?.role === 'JobSeeker' && !alreadyApplied) handleApply(job.id);
+                                    }}
+                                    className={applyButtonClass}
+                                    disabled={bookmark.isPending || alreadyApplied}
                                 />
                             </div>
                         </div>
@@ -356,6 +443,19 @@ export default function JobList() {
                     features={features}
                     prefectures={prefectures}
                     searchText={searchTerm}
+                />
+            )}
+            {loginModalShown && (
+                <LoginModal onClose={() => setLoginModalShown(false)} onSuccess={() => setLoginModalShown(false)} />
+            )}
+            {applyModalShown && (
+                <Dialog
+                    title="応募確認"
+                    description="この求人に本当に応募しますか。"
+                    okButtonTitle="確認"
+                    okButtonColor="bg-green"
+                    onPressOK={handleConfirmApply}
+                    onPressCancel={() => setApplyModalShown(false)}
                 />
             )}
         </div>

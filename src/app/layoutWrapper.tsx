@@ -15,10 +15,8 @@ export default function LayoutWrapper({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={ZKGN.className}>
-        {children}
-      </body>
-    </html>
+    <div className={ZKGN.className}>
+      {children}
+    </div>
   );
 }

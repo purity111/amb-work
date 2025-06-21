@@ -32,6 +32,10 @@ export default function ApplicationMngPage() {
   const [selectedApplication, setSelectedApplication] = useState<ApplicationItem | null>(null);
 
   useEffect(() => {
+    document.title = 'リユース転職サービス';
+  }, []);
+
+  useEffect(() => {
     const params = new URLSearchParams(searchParams.toString());
     const jobTypeParam = params.get('jobType');
     const searchText = params.get('searchTerm');

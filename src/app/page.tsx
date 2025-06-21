@@ -3,17 +3,88 @@
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, Pagination, Navigation } from 'swiper/modules';
 import Image from "next/image";
-import { AboutPosts, HomeSliderData, Posts, QuickJobs } from '@/utils/constants';
+import { AboutPosts, HomeSliderData, Posts, QuickJobs, MapData } from '@/utils/constants';
 import CButton from '@/components/common/Button';
 import JobListAndSupportSection from '@/components/JobListAndSupportSection';
 import Footer from '@/components/Footer';
 import JobFilterForm, { JobFilterFormValue } from '@/components/pages/jobs/JobFilterForm';
+import { useRouter } from 'next/navigation';
+import { useGetFeatures } from '@/hooks/useGetFeatures';
+import { useEffect } from 'react';
 
 
 export default function HomePage() {
-  const onSubmitJobSearch = (value: JobFilterFormValue) => {
-    console.log('Search job by: ', { value })
-  }
+  const router = useRouter();
+  const { data: featuresData, isLoading: featuresLoading } = useGetFeatures();
+
+  useEffect(() => {
+    document.title = 'リユース転職サービス';
+  }, []);
+
+  const getPrefectureNames = (ids: (string | number)[]): string[] => {
+    const names: string[] = [];
+    console.log('getPrefectureNames called with:', ids);
+    MapData.forEach((region) => {
+      region.city.forEach((city) => {
+        if (ids.some(id => id.toString() === city.id.toString())) {
+          names.push(city.text);
+        }
+      });
+    });
+    console.log('getPrefectureNames returning:', names);
+    return names;
+  };
+
+  const getFeatureNames = (ids: (string | number)[]): string[] => {
+    if (!featuresData?.data) return [];
+    console.log('getFeatureNames called with:', ids);
+    const names = ids.map((id) => {
+      const found = featuresData.data.find((f: any) => f.id.toString() === id.toString());
+      return found ? found.name : '';
+    }).filter(Boolean);
+    console.log('getFeatureNames returning:', names);
+    return names;
+  };
+
+  const testSubmit = () => {
+    console.log('Test submit function called!');
+  };
+
+  const onSubmitJobSearch = (value: JobFilterFormValue, searchText: string) => {
+    console.log('=== onSubmitJobSearch START ===');
+    console.log('onSubmitJobSearch called with:', { value, searchText });
+    if (featuresLoading) {
+      console.log('Features still loading, returning early');
+      return;
+    }
+    
+    // Convert feature IDs to names using existing helper
+    const featureIds = [
+      ...(value.conditions || []),
+      ...(value.employmentTypes || []),
+      ...(value.items || []),
+      ...(value.jobTypes || [])
+    ];
+    const featureNames = getFeatureNames(featureIds);
+    
+    // Convert prefecture IDs to names using existing helper
+    const prefectureIds = value.prefectures || [];
+    const prefectureNames = getPrefectureNames(prefectureIds);
+    
+    console.log('Feature IDs:', featureIds, 'Feature Names:', featureNames);
+    console.log('Prefecture IDs:', prefectureIds, 'Prefecture Names:', prefectureNames);
+    
+    const params = new URLSearchParams();
+    params.set('page', '1');
+    params.set('limit', '10');
+    params.set('searchTerm', searchText || '');
+    params.set('prefectures', prefectureNames.join(','));
+    params.set('features', featureNames.join(','));
+    const url = `/jobs?${params.toString()}`;
+    console.log('Redirecting to:', url);
+    router.push(url);
+    console.log('=== onSubmitJobSearch END ===');
+  };
 
   return (
     <div className="flex min-h-screen flex-col">

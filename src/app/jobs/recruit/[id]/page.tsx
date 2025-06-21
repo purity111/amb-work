@@ -3,14 +3,21 @@
 import ImageWithLoader from "@/components/common/ImageWithLoader";
 import Spinner from "@/components/common/Spinner";
 import { useGetJobById } from "@/hooks/useGetJobById";
+import { useGetBookmarkedJobs } from "@/hooks/useGetBookmarkedJobs";
 import useWindowSize from "@/hooks/useWindowSize";
 import { getFirstFullImage, getPrefectureName, parsePublicDate } from "@/utils/helper";
 import { CompanyInfo, JobDetailExtra, RecruitingCriteria, StaffInfoExtra } from "@/utils/types";
 import Image from "next/image";
 import { useParams } from "next/navigation";
-import { useMemo, useRef } from "react";
+import { useMemo, useRef, useState, useEffect } from "react";
 import { Navigation, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
+import CButton from '@/components/common/Button';
+import { useAuth } from '@/hooks/useAuth';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { bookmarkJob, createApplication, getApplicationsByRole } from '@/lib/api';
+import { toast } from 'react-toastify';
+import Dialog from "@/components/Dialog";
 
 export default function JobPreviewDetails() {
     const params = useParams();
@@ -21,8 +28,41 @@ export default function JobPreviewDetails() {
     const aboutSectionRef = useRef<HTMLDivElement | null>(null);
     const informationSectionRef = useRef<HTMLDivElement | null>(null);
 
+    const [loginModalShown, setLoginModalShown] = useState(false);
     const { data, isLoading } = useGetJobById(Number(id));
     const [width] = useWindowSize();
+    const { profile, isAuthenticated } = useAuth();
+    const queryClient = useQueryClient();
+    const isLoggedIn = !!profile?.role;
+    const [isApplying, setIsApplying] = useState(false);
+    const [applyModalShown, setApplyModalShown] = useState(false);
+    const [selectedJobId, setSelectedJobId] = useState<number | null>(null);
+    const [jobseekerApplications, setJobseekerApplications] = useState<number[]>([]);
+
+    // Get bookmarked jobs to check if current job is bookmarked
+    const { data: bookmarkedList, refetch } = useGetBookmarkedJobs(profile?.role || '');
+    const bookmark = useMutation({
+        mutationFn: bookmarkJob,
+        onSuccess: (data) => {
+            // Optionally invalidate or refetch queries here
+            if (!data.success) return;
+            if (data.data) toast.success('お気に入りの登録に成功しました。');
+            else toast.success('お気に入りを排除しました。')
+            refetch()
+        },
+        onError: (error) => {
+            console.error('Error with registering favorite:', error);
+            toast.error('お気に入りをご登録できません。')
+        },
+    });
+
+    const onToggleBookmark = (id: number) => {
+        bookmark.mutate({ job_info_id: id })
+    }
+
+    const bookmarkShouldBeDisabled = useMemo(() => {
+        return bookmark.isPending || profile?.role !== 'JobSeeker'
+    }, [bookmark, profile])
 
     const job: JobDetailExtra = useMemo(() => {
         if (!data?.data || isLoading) return null;
@@ -33,6 +73,55 @@ export default function JobPreviewDetails() {
         if (!job) return null;
         return job.job_detail_page_template_id === 1 ? 'blue' : 'orange';
     }, [job])
+
+    // Check if current job is bookmarked
+    const isBookmarked = useMemo(() => {
+        if (!bookmarkedList?.data || !id) return false;
+        return bookmarkedList.data.some((bookmark: any) => bookmark.job_info_id === Number(id));
+    }, [bookmarkedList, id]);
+
+    // Bookmark mutation
+    const bookmarkMutation = useMutation({
+        mutationFn: ({ job_info_id }: { job_info_id: number }) => bookmarkJob({ job_info_id }),
+        onSuccess: () => {
+            toast.success('お気に入りを更新しました。');
+            queryClient.invalidateQueries({ queryKey: ['getJobById', Number(id)] });
+            queryClient.invalidateQueries({ queryKey: ['getBookmarkedJobs', profile?.role || ''] });
+        },
+        onError: () => {
+            toast.error('お気に入りの更新に失敗しました。');
+        },
+    });
+    // Apply mutation
+    const applyMutation = useMutation({
+        mutationFn: async () => {
+            if (!profile?.id) throw new Error('ログインしてください');
+            return createApplication({ job_info_id: Number(id), job_seeker_id: profile.id });
+        },
+        onSuccess: () => {
+            toast.success('応募が完了しました。');
+            queryClient.invalidateQueries({ queryKey: ['getJobById', Number(id)] });
+            setJobseekerApplications(prev => [...prev, job.id]);
+        },
+        onError: () => {
+            toast.error('応募に失敗しました。');
+        },
+    });
+
+    const [mounted, setMounted] = useState(false);
+    useEffect(() => setMounted(true), []);
+
+    useEffect(() => {
+        if (profile?.role === 'JobSeeker' && profile?.id) {
+            getApplicationsByRole({ job_seeker_id: profile.id, page: 1, limit: 1000 }).then(res => {
+                if (res?.data?.applications) {
+                    setJobseekerApplications(res.data.applications.map((a: any) => a.job_info_id));
+                }
+            });
+        }
+    }, [profile]);
+
+    if (!mounted) return null;
 
     if (isLoading) {
         return (
@@ -111,65 +200,162 @@ export default function JobPreviewDetails() {
 
     }
 
+    const handleConfirmApply = async () => {
+        if (!selectedJobId) return;
+        setIsApplying(true);
+        try {
+            const profileStr = localStorage.getItem('profile');
+            let jobSeekerId = null;
+            if (profileStr) {
+                try {
+                    const parsed = JSON.parse(profileStr);
+                    jobSeekerId = parsed?.id;
+                } catch (e) { }
+            }
+            if (!jobSeekerId) {
+                toast.error('求職者IDが見つかりません。ログインし直してください。');
+                setIsApplying(false);
+                setApplyModalShown(false);
+                return;
+            }
+            const res = await createApplication({ job_info_id: selectedJobId, job_seeker_id: Number(jobSeekerId) });
+            if (res.success) {
+                toast.success('応募が完了しました。');
+                console.log(jobseekerApplications);
+                setJobseekerApplications(prev => [...prev, selectedJobId]);
+            } else {
+                toast.error(res.message || '応募に失敗しました。');
+            }
+        } catch (e) {
+            toast.error('応募に失敗しました。');
+        }
+        setIsApplying(false);
+        setApplyModalShown(false);
+    };
+
+    const handleFavorite = () => {
+        if (!isAuthenticated) {
+            toast.error('ログインしてください');
+            return;
+        }
+        bookmarkMutation.mutate({ job_info_id: Number(id) });
+    };
+
+    const handleApply = () => {
+        if (!isAuthenticated) {
+            toast.error('ログインしてください');
+            return;
+        }
+        applyMutation.mutate();
+    };
+
+    const alreadyApplied = jobseekerApplications.includes(job.id);
+    const applyButtonText = alreadyApplied
+        ? "応募済み"
+        : job.job_detail_page_template_id === 1
+            ? "直接応募する"
+            : "転職支援サービスに応募する";
+
     return (
         <div className="flex flex-col pt-5">
-            <p className="text-4xl text-center text-gray-300 mb-3">{job.employer.clinic_name}</p>
-            <p className={`text-2xl text-center text-${themeColor} mb-6`}>{job.job_title}</p>
-            <div className="mt-10 flex flex-row justify-center">
+
+            <p className="text-[24px] md:text-4xl text-center text-gray-300 mb-3 break-words">{job.employer.clinic_name}</p>
+            <p className={`text-2xl text-center text-${themeColor} mb-6 break-words`}>{job.job_title}</p>
+            <div className="mt-10 flex flex-wrap flex-row justify-center items-stretch sm:items-center w-full gap-2 sm:gap-0">
                 {job?.staffInfos?.length > 0 && (
                     <div
-                        className="px-1 md:px-6 flex flex-col items-center border-l-1 border-gray-700 cursor-pointer"
+                        className="px-1 sm:px-6 flex flex-col items-center border-l-0 sm:border-l-1 border-gray-700 cursor-pointer"
                         onClick={() => staffSectionRef.current?.scrollIntoView({ behavior: 'smooth' })}
                     >
-                        <p className="text-[12px] md:text-base font-bold text-gray-300">スタッフ紹介</p>
-                        <p className={`text-[10px] text-${themeColor} mt-2`}>STAFF</p>
+                        <p className="text-[18px] sm:text-base font-bold text-gray-300">スタッフ紹介</p>
+                        <p className={`text-[14px] text-${themeColor} mt-2`}>STAFF</p>
                     </div>
                 )}
                 {job?.workplaceIntroductions?.length > 0 && (
                     <div
-                        className="px-1 md:px-6 flex flex-col items-center border-l-1 border-gray-700 cursor-pointer"
+                        className="px-1 sm:px-6 flex flex-col items-center border-l-0 sm:border-l-1 border-gray-700 cursor-pointer"
                         onClick={() => gallerySectionRef.current?.scrollIntoView({ behavior: 'smooth' })}
                     >
-                        <p className="text-[12px] md:text-base font-bold text-gray-300">社内風景</p>
-                        <p className={`text-[10px] text-${themeColor} mt-2`}>PHOTO GALLERY</p>
+                        <p className="text-[18px] sm:text-base font-bold text-gray-300">社内風景</p>
+                        <p className={`text-[14px] text-${themeColor} mt-2`}>PHOTO GALLERY</p>
                     </div>
                 )}
                 <div
-                    className="px-1 md:px-6 flex flex-col items-center border-l-1 border-r-1 border-gray-700 cursor-pointer"
+                    className="px-1 sm:px-6 flex flex-col items-center border-l-0 sm:border-l-1 border-r-0 sm:border-r-1 border-gray-700 cursor-pointer"
                     onClick={() => aboutSectionRef.current?.scrollIntoView({ behavior: 'smooth' })}
                 >
-                    <p className="text-[12px] md:text-base font-bold text-gray-300">会社情報</p>
-                    <p className={`text-[10px] text-${themeColor} mt-2`}>ABOUT</p>
+                    <p className="text-[18px] sm:text-base font-bold text-gray-300">会社情報</p>
+                    <p className={`text-[14px] text-${themeColor} mt-2`}>ABOUT</p>
                 </div>
                 <div
-                    className="px-1 md:px-6 flex flex-col items-center border-r-1 border-gray-700 cursor-pointer"
+                    className="px-1 sm:px-6 flex flex-col items-center border-r-0 sm:border-r-1 border-gray-700 cursor-pointer"
                     onClick={() => informationSectionRef.current?.scrollIntoView({ behavior: 'smooth' })}
                 >
-                    <p className="text-[12px] md:text-base font-bold text-gray-300">求人情報</p>
-                    <p className={`text-[10px] text-${themeColor} mt-2`}>INFORMATION</p>
+                    <p className="text-[18px] sm:text-base font-bold text-gray-300">求人情報</p>
+                    <p className={`text-[14px] text-${themeColor} mt-2`}>INFORMATION</p>
                 </div>
             </div>
             <div>
-                <div className="h-35 relative aspect-250/138 mx-auto">
+                <div className="h-35 relative aspect-250/138 mx-auto w-full max-w-[400px]">
                     <Image src={`/images/recruiter/${themeColor === 'orange' ? 'message' : 'message_blue'}.png`} alt="msg" fill />
                 </div>
             </div>
-            <p className="text-2xl text-center text-gray-300 font-bold mt-6">{job.job_lead_statement}</p>
+            <p className="text-2xl text-center text-gray-300 font-bold mt-6 break-words">{job.job_lead_statement}</p>
 
+            <div className={`sticky my-10 top-20 md:top-25 z-20 bg-${themeColor} py-3`}>
+                <div className="flex flex-row justify-center gap-4">
+                    <CButton
+                        text={isBookmarked ? "お気に入り解除" : "お気に入り登録"}
+                        className={`bg-white text-${themeColor} rounded-lg ${!isLoggedIn ? 'cursor-pointer' : bookmarkShouldBeDisabled ? '!cursor-not-allowed' : 'cursor-pointer'}`}
+                        onClick={() => {
+                            if (!isLoggedIn) setLoginModalShown(true);
+                            else onToggleBookmark(job.id);
+                        }}
+                        disabled={bookmarkShouldBeDisabled}
+                        rightIcon={
+                            <Image
+                                src={`/images/icons/${isBookmarked ? '' : 'off_'}favorite.png`}
+                                alt="favorite-icon"
+                                width={18}
+                                height={18}
+                            />
+                        }
+                    />
+                    <CButton
+                        text={alreadyApplied
+                            ? "応募済み"
+                            : job.job_detail_page_template_id === 1
+                                ? "直接応募する"
+                                : "転職支援サービスに応募する"
+                        }
+                        className={`
+                            border-2
+                            ${themeColor === 'blue' ? 'border-blue text-blue' : 'border-orange text-orange'}
+                            rounded-sm min-w-[140px] transition py-[10px] px-[24px] text-base
+                            ${alreadyApplied ? 'bg-gray-500 text-white cursor-not-allowed' : 'bg-white'}
+                        `}
+                        onClick={() => {
+                            if (!isLoggedIn) setLoginModalShown(true);
+                            else if (profile?.role === 'JobSeeker' && !alreadyApplied) handleApply();
+                        }}
+                        disabled={alreadyApplied}
+                    />
+                </div>
+            </div>
             {job?.staffInfos?.length > 0 && (
-                <div ref={staffSectionRef} id="preview-staff" className="flex flex-col items-center ">
-                    <p className="text-4xl text-gray-300 font-bold mt-30">スタッフ紹介</p>
+                <div ref={staffSectionRef} id="preview-staff" className="flex flex-col items-center w-full px-2 sm:px-0">
+                    <p className="text-4xl text-gray-300 font-bold mt-10 sm:mt-30">スタッフ紹介</p>
                     <p className={`text-${themeColor}`}>STAFF</p>
-                    <Swiper navigation={true} modules={[Navigation]} className="w-full">
+                    <Swiper navigation={true} modules={[Navigation]} className="w-full max-w-full">
                         {job?.staffInfos?.map((staff: StaffInfoExtra) => {
                             return (
                                 <SwiperSlide key={staff.id}>
                                     <div className="flex items-center justify-center pb-10">
-                                        <div className="w-9/10 max-w-85 shadow-md rounded-tr-[40px] mt-10 overflow-hidden">
+                                        <div className="w-full sm:w-9/10 max-w-85 shadow-md rounded-tr-[40px] mt-10 overflow-hidden">
                                             <div className="w-full aspect-1/1 relative">
                                                 <ImageWithLoader className="object-cover" src={getFirstFullImage(staff.images) || '/images/default-avatar.jpg'} alt={staff.first_name} fill />
                                             </div>
-                                            <div className="p-8">
+                                            <div className="p-4 sm:p-8">
                                                 {(staff.first_name || staff.last_name) && <p>{staff.first_name} {staff.last_name}</p>}
                                                 {staff.post && <p>{staff.post}</p>}
                                                 {staff.career && <p>{staff.career}</p>}
@@ -185,28 +371,26 @@ export default function JobPreviewDetails() {
             )}
 
             {job?.workplaceIntroductions?.length > 0 && (
-                <div ref={gallerySectionRef} id="preview-gallery" className="mt-30 relative py-30 flex flex-col items-center">
-                    <div className="absolute -right-500 top-0 left-0 bottom-0 bg-gray-800 rounded-tl-[200px] -z-1" />
-                    <p className="text-4xl text-gray-300 font-bold">社内風景</p>
-                    <p className={`text-${themeColor}`}>PHOTO GALLERY</p>
-                    <div className="w-screen -ml-[calc(50vw - 50%)] pt-15 px-4">
+                <div ref={gallerySectionRef} id="preview-gallery" className="relative pt-10 flex flex-col items-center w-full px-2 sm:px-0">
+                    <div className="absolute inset-y-0 left-1/2 right-1/2 -translate-x-1/2 w-screen bg-gray-800 rounded-tl-[200px] -z-1" />
+                    <p className="text-4xl text-gray-300 font-bold z-10">社内風景</p>
+                    <p className={`text-${themeColor} z-10`}>PHOTO GALLERY</p>
+                    <div className="w-[85%] md:w-full sm:w-screen sm:-ml-[calc(50vw-50%)] pt-6 sm:pt-15 px-0 sm:px-4 z-10">
                         <Swiper
-                            slidesPerView={width < 768 ? 1 : 3}
-                            spaceBetween={30}
+                            slidesPerView={width < 640 ? 1 : width < 1024 ? 2 : 3}
+                            spaceBetween={16}
                             centeredSlides={true}
-                            pagination={{
-                                clickable: true,
-                            }}
+                            pagination={{ clickable: true }}
                             modules={[Pagination]}
                         >
                             {job.workplaceIntroductions?.map((place: CompanyInfo) => {
                                 return (
                                     <SwiperSlide key={place.id}>
-                                        <div className="pb-10">
+                                        <div className="pb-6 sm:pb-10">
                                             <div className="w-full aspect-5/4 relative">
                                                 <ImageWithLoader className="object-cover" src={getFirstFullImage(place.images) || '/images/default-company.png'} alt={place.description} fill />
                                             </div>
-                                            <p className="bg-white p-6 shadow-lg font-light">
+                                            <p className="bg-white p-4 sm:p-6 shadow-lg font-light">
                                                 {place.description}
                                             </p>
                                         </div>
@@ -218,97 +402,54 @@ export default function JobPreviewDetails() {
                 </div>
             )}
 
-            <div ref={aboutSectionRef} id="preview-gallery" className="mt-30 relative py-30 flex flex-col items-center">
+            <div ref={aboutSectionRef} id="preview-gallery" className="relative pt-10 flex flex-col items-center w-full px-2 sm:px-0">
                 <p className="text-4xl text-gray-300 font-bold">会社情報</p>
-                <p className={`text-${themeColor}`}>ABOUT</p>
-                <div className="w-full border-1 border-gray-700 mt-10">
-                    <div className="flex flex-row border-b-1 border-gray-700">
-                        <div className="flex-1 border-r-1 border-gray-700 p-3 bg-gray-800">
-                            <p className="font-bold text-gray-300">会社名</p>
+                <p className={`text-${themeColor} pb-5`}>ABOUT</p>
+                <div className="narrow-container w-full border-1 border-gray-700 mt-6 sm:mt-10 text-sm sm:text-base">
+                    {[
+                        { label: '会社名', value: `${job.employer.clinic_name} (${job.employer.clinic_name_kana})` },
+                        { label: '事業形態', value: '法人' },
+                        { label: '住所', value: (<><span>〒{job.employer.zip}</span><br /><span>{getPrefectureName(job.employer.prefectures)} {job.employer.city}</span></>) },
+                        { label: '従業員数', value: job.employer.employee_number },
+                        { label: '設立年月日', value: job.employer.establishment_year },
+                        { label: '資本金', value: job.employer.capital_stock },
+                        { label: '事業内容', value: job.employer.business },
+                        { label: 'ウェブサイト', value: job.employer.home_page_url },
+                        { label: '掲載期間', value: `${parsePublicDate(job.clinic_public_date_start)} ~ ${parsePublicDate(job.clinic_public_date_end)}` },
+                    ].map((row, idx) => (
+                        <div key={row.label} className={`flex flex-col sm:flex-row border-b-1 last:border-b-0 border-gray-700`}>
+                            <div className="sm:flex-1 border-b-0 sm:border-b-0 sm:border-r-1 border-gray-700 p-3 bg-gray-800">
+                                <p className="font-bold text-gray-300">{row.label}</p>
+                            </div>
+                            <div className="sm:flex-3 p-3">
+                                <p className="font-light break-words">{row.value}</p>
+                            </div>
                         </div>
-                        <div className="flex-3 p-3">
-                            <p className="font-light">{job.employer.clinic_name} ({job.employer.clinic_name_kana})</p>
-                        </div>
-                    </div>
-                    <div className="flex flex-row border-b-1 border-gray-700">
-                        <div className="flex-1 border-r-1 border-gray-700 p-3 bg-gray-800">
-                            <p className="font-bold text-gray-300">事業形態</p>
-                        </div>
-                        <div className="flex-3 p-3">
-                            <p className="font-light">法人</p>
-                        </div>
-                    </div>
-                    <div className="flex flex-row border-b-1 border-gray-700">
-                        <div className="flex-1 border-r-1 border-gray-700 p-3 bg-gray-800">
-                            <p className="font-bold text-gray-300">住所</p>
-                        </div>
-                        <div className="flex-3 p-3">
-                            <p className="font-light">〒{job.employer.zip}</p>
-                            <p className="font-light">{getPrefectureName(job.employer.prefectures)} {job.employer.city}</p>
-                        </div>
-                    </div>
-                    <div className="flex flex-row border-b-1 border-gray-700">
-                        <div className="flex-1 border-r-1 border-gray-700 p-3 bg-gray-800">
-                            <p className="font-bold text-gray-300">従業員数</p>
-                        </div>
-                        <div className="flex-3 p-3">
-                            <p className="font-light">{job.employer.employee_number}</p>
-                        </div>
-                    </div>
-                    <div className="flex flex-row border-b-1 border-gray-700">
-                        <div className="flex-1 border-r-1 border-gray-700 p-3 bg-gray-800">
-                            <p className="font-bold text-gray-300">設立年月日</p>
-                        </div>
-                        <div className="flex-3 p-3">
-                            <p className="font-light">{job.employer.establishment_year}</p>
-                        </div>
-                    </div>
-                    <div className="flex flex-row border-b-1 border-gray-700">
-                        <div className="flex-1 border-r-1 border-gray-700 p-3 bg-gray-800">
-                            <p className="font-bold text-gray-300">資本金</p>
-                        </div>
-                        <div className="flex-3 p-3">
-                            <p className="font-light">{job.employer.capital_stock}</p>
-                        </div>
-                    </div>
-                    <div className="flex flex-row border-b-1 border-gray-700">
-                        <div className="flex-1 border-r-1 border-gray-700 p-3 bg-gray-800">
-                            <p className="font-bold text-gray-300">事業内容</p>
-                        </div>
-                        <div className="flex-3 p-3">
-                            <p className="font-light">{job.employer.business}</p>
-                        </div>
-                    </div>
-                    <div className="flex flex-row border-b-1 border-gray-700">
-                        <div className="flex-1 border-r-1 border-gray-700 p-3 bg-gray-800">
-                            <p className="font-bold text-gray-300">ウェブサイト</p>
-                        </div>
-                        <div className="flex-3 p-3">
-                            <p className="font-light">{job.employer.home_page_url}</p>
-                        </div>
-                    </div>
-                    <div className="flex flex-row">
-                        <div className="flex-1 border-r-1 border-gray-700 p-3 bg-gray-800">
-                            <p className="font-bold text-gray-300">掲載期間</p>
-                        </div>
-                        <div className="flex-3 p-3">
-                            <p className="font-light">{parsePublicDate(job.clinic_public_date_start)} ~ {parsePublicDate(job.clinic_public_date_end)}</p>
-                        </div>
-                    </div>
+                    ))}
                 </div>
             </div>
 
-            <div ref={informationSectionRef} id="preview-gallery" className="mt-30 relative py-30 flex flex-col items-center">
-                <div className="absolute top-0 w-screen bottom-0 bg-gray-800 rounded-tr-[200px] -z-1" />
-                <p className="text-4xl text-gray-300 font-bold">求人情報</p>
-                <p className={`text-${themeColor}`}>INFORMATION</p>
-                <div className="mt-10 bg-white p-2 md:p-15 w-full">
+            <div ref={informationSectionRef} id="preview-gallery" className="mt-10 sm:mt-30 relative py-10 sm:py-30 flex flex-col items-center w-full px-2 sm:px-0">
+                <div className="absolute inset-y-0 left-1/2 right-1/2 -translate-x-1/2 w-screen bg-gray-800 rounded-tr-[200px] -z-1" />
+                <p className="text-4xl text-gray-300 font-bold z-10">求人情報</p>
+                <p className={`text-${themeColor} z-10 pb-5`}>INFORMATION</p>
+                <div className="narrow-container mt-6 sm:mt-10 bg-white p-2 sm:p-15 w-full text-sm sm:text-base z-10">
                     <div className="border-1 border-t-0 border-gray-700">
                         {renderFeatureInfo(job)}
                         {renderCriteriaInfo(job)}
                     </div>
                 </div>
             </div>
+            {applyModalShown && (
+                <Dialog
+                    title="応募確認"
+                    description="この求人に本当に応募しますか。"
+                    okButtonTitle="確認"
+                    okButtonColor="bg-green"
+                    onPressOK={handleConfirmApply}
+                    onPressCancel={() => setApplyModalShown(false)}
+                />
+            )}
         </div >
     );
 }

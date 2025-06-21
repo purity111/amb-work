@@ -353,10 +353,16 @@ dl dt {
   .rwd-table th:last-child,
   .rwd-table td:last-child {
     padding-right: 0;
-  }
+  } 
 
   .rwd-table th,
   .rwd-table td {
     padding: 1em !important;
   }
+}
+
+.narrow-container {
+  width: 95%;
+  max-width: 800px;
+  margin: auto;
 }

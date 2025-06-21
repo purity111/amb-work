@@ -1,6 +1,6 @@
 'use client'
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import Image from "next/image";
 import Breadcrumb from "@/components/Breadcrumb";
 import DefinitionSection from "@/components/pages/privacy/DefinitionSection";
@@ -151,6 +151,9 @@ const TermsSections: PrivacyPolicySectionData[] = [
 ];
 
 export default function TermsPage() {
+    useEffect(() => {
+        document.title = 'リユース転職サービス';
+    }, []);
     return (
         <main>
             {/* Hero Section - Identical Split Layout */}

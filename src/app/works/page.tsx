@@ -1,6 +1,6 @@
 'use client'
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import Image from 'next/image'; // Image is now used in JobCategorySection
 import JobCategorySection from '@/components/pages/works/JobCategorySection';
 import Breadcrumb from '@/components/Breadcrumb';
@@ -124,6 +124,9 @@ const jobCategories: JobCategory[] = [
 ];
 
 export default function WorksPage() {
+    useEffect(() => {
+        document.title = 'リユース転職サービス';
+    }, []);
     return (
         <div className="min-h-screen">
             {/* Hero Section */}

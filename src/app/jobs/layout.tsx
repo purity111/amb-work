@@ -10,9 +10,7 @@ export default function JobsLayout({
     return (
         <>
             <div className="pt-25 relative">
-                <div className="w-9/10 max-w-200 mx-auto min-h-screen">
-                    {children}
-                </div>
+                {children}
             </div>
             <Footer />
         </>

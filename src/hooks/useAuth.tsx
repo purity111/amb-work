@@ -54,9 +54,9 @@ export function useAuth() {
 
         setToken(savedToken);
 
-        if (!savedToken) {
-            router.push('/')
-        }
+        // if (!savedToken) {
+        //     router.push('/')
+        // }
 
         if (savedProfile) {
             try {

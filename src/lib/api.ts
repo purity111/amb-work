@@ -175,9 +175,17 @@ export const updateJobById = async ({ id, param, thumbnail, companyImages, staff
     return response.data;
 };
 
+// export const createApplication = async (param: ApplicationParam) => {
+//     const response = await api.post('/applications', param);
+//     console.log('------------', response.data)
 //Application Mng
 export const getApplicationsByRole = async (param: ApplicationFetchParam) => {
     const queryString = toQueryString(param);
     const response = await api.get(`/applications?${queryString}`);
+    return response.data;
+};
+
+export const createApplication = async (param: { job_info_id: number, job_seeker_id: number }) => {
+    const response = await api.post('/applications', param);
     return response.data;
 };
