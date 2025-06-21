@@ -39,10 +39,6 @@ export default function HomeLayout({
 
   return (
     <html lang="ja">
-      <head>
-        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
-        <link rel="icon" type="image/png" sizes="180x180" href="/favicon-180x180.png" />
-      </head>
       {/* 👇 Apply the custom font class to <body> */}
       <body className={inter.className}>
         <LayoutWrapper>

@@ -268,11 +268,11 @@ export default function ApplicationMngPage() {
           <div className="p-4 text-left">
             <div className="mb-4">
               <div className="flex flex-col sm:flex-row sm:items-baseline">
-                <span className="font-semibold text-md w-full sm:w-[200px] shrink-0">求人タイトル:</span>
+                <span className="font-semibold text-md w-full sm:w-[150px] shrink-0">求人タイトル:</span>
                 <span className="text-[20px] md:text-[24px] text-green-600 font-bold text-left flex-1">{selectedApplication.jobInfo.job_title}</span>
               </div>
               <div className="mt-2 flex flex-col sm:flex-row sm:items-baseline">
-                <span className="font-semibold text-md w-full sm:w-[200px] shrink-0">応募日時:</span>
+                <span className="font-semibold text-md w-full sm:w-[150px] shrink-0">応募日時:</span>
                 <span className="text-left flex-1">{formatDateTime(selectedApplication.created)}</span>
               </div>
             </div>
@@ -280,7 +280,7 @@ export default function ApplicationMngPage() {
             {
               selectedApplication.jobInfo.recruitingCriterias &&
               selectedApplication.jobInfo.recruitingCriterias.some(criteria => criteria.JobInfosRecruitingCriteria.body) && (
-                <hr className="my-4 border-gray-600 w-full sm:ml-[200px] sm:w-[calc(100%-200px)]" />
+                <hr className="my-4 border-gray-600 w-full sm:ml-[150px] sm:w-[calc(100%-150px)]" />
               )
             }
 
@@ -290,9 +290,9 @@ export default function ApplicationMngPage() {
                 <ul>
                   {selectedApplication.jobInfo.recruitingCriterias.filter(criteria => criteria.JobInfosRecruitingCriteria.body).map((criteria, index) => (
                     <React.Fragment key={index}>
-                      {index > 0 && <hr className="my-4 border-gray-600 w-full sm:ml-[200px] sm:w-[calc(100%-200px)]" />}
+                      {index > 0 && <hr className="my-4 border-gray-600 w-full sm:ml-[150px] sm:w-[calc(100%-150px)]" />}
                       <li className="flex flex-col sm:flex-row sm:items-baseline">
-                        <span className="font-semibold text-md w-full sm:w-[200px] shrink-0">{criteria.name}:</span>
+                        <span className="font-semibold text-md w-full sm:w-[150px] shrink-0">{criteria.name}:</span>
                         <span className="text-left flex-1">{criteria.JobInfosRecruitingCriteria.body}</span>
                       </li>
                     </React.Fragment>
