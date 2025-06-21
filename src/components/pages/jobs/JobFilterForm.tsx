@@ -235,6 +235,7 @@ export default function JobFilterForm({ onSubmit, hasCloseButton = false, onClos
                 <CButton
                     text={'この条件で検索'}
                     className={`bg-green rounded-sm text-white`}
+                    leftIcon={<Image src="/svgs/search-white.svg" width={20} height={20} alt="search-icon" />}
                     onClick={() => onSubmit(selectedOptions, searchTerm)}
                 />
             </div>

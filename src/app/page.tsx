@@ -88,6 +88,7 @@ export default function HomePage() {
 
   return (
     <div className="flex min-h-screen flex-col">
+      <div className='bg-[#414141] h-[140px] md:h-[160px] w-full'></div>
       <Swiper
         spaceBetween={30}
         speed={2000}
@@ -110,10 +111,10 @@ export default function HomePage() {
         ))}
       </Swiper>
       <div className='w-19/20 max-w-240 mx-auto px-3 py-8 sm:py-24'>
-        <h2 className='mb-8 text-[24px] sm:text-3xl job-openings text-center relative font-bold text-gray-300'>求人情報</h2>
+        <h2 className='mb-8 text-[24px] sm:text-[32px] font-medium job-openings text-center relative font-bold text-gray-300'>求人情報</h2>
         <p className='text-center text-[14px] sm:text-base text-gray-600 font-sans'>JOB OPENINGS</p>
-        <p className='mt-10 text-center text-[18px] sm:text-2xl text-gray-300 font-bold'>リユース・リサイクル・買取業界の転職、就活、バイト探しは</p>
-        <p className='text-center text-[20px] sm:text-4xl text-gray-300 font-bold'>
+        <p className='mt-10 text-center text-[18px] sm:text-[20px] text-gray-300 font-medium'>リユース・リサイクル・買取業界の転職、就活、バイト探しは</p>
+        <p className='text-center text-[20px] sm:text-[24px] text-gray-300 font-medium'>
           <span className='text-green'>「求人数 NO.1」</span>
           のリユース転職で求人検索！
         </p>
@@ -130,13 +131,13 @@ export default function HomePage() {
         ))}
       </div>
       <div className='pt-15 sm:pt-25'>
-        <h2 className='mb-8 text-[24px] sm:text-3xl job-openings text-center relative font-bold text-gray-300'>転職支援サービス</h2>
+        <h2 className='mb-8 text-[24px] sm:text-[28px] job-openings text-center relative font-medium text-gray-300'>転職支援サービス</h2>
         <p className='text-center text-[14px] sm:text-base text-gray-600 font-sans'>SUPPORT</p>
-        <p className='text-center text-[20px] sm:text-4xl/14 text-gray-300 font-bold mt-15 '>
+        <p className='text-center text-[18px] sm:text-[24px] text-gray-300 font-bold mt-15 '>
           <span className='text-green'>専属のキャリアアドバイザー</span>
           無料で徹底サポート！
         </p>
-        <p className='text-center text-[20px] sm:text-4xl/14 text-gray-300 font-bold'>
+        <p className='text-center text-[18px] sm:text-[24px] text-gray-300 font-bold'>
           <span className='text-green'>非公開求人</span>
           も多数！
         </p>
