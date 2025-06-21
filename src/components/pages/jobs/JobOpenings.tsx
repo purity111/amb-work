@@ -36,7 +36,6 @@ export default function JobList() {
     const [loginModalShown, setLoginModalShown] = useState(false);
     const [applyModalShown, setApplyModalShown] = useState(false);
     const [selectedJobId, setSelectedJobId] = useState<number | null>(null);
-    const [isApplying, setIsApplying] = useState(false);
     const [jobseekerApplications, setJobseekerApplications] = useState<number[]>([]);
 
     const router = useRouter()
@@ -278,7 +277,6 @@ export default function JobList() {
 
     const handleConfirmApply = async () => {
         if (!selectedJobId) return;
-        setIsApplying(true);
         try {
             const profileStr = localStorage.getItem('profile');
             let jobSeekerId = null;
@@ -286,11 +284,11 @@ export default function JobList() {
                 try {
                     const parsed = JSON.parse(profileStr);
                     jobSeekerId = parsed?.id;
-                } catch (e) {}
+                } catch (e) {console.log(e);
+                }
             }
             if (!jobSeekerId) {
                 toast.error('求職者IDが見つかりません。ログインし直してください。');
-                setIsApplying(false);
                 setApplyModalShown(false);
                 return;
             }
@@ -302,9 +300,9 @@ export default function JobList() {
                 toast.error(res.message || '応募に失敗しました。');
             }
         } catch (e) {
+            console.log(e);
             toast.error('応募に失敗しました。');
         }
-        setIsApplying(false);
         setApplyModalShown(false);
     };
 

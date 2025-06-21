@@ -5,10 +5,14 @@ import Image from "next/image";
 import Link from "next/link";
 import { useAuthContext } from "@/app/layout";
 import { useState, useEffect } from "react";
+import RegisterModal from "@/components/modal/Register";
+import LoginModal from "@/components/modal/Login";
 
 export default function Footer() {
     const { isAuthenticated } = useAuthContext();
     const [isMounted, setIsMounted] = useState(false);
+    const [loginModalShown, setLoginModalShown] = useState(false);
+    const [registerModalShown, setRegisterModalShown] = useState(false);
 
     useEffect(() => {
         setIsMounted(true);
@@ -64,11 +68,11 @@ export default function Footer() {
                             </Link>
                         ) : (
                             <>
-                                <div className="cursor-pointer text-white flex-1 flex flex-row items-center py-2 px-6 bg-green hover:opacity-50 duration-400">
+                                <div className="cursor-pointer text-white flex-1 flex flex-row items-center py-2 px-6 bg-green hover:opacity-50 duration-400" onClick={() => setRegisterModalShown(true)}>
                                     <Image src="/svgs/register_icon.svg" alt="register-icon" width={16} height={16} />
                                     <span className="ml-2">会員登録</span>
                                 </div>
-                                <div className="cursor-pointer text-white flex-1 flex flex-row items-center py-2 px-6 bg-blue hover:opacity-50 duration-400">
+                                <div className="cursor-pointer text-white flex-1 flex flex-row items-center py-2 px-6 bg-blue hover:opacity-50 duration-400" onClick={() => setLoginModalShown(true)}>
                                     <Image src="/svgs/login_icon.svg" alt="register-icon" width={16} height={16} />
                                     <span className="ml-2">ログイン</span>
                                 </div>
@@ -84,6 +88,12 @@ export default function Footer() {
                     </div>
                 </div>
             </div>
+            {loginModalShown && (
+                <LoginModal onClose={() => setLoginModalShown(false)} onSuccess={() => setLoginModalShown(false)} />
+            )}
+            {registerModalShown && (
+                <RegisterModal onClose={() => setRegisterModalShown(false)} />
+            )}
         </footer>
     );
 }

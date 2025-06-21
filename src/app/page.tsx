@@ -46,10 +46,6 @@ export default function HomePage() {
     return names;
   };
 
-  const testSubmit = () => {
-    console.log('Test submit function called!');
-  };
-
   const onSubmitJobSearch = (value: JobFilterFormValue, searchText: string) => {
     console.log('=== onSubmitJobSearch START ===');
     console.log('onSubmitJobSearch called with:', { value, searchText });

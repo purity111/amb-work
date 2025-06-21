@@ -14,10 +14,11 @@ import { Navigation, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import CButton from '@/components/common/Button';
 import { useAuth } from '@/hooks/useAuth';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 import { bookmarkJob, createApplication, getApplicationsByRole } from '@/lib/api';
 import { toast } from 'react-toastify';
 import Dialog from "@/components/Dialog";
+import LoginModal from "@/components/modal/Login";
 
 export default function JobPreviewDetails() {
     const params = useParams();
@@ -31,10 +32,8 @@ export default function JobPreviewDetails() {
     const [loginModalShown, setLoginModalShown] = useState(false);
     const { data, isLoading } = useGetJobById(Number(id));
     const [width] = useWindowSize();
-    const { profile, isAuthenticated } = useAuth();
-    const queryClient = useQueryClient();
+    const { profile } = useAuth();
     const isLoggedIn = !!profile?.role;
-    const [isApplying, setIsApplying] = useState(false);
     const [applyModalShown, setApplyModalShown] = useState(false);
     const [selectedJobId, setSelectedJobId] = useState<number | null>(null);
     const [jobseekerApplications, setJobseekerApplications] = useState<number[]>([]);
@@ -79,34 +78,6 @@ export default function JobPreviewDetails() {
         if (!bookmarkedList?.data || !id) return false;
         return bookmarkedList.data.some((bookmark: any) => bookmark.job_info_id === Number(id));
     }, [bookmarkedList, id]);
-
-    // Bookmark mutation
-    const bookmarkMutation = useMutation({
-        mutationFn: ({ job_info_id }: { job_info_id: number }) => bookmarkJob({ job_info_id }),
-        onSuccess: () => {
-            toast.success('お気に入りを更新しました。');
-            queryClient.invalidateQueries({ queryKey: ['getJobById', Number(id)] });
-            queryClient.invalidateQueries({ queryKey: ['getBookmarkedJobs', profile?.role || ''] });
-        },
-        onError: () => {
-            toast.error('お気に入りの更新に失敗しました。');
-        },
-    });
-    // Apply mutation
-    const applyMutation = useMutation({
-        mutationFn: async () => {
-            if (!profile?.id) throw new Error('ログインしてください');
-            return createApplication({ job_info_id: Number(id), job_seeker_id: profile.id });
-        },
-        onSuccess: () => {
-            toast.success('応募が完了しました。');
-            queryClient.invalidateQueries({ queryKey: ['getJobById', Number(id)] });
-            setJobseekerApplications(prev => [...prev, job.id]);
-        },
-        onError: () => {
-            toast.error('応募に失敗しました。');
-        },
-    });
 
     const [mounted, setMounted] = useState(false);
     useEffect(() => setMounted(true), []);
@@ -202,7 +173,6 @@ export default function JobPreviewDetails() {
 
     const handleConfirmApply = async () => {
         if (!selectedJobId) return;
-        setIsApplying(true);
         try {
             const profileStr = localStorage.getItem('profile');
             let jobSeekerId = null;
@@ -210,11 +180,11 @@ export default function JobPreviewDetails() {
                 try {
                     const parsed = JSON.parse(profileStr);
                     jobSeekerId = parsed?.id;
-                } catch (e) { }
+                } catch (e) { console.log(e);
+                 }
             }
             if (!jobSeekerId) {
                 toast.error('求職者IDが見つかりません。ログインし直してください。');
-                setIsApplying(false);
                 setApplyModalShown(false);
                 return;
             }
@@ -227,34 +197,14 @@ export default function JobPreviewDetails() {
                 toast.error(res.message || '応募に失敗しました。');
             }
         } catch (e) {
+            console.log(e);
             toast.error('応募に失敗しました。');
         }
-        setIsApplying(false);
         setApplyModalShown(false);
     };
 
-    const handleFavorite = () => {
-        if (!isAuthenticated) {
-            toast.error('ログインしてください');
-            return;
-        }
-        bookmarkMutation.mutate({ job_info_id: Number(id) });
-    };
-
-    const handleApply = () => {
-        if (!isAuthenticated) {
-            toast.error('ログインしてください');
-            return;
-        }
-        applyMutation.mutate();
-    };
 
     const alreadyApplied = jobseekerApplications.includes(job.id);
-    const applyButtonText = alreadyApplied
-        ? "応募済み"
-        : job.job_detail_page_template_id === 1
-            ? "直接応募する"
-            : "転職支援サービスに応募する";
 
     return (
         <div className="flex flex-col pt-5">
@@ -302,7 +252,7 @@ export default function JobPreviewDetails() {
             </div>
             <p className="text-2xl text-center text-gray-300 font-bold mt-6 break-words">{job.job_lead_statement}</p>
 
-            <div className={`sticky my-10 top-20 md:top-25 z-20 bg-${themeColor} py-3`}>
+            <div className={`sticky my-10 top-20 md:top-25 z-10 bg-${themeColor} py-3`}>
                 <div className="flex flex-row justify-center gap-4">
                     <CButton
                         text={isBookmarked ? "お気に入り解除" : "お気に入り登録"}
@@ -311,7 +261,8 @@ export default function JobPreviewDetails() {
                             if (!isLoggedIn) setLoginModalShown(true);
                             else onToggleBookmark(job.id);
                         }}
-                        disabled={bookmarkShouldBeDisabled}
+                        // Only disable if logged in as JobSeeker and mutation is pending
+                        disabled={isLoggedIn && bookmarkShouldBeDisabled}
                         rightIcon={
                             <Image
                                 src={`/images/icons/${isBookmarked ? '' : 'off_'}favorite.png`}
@@ -328,15 +279,18 @@ export default function JobPreviewDetails() {
                                 ? "直接応募する"
                                 : "転職支援サービスに応募する"
                         }
-                        className={`
-                            border-2
+                        className={
+                            `border-2
                             ${themeColor === 'blue' ? 'border-blue text-blue' : 'border-orange text-orange'}
                             rounded-sm min-w-[140px] transition py-[10px] px-[24px] text-base
-                            ${alreadyApplied ? 'bg-gray-500 text-white cursor-not-allowed' : 'bg-white'}
-                        `}
+                            ${alreadyApplied ? 'bg-gray-500 text-white cursor-not-allowed' : 'bg-white'}`
+                        }
                         onClick={() => {
                             if (!isLoggedIn) setLoginModalShown(true);
-                            else if (profile?.role === 'JobSeeker' && !alreadyApplied) handleApply();
+                            else if (profile?.role === 'JobSeeker' && !alreadyApplied) {
+                                setSelectedJobId(job.id);
+                                setApplyModalShown(true);
+                            }
                         }}
                         disabled={alreadyApplied}
                     />
@@ -416,7 +370,7 @@ export default function JobPreviewDetails() {
                         { label: '事業内容', value: job.employer.business },
                         { label: 'ウェブサイト', value: job.employer.home_page_url },
                         { label: '掲載期間', value: `${parsePublicDate(job.clinic_public_date_start)} ~ ${parsePublicDate(job.clinic_public_date_end)}` },
-                    ].map((row, idx) => (
+                    ].map((row) => (
                         <div key={row.label} className={`flex flex-col sm:flex-row border-b-1 last:border-b-0 border-gray-700`}>
                             <div className="sm:flex-1 border-b-0 sm:border-b-0 sm:border-r-1 border-gray-700 p-3 bg-gray-800">
                                 <p className="font-bold text-gray-300">{row.label}</p>
@@ -449,6 +403,9 @@ export default function JobPreviewDetails() {
                     onPressOK={handleConfirmApply}
                     onPressCancel={() => setApplyModalShown(false)}
                 />
+            )}
+            {loginModalShown && (
+                <LoginModal onClose={() => setLoginModalShown(false)} onSuccess={() => setLoginModalShown(false)} />
             )}
         </div >
     );

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { ChangeEvent, useEffect, useState, useRef } from 'react';
+import React, { ChangeEvent, useEffect, useState, useRef, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import ApplicationCard from '@/components/ApplicationCard';
 import { getApplicationsByRole } from '@/lib/api';
@@ -15,7 +15,7 @@ import { PrefectureOptions, JobTypeOptions } from '@/utils/constants';
 import { useAuth } from '@/hooks/useAuth';
 import Modal from '@/components/common/Modal';
 
-export default function ApplicationMngPage() {
+function ApplicationMngContent() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPage, setTotalPage] = useState(1);
   const [limit] = useState(10);
@@ -45,7 +45,7 @@ export default function ApplicationMngPage() {
     hasLoaded.current = true;
   }, [searchParams]);
 
-  const { data: response, isLoading: aLoading, refetch } = useQuery<{
+  const { data: response, isLoading: aLoading } = useQuery<{
     data: { applications: ApplicationItem[]; pagination: { totalPages: number } };
   }>({ queryKey: ['applications', currentPage, limit, searchTerm, jobType !== '0' ? jobType : undefined, profile?.id], queryFn: async () => {
     const params: ApplicationFetchParam = {
@@ -141,12 +141,6 @@ export default function ApplicationMngPage() {
     }
   };
 
-  const onClearSearch = () => {
-    setTempSearch('');
-    setSearchTerm('');
-    setJobType('0');
-  };
-
   const formatDateTime = (dateString: string) => {
     if (!dateString) return '';
     try {
@@ -211,12 +205,6 @@ export default function ApplicationMngPage() {
                 size="small"
                 onClick={onConfirmSearchTerm}
               />
-              {/* <CButton
-                text="クリア"
-                className='bg-gray text-black h-[40px]'
-                size="small"
-                onClick={onClearSearch}
-              /> */}
             </div>
           </div>
           <div className="">
@@ -304,6 +292,14 @@ export default function ApplicationMngPage() {
         </Modal>
       )}
     </div>
+  );
+}
+
+export default function ApplicationMngPage() {
+  return (
+    <Suspense fallback={<div className="container mx-auto px-4 py-8"><p>読み込む中...</p></div>}>
+      <ApplicationMngContent />
+    </Suspense>
   );
 }
 
