@@ -50,7 +50,7 @@ const JobCategorySection: React.FC<JobCategorySectionProps> = ({ category }) => 
                     <div className="text-[24px] md:text-[30px] font-bold text-green-600">{`0${category.id}`}</div>
                     <div className="h-px bg-green-600 w-4 ml-2"></div> {/* Right line */}
                 </div>
-                <h3 className="text-3xl font-medium text-gray-900 text-center">{category.title}</h3>
+                <h3 className="text-3xl font-medium font-medium text-center">{category.title}</h3>
             </div>
 
             {/* White Card with Content */}
@@ -62,26 +62,26 @@ const JobCategorySection: React.FC<JobCategorySectionProps> = ({ category }) => 
                             <React.Fragment key={index}>
                                 {/* Job Title Row */}
                                 <div className='border border-gray-700'>
-                                    <div className="grid grid-cols-[120px_1fr] md:grid-cols-[200px_1fr] font-light">
-                                        <div className="font-light text-gray-900 bg-gray-800 p-4 flex items-center">職種名</div>
+                                    <div className="grid grid-cols-[120px_1fr] md:grid-cols-[200px_1fr]">
+                                        <div className="font-medium bg-gray-800 p-4 flex items-center">職種名</div>
                                         <div className="p-4 flex items-center border-l border-gray-700">{job.title}</div>
                                     </div>
 
                                     {/* Location Row */}
-                                    <div className="grid grid-cols-[120px_1fr] md:grid-cols-[200px_1fr] font-light border-t border-gray-700">
-                                        <div className="font-light text-gray-900 bg-gray-800 p-4 flex items-center">勤務場所</div>
+                                    <div className="grid grid-cols-[120px_1fr] md:grid-cols-[200px_1fr] border-t border-gray-700">
+                                        <div className="font-medium bg-gray-800 p-4 flex items-center">勤務場所</div>
                                         <div className="p-4 flex items-center border-l border-gray-700">{job.location}</div>
                                     </div>
 
                                     {/* Description Row */}
-                                    <div className="grid grid-cols-[120px_1fr] md:grid-cols-[200px_1fr] font-light border-t border-gray-700">
-                                        <div className="font-light text-gray-900 bg-gray-800 p-4 flex items-center">仕事内容</div>
+                                    <div className="grid grid-cols-[120px_1fr] md:grid-cols-[200px_1fr] border-t border-gray-700">
+                                        <div className="font-medium bg-gray-800 p-4 flex items-center">仕事内容</div>
                                         <div className="p-4 border-l border-gray-700">{job.description}</div>
                                     </div>
 
                                     {/* Required Skills Row */}
-                                    <div className="grid grid-cols-[120px_1fr] md:grid-cols-[200px_1fr] font-light border-t border-gray-700">
-                                        <div className="font-light text-gray-900 bg-gray-800 p-4 flex items-center">必要な知識やスキル</div>
+                                    <div className="grid grid-cols-[120px_1fr] md:grid-cols-[200px_1fr] border-t border-gray-700">
+                                        <div className="font-medium bg-gray-800 p-4 flex items-center">必要な知識やスキル</div>
                                         <div className="p-4 border-l border-gray-700">
                                             <ul className="list-disc list-inside space-y-1">
                                                 {job.requiredSkills.map((skill, skillIndex) => (
@@ -112,7 +112,7 @@ const JobCategorySection: React.FC<JobCategorySectionProps> = ({ category }) => 
                 {/* Sub-categories for 本部部門 */}
                 {isHeadOfficeCategory && category.subCategories && category.subCategories.length > 0 && (
                     <div>
-                        <p className="font-medium text-gray-900 mb-2 text-center font-light">{category.description}</p>
+                        <p className="font-medium font-medium mb-2 text-cente">{category.description}</p>
                         <div className="space-y-4 p-6">
                             <div className="space-y-2">
                                 {category.subCategories.map((subCat, index) => (

@@ -155,55 +155,57 @@ export default function TermsPage() {
         document.title = 'リユース転職サービス';
     }, []);
     return (
-        <main>
-            {/* Hero Section - Identical Split Layout */}
-            <div className="h-20 sm:h-30 md:h-75 bg-[#414141]"></div>
-            {/* Text Content (Left Side - Dark Grey Background) */}
-            <div className="w-full max-w-[1200px] m-auto text-white px-4 lg:px-0 md:mb-25">
-                <div className="md:text-left md:mr-8 xl:mr-20">
-                    <div className="h-[30px] md:h-15 w-[3px] bg-green-500 mr-2 md:mt-[-30px] mb-5 md:mb-10"></div>
-                    <h1 className="text-[26px] md:text-[35px] lg:text-[44px] font-bold text-black mb-2">利用規約（ユーザー向け）</h1>
-                    <p className="text-[14px] md:text-[18px] text-gray-300 font-bold">Terms of Use</p>
+        <>
+            <main>
+                {/* Hero Section - Identical Split Layout */}
+                <div className="h-20 sm:h-30 md:h-75 bg-[#414141]"></div>
+                {/* Text Content (Left Side - Dark Grey Background) */}
+                <div className="w-full max-w-[1200px] m-auto text-white px-4 lg:px-0 md:mb-25">
+                    <div className="md:text-left md:mr-8 xl:mr-20">
+                        <div className="h-[30px] md:h-15 w-[3px] bg-green-500 mr-2 md:mt-[-30px] mb-5 md:mb-10"></div>
+                        <h1 className="text-[26px] md:text-[35px] lg:text-[44px] font-bold text-black mb-2">利用規約（ユーザー向け）</h1>
+                        <p className="text-[14px] md:text-[18px] text-gray-300 font-bold">Terms of Use</p>
+                    </div>
                 </div>
-            </div>
 
-            <div className="pl-4">
-                <div className="w-full my-10 sm:my-[50px] md:my-0 md:w-1/2 relative bg-white h-[160px] sm:h-[250px] md:h-[350px] flex justify-end rounded-tl-[50px] sm:rounded-tl-[80px] md:rounded-tl-[100px] overflow-hidden md:absolute md:right-0 md:top-[180px]">
-                    <Image
-                        src="/images/privacy-bg.jpg"
-                        alt="Company Page Top"
-                        fill
-                        className="object-cover object-center"
-                        priority
-                    />
+                <div className="pl-4">
+                    <div className="w-full my-10 sm:my-[50px] md:my-0 md:w-1/2 relative bg-white h-[160px] sm:h-[250px] md:h-[350px] flex justify-end rounded-tl-[50px] sm:rounded-tl-[80px] md:rounded-tl-[100px] overflow-hidden md:absolute md:right-0 md:top-[180px]">
+                        <Image
+                            src="/images/privacy-bg.jpg"
+                            alt="Company Page Top"
+                            fill
+                            className="object-cover object-center"
+                            priority
+                        />
+                    </div>
                 </div>
-            </div>
 
-            {/* Breadcrumb */}
-            <Breadcrumb />
+                {/* Breadcrumb */}
+                <Breadcrumb />
 
-            {/* Main Content */}
-            <div className="max-w-[850px] mx-auto px-4 md:px-8 py-8">
-                {/* Intro text */}
-                <p className="mb-8 leading-[1.8]">
-                    株式会社AMBヒトラボ（以下「当社」といいます。）は、当社の求人情報サービスサイト「リユース転職」（以下「本サービス」と総称します。）を提供するにあたり、以下のとおり利用規約（以下「本利用規約」といいます。）を定めています。本利用規約は、本サービスを利用されるすべての方（以下「ユーザー」といいます。）に適用されるため、本アカウントをご登録される前によくご覧ください。
-                </p>
+                {/* Main Content */}
+                <div className="max-w-[850px] mx-auto px-4 md:px-8 py-8">
+                    {/* Intro text */}
+                    <p className="mb-8 leading-[1.8]">
+                        株式会社AMBヒトラボ（以下「当社」といいます。）は、当社の求人情報サービスサイト「リユース転職」（以下「本サービス」と総称します。）を提供するにあたり、以下のとおり利用規約（以下「本利用規約」といいます。）を定めています。本利用規約は、本サービスを利用されるすべての方（以下「ユーザー」といいます。）に適用されるため、本アカウントをご登録される前によくご覧ください。
+                    </p>
 
-                {/* Render sections using the component */}
-                {TermsSections.map((section) => (
-                    <DefinitionSection
-                        key={section.number}
-                        number={section.number}
-                        title={section.title}
-                        text={section.text}
-                        isTerms={true}
-                    />
-                ))}
-                <p className='text-[14px] md:text-base text-right pb-10 md:pb-20'>
-                    2023年8月19日制定・適用
-                </p>
-            </div>
+                    {/* Render sections using the component */}
+                    {TermsSections.map((section) => (
+                        <DefinitionSection
+                            key={section.number}
+                            number={section.number}
+                            title={section.title}
+                            text={section.text}
+                            isTerms={true}
+                        />
+                    ))}
+                    <p className='text-[14px] md:text-base text-right pb-10 md:pb-20'>
+                        2023年8月19日制定・適用
+                    </p>
+                </div>
+            </main>
             <Footer />
-        </main>
+        </>
     );
 }
