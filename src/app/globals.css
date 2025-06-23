@@ -1,6 +1,16 @@
 @import "tailwindcss";
 @import 'react-toastify/dist/ReactToastify.css';
 
+@font-face {
+  font-family: 'YuGothicWeb';
+  src: url('/fonts/yu-gothic-regular.woff2') format('woff2'),
+       url('/fonts/yu-gothic-regular.woff') format('woff'),
+       url('/fonts/yu-gothic-regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 @theme {
   --color-gray-200: #212529;
   --color-gray-300: #333333;
@@ -30,7 +40,8 @@
 }
 
 body {
-  overflow-x: hidden !important;
+  font-family: 'YuGothicWeb', "Yu Gothic", "YuGothic", "Hiragino Kaku Gothic ProN", "Meiryo", "MS PGothic", "Hiragino Sans", sans-serif;
+  overflow-x: hidden;
 }
 
 .consultation-menu {
@@ -60,11 +71,6 @@ main {
 
 html {
   scroll-behavior: smooth;
-}
-
-body {
-  font-family: "YuGothic", "Hiragino Kaku Gothic ProN", "Hiragino Sans" sans-serif;
-  overflow-x: hidden;
 }
 
 table {

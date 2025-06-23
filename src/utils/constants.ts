@@ -1,4 +1,4 @@
-import { HeaderButton, MapInfo, CircleTextItemData, StatisticItemData, AboutItemProps, CustomerVoiceItemData, PricePlanData, RecruiterFlowStep } from "./types";
+import { HeaderButton, MapInfo, CircleTextItemData, StatisticItemData, AboutItemProps, CustomerVoiceItemData, PricePlanData, RecruiterFlowStep, SikakuItemProps, SikakuOrderItemProps } from "./types";
 
 export const HeaderButtonList: HeaderButton[] = [
     {
@@ -1512,3 +1512,114 @@ export const JobStatusOptions = [
         option: '非公開（下書き）'
     },
 ]
+
+export const FGA_QUALIFICATION_DATA: SikakuItemProps[] = [
+    {
+        number: '01',
+        title: 'ユース検定',
+        subtitle: 'Reuse Test',
+        image: '/images/qualifications/1.jpg',
+        description: '学べる内容：リユース品の買取・販売を行う「リユースショップ」を営業していくうえで必要な基礎知識を学びます。「古物営業法」を中心に「個人情報保護法」「製造物責任法」「資源有効利用促進法」などの関連法規の基本知識や留意すべき事項などを実務の流れに沿って学んでいきます。',
+        order_title: 'リユースハンドブック（リユース検定公式テキスト）目次より抜粋',
+        order_content: '1. リユース業の意義\n2. リユースショップを営むための基本事項\n3. リユースショップ営業の実務\n4. 取引の信頼性を高める営業、コンプライアンス（法令遵守）営業\n5. 特定の商品を取り扱う場合の注意\n6. 資料',
+        order_desc: '上記の内容から試験が出題され、試験に合格した方が資格を取得できます。（選択式50問、制限時間は60分。1問2点、100点満点。90点以上をもって合格。2月、5月、8月、11月の各１ヶ月の間の特定日に全国の試験会場で実施しています。）',
+        table: [
+            { label: '運営', value: '一般社団法人日本リユース業協会' },
+            { label: '料金', value: '5,000円＋消費税' },
+            { label: '取得までの期間', value: '―' },
+            { label: 'URL', value: 'https://www.re-use.jp/' },
+        ],
+        recommend: [
+            'リユースショップで接客・販売のお仕事をされている方',
+            'ブランド品等の買取、鑑定に関するお仕事をしている方',
+            '出張買取、訪問買取で営業のお仕事をされている方',
+            'リユース関連企業で働いている方（管理部門、営業部門など）',
+        ],
+    },
+    {
+        number: '02',
+        title: 'AACD協会基準判定士',
+        subtitle: 'AACD ASSOCIATION STANDARDS JUDGE',
+        image: '/images/qualifications/2.jpg',
+        description: '学べる内容：一般社団法人日本流通自主管理協会(AACD)の会員企業になるという前提がありますが、AACDの開催する講習で、真贋だけでなく、ブランド品を取り扱う（仕入れ、買取り、販売）際に必要な基本的な知識を総合的に学び、試験でその実力をはかります。そして試験に合格した方が資格を取得できます。',
+        order_title: 'AACDのHPより抜粋',
+        order_content: '1. ソフト研修では、テキストに沿って並行輸入の基礎知識、関連法令、カスタマー対応などを学びます。\n2. ハード研修では、ルイ・ヴィトン、シャネル、エルメス、グッチ、プラダ、コーチの６ブランドに加え、ジュエリー、時計の２カテゴリーの判別について「判別プロジェクター研修」と「実技研修」に分けて学びます。①判別プロジェクター研修では各ブランド、各カテゴリーの商品をどうやって判別するか講習を受けます。そのあと②実地研修では、実際に現物を手に取り、基準内・外商品を比較し、講習で学んだポイントを実際に確認します。',
+        order_desc: '認定試験（選択問題＋レポート）は、毎年1回実施し、合格率は30～40％程度です。「協会基準判定士」は、資格認定された後も定期的に実施されるセミナーや研修に参加して、常に新しい情報を更新することが求められ、５年ごとに更新手続きが必要となります。',
+        table: [
+            { label: '運営', value: '日本流通自主管理協会(AACD)' },
+            { label: '料金', value: '毎年各社1名無料、2人目から1名22,000円（税込み）' },
+            { label: '取得までの期間', value: '―' },
+            { label: 'URL', value: 'https://www.aacd.gr.jp/' },
+        ],
+        recommend: [
+            '日本流通自主管理協会の会員企業に属している方\n　　（会員企業とは、ブランド品買取店や質屋などの「小売企業」、\n　　ブランド物のバッグやアクセサリーなどの専門知識を持つ「卸売企業」、\n　　同協会の目的や趣に賛同し力添えをする「賛助企業」が挙げられます。）\n',
+            'ブランド品の買取、真贋・鑑定に関するお仕事をしている方',
+        ],
+    },
+    {
+        number: '03',
+        title: '遺品整理士',
+        subtitle: 'ESTATE AGENT',
+        image: '/images/qualifications/3.jpg',
+        description: '学べる内容：養成講座の教本内容から抜粋',
+        order_content: '【第１部】遺品整理・遺品整理業とは\n　　第１章　遺品整理とは何か\n　　第２章　専門家が今、必要とされる理由とは\n　　第３章　取り巻いている、様々な社会問題\n【第２部】遺品整理を行うためには\n　　第１章　実務を行っていく上で必要なこととは\n　　第２章　行われている”実際の業務”とは\n　　第３章　作業を行う上での留意点\n　　第４章　法規制との関わりについて\n【第３部】事例研究について\n　　第１章　事例研究について',
+        table: [
+            { label: '運営', value: '一般社団法人　遺品整理士認定協会' },
+            { label: '料金', value: '入会金25,000円、会費(認定手続き含む) 7,000円（2年間有効）' },
+            { label: '取得までの期間', value: '約４～５か月' },
+            { label: 'URL', value: 'https://www.is-mind.org/about.html' },
+        ],
+        recommend: [
+            'お客様から遺品整理、生前整理のご相談をいただく方',
+            'リユースショップや訪問買取で接客・営業のお仕事をされている方',
+            'お仕事でシニア層や高齢のお客様とお話をすることが多い方',
+            'これからリユース業界を目指されている方',
+        ],
+        notes: '※英国宝石学協会が認定する宝石学資格が「FGA」について、日本宝飾クラフト学院　宝石学　講師の鈴木敏文さんにご監修いただきました。詳しくはこちらをご覧ください。',
+    },
+    {
+        number: '04',
+        title: 'FGA',
+        subtitle: 'FELLOW OF THE GEMMOLOGICAL ASSOCIATION OF GREAT BRITAIN',
+        image: '/images/qualifications/4.jpg',
+        description: '学べる内容：宝石に関するあらゆること（宝石のこと、つくりのこと、デザインのこと、歴史のこと、宝石の鑑別について）を総合的に学びます。GemA宝石学コース（ファンデーションコース（基礎課程）→ディプロマコース（上級課程））を受講し、それぞれの試験に合格した方が資格を取得できます。',
+        table: [
+            { label: '運営', value: '英国宝石学協会（The Gemmological Association of Great Britain/Gem-A）' },
+            { label: '料金', value: '約170万円' },
+            { label: '取得までの期間', value: '約年' },
+            { label: 'URL', value: 'https://www.jj-craft.com/gem-a/' },
+        ],
+        recommend: [
+            '宝飾・ジュエリー・貴金属関連の分野で仕事をされている方',
+            '宝石の鑑定、鑑別、一般知識を求められている方',
+            'ジュエリーのバイヤーや鑑定士を目指している方',
+        ],
+        notes: '※英国宝石学協会が認定する宝石学資格が「FGA」について、日本宝飾クラフト学院　宝石学　講師の鈴木敏文さんにご監修いただきました。詳しくはこちらをご覧ください。',
+    },
+    
+    
+];
+
+export const SIKAKU_ORDER_ITEMS: SikakuOrderItemProps[] = [
+    {
+        number: '01.',
+        title: '一般社団法人日本リユース業協会が主催する「リユース検定」',
+        link: '/qualifications#test01',
+    },
+    {
+        number: '02.',
+        title: '一般社団法人日本流通自主管理協会(AACD)が認定する「協会基準判定士」',
+        link: '/qualifications#test02',
+    },
+    {
+        number: '03.',
+        title: '般社団法人遺品整理士認定協会が認定する「遺品整理士」',
+        link: '/qualifications#test03',
+    },
+    {
+        number: '04.',
+        title: '英国宝石学協会が認定する「宝石学資格のFGA」',
+        link: '/qualifications#test04',
+    },
+    // Add more items as needed
+];
