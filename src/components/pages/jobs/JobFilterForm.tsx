@@ -121,7 +121,7 @@ export default function JobFilterForm({ onSubmit, hasCloseButton = false, onClos
                 </div>
                 <div className='flex-1 py-4 md:p-4'>
                     <div className='border border-gray-700 p-3 rounded-xs'>
-                        <p className='px-1 py-2 mb-2 bg-[#6c757d] text-white text-[11px] sm:text-[13px] font-light rounded-xs'>選択中の都道府県</p>
+                        <p className='px-1 py-2 mb-2 bg-[#6c757d] text-white text-[11px] sm:text-[13px] font-normal rounded-xs'>選択中の都道府県</p>
                         <div className='flex flex-row flex-wrap'>
                             {cityList.map(city => (
                                 <span

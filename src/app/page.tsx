@@ -180,7 +180,7 @@ export default function HomePage() {
             <div className='flex-1 flex flex-col items-center justify-center px-4 sm:px-10'>
               <div>
                 <p className='text-[16px] sm:text-xl text-gray-300 font-bold'>{post.title}</p>
-                <p className='text-[12px] sm:text-sm text-gray-600 font-light'>{post.subTitle}</p>
+                <p className='text-[12px] sm:text-sm text-gray-600 font-normal'>{post.subTitle}</p>
               </div>
             </div>
           </a>

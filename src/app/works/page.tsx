@@ -128,92 +128,94 @@ export default function WorksPage() {
         document.title = 'リユース転職サービス';
     }, []);
     return (
-        <div className="min-h-screen">
-            {/* Hero Section */}
-            <div className="md:h-45 bg-[#414141]"></div>
-            {/* Text Content (Left Side - Dark Grey Background) */}
-            <div className="w-full max-w-[1200px] m-auto text-white px-4 lg:px-0 mb-10">
-                <div className="md:text-left md:mr-8 xl:mr-20">
-                    <div className="h-[30px] md:h-15 w-[3px] bg-green-500 mr-2 md:mt-[-30px] mb-5 md:mb-10"></div>
-                    <h1 className="text-[26px] md:text-[35px] lg:text-[44px] text-black mb-2">仕事・スキルに<br />ついて知る</h1>
-                    <p className="text-[14px] md:text-[18px] text-gray-300 font-bold">Jobs & Skills</p>
-                </div>
-            </div>
-
-            <div className="pl-4">
-                <div className="w-full my-10 sm:my-[50px] md:my-0 md:w-1/2 relative bg-white h-[160px] sm:h-[250px] md:h-[350px] flex justify-end rounded-tl-[50px] sm:rounded-tl-[80px] md:rounded-tl-[100px] overflow-hidden md:absolute md:right-0 md:top-[180px]">
-                    <Image
-                        src="/images/works/top.jpg"
-                        alt="Company Page Top"
-                        fill
-                        className="object-cover object-center"
-                        priority
-                    />
-                </div>
-            </div>
-
-            {/* Breadcrumb */}
-            <Breadcrumb />
-            <div className="sm:max-w-[90%] md:max-w-[720px] lg:max-w-[960px] mx-auto px-4 sm:px-6 lg:px-0">
-                <div className="pb-[30px] md:pb-[60px] text-center">
-                    <h2 className="text-2xl md:text-3xl font-bold mb-9 text-center relative inline-block mx-auto job-openings">
-                        仕事・スキルを知る
-                    </h2>
-                    <p className='text-center text-[14px] md:text-base text-gray-600 font-sans'>KNOW YOUR JOB/SKILLS</p>
-                </div>
-                <div className="relative aspect-[5/2] w-full mx-auto">
-                    <Image
-                        src="/images/works/explain.jpg"
-                        alt="説明"
-                        fill
-                        className="object-cover rounded-tr-[30px] rounded-bl-[30px]"
-                    />
+        <>
+            <main className="min-h-screen">
+                {/* Hero Section */}
+                <div className="h-20 sm:h-30 md:h-75 bg-[#414141]"></div>
+                {/* Text Content (Left Side - Dark Grey Background) */}
+                <div className="w-full max-w-[1200px] m-auto text-white px-4 lg:px-0 mb-10">
+                    <div className="md:text-left md:mr-8 xl:mr-20">
+                        <div className="h-[30px] md:h-15 w-[3px] bg-green-500 mr-2 md:mt-[-30px] mb-5 md:mb-10"></div>
+                        <h1 className="text-[26px] md:text-[35px] lg:text-[44px] text-black mb-2">仕事・スキルに<br />ついて知る</h1>
+                        <p className="text-[14px] md:text-[18px] text-gray-300 font-bold">Jobs & Skills</p>
+                    </div>
                 </div>
 
-                <p className='text-[14px] md:text-[16px] pt-10 font-light leading-[1.8]'>
-                    リユース・リサイクル・買取業界では、上場企業からスタートアップ、地域密着の中小企業まで、企業規模や組織風土が幅広いのが特徴です。成長戦略もIT・テクノロジーを駆使する会社、海外進出に積極的な会社など様々。そのため、自分の価値観や、キャリアイメージにマッチした企業選択、仕事選びは重要です。<br /><br />
-                    不用品を買い取りし、再度流通させているリユースビジネスは持続可能な社会を作る循環型ビジネスです。SDGsにも合致しており、社会貢献性の高い仕事であることから今後も注目をされる仕事であることは間違いないでしょう。
-                </p>
-
-                {/* Main business */}
-                <div className="pt-[50px] md:pt-[100px] text-center">
-                    <h2 className="text-2xl md:text-3xl font-bold mb-9 text-center relative inline-block mx-auto job-openings">
-                        リユース・リサイクル・買取業界の主な仕事
-                    </h2>
-                    <p className='text-center text-[14px] md:text-base text-gray-600 font-sans'>Main business</p>
-                </div>
-                <p className='text-[14px] md:text-[16px] py-16 font-light leading-[1.8] text-center'>
-                    リユース・リサイクル・買取業界の主な仕事（職種）と、その仕事に必要な知識やスキルを整理しました。<br />
-                    経験や知識・スキルを向上させていくことで、市場価値が高まり、キャリアアップしていくことができます。
-                </p>
-
-                {/* Main Business Section */}
-                <div className="space-y-12">
-                    {jobCategories.map((category) => (
-                        <JobCategorySection key={category.id} category={category} />
-                    ))}
-                </div>
-
-                {/* Consulting */}
-                <div className="lg:flex justify-between items-center gap-10">
-                    <div className="relative aspect-[4/4] w-full mx-auto max-w-[500px]">
+                <div className="pl-4">
+                    <div className="w-full my-10 sm:my-[50px] md:my-0 md:w-1/2 relative bg-white h-[160px] sm:h-[250px] md:h-[350px] flex justify-end rounded-tl-[50px] sm:rounded-tl-[80px] md:rounded-tl-[100px] overflow-hidden md:absolute md:right-0 md:top-[180px]">
                         <Image
-                            src="/images/works/graph.jpg"
-                            alt="グラフ"
+                            src="/images/works/top.jpg"
+                            alt="Company Page Top"
+                            fill
+                            className="object-cover object-center"
+                            priority
+                        />
+                    </div>
+                </div>
+
+                {/* Breadcrumb */}
+                <Breadcrumb />
+                <div className="sm:max-w-[90%] md:max-w-[720px] lg:max-w-[960px] mx-auto px-4 sm:px-6 lg:px-0">
+                    <div className="pb-[30px] md:pb-[60px] text-center">
+                        <h2 className="text-2xl md:text-3xl font-bold mb-9 text-center relative inline-block mx-auto job-openings">
+                            仕事・スキルを知る
+                        </h2>
+                        <p className='text-center text-[14px] md:text-base text-gray-600 font-sans'>KNOW YOUR JOB/SKILLS</p>
+                    </div>
+                    <div className="relative aspect-[5/2] w-full mx-auto">
+                        <Image
+                            src="/images/works/explain.jpg"
+                            alt="説明"
                             fill
                             className="object-cover rounded-tr-[30px] rounded-bl-[30px]"
                         />
                     </div>
-                    <div className="">
-                        <h3 className='text-center pb-10 text-[26px] md:text-[32px] font-bold'>
-                            専門のキャリアアドバイザーに<br />
-                            無料相談
-                        </h3>
-                        <p className='text-[14px] text-base font-light leading-[1.8]'>具体的にどのような方法で知識やスキルを向上させていけばよいのかなど、詳細を知りたい方は専門のキャリアアドバイザーにまずは無料相談をしてみましょう。</p>
+
+                    <p className='text-[14px] md:text-[16px] pt-10 font-normal leading-[1.8]'>
+                        リユース・リサイクル・買取業界では、上場企業からスタートアップ、地域密着の中小企業まで、企業規模や組織風土が幅広いのが特徴です。成長戦略もIT・テクノロジーを駆使する会社、海外進出に積極的な会社など様々。そのため、自分の価値観や、キャリアイメージにマッチした企業選択、仕事選びは重要です。<br /><br />
+                        不用品を買い取りし、再度流通させているリユースビジネスは持続可能な社会を作る循環型ビジネスです。SDGsにも合致しており、社会貢献性の高い仕事であることから今後も注目をされる仕事であることは間違いないでしょう。
+                    </p>
+
+                    {/* Main business */}
+                    <div className="pt-[50px] md:pt-[100px] text-center">
+                        <h2 className="text-2xl md:text-3xl font-bold mb-9 text-center relative inline-block mx-auto job-openings">
+                            リユース・リサイクル・買取業界の主な仕事
+                        </h2>
+                        <p className='text-center text-[14px] md:text-base text-gray-600 font-sans'>Main business</p>
+                    </div>
+                    <p className='text-[14px] md:text-[16px] py-16 font-normal leading-[1.8] text-center'>
+                        リユース・リサイクル・買取業界の主な仕事（職種）と、その仕事に必要な知識やスキルを整理しました。<br />
+                        経験や知識・スキルを向上させていくことで、市場価値が高まり、キャリアアップしていくことができます。
+                    </p>
+
+                    {/* Main Business Section */}
+                    <div className="space-y-12">
+                        {jobCategories.map((category) => (
+                            <JobCategorySection key={category.id} category={category} />
+                        ))}
+                    </div>
+
+                    {/* Consulting */}
+                    <div className="lg:flex justify-between items-center gap-10">
+                        <div className="relative aspect-[4/4] w-full mx-auto max-w-[500px]">
+                            <Image
+                                src="/images/works/graph.jpg"
+                                alt="グラフ"
+                                fill
+                                className="object-cover rounded-tr-[30px] rounded-bl-[30px]"
+                            />
+                        </div>
+                        <div className="">
+                            <h3 className='text-center pb-10 text-[26px] md:text-[32px] font-bold'>
+                                専門のキャリアアドバイザーに<br />
+                                無料相談
+                            </h3>
+                            <p className='text-[14px] text-base font-normal leading-[1.8]'>具体的にどのような方法で知識やスキルを向上させていけばよいのかなど、詳細を知りたい方は専門のキャリアアドバイザーにまずは無料相談をしてみましょう。</p>
+                        </div>
                     </div>
                 </div>
-            </div>
+            </main>
             <Footer />
-        </div>
+        </>
     );
 }
