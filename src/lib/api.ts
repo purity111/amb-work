@@ -1,4 +1,4 @@
-import { RegisterEmployerParam, RegisterJobSeekerParam, LoginParam, JobParam, RecruitingCriteria, AdminCriteriaFetchParam, BookmarkJobParam, CreateUpdateCriteriaFetchParam, ApplicationFetchParam } from "@/utils/types";
+import { RegisterEmployerParam, RegisterJobSeekerParam, LoginParam, JobParam, RecruitingCriteria, AdminCriteriaFetchParam, BookmarkJobParam, CreateUpdateCriteriaFetchParam, ApplicationFetchParam, BookmarkedJobsFetchParams } from "@/utils/types";
 import api from './axios';
 import { toQueryString } from "@/utils/helper";
 
@@ -84,8 +84,9 @@ export const deleteRecruitingCriteria = async (id: number) => {
 };
 
 //Favourite related
-export const getBookmarkedJobs = async () => {
-    const response = await api.get(`/jobs/favourites`);
+export const getBookmarkedJobs = async (param: BookmarkedJobsFetchParams) => {
+    const queryString = toQueryString(param);
+    const response = await api.get(`/jobs/favourites?${queryString}`);
     return response.data;
 };
 

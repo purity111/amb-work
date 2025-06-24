@@ -39,7 +39,7 @@ export default function JobPreviewDetails() {
     const [jobseekerApplications, setJobseekerApplications] = useState<number[]>([]);
 
     // Get bookmarked jobs to check if current job is bookmarked
-    const { data: bookmarkedList, refetch } = useGetBookmarkedJobs(profile?.role || '');
+    const { data: bookmarkedList, refetch } = useGetBookmarkedJobs({ role: profile?.role || '' });
     const bookmark = useMutation({
         mutationFn: bookmarkJob,
         onSuccess: (data) => {
@@ -75,8 +75,15 @@ export default function JobPreviewDetails() {
 
     // Check if current job is bookmarked
     const isBookmarked = useMemo(() => {
-        if (!bookmarkedList?.data || !id) return false;
-        return bookmarkedList.data.some((bookmark: any) => bookmark.job_info_id === Number(id));
+        let bookmarks: any[] = [];
+        if (bookmarkedList?.data?.jobs) {
+            bookmarks = bookmarkedList.data.jobs;
+        } else if (bookmarkedList?.data?.favouritejobs) {
+            bookmarks = bookmarkedList.data.favouritejobs;
+        } else if (Array.isArray(bookmarkedList?.data)) {
+            bookmarks = bookmarkedList.data;
+        }
+        return bookmarks.some((bookmark: any) => bookmark.job_info_id === Number(id));
     }, [bookmarkedList, id]);
 
     const [mounted, setMounted] = useState(false);
@@ -256,16 +263,16 @@ export default function JobPreviewDetails() {
                 <div className="flex flex-row justify-center gap-4">
                     <CButton
                         text={isBookmarked ? "お気に入り解除" : "お気に入り登録"}
-                        className={`bg-white text-${themeColor} rounded-lg ${!isLoggedIn ? 'cursor-pointer' : bookmarkShouldBeDisabled ? '!cursor-not-allowed' : 'cursor-pointer'}`}
+                        className={`bg-white text-${themeColor} rounded-lg ${!isLoggedIn ? 'cursor-pointer' : bookmarkShouldBeDisabled ? '!cursor-not-allowed opacity-60' : 'cursor-pointer'}`}
                         onClick={() => {
                             if (!isLoggedIn) setLoginModalShown(true);
-                            else onToggleBookmark(job.id);
+                            else if (profile?.role === 'JobSeeker') onToggleBookmark(job.id);
                         }}
-                        // Only disable if logged in as JobSeeker and mutation is pending
-                        disabled={isLoggedIn && bookmarkShouldBeDisabled}
+                        disabled={bookmarkShouldBeDisabled}
+                        aria-label={bookmarkShouldBeDisabled ? '求職者のみお気に入り登録できます' : undefined}
                         rightIcon={
                             <Image
-                                src={`/images/icons/${isBookmarked ? '' : 'off_'}favorite.png`}
+                                src={`/images/icons/${isBookmarked ? 'favorite' : 'off_favorite'}.png`}
                                 alt="favorite-icon"
                                 width={18}
                                 height={18}

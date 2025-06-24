@@ -262,6 +262,12 @@ export interface CreateUpdateCriteriaFetchParam {
     display_order: number
 }
 
+export interface BookmarkedJobsFetchParams {
+    page?: number;
+    limit?: number;
+    searchTerm?: string;
+}
+
 export interface BookmarkJobParam {
     job_info_id: number;
 }
