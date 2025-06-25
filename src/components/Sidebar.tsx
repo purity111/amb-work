@@ -17,7 +17,7 @@ export const menuItemsByRole: Record<string, MenuItem[]> = {
   jobseeker: [
     { label: '応募管理', path: '/mypage/application_mng', icon: 'application.png' },
     { label: 'チャット管理', path: '/mypage/chat_mng', icon: 'chat.png' },
-    { label: '気に入り', path: '/mypage/favourites', icon: 'star3.png' },
+    { label: 'お気に入り', path: '/mypage/favourites', icon: 'star3.png' },
     { label: 'プロフィール', path: '/mypage/profile', icon: 'man1.png' },
     { label: 'ログアウト', path: '/logout', icon: 'logout.png' },
   ],
