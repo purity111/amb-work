@@ -440,9 +440,10 @@ export default function JobList() {
                                     onClick={() => {
                                         if (!isLoggedIn) setLoginModalShown(true);
                                         else if (profile?.role === 'JobSeeker' && !alreadyApplied) handleApply(job.id);
+                                        else if (alreadyApplied) router.push('/mypage/application_mng');
                                     }}
                                     className={applyButtonClass}
-                                    disabled={bookmark.isPending || alreadyApplied}
+                                    disabled={bookmark.isPending}
                                 />
                             </div>
                         </div>

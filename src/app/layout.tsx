@@ -13,6 +13,7 @@ import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import "react-datepicker/dist/react-datepicker.css";
 import { Inter } from "next/font/google";
+import { usePathname } from "next/navigation";
 
 const AuthContext = createContext<ReturnType<typeof useAuth> | null>(null);
 
@@ -36,6 +37,9 @@ export default function HomeLayout({
   children: React.ReactNode;
 }>) {
   const [queryClient] = useState(() => new QueryClient());
+  const pathname = usePathname();
+  // Hide FixedBottomBar on /jobs/recruit/[id] page
+  const hideFixedBottomBar = pathname?.startsWith("/jobs/recruit/");
 
   return (
     <html lang="ja">
@@ -46,7 +50,7 @@ export default function HomeLayout({
             <AuthProvider>
               <Header />
               {children}
-              <FixedBottomBar />
+              {!hideFixedBottomBar && <FixedBottomBar />}
               <ToastContainer hideProgressBar={true} />
             </AuthProvider>
           </QueryClientProvider>

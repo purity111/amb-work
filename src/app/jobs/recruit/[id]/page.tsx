@@ -8,7 +8,7 @@ import useWindowSize from "@/hooks/useWindowSize";
 import { getFirstFullImage, getPrefectureName, parsePublicDate } from "@/utils/helper";
 import { CompanyInfo, JobDetailExtra, RecruitingCriteria, StaffInfoExtra } from "@/utils/types";
 import Image from "next/image";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useMemo, useRef, useState, useEffect } from "react";
 import { Navigation, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -23,6 +23,7 @@ import LoginModal from "@/components/modal/Login";
 export default function JobPreviewDetails() {
     const params = useParams();
     const id = params.id;
+    const router = useRouter();
 
     const staffSectionRef = useRef<HTMLDivElement | null>(null);
     const gallerySectionRef = useRef<HTMLDivElement | null>(null);
@@ -39,7 +40,7 @@ export default function JobPreviewDetails() {
     const [jobseekerApplications, setJobseekerApplications] = useState<number[]>([]);
 
     // Get bookmarked jobs to check if current job is bookmarked
-    const { data: bookmarkedList, refetch } = useGetBookmarkedJobs({ role: profile?.role || '' });
+    const { data: bookmarkedList, refetch } = useGetBookmarkedJobs({ page: 1, limit: 10, searchTerm: '' });
     const bookmark = useMutation({
         mutationFn: bookmarkJob,
         onSuccess: (data) => {
@@ -98,6 +99,20 @@ export default function JobPreviewDetails() {
             });
         }
     }, [profile]);
+
+    // Add state and effect for visibility like FixedBottomBar
+    const [isBarVisible, setIsBarVisible] = useState(false);
+    useEffect(() => {
+        const handleScroll = () => {
+            const scrollY = window.scrollY;
+            const windowHeight = window.innerHeight;
+            const documentHeight = document.documentElement.scrollHeight;
+            setIsBarVisible(scrollY > 0 && (documentHeight - (scrollY + windowHeight)) > 100);
+        };
+        window.addEventListener('scroll', handleScroll);
+        handleScroll();
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
 
     if (!mounted) return null;
 
@@ -259,7 +274,10 @@ export default function JobPreviewDetails() {
             </div>
             <p className="text-2xl text-center text-gray-300 font-bold mt-6 break-words">{job.job_lead_statement}</p>
 
-            <div className={`sticky my-10 top-20 md:top-25 z-10 bg-${themeColor} py-3`}>
+            {/* Fixed bottom bar for actions, shown/hide on scroll like <FixedBottomBar> */}
+            <div
+                className={`fixed bottom-0 left-0 right-0 z-30 bg-${themeColor} py-3 transition-all duration-300 ease-in-out ${isBarVisible ? 'translate-y-0 opacity-100' : 'translate-y-full opacity-0'}`}
+            >
                 <div className="flex flex-row justify-center gap-4">
                     <CButton
                         text={isBookmarked ? "お気に入り解除" : "お気に入り登録"}
@@ -282,24 +300,28 @@ export default function JobPreviewDetails() {
                     <CButton
                         text={alreadyApplied
                             ? "応募済み"
-                            : job.job_detail_page_template_id === 1
-                                ? "直接応募する"
-                                : "転職支援サービスに応募する"
+                            : width < 768
+                                ? "応募する"
+                                : job.job_detail_page_template_id === 1
+                                    ? "企業に直接応募する"
+                                    : "転職支援サービスに応募する"
                         }
                         className={
                             `border-2
                             ${themeColor === 'blue' ? 'border-blue text-blue' : 'border-orange text-orange'}
                             rounded-sm min-w-[140px] transition py-[10px] px-[24px] text-base
-                            ${alreadyApplied ? 'bg-gray-500 text-white cursor-not-allowed' : 'bg-white'}`
+                            ${alreadyApplied ? 'bg-gray-500 text-white cursor-pointer' : 'bg-white'}`
                         }
                         onClick={() => {
                             if (!isLoggedIn) setLoginModalShown(true);
                             else if (profile?.role === 'JobSeeker' && !alreadyApplied) {
                                 setSelectedJobId(job.id);
                                 setApplyModalShown(true);
+                            } else if (alreadyApplied) {
+                                router.push('/mypage/application_mng');
                             }
                         }}
-                        disabled={alreadyApplied}
+                        disabled={bookmarkShouldBeDisabled}
                     />
                 </div>
             </div>
