@@ -8,6 +8,7 @@ import { bookmarkJob } from '@/lib/api';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
 import LoginModal from './modal/Login';
+import { format } from 'date-fns';
 
 interface FavoriteCardProps {
   companyName: string;
@@ -47,6 +48,17 @@ const FavoriteCard: React.FC<FavoriteCardProps> = ({
   const queryClient = useQueryClient();
   const [loginModalShown, setLoginModalShown] = useState(false);
 
+  // Format application date in Japanese format
+  const formatApplicationDate = (dateString: string) => {
+    try {
+      const date = new Date(dateString);
+      return format(date, 'yyyy年M月d日');
+    } catch (error) {
+      console.error('Error formatting date:', error);
+      return dateString; // Fallback to original string if parsing fails
+    }
+  };
+
   const bookmark = useMutation({
     mutationFn: bookmarkJob,
     onSuccess: (data) => {
@@ -68,7 +80,9 @@ const FavoriteCard: React.FC<FavoriteCardProps> = ({
       setLoginModalShown(true);
       return;
     }
-    bookmark.mutate({ job_info_id: jobId });
+    if (confirm('本当にお気に入りを解除しますか？')) {
+      bookmark.mutate({ job_info_id: jobId });
+    }
   };
 
   const bookmarkShouldBeDisabled = bookmark.isPending || profile?.role !== 'JobSeeker';
@@ -76,19 +90,16 @@ const FavoriteCard: React.FC<FavoriteCardProps> = ({
   return (
     <>
       <div className="bg-white shadow rounded-lg mb-4">
-        <div className={`${headerBgClass} text-white p-3 flex justify-between items-center rounded-t-lg gap-1`}>
-          <div>
-            <h2 className="text-sm md:text-base text-black font-semibold">{companyName}</h2>
-            <h3 className="text-base md:text-lg font-bold mt-1">{jobTitle} ({storeName})</h3>
-          </div>
-          <span className="bg-gray-600 text-white min-w-[76px] md:min-w-[86px] text-xs md:text-sm px-2 py-1 rounded">お気に入り</span>
+        <div className={`${headerBgClass} text-white p-3 rounded-t-lg gap-1`}>
+          <h2 className="text-sm md:text-base text-black font-semibold">{companyName}</h2>
+          <h3 className="text-base md:text-lg font-bold mt-1">{jobTitle} ({storeName})</h3>
         </div>
 
         <div className="p-4 border border-[#d7d7d7]">
           <div className="flex flex-col sm:grid sm:grid-cols-2 gap-4 text-sm">
             <div>
               <span className="font-semibold">登録日時</span>
-              <p className="mt-1">{applicationDate}</p>
+              <p className="mt-1">{formatApplicationDate(applicationDate)}</p>
             </div>
             <div>
               <span className="font-semibold">給料</span>
@@ -96,17 +107,39 @@ const FavoriteCard: React.FC<FavoriteCardProps> = ({
             </div>
           </div>
 
-          <div className="border-t border-black my-4"></div>
+          <div className="border-t border-black my-2"></div>
 
           <div className="text-md mb-4">
             <h4 className="font-bold text-lg mb-2">会社情報</h4>
-            <p><span className="font-semibold">会社名：</span>{companyName}</p>
-            <p><span className="font-semibold">Zip：</span>{zip}</p>
-            <p><span className="font-semibold">住所：</span>{prefecture}{city}</p>
-            <p><span className="font-semibold">Tel：</span>{tel}</p>
+            <div className="flex flex-wrap gap-4">
+              {companyName && (
+                <div>
+                  <span className="font-semibold">会社名：</span>
+                  <span>{companyName}</span>
+                </div>
+              )}
+              {zip && (
+                <div>
+                  <span className="font-semibold">Zip：</span>
+                  <span>{zip}</span>
+                </div>
+              )}
+              {(prefecture || city) && (
+                <div>
+                  <span className="font-semibold">住所：</span>
+                  <span>{prefecture}{city}</span>
+                </div>
+              )}
+              {tel && (
+                <div>
+                  <span className="font-semibold">Tel：</span>
+                  <span>{tel}</span>
+                </div>
+              )}
+            </div>
           </div>
 
-          <div className="flex justify-end space-x-3 mt-6">
+          <div className="flex justify-end space-x-3">
             <CButton
               text={isBookmarked ? "お気に入り解除" : "お気に入り登録"}
               className={`border-2 border-yellow text-yellow rounded-sm ${!profile?.role ? 'cursor-pointer' : bookmarkShouldBeDisabled ? '!cursor-not-allowed' : 'cursor-pointer'}`}
@@ -129,8 +162,8 @@ const FavoriteCard: React.FC<FavoriteCardProps> = ({
 
       {loginModalShown && (
         <LoginModal
-          isOpen={loginModalShown}
           onClose={() => setLoginModalShown(false)}
+          onSuccess={() => setLoginModalShown(false)}
         />
       )}
     </>

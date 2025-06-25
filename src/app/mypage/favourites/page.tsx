@@ -7,6 +7,7 @@ import FavoriteCard from '@/components/FavoriteCard';
 import Pagination from '@/components/common/Pagination';
 import Spinner from '@/components/common/Spinner';
 import Input from '@/components/common/Input';
+import CButton from '@/components/common/Button';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { BookmarkJob } from '@/utils/types';
 
@@ -14,9 +15,10 @@ export default function FavouritesPage() {
   const [limit] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState('');
+  const [tempSearch, setTempSearch] = useState('');
   const [totalJobCount, setTotalJobCount] = useState(0);
   const [totalPageCount, setTotalPageCount] = useState(0);
-  const [favoriteJobs, setFavoriteJobs] = useState<BookmarkJob[]>([]);
+  const [favoriteJobs, setFavoriteJobs] = useState<any>(null);
 
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -25,15 +27,12 @@ export default function FavouritesPage() {
   const { data, isLoading, isError, refetch } = useGetBookmarkedJobs({
     page: currentPage,
     limit,
-    searchTerm,
-    role: profile?.role || ''
+    searchTerm
   });
 
   useEffect(() => {
     if (isLoading) return;
-    console.log('Bookmarked jobs API response:', data);
     if (data?.success && data.data) {
-      // const { jobs, pagination } = data.data;
       setFavoriteJobs(data.data);
       setTotalJobCount(data.data.pagination?.total || 0);
       setTotalPageCount(data.data.pagination?.totalPages || 0);
@@ -46,6 +45,7 @@ export default function FavouritesPage() {
     const searchText = params.get('searchTerm');
     const page = params.get('page');
     setSearchTerm(searchText || '');
+    setTempSearch(searchText || '');
     setCurrentPage(Number(page) || 1);
   }, [searchParams]);
 
@@ -62,20 +62,34 @@ export default function FavouritesPage() {
     setCurrentPage(page);
   };
 
-  const handleSearchChange = (value: string) => {
-    setSearchTerm(value);
+  const onChangeSearchTerm = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setTempSearch(e.target.value);
+  };
+
+  const onConfirmSearchTerm = () => {
+    setSearchTerm(tempSearch);
     setCurrentPage(1); // Reset to first page when searching
   };
 
   const handleBookmarkToggle = (jobId: number) => {
-    // Remove the job from the list when unbookmarked
-    setFavoriteJobs(prev => prev.filter(job => job.job_info_id !== jobId));
+    setFavoriteJobs((prev: any) => {
+      if (prev && typeof prev === 'object' && 'favouritejobs' in prev && Array.isArray(prev.favouritejobs)) {
+        return {
+          ...prev,
+          favouritejobs: prev.favouritejobs.filter((job: any) => job.job_info_id !== jobId)
+        };
+      } else if (prev && typeof prev === 'object' && 'jobs' in prev && Array.isArray(prev.jobs)) {
+        return {
+          ...prev,
+          jobs: prev.jobs.filter((job: any) => job.job_info_id !== jobId)
+        };
+      } else if (Array.isArray(prev)) {
+        return prev.filter((job: any) => job.job_info_id !== jobId);
+      }
+      return prev;
+    });
     refetch();
   };
-
-  useEffect(() => {
-    console.log('favoriteJobs', favoriteJobs.favouritejobs);
-  }, [favoriteJobs]);
 
   const handleDetailsClick = (job: any) => {
     window.open(`/jobs/recruit/${job.jobId}`, '_blank');
@@ -108,23 +122,35 @@ export default function FavouritesPage() {
     );
   }
 
+  // Determine the correct array to use for favorite jobs
+  let bookmarks: any[] = [];
+  if (favoriteJobs?.favouritejobs) {
+    bookmarks = favoriteJobs.favouritejobs;
+  } else if (favoriteJobs?.jobs) {
+    bookmarks = favoriteJobs.jobs;
+  } else if (Array.isArray(favoriteJobs)) {
+    bookmarks = favoriteJobs;
+  }
+
   return (
     <div className="flex flex-col p-5">
       <h1 className="text-2xl font-bold mb-6">お気に入り</h1>
 
       {/* Search Section */}
-      <div className="mb-6">
+      <div className="mb-6 flex justify-start gap-2 items-center">
         <Input
           type="text"
           placeholder="求人を検索..."
-          value={searchTerm}
-          onChange={(e) => handleSearchChange(e.target.value)}
+          value={tempSearch}
+          onChange={onChangeSearchTerm}
           className="max-w-md"
         />
-      </div>
-
-      {/* Results Count */}
-      <div className="mb-4">
+        <CButton
+          text="検索"
+          className='bg-blue text-white h-10'
+          size="small"
+          onClick={onConfirmSearchTerm}
+        />
         <p className="text-gray-600">
           {totalJobCount}件のお気に入り求人が見つかりました
         </p>
@@ -132,12 +158,12 @@ export default function FavouritesPage() {
 
       {/* Favorite Jobs List */}
       <div className="space-y-4">
-        {favoriteJobs.length === 0 ? (
+        {bookmarks.length === 0 ? (
           <div className="text-center py-8">
             <p className="text-gray-500">お気に入りの求人がありません。</p>
           </div>
-        ) : (favoriteJobs.length &&
-          favoriteJobs.favouritejobs.map((bookmark) => {
+        ) : (
+          bookmarks.map((bookmark: any) => {
             const job = bookmark.jobInfo;
             return (
               <FavoriteCard
@@ -148,7 +174,7 @@ export default function FavouritesPage() {
                 applicationDate={bookmark.created}
                 salary={job.pay}
                 zip=""
-                prefecture={job.employer.prefectures.toString()}
+                prefecture={job.employer.prefectures?.toString?.() ?? ""}
                 city={job.employer.city}
                 tel=""
                 templateId={job.job_detail_page_template_id}
