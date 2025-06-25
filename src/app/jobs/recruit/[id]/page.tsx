@@ -39,7 +39,7 @@ export default function JobPreviewDetails() {
     const [jobseekerApplications, setJobseekerApplications] = useState<number[]>([]);
 
     // Get bookmarked jobs to check if current job is bookmarked
-    const { data: bookmarkedList, refetch } = useGetBookmarkedJobs(profile?.role || '');
+    const { data: bookmarkedList, refetch } = useGetBookmarkedJobs({ role: profile?.role || '' });
     const bookmark = useMutation({
         mutationFn: bookmarkJob,
         onSuccess: (data) => {
@@ -75,8 +75,15 @@ export default function JobPreviewDetails() {
 
     // Check if current job is bookmarked
     const isBookmarked = useMemo(() => {
-        if (!bookmarkedList?.data || !id) return false;
-        return bookmarkedList.data.some((bookmark: any) => bookmark.job_info_id === Number(id));
+        let bookmarks: any[] = [];
+        if (bookmarkedList?.data?.jobs) {
+            bookmarks = bookmarkedList.data.jobs;
+        } else if (bookmarkedList?.data?.favouritejobs) {
+            bookmarks = bookmarkedList.data.favouritejobs;
+        } else if (Array.isArray(bookmarkedList?.data)) {
+            bookmarks = bookmarkedList.data;
+        }
+        return bookmarks.some((bookmark: any) => bookmark.job_info_id === Number(id));
     }, [bookmarkedList, id]);
 
     const [mounted, setMounted] = useState(false);
@@ -122,7 +129,7 @@ export default function JobPreviewDetails() {
                         <p className="font-bold text-gray-300">{key}</p>
                     </div>
                     <div className="flex-3 p-3">
-                        <p className="font-light">{data}</p>
+                        <p className="font-normal">{data}</p>
                     </div>
                 </div>
             )
@@ -150,8 +157,8 @@ export default function JobPreviewDetails() {
                         <p className="font-bold text-gray-300">勤務地</p>
                     </div>
                     <div className="flex-3 p-3">
-                        {zipData && <p className="font-light">〒{zipData.JobInfosRecruitingCriteria.body}</p>}<br />
-                        {cityData && <p className="font-light">{cityData.JobInfosRecruitingCriteria.body}</p>}
+                        {zipData && <p className="font-normal">〒{zipData.JobInfosRecruitingCriteria.body}</p>}<br />
+                        {cityData && <p className="font-normal">{cityData.JobInfosRecruitingCriteria.body}</p>}
                     </div>
                 </div>
                 {cloned.map((criteria: RecruitingCriteria) => {
@@ -161,7 +168,7 @@ export default function JobPreviewDetails() {
                                 <p className="font-bold text-gray-300">{criteria.name}</p>
                             </div>
                             <div className="flex-3 p-3">
-                                <p className="font-light" dangerouslySetInnerHTML={{ __html: criteria.JobInfosRecruitingCriteria.body.replace(/\r?\n/g, '<br />') }} />
+                                <p className="font-normal" dangerouslySetInnerHTML={{ __html: criteria.JobInfosRecruitingCriteria.body.replace(/\r?\n/g, '<br />') }} />
                             </div>
                         </div>
                     )
@@ -256,16 +263,16 @@ export default function JobPreviewDetails() {
                 <div className="flex flex-row justify-center gap-4">
                     <CButton
                         text={isBookmarked ? "お気に入り解除" : "お気に入り登録"}
-                        className={`bg-white text-${themeColor} rounded-lg ${!isLoggedIn ? 'cursor-pointer' : bookmarkShouldBeDisabled ? '!cursor-not-allowed' : 'cursor-pointer'}`}
+                        className={`bg-white text-${themeColor} rounded-lg ${!isLoggedIn ? 'cursor-pointer' : bookmarkShouldBeDisabled ? '!cursor-not-allowed opacity-60' : 'cursor-pointer'}`}
                         onClick={() => {
                             if (!isLoggedIn) setLoginModalShown(true);
-                            else onToggleBookmark(job.id);
+                            else if (profile?.role === 'JobSeeker') onToggleBookmark(job.id);
                         }}
-                        // Only disable if logged in as JobSeeker and mutation is pending
-                        disabled={isLoggedIn && bookmarkShouldBeDisabled}
+                        disabled={bookmarkShouldBeDisabled}
+                        aria-label={bookmarkShouldBeDisabled ? '求職者のみお気に入り登録できます' : undefined}
                         rightIcon={
                             <Image
-                                src={`/images/icons/${isBookmarked ? '' : 'off_'}favorite.png`}
+                                src={`/images/icons/${isBookmarked ? 'favorite' : 'off_favorite'}.png`}
                                 alt="favorite-icon"
                                 width={18}
                                 height={18}
@@ -313,7 +320,7 @@ export default function JobPreviewDetails() {
                                                 {(staff.first_name || staff.last_name) && <p>{staff.first_name} {staff.last_name}</p>}
                                                 {staff.post && <p>{staff.post}</p>}
                                                 {staff.career && <p>{staff.career}</p>}
-                                                {staff.introduction_text && <p className="font-light">{staff.introduction_text}</p>}
+                                                {staff.introduction_text && <p className="font-normal">{staff.introduction_text}</p>}
                                             </div>
                                         </div>
                                     </div>
@@ -344,7 +351,7 @@ export default function JobPreviewDetails() {
                                             <div className="w-full aspect-5/4 relative">
                                                 <ImageWithLoader className="object-cover" src={getFirstFullImage(place.images) || '/images/default-company.png'} alt={place.description} fill />
                                             </div>
-                                            <p className="bg-white p-4 sm:p-6 shadow-lg font-light">
+                                            <p className="bg-white p-4 sm:p-6 shadow-lg font-normal">
                                                 {place.description}
                                             </p>
                                         </div>
@@ -376,7 +383,7 @@ export default function JobPreviewDetails() {
                                 <p className="font-bold text-gray-300">{row.label}</p>
                             </div>
                             <div className="sm:flex-3 p-3">
-                                <p className="font-light break-words">{row.value}</p>
+                                <p className="font-normal break-words">{row.value}</p>
                             </div>
                         </div>
                     ))}
