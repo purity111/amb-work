@@ -190,3 +190,23 @@ export const createApplication = async (param: { job_info_id: number, job_seeker
     const response = await api.post('/applications', param);
     return response.data;
 };
+
+// Update JobSeeker Profile
+export const updateJobSeekerProfile = async (param: FormData) => {
+    const response = await api.post('/auth/job-seeker/update', param, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+    });
+    return response.data;
+};
+
+// Update Employer Profile
+export const updateEmployerProfile = async (param: Omit<RegisterEmployerParam, 'email' | 'password'> & { id: number }) => {
+    const response = await api.post('/auth/employer/update', param);
+    return response.data;
+};
+
+// Get current user info
+export const getCurrentUser = async () => {
+    const response = await api.get('/auth/me');
+    return response.data;
+};
