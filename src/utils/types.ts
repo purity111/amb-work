@@ -465,3 +465,25 @@ export interface ApplicationItem {
         }>;
     };
 }
+
+export interface SikakuItemProps {
+    id?: string
+    number?: string;
+    title?: string;
+    subtitle?: string;
+    image?: string;
+    description?: string;
+    order_title?: string;
+    order_content?: string;
+    order_desc?: string;
+    table?: { label: string; value: React.ReactNode }[];
+    recommend?: string[];
+    notes?: React.ReactNode;
+}
+
+export interface SikakuOrderItemProps {
+    id?: string;
+    number?: string;
+    title?: string;
+    link?: string;
+}

@@ -1,13 +1,13 @@
 'use client'
 
-import { Noto_Sans_JP } from 'next/font/google'
+// import { Noto_Sans_JP } from 'next/font/google'
 import "./globals.css";
 
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 
-const ZKGN = Noto_Sans_JP({ subsets: ['latin'] })
+// const ZKGN = Noto_Sans_JP({ subsets: ['latin'] })
 
 export default function LayoutWrapper({
   children,
@@ -15,7 +15,7 @@ export default function LayoutWrapper({
   children: React.ReactNode;
 }>) {
   return (
-    <div className={ZKGN.className}>
+    <div>
       {children}
     </div>
   );
