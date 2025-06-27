@@ -21,17 +21,17 @@ export default function SikakuItem({
             <div className="px-[15px] sm:px-[40px] md:px-[90px] py-10 md:py-15">
                 <div className="text-center mb-6">
                     <div className="text-[#65B729] font-bold text-[30px] mb-1">― {number} ―</div>
-                    <h2 className="text-[28px] font-bold mb-1">{title}</h2>
+                    <h2 className="text-[28px] font-bold mb-1">{title || "資格タイトル"}</h2>
                     <div className="text-[14px]">{subtitle}</div>
                 </div>
                 <div className="w-full flex-shrink-0">
                     <div className="relative w-full lg:w-[85%] mx-auto my-10 aspect-[5/3] rounded-lg overflow-hidden">
                         <Image
-                            src={image}
-                            alt={title}
+                            src={image || "/images/default-image.png"}
+                            alt={title || "資格画像"}
                             fill
                             className="object-contain"
-                            size s="(max-width: 768px) 100vw, 50vw"
+                            sizes="(max-width: 768px) 100vw, 50vw"
                             priority
                         />
                     </div>
@@ -45,8 +45,8 @@ export default function SikakuItem({
                 <div className="overflow-x-auto mb-6">
                     <table className="min-w-[300px] w-full text-left border border-[#e5e5e5] text-sm md:text-base">
                         <tbody>
-                            {table.map((row, idx) => (
-                                <tr key={idx} className={idx !== table.length - 1 ? "border-b border-[#e5e5e5]" : ''}>
+                            {(table || []).map((row, idx) => (
+                                <tr key={idx} className={idx !== (table?.length || 0) - 1 ? "border-b border-[#e5e5e5]" : ''}>
                                     <th className="bg-gray-50 !p-2 !md:px-4 !md:py-6 font-medium w-32 md:w-40">{row.label}</th>
                                     <td className="!p-2 !md:px-4 !md:py-6">{row.value}</td>
                                 </tr>
@@ -57,7 +57,7 @@ export default function SikakuItem({
                 <div className="bg-[#f6fff2] border-l-4 border-[#65B729] p-4 mb-6 rounded">
                     <div className="font-bold text-[#65B729] mb-10 text-[17px]">このような方にオススメ</div>
                     <ul className="list-disc list-inside text-sm md:text-base">
-                        {recommend.map((item, idx) => (
+                        {(recommend || []).map((item, idx) => (
                             <li key={idx} className="text-sm md:text-base leading-[2] whitespace-pre-line">{item}</li>
                         ))}
                     </ul>

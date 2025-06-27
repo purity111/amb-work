@@ -4,7 +4,7 @@ import { SikakuOrderItemProps } from "@/utils/types";
 export default function SikakuOrderItem({ number, title, link }: SikakuOrderItemProps) {
     return (
         <div className="">
-            <Link href={link} className="items-center flex justify-between border-[#dfdfdf] border-b-1 mt-5 gap-2">
+            <Link href={link || "#"} className="items-center flex justify-between border-[#dfdfdf] border-b-1 mt-5 gap-2">
                 <div className="flex items-center justify-center gap-3">
                     <div className="text-[#65B729] text-[26px] md:text-[30px] font-bold">{number}</div>
                     <h5 className="text-base md:text-[18px] font-semibold">{title}</h5>
