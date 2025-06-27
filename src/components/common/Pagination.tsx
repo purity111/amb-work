@@ -18,8 +18,8 @@ export default function Pagination({ page, totalPages, onPageChange }: Paginatio
             forcePage={page - 1}
             previousLabel="< Prev"
             containerClassName="flex items-center space-x-2"
-            pageClassName="border px-3 py-1 rounded border-gray-700 cursor-pointer hover:bg-gray-700"
-            activeClassName="bg-blue text-white"
+            pageLinkClassName="border border-[#dfdfdf] px-3 py-1 cursor-pointer hover:bg-gray-700"
+            activeLinkClassName="bg-blue text-white"
             previousClassName="px-3 py-1 rounded bg-gray-700 cursor-pointer hover:bg-gray-300 hover:text-white"
             nextClassName="px-3 py-1 rounded bg-gray-700 cursor-pointer hover:bg-gray-300 hover:text-white"
             breakClassName="px-3 py-1"

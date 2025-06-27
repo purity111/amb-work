@@ -1,4 +1,4 @@
-import { RegisterEmployerParam, RegisterJobSeekerParam, LoginParam, JobParam, RecruitingCriteria, AdminCriteriaFetchParam, BookmarkJobParam, CreateUpdateCriteriaFetchParam, ApplicationFetchParam } from "@/utils/types";
+import { RegisterEmployerParam, RegisterJobSeekerParam, LoginParam, JobParam, RecruitingCriteria, AdminCriteriaFetchParam, BookmarkJobParam, CreateUpdateCriteriaFetchParam, ApplicationFetchParam, BookmarkedJobsFetchParams } from "@/utils/types";
 import api from './axios';
 import { toQueryString } from "@/utils/helper";
 
@@ -83,9 +83,7 @@ export const deleteRecruitingCriteria = async (id: number) => {
     return response.data;
 };
 
-//Favourite related
-export const getBookmarkedJobs = async (page: number, limit: number, searchTerm: string) => {
-    const param: Record<string, any> = { page, limit, searchTerm };
+export const getBookmarkedJobs = async (param: BookmarkedJobsFetchParams) => {
     const queryString = toQueryString(param);
     const response = await api.get(`/jobs/favourites?${queryString}`);
     return response.data;
@@ -189,5 +187,27 @@ export const getApplicationsByRole = async (param: ApplicationFetchParam) => {
 
 export const createApplication = async (param: { job_info_id: number, job_seeker_id: number }) => {
     const response = await api.post('/applications', param);
+    return response.data;
+};
+
+// Update JobSeeker Profile
+export const updateJobSeekerProfile = async (param: FormData) => {
+    const response = await api.post('/auth/job-seeker/update', param, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+    });
+    return response.data;
+};
+
+// Update Employer Profile
+export const updateEmployerProfile = async (param: FormData) => {
+    const response = await api.post('/auth/employer/update', param, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+    });
+    return response.data;
+};
+
+// Get current user info
+export const getCurrentUser = async () => {
+    const response = await api.get('/auth/me');
     return response.data;
 };

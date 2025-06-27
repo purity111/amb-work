@@ -20,7 +20,7 @@ export default function Header() {
     const [isMounted, setIsMounted] = useState(false);
 
     const { profile, isAuthenticated, token, logout } = useAuthContext();
-
+    
     const router = useRouter();
     useEffect(() => {
         setIsMounted(true);
@@ -43,7 +43,7 @@ export default function Header() {
             }
             return config;
         });
-    }, [router])
+    }, [token, router])
 
     const onLoginSuccess = () => {
         setLoginModalShown(false);

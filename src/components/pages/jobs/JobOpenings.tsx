@@ -37,6 +37,7 @@ export default function JobList() {
     const [applyModalShown, setApplyModalShown] = useState(false);
     const [selectedJobId, setSelectedJobId] = useState<number | null>(null);
     const [jobseekerApplications, setJobseekerApplications] = useState<number[]>([]);
+    const [optimisticBookmarkedSet, setOptimisticBookmarkedSet] = useState<Set<number>>(new Set());
 
     const router = useRouter()
 
@@ -51,7 +52,7 @@ export default function JobList() {
     })
 
     const { profile } = useAuthContext();
-    const { data: bookmarkedList, refetch } = useGetBookmarkedJobs(profile?.role || '');
+    const { data: bookmarkedList, refetch } = useGetBookmarkedJobs({ page: 1, limit: 10, searchTerm: '' });
     const bookmark = useMutation({
         mutationFn: bookmarkJob,
         onSuccess: (data) => {
@@ -108,8 +109,16 @@ export default function JobList() {
         router.push(`?${params.toString()}`);
     }, [currentPage, limit, searchTerm, prefectures, features])
 
-    const bookmarkedSet = useMemo(() => {
-        return new Set(bookmarkedList?.data?.map((i: BookmarkJob) => i.job_info_id));
+    useEffect(() => {
+        let bookmarks: BookmarkJob[] = [];
+        if (bookmarkedList?.data?.jobs) {
+            bookmarks = bookmarkedList.data.jobs;
+        } else if (bookmarkedList?.data?.favouritejobs) {
+            bookmarks = bookmarkedList.data.favouritejobs;
+        } else if (Array.isArray(bookmarkedList?.data)) {
+            bookmarks = bookmarkedList.data;
+        }
+        setOptimisticBookmarkedSet(new Set(bookmarks.map((i: BookmarkJob) => i.job_info_id)));
     }, [bookmarkedList]);
 
     const bookmarkShouldBeDisabled = useMemo(() => {
@@ -241,10 +250,16 @@ export default function JobList() {
     }
 
     const onToggleBookmark = (id: number) => {
-        bookmark.mutate({ job_info_id: id })
+        setOptimisticBookmarkedSet(prev => {
+            const newSet = new Set(prev);
+            if (newSet.has(id)) newSet.delete(id);
+            else newSet.add(id);
+            return newSet;
+        });
+        bookmark.mutate({ job_info_id: id });
     }
 
-    const isBookmarked = (id: number) => bookmarkedSet.has(id);
+    const isBookmarked = (id: number) => optimisticBookmarkedSet.has(id);
 
     const isLoggedIn = !!profile?.role;
 
@@ -397,16 +412,17 @@ export default function JobList() {
                             <div className="flex-1 md:flex-4 flex flex-row space-x-4 md:space-x-8">
                                 <CButton
                                     text={isBookmarked(job.id) ? "お気に入り解除" : "お気に入り登録"}
-                                    className={`flex-1 border-2 border-yellow text-yellow rounded-sm ${!isLoggedIn ? 'cursor-pointer' : bookmarkShouldBeDisabled ? '!cursor-not-allowed' : 'cursor-pointer'}`}
+                                    className={`flex-1 border-2 border-yellow text-yellow rounded-sm ${!isLoggedIn ? 'cursor-pointer' : bookmarkShouldBeDisabled ? '!cursor-not-allowed opacity-60' : 'cursor-pointer'}`}
                                     onClick={() => {
                                         if (!isLoggedIn) setLoginModalShown(true);
-                                        else onToggleBookmark(job.id);
+                                        else if (profile?.role === 'JobSeeker') onToggleBookmark(job.id);
                                     }}
-                                    disabled={bookmark.isPending}
+                                    disabled={bookmarkShouldBeDisabled}
+                                    aria-label={bookmarkShouldBeDisabled ? '求職者のみお気に入り登録できます' : undefined}
                                     rightIcon={
                                         bookmark.isPending ?
                                             <Spinner size={4} color="orange" />
-                                            : <Image src={`/images/icons/${isBookmarked(job.id) ? '' : 'off_'}favorite.png`} alt="favorite-icon" width={20} height={20} />
+                                            : <Image src={`/images/icons/${isBookmarked(job.id) ? 'favorite' : 'off_favorite'}.png`} alt="favorite-icon" width={20} height={20} />
                                     }
                                 />
                                 <a href={`/jobs/recruit/${job.id}`} className="flex-1" target="_blank">
@@ -424,9 +440,10 @@ export default function JobList() {
                                     onClick={() => {
                                         if (!isLoggedIn) setLoginModalShown(true);
                                         else if (profile?.role === 'JobSeeker' && !alreadyApplied) handleApply(job.id);
+                                        else if (alreadyApplied) router.push('/mypage/application_mng');
                                     }}
                                     className={applyButtonClass}
-                                    disabled={bookmark.isPending || alreadyApplied}
+                                    disabled={bookmark.isPending}
                                 />
                             </div>
                         </div>
