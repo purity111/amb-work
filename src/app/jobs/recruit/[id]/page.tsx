@@ -283,7 +283,7 @@ export default function JobPreviewDetails() {
                         text={alreadyApplied
                             ? "応募済み"
                             : job.job_detail_page_template_id === 1
-                                ? "直接応募する"
+                                ? "企業に直接応募する"
                                 : "転職支援サービスに応募する"
                         }
                         className={
