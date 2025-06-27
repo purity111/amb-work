@@ -163,8 +163,6 @@ const PublicDateFormat = 'MM/dd/yyyy'
 export default function CreateNewJobComponent({ preLoad }: CreateNewJobProps) {
     const [companyOptions, setCompanyOptions] = useState<PickOption[]>([]);
     const [imagePreview, setImagePreview] = useState<string | null>(null);
-    const [avatarFile, setAvatarFile] = useState<File | null>(null);
-    const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
 
     const { profile, isAdmin } = useAuthContext();
     const router = useRouter();

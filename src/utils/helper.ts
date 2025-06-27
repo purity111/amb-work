@@ -84,11 +84,3 @@ export const parsePublicDate = (date: string, mask = 'yyyy/mm/dd') => {
         return '無期限'
     }
 }
-
-const getAvatarUrl = (url) => {
-    if (!url) return '/images/default-avatar.jpg';
-    if (url.startsWith('/uploads')) {
-        return `${UPLOADS_BASE_URL}/${url}`; // or whatever your public base is
-    }
-    return url;
-};

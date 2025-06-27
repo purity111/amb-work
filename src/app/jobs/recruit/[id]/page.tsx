@@ -13,7 +13,7 @@ import { useMemo, useRef, useState, useEffect } from "react";
 import { Navigation, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import CButton from '@/components/common/Button';
-import { useAuth } from '@/hooks/useAuth';
+import { useAuthContext } from "@/app/layout";
 import { useMutation } from '@tanstack/react-query';
 import { bookmarkJob, createApplication, getApplicationsByRole } from '@/lib/api';
 import { toast } from 'react-toastify';
@@ -33,7 +33,7 @@ export default function JobPreviewDetails() {
     const [loginModalShown, setLoginModalShown] = useState(false);
     const { data, isLoading } = useGetJobById(Number(id));
     const [width] = useWindowSize();
-    const { profile } = useAuth();
+    const { profile } = useAuthContext();
     const isLoggedIn = !!profile?.role;
     const [applyModalShown, setApplyModalShown] = useState(false);
     const [selectedJobId, setSelectedJobId] = useState<number | null>(null);

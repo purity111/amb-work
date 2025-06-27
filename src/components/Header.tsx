@@ -43,7 +43,7 @@ export default function Header() {
             }
             return config;
         });
-    }, [router])
+    }, [token, router])
 
     const onLoginSuccess = () => {
         setLoginModalShown(false);

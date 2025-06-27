@@ -73,8 +73,6 @@ export default function ProfilePage() {
     });
 
     const watchedRole = watch('role');
-    const watchedAvatarUrl = watch('avatarUrl');
-    const watchedCapital = watch('capital_stock');
     const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
     const [avatarFile, setAvatarFile] = useState<File | null>(null);
 
@@ -148,7 +146,6 @@ export default function ProfilePage() {
 
             const userId = currentUserData.data.id;
             const userRole = currentUserData.data.role; // Use actual user role from API
-            const prefecturesNumber = parseInt(data.prefectures);
 
             console.log('Form data:', data);
 

@@ -52,7 +52,7 @@ export default function JobList() {
     })
 
     const { profile } = useAuthContext();
-    const { data: bookmarkedList, refetch } = useGetBookmarkedJobs({ role: profile?.role || '' });
+    const { data: bookmarkedList, refetch } = useGetBookmarkedJobs({ page: 1, limit: 10, searchTerm: '' });
     const bookmark = useMutation({
         mutationFn: bookmarkJob,
         onSuccess: (data) => {

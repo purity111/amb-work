@@ -9,7 +9,6 @@ import Spinner from '@/components/common/Spinner';
 import Input from '@/components/common/Input';
 import CButton from '@/components/common/Button';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { BookmarkJob } from '@/utils/types';
 
 export default function FavouritesPage() {
   const [limit] = useState(10);
