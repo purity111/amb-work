@@ -103,12 +103,14 @@ export function useAuth() {
 
     // Logout function
     const logout = () => {
-        localStorage.removeItem('token');
-        localStorage.removeItem('profile');
-        delete api.defaults.headers.common['Authorization'];
-        setToken(null);
-        setProfile(null);
-        router.push('/')
+        if (confirm("本当にログアウトしますか？")) {
+            localStorage.removeItem('token');
+            localStorage.removeItem('profile');
+            delete api.defaults.headers.common['Authorization'];
+            setToken(null);
+            setProfile(null);
+            router.push('/')
+        }
     }
 
     return {
