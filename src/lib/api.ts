@@ -83,7 +83,6 @@ export const deleteRecruitingCriteria = async (id: number) => {
     return response.data;
 };
 
-//Favourite related
 export const getBookmarkedJobs = async (param: BookmarkedJobsFetchParams) => {
     const queryString = toQueryString(param);
     const response = await api.get(`/jobs/favourites?${queryString}`);
