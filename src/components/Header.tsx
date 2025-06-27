@@ -20,7 +20,6 @@ export default function Header() {
     const [isMounted, setIsMounted] = useState(false);
 
     const { profile, isAuthenticated, token, logout } = useAuthContext();
-    console.log('profile', profile);
     
     const router = useRouter();
     useEffect(() => {

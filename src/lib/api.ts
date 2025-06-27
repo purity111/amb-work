@@ -200,8 +200,10 @@ export const updateJobSeekerProfile = async (param: FormData) => {
 };
 
 // Update Employer Profile
-export const updateEmployerProfile = async (param: Omit<RegisterEmployerParam, 'email' | 'password'> & { id: number }) => {
-    const response = await api.post('/auth/employer/update', param);
+export const updateEmployerProfile = async (param: FormData) => {
+    const response = await api.post('/auth/employer/update', param, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+    });
     return response.data;
 };
 
