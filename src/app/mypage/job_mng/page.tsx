@@ -49,6 +49,13 @@ export default function JobMngPage() {
 
   const searchParams = useSearchParams();
 
+  // Employer/Admin access control
+  useEffect(() => {
+    if (profile && !(profile.role === 'Employer' || profile.role === 'admin')) {
+      router.replace("/mypage");
+    }
+  }, [profile, router]);
+
   useEffect(() => {
     refetch();
   }, [])

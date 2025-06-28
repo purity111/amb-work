@@ -45,7 +45,7 @@ export default function Dialog({
                             >
                                 {okButtonTitle}
                             </button>
-                            <button type="button" onClick={onPressCancel} className="cursor-pointer mt-3 inline-flex w-full justify-center rounded-md bg-gray-700 px-3 py-2 text-sm font-semibold text-gray-400 shadow-xs ring-1 ring-gray-300 ring-inset hover:bg-gray-100 sm:mt-0 sm:w-auto">Cancel</button>
+                            <button type="button" onClick={onPressCancel} className="cursor-pointer mt-3 inline-flex w-full justify-center rounded-md bg-gray-700 px-3 py-2 text-sm font-semibold text-gray-400 shadow-xs ring-1 ring-gray-300 ring-inset hover:bg-gray-100 sm:mt-0 sm:w-auto">キャンセル</button>
                         </div>
                     </div>
                 </div>

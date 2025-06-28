@@ -357,7 +357,7 @@ export default function JobList() {
                     ? "応募済み"
                     : isTemplate2
                         ? "転職支援サービスに応募する"
-                        : "直接応募する";
+                        : "企業に直接応募する";
                 const applyButtonClass = alreadyApplied
                     ? 'w-full text-white rounded-sm bg-gray-400 cursor-not-allowed'
                     : `w-full text-white rounded-sm ${isTemplate2 ? 'bg-orange' : 'bg-blue'}`;

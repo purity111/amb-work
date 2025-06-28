@@ -51,10 +51,8 @@ export default function HeaderAvatar({ data }: Props) {
             >
                 <p className="p-2 text-gray-600 text-sm border-b-1 border-gray-800">
                     {(userData?.role === 'admin' || userData?.role === 'subadmin') && 'Admin'}
-                    {userData?.role === 'Employer' && userData?.clinic_name}
-                    {userData?.role === 'JobSeeker' && userData?.name}
-                    {userData?.role === 'Employer' && `(${userData?.clinic_name_kana})`}
-                    {userData?.role === 'Employer' && `(${userData?.name_kana})`}
+                    {userData?.role === 'employer' && userData?.clinic_name}
+                    {userData?.role === 'jobseeker' && userData?.name}
                 </p>
                 <a href="/mypage" className="text-base w-1/1">
                     <p className="p-2 hover:bg-gray-800">My Page</p>

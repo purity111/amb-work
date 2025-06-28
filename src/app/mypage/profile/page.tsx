@@ -10,7 +10,7 @@ import CSelect from "@/components/common/Select";
 import CButton from "@/components/common/Button";
 import RequiredLabel from "@/components/common/RequiredLabel";
 import Image from "next/image";
-import { updateJobSeekerProfile, updateEmployerProfile } from "@/lib/api";
+import { updateJobSeekerProfile, updateEmployerProfile, requestChangeEmail } from "@/lib/api";
 
 type FormValues = {
     name: string;
@@ -75,7 +75,12 @@ export default function ProfilePage() {
     const watchedRole = watch('role');
     const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
     const [avatarFile, setAvatarFile] = useState<File | null>(null);
-
+    const [emailChangeLoading, setEmailChangeLoading] = useState(false);
+    const [newEmail, setNewEmail] = useState("");
+    const [emailChangeSuccess, setEmailChangeSuccess] = useState(false);
+    const currentEmail = currentUserData?.data?.email || "";
+    const [emailError, setEmailError] = useState<string | undefined>(undefined);
+    
     useEffect(() => {
         if (!hasPreloaded.current && currentUserData?.success && currentUserData?.data) {
             const userData = currentUserData.data;
@@ -136,6 +141,22 @@ export default function ProfilePage() {
             });
         }
     }, [currentUserData, reset]);
+
+    useEffect(() => {
+        if (currentEmail && !newEmail) {
+            setNewEmail(currentEmail);
+        }
+    }, [currentEmail, newEmail]);
+
+    // Auto-hide email change success message after 5 seconds
+    useEffect(() => {
+        if (emailChangeSuccess) {
+            const timer = setTimeout(() => {
+                setEmailChangeSuccess(false);
+            }, 5000);
+            return () => clearTimeout(timer);
+        }
+    }, [emailChangeSuccess]);
 
     const onSubmit = async (data: FormValues) => {
         try {
@@ -230,6 +251,35 @@ export default function ProfilePage() {
         }
     };
 
+    // Email change handler
+    const handleEmailChangeRequest = async () => {
+        if (!newEmail || newEmail === currentEmail) {
+            toast.error("新しいメールアドレスを入力してください");
+            return;
+        }
+        setEmailChangeLoading(true);
+        setEmailChangeSuccess(false);
+        try {
+            const res = await requestChangeEmail(newEmail);
+            if (res.success) {
+                toast.success("確認メールを送信しました。メールをご確認ください。");
+                setEmailChangeSuccess(true);
+            } else {
+                toast.error(res.message || "メールアドレスの変更リクエストに失敗しました");
+            }
+        } catch (err) {
+            toast.error("メールアドレスの変更リクエストに失敗しました");
+            console.log(err);
+            
+        } finally {
+            setEmailChangeLoading(false);
+        }
+    };
+
+    function validateEmail(email: string) {
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    }
+
     if (isLoading) {
         return (
             <div className="flex justify-center items-center h-64">
@@ -256,7 +306,7 @@ export default function ProfilePage() {
                     {/* Empty page for admin users */}
                 </div>
             ) : (
-                <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col md:flex-row gap-8 gap-10 w-full justify-center items-center md:[align-items:unset]">
+                <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col md:flex-row gap-8 gap-10 w-full sm:w-[90%] m-auto justify-center items-center md:[align-items:unset]">
                     {/* Avatar section */}
                     <div className="flex flex-col items-center w-1/2 w-1/2 md:w-[25%]">
                         <Image
@@ -732,6 +782,45 @@ export default function ProfilePage() {
                     </div>
                 </form>
             )}
+
+            {/* Email Change Section */}
+            <div className="mb-8 p-4 border rounded mt-20 bg-gray-50">
+
+                <div className="flex flex-col md:flex-row items-center gap-4 mb-2">
+                    <div className="flex items-center gap-1 min-w-[130px]">
+                        <label className="block text-sm font-medium">メールアドレス</label>
+                    </div>
+                    <div className="flex-1 flex flex-col md:flex-row gap-2 justify-end">
+                        <CInput
+                            type="email"
+                            value={newEmail}
+                            onChange={e => {
+                                setNewEmail(e.target.value);
+                                if (!validateEmail(e.target.value)) {
+                                    setEmailError("有効なメールアドレスを入力してください");
+                                } else {
+                                    setEmailError(undefined);
+                                }
+                            }}
+                            placeholder="新しいメールアドレス"
+                            className="w-full lg:w-80"
+                            disabled={emailChangeLoading}
+                            isError={!!emailError}
+                            errorText={emailError}
+                        />
+                        <CButton
+                            type="button"
+                            text={emailChangeLoading ? "送信中..." : "メールアドレス変更"}
+                            className="bg-blue-500 text-white"
+                            onClick={handleEmailChangeRequest}
+                            disabled={emailChangeLoading || !newEmail || newEmail === currentEmail || !!emailError}
+                        />
+                    </div>
+                </div>
+                {emailChangeSuccess && (
+                    <div className="text-green-600 text-sm mt-2">確認メールを送信しました。メールをご確認ください。</div>
+                )}
+            </div>
         </div>
     );
 } 

@@ -9,6 +9,7 @@ import Spinner from '@/components/common/Spinner';
 import Input from '@/components/common/Input';
 import CButton from '@/components/common/Button';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { getApplicationsByRole } from '@/lib/api';
 
 export default function FavouritesPage() {
   const [limit] = useState(10);
@@ -18,6 +19,7 @@ export default function FavouritesPage() {
   const [totalJobCount, setTotalJobCount] = useState(0);
   const [totalPageCount, setTotalPageCount] = useState(0);
   const [favoriteJobs, setFavoriteJobs] = useState<any>(null);
+  const [jobseekerApplications, setJobseekerApplications] = useState<number[]>([]);
 
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -28,6 +30,23 @@ export default function FavouritesPage() {
     limit,
     searchTerm
   });
+
+  useEffect(() => {
+    if (profile && profile.role !== 'JobSeeker') {
+      router.replace("/mypage");
+    }
+  }, [profile, router]);
+
+  // Fetch applications for the current jobseeker
+  useEffect(() => {
+    if (profile?.role === 'JobSeeker' && profile?.id) {
+      getApplicationsByRole({ job_seeker_id: profile.id, page: 1, limit: 1000 }).then(res => {
+        if (res?.data?.applications) {
+          setJobseekerApplications(res.data.applications.map((a: any) => a.job_info_id));
+        }
+      });
+    }
+  }, [profile]);
 
   useEffect(() => {
     if (isLoading) return;
@@ -164,6 +183,7 @@ export default function FavouritesPage() {
         ) : (
           bookmarks.map((bookmark: any) => {
             const job = bookmark.jobInfo;
+            const isApplied = jobseekerApplications.includes(job.id);
             return (
               <FavoriteCard
                 key={bookmark.id}
@@ -179,6 +199,7 @@ export default function FavouritesPage() {
                 templateId={job.job_detail_page_template_id}
                 jobId={job.id}
                 isBookmarked={true}
+                isApplied={isApplied}
                 onBookmarkToggle={handleBookmarkToggle}
                 onDetailsClick={handleDetailsClick}
               />

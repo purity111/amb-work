@@ -211,3 +211,9 @@ export const getCurrentUser = async () => {
     const response = await api.get('/auth/me');
     return response.data;
 };
+
+export const requestChangeEmail = async (newEmail: string) => {
+    console.log('newEmail', newEmail);
+    const response = await api.post('/auth/change-email-request', { newEmail: newEmail });
+    return response.data;
+};

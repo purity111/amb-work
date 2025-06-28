@@ -15,6 +15,7 @@ import { toast } from 'react-toastify';
 import * as Yup from 'yup';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { useAuthContext } from "@/app/layout";
 
 const schema = Yup.object().shape({
   calling_name: Yup.string().required('呼出用名称は必須です'),
@@ -39,6 +40,7 @@ export default function CriteriaMngPage() {
   const [criterias, setCriterias] = useState<RecruitingCriteria[]>([]);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [editingCriteria, setEditingCriteria] = useState<RecruitingCriteria | null>(null);
+  const { profile, isAdmin } = useAuthContext();
 
   useForm<FormValues>({
     resolver: yupResolver(schema),
@@ -106,6 +108,12 @@ export default function CriteriaMngPage() {
     params.set('searchTerm', searchTerm);
     router.push(`?${params.toString()}`);
   }, [currentPage, limit, searchTerm, router]);
+
+  useEffect(() => {
+    if (profile && !isAdmin) {
+      router.replace("/mypage");
+    }
+  }, [profile, isAdmin, router]);
 
   const onPageChange = (page: number) => {
     setCurrentPage(page);

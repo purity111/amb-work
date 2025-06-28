@@ -5,6 +5,8 @@ import { format } from 'date-fns';
 import { SubmitHandler } from 'react-hook-form';
 import { useMutation } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
+import { useRouter } from 'next/navigation';
+import { useAuthContext } from "@/app/layout";
 
 import { FeatureItem, PickOption } from '@/utils/types';
 import { createFeatures, updateFeatures, deleteFeatures } from '@/lib/api';
@@ -29,6 +31,8 @@ type FormValues = {
 // }).required();
 
 export default function FeatureMngPage() {
+  const { profile, isAdmin } = useAuthContext();
+  const router = useRouter();
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPage, setTotalPage] = useState(1);
   const [limit] = useState(10);
@@ -111,6 +115,13 @@ export default function FeatureMngPage() {
       setParentFeatures([{ value: '', option: '選択してください' }, ...parents]);
     }
   }, [allFeaturesResponse]);
+
+  // Admin access control
+  useEffect(() => {
+    if (profile && !isAdmin) {
+      router.replace("/mypage");
+    }
+  }, [profile, isAdmin, router]);
 
   // Handlers
   const onPageChange = (page: number) => {

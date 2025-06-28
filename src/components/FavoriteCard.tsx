@@ -23,6 +23,7 @@ interface FavoriteCardProps {
   templateId: number;
   jobId: number;
   isBookmarked: boolean;
+  isApplied?: boolean;
   onBookmarkToggle: (jobId: number) => void;
   onDetailsClick: (job: any) => void;
 }
@@ -40,6 +41,7 @@ const FavoriteCard: React.FC<FavoriteCardProps> = ({
   templateId,
   jobId,
   isBookmarked,
+  isApplied = false,
   onBookmarkToggle,
   onDetailsClick,
 }) => {
@@ -90,9 +92,14 @@ const FavoriteCard: React.FC<FavoriteCardProps> = ({
   return (
     <>
       <div className="bg-white shadow rounded-lg mb-4">
-        <div className={`${headerBgClass} text-white p-3 rounded-t-lg gap-1`}>
-          <h2 className="text-sm md:text-base text-black font-semibold">{companyName}</h2>
-          <h3 className="text-base md:text-lg font-bold mt-1">{jobTitle} ({storeName})</h3>
+        <div className={`${headerBgClass} text-white p-3 flex justify-between items-center rounded-t-lg gap-1`}>
+          <div>
+            <h2 className="text-sm md:text-base text-black font-semibold">{companyName}</h2>
+            <h3 className="text-base md:text-lg font-bold mt-1">{jobTitle} ({storeName})</h3>
+          </div>
+          {isApplied && (
+            <span className="bg-gray-600 text-white min-w-[76px] md:min-w-[86px] text-xs md:text-sm px-2 py-1 rounded">応募済み</span>
+          )}
         </div>
 
         <div className="p-4 border border-[#d7d7d7]">

@@ -35,37 +35,35 @@ type FormValues = {
 const schema = Yup.object().shape({
     name: Yup.string()
         .matches(/^[\u4E00-\u9FAF\u30A0–\u30FF]+$/, '全角の日本語文字のみを入力してください') // Matches common Kanji + Katakana range
-        .required('必須項目です'),
+        .required('必須項目です。'),
     name_kana: Yup.string()
         .matches(/^[ァ-ヶー　]+$/, '漢字のみを入力してください') // Matches common Kanji range
-        .required('必須項目です'),
+        .required('必須項目です。'),
     dob_year: Yup.number().required(),
     dob_month: Yup.number().required(),
     dob_date: Yup.number().required(),
     sex: Yup.string().required(),
     postCode: Yup.string()
-        .required('PostCode is required')
-        .matches(/^\d{3}-\d{4}$/, 'PostCode is not valid'),
-    prefecture: Yup.string().required('Prefecture is required'),
+        .required('郵便番号を入力してください。')
+        .matches(/^\d{3}-\d{4}$/, '有効な郵便番号を入力してください。'),
+    prefecture: Yup.string().required('必須項目です。'),
     phonenumber: Yup.string()
-        .required('Phonenumber is required')
-        .matches(/^0\d{2}\d{3,4}\d{4}$/, 'Phonenumber is not valid'),
+        .required('必須項目です。')
+        .matches(/^0\d{2}\d{3,4}\d{4}$/, '電話番号は無効です。'),
     email: Yup.string()
-        .email('Invalid email address')
-        .required('Email is required'),
+        .email('無効なメールアドレスです。')
+        .required('必須項目です。'),
     confirmEmail: Yup.string()
-        .oneOf([Yup.ref('email')], 'Emails must match')
-        .required('Please confirm your email'),
+        .oneOf([Yup.ref('email')], 'メールアドレスは一致する必要があります。')
+        .required('必須項目です。'),
     password: Yup.string()
-        .required('Password is required')
-        .min(8, 'Must be at least 8 characters')
-        .matches(/[A-Z]/, 'Must contain an uppercase letter')
-        .matches(/[a-z]/, 'Must contain a lowercase letter')
-        .matches(/[0-9]/, 'Must contain a number')
-        .matches(/[@$!%*?&#]/, 'Must contain a special character'),
+        .required('必須項目です。')
+        .min(8, '8文字以上である必要があります')
+        .matches(/[0-9]/, '数字を含めてください。')
+        .matches(/[@$!%*?&#]/, '特殊記号を含めてください。'),
     confirmPassword: Yup.string()
-        .oneOf([Yup.ref('password')], 'Passwords must match')
-        .required('Please confirm your password'),
+        .oneOf([Yup.ref('password')], 'パスワードは一致する必要があります')
+        .required('必須項目です。'),
     others: Yup.string()
 });
 

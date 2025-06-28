@@ -37,12 +37,10 @@ export const menuItemsByRole: Record<string, MenuItem[]> = {
     { label: '応募者管理', path: '/mypage/applicant_mng', icon: 'applicants.png' },
     { label: '企業管理', path: '/mypage/company_mng', icon: 'company.png' },
     { label: 'チャット管理', path: '/mypage/chat_mng', icon: 'chat.png' },
-    { label: 'プロフィール', path: '/mypage/profile', icon: 'man1.png' },
     { label: 'ログアウト', path: '/logout', icon: 'logout.png' },
   ],
   subadmin: [
     { label: '企業管理', path: '/mypage/company_mng', icon: 'company.png' },
-    { label: 'プロフィール', path: '/mypage/profile', icon: 'man1.png' },
     { label: 'ログアウト', path: '/logout', icon: 'logout.png' },
   ],
 };

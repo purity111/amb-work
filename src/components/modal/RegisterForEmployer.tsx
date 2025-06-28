@@ -35,45 +35,43 @@ type FormValues = {
 
 const schema = Yup.object().shape({
     name: Yup.string()
-        .required('必須項目です'),
+        .required('必須項目です。'),
     company: Yup.string()
-        .required('必須項目です'),
+        .required('必須項目です。'),
     postCode: Yup.string()
-        .required('PostCode is required')
+        .required('必須項目です。')
         .matches(/^\d{3}-\d{4}$/, 'PostCode is not valid'),
-    prefecture: Yup.number().required('Prefecture is required'),
-    address: Yup.string().required('Address is required'),
+    prefecture: Yup.number().required('必須項目です。'),
+    address: Yup.string().required('必須項目です。'),
     phonenumber: Yup.string()
-        .required('Phonenumber is required')
-        .matches(/^0\d{2}\d{3,4}\d{4}$/, 'Phonenumber is not valid'),
+        .required('必須項目です。')
+        .matches(/^0\d{2}\d{3,4}\d{4}$/, '無効な電話番号です。'),
     numberOfEmployee: Yup.number()
         .transform((value, originalValue) => {
             return originalValue === '' ? undefined : value;
         })
-        .typeError("Number of employee must be a number type")
-        .moreThan(0, 'Number of employee must be greater than 0'),
+        .typeError("数値型である必要があります。")
+        .moreThan(0, '0より大きくなければなりません。'),
     establishment_date: Yup.number(),
     establishment_year: Yup.number(),
     establishment_month: Yup.number(),
     capital_stock: Yup.number()
-        .typeError('Must be a number')
-        .positive('Must be greater than 0'),
+        .typeError('数値型である必要があります。')
+        .positive('0より大きくなければなりません。'),
     business_content: Yup.string(),
     website: Yup.string()
-        .url('Invalid URL'),
+        .url('無効なURL'),
     email: Yup.string()
-        .email('Invalid email address')
-        .required('Email is required'),
+        .email('無効なメールアドレス')
+        .required('必須項目です。'),
     password: Yup.string()
-        .required('Password is required')
-        .min(8, 'Must be at least 8 characters')
-        .matches(/[A-Z]/, 'Must contain an uppercase letter')
-        .matches(/[a-z]/, 'Must contain a lowercase letter')
-        .matches(/[0-9]/, 'Must contain a number')
-        .matches(/[@$!%*?&#]/, 'Must contain a special character'),
+        .required('必須項目です。')
+        .min(8, '8文字以上である必要があります。')
+        .matches(/[0-9]/, '数字を含める必要があります。')
+        .matches(/[@$!%*?&#]/, '特殊文字を含める必要があります。'),
     confirm: Yup.string()
-        .oneOf([Yup.ref('password')], 'Passwords must match')
-        .required('Please confirm your password'),
+        .oneOf([Yup.ref('password')], 'パスワードは一致する必要があります。')
+        .required('必須項目です。'),
 });
 
 export default function RegisterForEmployer({ onSuccess }: FormProps) {
