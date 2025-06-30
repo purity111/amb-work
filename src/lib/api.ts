@@ -1,4 +1,4 @@
-import { RegisterEmployerParam, RegisterJobSeekerParam, LoginParam, JobParam, RecruitingCriteria, AdminCriteriaFetchParam, BookmarkJobParam, CreateUpdateCriteriaFetchParam, ApplicationFetchParam, BookmarkedJobsFetchParams } from "@/utils/types";
+import { RegisterEmployerParam, RegisterJobSeekerParam, LoginParam, JobParam, RecruitingCriteria, AdminCriteriaFetchParam, BookmarkJobParam, CreateUpdateCriteriaFetchParam, ApplicationFetchParam, BookmarkedJobsFetchParams, ColumnFetchParam, Column, ColumnResponse } from "@/utils/types";
 import api from './axios';
 import { toQueryString } from "@/utils/helper";
 
@@ -213,7 +213,30 @@ export const getCurrentUser = async () => {
 };
 
 export const requestChangeEmail = async (newEmail: string) => {
-    console.log('newEmail', newEmail);
-    const response = await api.post('/auth/change-email-request', { newEmail: newEmail });
+    const response = await api.post('/auth/request-change-email', { newEmail });
+    return response.data;
+};
+
+// Column related
+export const getColumns = async (param: ColumnFetchParam = {}): Promise<ColumnResponse> => {
+    const queryString = toQueryString(param);
+    const response = await api.get(`/columns?${queryString}`);
+    console.log(response.data.data);
+    return response.data.data;
+};
+
+// Fetch a single column by id
+export const getColumn = async (id: number): Promise<Column> => {
+    const response = await api.get(`/columns/${id}`);
+    return response.data;
+};
+
+// Create a new column
+export const createColumn = async (formData: FormData): Promise<Column> => {
+    const response = await api.post('/columns', formData, {
+        headers: {
+            'Content-Type': 'multipart/form-data',
+        },
+    });
     return response.data;
 };

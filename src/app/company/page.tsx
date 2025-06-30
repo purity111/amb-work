@@ -35,7 +35,7 @@ export default function CompanyPage() {
                 <Breadcrumb />
 
                 {/* Company Profile Section */}
-                <div className="max-w-[1000px] mx-auto px-8 sm:px-10 md:px-15 lg:px-8 pb-12 pt-0">
+                <div className="max-w-[1000px] mx-auto px-8 sm:px-10 md:px-15 lg:px-8 pb-12 pt-0 bg-gray">
                     <div className="mb-15 md:mb-25 rounded-lg shadow-lg px-4 py-6 md:p-8 bg-[#ededed]">
                         <dl className="grid grid-cols-1 md:grid-cols-[140px_1fr] gap-y-6 md:gap-y-8">
                             <dt className="font-bold text-gray-700 text-[14px] md:text-[16px]">会社名</dt>
