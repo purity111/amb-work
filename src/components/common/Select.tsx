@@ -9,14 +9,14 @@ interface CSelectProps {
     errorText?: string;
 }
 
-export default function CSelect({ options, height = 'h-[50px]', width = 'w-full', className, isError = false, errorText, ...props }: CSelectProps & InputHTMLAttributes<HTMLSelectElement>) {
+export default function CSelect({ options, width = 'w-full', className, isError = false, errorText, ...props }: CSelectProps & InputHTMLAttributes<HTMLSelectElement>) {
     return (
         <div>
             <div className="relative">
                 <select
                     className={`relative appearance-none border rounded-lg focus:outline-none px-4 truncate
                     ${isError ? 'border-red-400' : 'border-[#CCC]'}
-                    ${height} ${width} ${className}
+                    ${width} ${className}
                 `}
                     {...props}
                 >

@@ -435,8 +435,7 @@ export default function CreateNewJobComponent({ preLoad }: CreateNewJobProps) {
                                             isError={!!errors.company}
                                             errorText={errors.company?.message}
                                             options={companyOptions}
-                                            height="h-[40px]"
-                                            className="rounded-sm placeholder-gray-700"
+                                            className="h-[40px] rounded-sm placeholder-gray-700"
                                             onChange={(e) => field.onChange(e)}
                                         />
                                     )}

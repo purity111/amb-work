@@ -24,11 +24,11 @@ export const getEstablishmentDateOptions = (year: number, month: number) => {
     const date = new Date(year, month - 1); // month is 0-based
     const lastDate = lastDayOfMonth(date);
     const maxDate = lastDate.getDate();
-    return Array.from({ length: maxDate }, (_, i) => {
+    return Array.from({ length: maxDate + 1 }, (_, i) => {
         if (i) {
             return {
-                value: String(i + 1),
-                option: String(i + 1)
+                value: String(i),
+                option: String(i)
             }
         } else {
             return {
