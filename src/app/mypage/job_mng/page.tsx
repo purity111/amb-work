@@ -324,7 +324,7 @@ export default function JobMngPage() {
                       <p className="p-2 bg-gray-800 text-sm border-r-1 border-gray-700">検索表示数</p>
                     </div>
                     <div className="flex-2">
-                      <p className="p-2 text-sm">0</p>
+                      <p className="p-2 text-sm">{Number(job.search_count)}</p>
                     </div>
                   </div>
 
@@ -333,7 +333,7 @@ export default function JobMngPage() {
                       <p className="p-2 bg-gray-800 text-sm border-r-1 border-gray-700 lg:border-l-1 lg:border-gray-700">求人ページ閲覧数</p>
                     </div>
                     <div className="flex-2">
-                      <p className="p-2 text-sm">0</p>
+                      <p className="p-2 text-sm">{Number(job.recruits_count)}</p>
                     </div>
                   </div>
 
@@ -342,7 +342,7 @@ export default function JobMngPage() {
                       <p className="p-2 bg-gray-800 text-sm border-r-1 border-gray-700">お気に入り登録会員数</p>
                     </div>
                     <div className="flex-2 lg:flex-5 overflow-hidden whitespace-nowrap">
-                      <p className="p-2 truncate text-sm">0</p>
+                      <p className="p-2 truncate text-sm">{Number(job.favourite_count)}</p>
                     </div>
                   </div>
 
@@ -351,7 +351,7 @@ export default function JobMngPage() {
                       <p className="p-2 bg-gray-800 text-sm border-r-1 border-gray-700">応募者総数</p>
                     </div>
                     <div className="flex-2 lg:flex-5 overflow-hidden whitespace-nowrap">
-                      <p className="p-2 truncate text-sm">0</p>
+                      <p className="p-2 truncate text-sm">{Number(job.application_count)}</p>
                     </div>
                   </div>
 
