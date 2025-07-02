@@ -22,12 +22,14 @@ import { useGetRecruitingCriterias } from "@/hooks/useGetRecruitingCriterias";
 import { useGetEmployerInfoById } from "@/hooks/useGetEmployerInfoById";
 import { createNewJob, updateJobById } from "@/lib/api";
 import { useMutation } from "@tanstack/react-query";
+import Cropper from 'react-easy-crop';
 import { toast } from "react-toastify";
 import { useRouter, useSearchParams } from "next/navigation";
-import { getFirstFullImage, getImageFile } from "@/utils/helper";
+import { blobToBase64, getFirstFullImage, getImageFile } from "@/utils/helper";
 import Image from "next/image";
 import FullPageSpinner from "@/components/common/FullPageSpinner";
 import { useGetJobById } from "@/hooks/useGetJobById";
+import CustomCropper from "@/components/Cropper";
 
 type CreateNewJobProps = {
     preLoad?: JobDetailExtra;
@@ -163,6 +165,7 @@ const PublicDateFormat = 'MM/dd/yyyy'
 export default function CreateNewJobComponent({ preLoad }: CreateNewJobProps) {
     const [companyOptions, setCompanyOptions] = useState<PickOption[]>([]);
     const [imagePreview, setImagePreview] = useState<string | null>(null);
+    const [cropModalShown, setCropModalShown] = useState(false);
 
     const { profile, isAdmin } = useAuthContext();
     const router = useRouter();
@@ -323,7 +326,10 @@ export default function CreateNewJobComponent({ preLoad }: CreateNewJobProps) {
         const file = e.target.files?.[0];
         if (file && file.type.startsWith('image/')) {
             const reader = new FileReader();
-            reader.onloadend = () => setImagePreview(reader.result as string);
+            reader.onloadend = () => {
+                setImagePreview(reader.result as string);
+                setCropModalShown(true)
+            }
             reader.readAsDataURL(file);
             setValue('thumbnail', file);
             trigger('thumbnail')
@@ -331,6 +337,24 @@ export default function CreateNewJobComponent({ preLoad }: CreateNewJobProps) {
             setImagePreview(null);
         }
     };
+
+    const onCancelCropThumbnail = () => {
+        setImagePreview(null);
+        setCropModalShown(false)
+    }
+
+    const onFinishedCropThumbnail = async (image: Blob) => {
+        const base64String = await blobToBase64(image);
+
+        // Convert blob to new File
+        const croppedFile = new File([image], (thumbnail as File)?.name ?? 'cropped.jpg', {
+            type: 'image/jpeg',
+        });
+        setValue('thumbnail', croppedFile);
+        trigger('thumbnail')
+        setImagePreview(base64String);
+        setCropModalShown(false)
+    }
 
     const onUpdateFeatures = (list: string[]) => {
         setValue('features', list)
@@ -477,7 +501,7 @@ export default function CreateNewJobComponent({ preLoad }: CreateNewJobProps) {
                         </div>
                         <div className="flex-3">
                             {imagePreview && (
-                                <div className="mt-4 mb-3 w-40 h-40">
+                                <div className="mt-4 mb-3 w-[300px] h-[220px]">
                                     <img
                                         src={imagePreview || '/images/default-avatar.jpg'}
                                         alt="Preview"
@@ -486,7 +510,7 @@ export default function CreateNewJobComponent({ preLoad }: CreateNewJobProps) {
                                 </div>
                             )}
                             {!imagePreview && thumbnail && (
-                                <div className="mt-4 mb-3 w-40 h-40 relative">
+                                <div className="mt-4 mb-3 w-[300px] h-[220px] relative">
                                     <Image
                                         src={thumbnail as string}
                                         alt="Preview"
@@ -507,6 +531,10 @@ export default function CreateNewJobComponent({ preLoad }: CreateNewJobProps) {
                                         accept="image/*"
                                         onChange={handleImageChange}
                                         className="hidden"
+                                        onClick={(e) => {
+                                            // @ts-ignore: Reset input to allow same file trigger
+                                            e.currentTarget.value = null;
+                                        }}
                                     />
                                 </label>
                                 {(thumbnail instanceof File) && (
@@ -897,6 +925,15 @@ export default function CreateNewJobComponent({ preLoad }: CreateNewJobProps) {
                     />
                 </div>
             </div>
+            {cropModalShown && imagePreview && (
+                <CustomCropper
+                    image={imagePreview}
+                    cropWidth={300}
+                    cropHeight={220}
+                    onCancel={onCancelCropThumbnail}
+                    onFinished={onFinishedCropThumbnail}
+                />
+            )}
             {
                 (createJob.isPending || updateJob.isPending) && (
                     <FullPageSpinner />

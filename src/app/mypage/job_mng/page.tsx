@@ -162,7 +162,7 @@ export default function JobMngPage() {
   }
 
   const onCopyJobLink = async (id: number) => {
-    const jobLink = `${window.location.origin}/job-openings/recruit/${id}`;
+    const jobLink = `${window.location.origin}/jobs/recruit/${id}`;
     try {
       await navigator.clipboard.writeText(jobLink);
       toast.info('求人リンクをコピーしました。')
@@ -258,7 +258,7 @@ export default function JobMngPage() {
               <div className="flex flex-col sm:flex-row">
 
                 <div className="w-1/1 sm:w-1/4 md:w-1/5 p-2">
-                  <div className="w-full aspect-1/1 relative">
+                  <div className="w-full aspect-300/220 relative">
                     {getFirstFullImage(job.jobThumbnails) ? (
                       <Image
                         src={getFirstFullImage(job.jobThumbnails) as string}
@@ -308,7 +308,7 @@ export default function JobMngPage() {
                     <div className="flex-2 lg:flex-5 flex flex-row items-center justify-between overflow-hidden whitespace-nowrap pr-1">
                       <div className="p-1 flex-1 overflow-hidden whitespace-nowrap">
                         <p className="bg-gray-800 my-auto border-1 px-1 border-gray-700 text-sm truncate">
-                          {`${window.location.origin}/job-openings/recruit/${job.id}`}
+                          {`${window.location.origin}/jobs/recruit/${job.id}`}
                         </p>
                       </div>
                       <CButton
