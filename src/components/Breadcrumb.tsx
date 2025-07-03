@@ -13,7 +13,8 @@ const pathToName: { [key: string]: string } = {
     '/privacy': 'プライバシーポリシー',
     '/simplified-test': '真贋スキル簡易テスト',
     '/qualifications': '資格一覧',
-
+    '/career-counseling': '転職支援サービス',
+    '/column': 'コラム一覧',
     '/about': 'リユース転職について',
     '/contact': 'お問い合わせ',
     // Add more paths and their corresponding names as needed
