@@ -163,7 +163,7 @@ export default function JobMngPage() {
   }
 
   const onCopyJobLink = async (id: number) => {
-    const jobLink = `${window.location.origin}/job-openings/recruit/${id}`;
+    const jobLink = `${window.location.origin}/jobs/recruit/${id}`;
     try {
       await navigator.clipboard.writeText(jobLink);
       toast.info('求人リンクをコピーしました。')
@@ -259,7 +259,7 @@ export default function JobMngPage() {
               <div className="flex flex-col sm:flex-row">
 
                 <div className="w-1/1 sm:w-1/4 md:w-1/5 p-2">
-                  <div className="w-full aspect-1/1 relative">
+                  <div className="w-full aspect-300/220 relative">
                     {getFirstFullImage(job.jobThumbnails) ? (
                       <Image
                         src={getFirstFullImage(job.jobThumbnails) as string}
@@ -278,7 +278,6 @@ export default function JobMngPage() {
                         sizes="(min-width: 768px) 20vw, 100vw"
                       />
                     )}
-
                   </div>
                 </div>
 
@@ -309,7 +308,7 @@ export default function JobMngPage() {
                     <div className="flex-2 lg:flex-5 flex flex-row items-center justify-between overflow-hidden whitespace-nowrap pr-1">
                       <div className="p-1 flex-1 overflow-hidden whitespace-nowrap">
                         <p className="bg-gray-800 my-auto border-1 px-1 border-gray-700 text-sm truncate">
-                          {`${window.location.origin}/job-openings/recruit/${job.id}`}
+                          {`${window.location.origin}/jobs/recruit/${job.id}`}
                         </p>
                       </div>
                       <CButton
@@ -325,7 +324,7 @@ export default function JobMngPage() {
                       <p className="p-2 bg-gray-800 text-sm border-r-1 border-gray-700">検索表示数</p>
                     </div>
                     <div className="flex-2">
-                      <p className="p-2 text-sm">0</p>
+                      <p className="p-2 text-sm">{Number(job.search_count)}</p>
                     </div>
                   </div>
 
@@ -334,7 +333,7 @@ export default function JobMngPage() {
                       <p className="p-2 bg-gray-800 text-sm border-r-1 border-gray-700 lg:border-l-1 lg:border-gray-700">求人ページ閲覧数</p>
                     </div>
                     <div className="flex-2">
-                      <p className="p-2 text-sm">0</p>
+                      <p className="p-2 text-sm">{Number(job.recruits_count)}</p>
                     </div>
                   </div>
 
@@ -343,7 +342,7 @@ export default function JobMngPage() {
                       <p className="p-2 bg-gray-800 text-sm border-r-1 border-gray-700">お気に入り登録会員数</p>
                     </div>
                     <div className="flex-2 lg:flex-5 overflow-hidden whitespace-nowrap">
-                      <p className="p-2 truncate text-sm">0</p>
+                      <p className="p-2 truncate text-sm">{Number(job.favourite_count)}</p>
                     </div>
                   </div>
 
@@ -352,7 +351,7 @@ export default function JobMngPage() {
                       <p className="p-2 bg-gray-800 text-sm border-r-1 border-gray-700">応募者総数</p>
                     </div>
                     <div className="flex-2 lg:flex-5 overflow-hidden whitespace-nowrap">
-                      <p className="p-2 truncate text-sm">0</p>
+                      <p className="p-2 truncate text-sm">{Number(job.application_count)}</p>
                     </div>
                   </div>
 

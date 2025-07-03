@@ -1,6 +1,8 @@
 import CButton from '@/components/common/Button';
 import CInput from '@/components/common/Input';
 import RequiredLabel from '@/components/common/RequiredLabel';
+import CustomCropper from '@/components/Cropper';
+import { blobToBase64 } from '@/utils/helper';
 import Image from 'next/image';
 import React, { ChangeEvent, useState } from 'react';
 import { Controller } from 'react-hook-form';
@@ -17,22 +19,44 @@ interface CompanyImageItemProps {
 export default function CompanyImageItem({ index, control, errors, setValue, onRemove, onTriggerKeyValue }: CompanyImageItemProps) {
   const [preview, setPreview] = useState<string | null>(null);
   const [file, setFile] = useState<File | null>(null);
+  const [cropModalShown, setCropModalShown] = useState(false);
 
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
       setFile(file)
       const reader = new FileReader();
-      reader.onloadend = () => setPreview(reader.result as string);
+      reader.onloadend = () => {
+        setPreview(reader.result as string);
+        setCropModalShown(true)
+      }
       reader.readAsDataURL(file);
       setValue(`companyImages.${index}.image`, file)
       onTriggerKeyValue(`companyImages.${index}.image`)
     }
   };
 
+  const onCancelCropThumbnail = () => {
+    setPreview(null);
+    setCropModalShown(false)
+  }
+
+  const onFinishedCropThumbnail = async (image: Blob) => {
+    const base64String = await blobToBase64(image);
+
+    // Convert blob to new File
+    const croppedFile = new File([image], (file as File)?.name ?? 'cropped.jpg', {
+      type: 'image/jpeg',
+    });
+    setValue(`companyImages.${index}.image`, croppedFile);
+    onTriggerKeyValue(`companyImages.${index}.image`)
+    setPreview(base64String);
+    setCropModalShown(false)
+  }
+
   return (
     <div className="w-[100%] sm:w-[48%] border-1 border-gray-700 bg-gray-900 p-2 rounded-sm">
-      <div className="w-full aspect-4/3 border-dashed border-3 border-gray-700 flex justify-center items-center relative">
+      <div className="w-full aspect-520/380 border-dashed border-3 border-gray-700 flex justify-center items-center relative">
 
         <Controller
           name={`companyImages.${index}.image`}
@@ -75,6 +99,10 @@ export default function CompanyImageItem({ index, control, errors, setValue, onR
             accept="image/*"
             onChange={handleImageChange}
             className="hidden"
+            onClick={(e) => {
+              // @ts-expect-error: Reset input to allow same file trigger
+              e.currentTarget.value = null;
+            }}
           />
         </label>
         <span className="ml-2">{file?.name || 'No file chosen'}</span>
@@ -111,8 +139,6 @@ export default function CompanyImageItem({ index, control, errors, setValue, onR
           />
         )}
       />
-
-
       <p className="text-sm text-gray-600 ">※50文字まで入力できます。</p>
       <div className='flex flex-row justify-end'>
         <CButton
@@ -123,6 +149,15 @@ export default function CompanyImageItem({ index, control, errors, setValue, onR
           size='small'
         />
       </div>
+      {cropModalShown && preview && (
+        <CustomCropper
+          image={preview}
+          cropWidth={520}
+          cropHeight={380}
+          onCancel={onCancelCropThumbnail}
+          onFinished={onFinishedCropThumbnail}
+        />
+      )}
     </div>
   );
 } 

@@ -178,6 +178,10 @@ export interface JobDetail {
     "deleted"?: string,
     "created": string,
     "modified": string,
+    "search_count": string,
+    "recruits_count": string,
+    "application_count": number,
+    "favourite_count": number,
     "employer": {
         "id": number,
         "clinic_name": string,
@@ -518,4 +522,33 @@ export interface ColumnResponse {
         totalItems: number;
         itemsPerPage: number;
     };
+
+ export interface JobSeekerFilterParam {
+    page: number;
+    limit: number;
+    sortBy?: string;
+    sortOrder?: 'ASC' | 'DESC',
+    prefectures?: number;
+    searchTerm?: string;
+}
+
+export interface JobSeekerDetail {
+    id: number;
+    name: string;
+    name_kana: string;
+    birthdate: string;
+    sex: number;
+    zip: string;
+    prefectures: number;
+    tel: string;
+    email: string;
+    desired_working_place_1?: string;
+    desired_working_place_2?: string;
+    other_desired_criteria?: string;
+    reset_token?: string;
+    deleted?: string;
+    created: string;
+    modified: string;
+    employmentTypes: number[];
+    desiredConditions: number[];
 }
