@@ -12,10 +12,6 @@ interface AddInterviewModalProps {
     onClose: () => void;
 }
 
-const CATEGORIES = [
-    { value: 'ビジネス', option: 'ビジネス' },
-    { value: 'キャリアチェンジ', option: 'キャリアチェンジ' },
-];
 const TAGS = [
     { value: '', option: '選択' },
     { value: '0', option: 'ビジネス' },
@@ -37,7 +33,6 @@ export default function AddInterviewModal({ isOpen, onClose }: AddInterviewModal
     const [htmlContent, setHtmlContent] = useState('');
     const thumbnail = watch('thumbnail');
     const modalRef = useRef<HTMLDivElement>(null);
-    const tag = watch('tag');
 
     useEffect(() => {
         if (isOpen) {
@@ -81,6 +76,8 @@ export default function AddInterviewModal({ isOpen, onClose }: AddInterviewModal
             onClose();
         } catch (error) {
             toast.error('エラーが発生しました');
+            console.log(error);
+            
         } finally {
             setIsLoading(false);
         }
@@ -141,6 +138,7 @@ export default function AddInterviewModal({ isOpen, onClose }: AddInterviewModal
                                         errorText={errors.tag?.message as string}
                                     />
                                 )}
+                                
                             />
                         </div>
                         {/* Show 説明 only for career-changer (tag === '1'), after タグ */}

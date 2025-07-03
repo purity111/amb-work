@@ -11,8 +11,9 @@ import Footer from '@/components/Footer';
 import AddColumnModal from '@/components/modal/AddColumnModal';
 import CategorySidebar from '@/components/pages/columns/CategorySidebar';
 import ColumnCard from '@/components/pages/columns/ColumnCard';
+import { Suspense } from 'react';
 
-export default function ColumnPage() {
+function ColumnsPageInner() {
     const searchParams = useSearchParams();
 
     const initialPage = Number(searchParams.get('page')) || 1;
@@ -217,5 +218,13 @@ export default function ColumnPage() {
             <Footer />
             <AddColumnModal isOpen={isAddModalOpen} onClose={() => setAddModalOpen(false)} />
         </>
+    );
+}
+
+export default function ColumnsPage() {
+    return (
+        <Suspense fallback={<div>Loading...</div>}>
+            <ColumnsPageInner />
+        </Suspense>
     );
 }

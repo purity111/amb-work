@@ -71,6 +71,8 @@ export default function ColumnDetailPage() {
                 router.push('/columns');
             } catch (error) {
                 toast.error('エラーが発生しました');
+                console.log(error);
+                
             }
         }
     };

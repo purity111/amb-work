@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import Modal from '@/components/common/Modal';
 import Input from '@/components/common/Input';
 import Select from '@/components/common/Select';
 import { updateInterview } from '@/lib/api';
@@ -15,10 +14,6 @@ interface EditInterviewModalProps {
     interview: Interview | null;
 }
 
-const CATEGORIES = [
-    { value: 'ビジネス', option: 'ビジネス' },
-    { value: 'キャリアチェンジ', option: 'キャリアチェンジ' },
-];
 const TAGS = [
     { value: '', option: '選択' },
     { value: 'business', option: 'ビジネス' },
@@ -121,6 +116,7 @@ export default function EditInterviewModal({ isOpen, onClose, interview }: EditI
             onClose();
         } catch (error) {
             toast.error('エラーが発生しました');
+            console.log(error);
         } finally {
             setIsLoading(false);
         }

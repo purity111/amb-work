@@ -20,10 +20,11 @@ export default function Header() {
     const [isMounted, setIsMounted] = useState(false);
 
     const { profile, isAuthenticated, token, logout } = useAuthContext();
-    
+
     const router = useRouter();
     useEffect(() => {
         setIsMounted(true);
+        if (!isAuthenticated) return;
         api.interceptors.response.use(
             (response) => response,
             async (error) => {
@@ -43,7 +44,7 @@ export default function Header() {
             }
             return config;
         });
-    }, [token, router])
+    }, [token, router, isAuthenticated])
 
     const onLoginSuccess = () => {
         setLoginModalShown(false);

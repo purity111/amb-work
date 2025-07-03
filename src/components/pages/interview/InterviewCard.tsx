@@ -1,14 +1,14 @@
 import { Interview } from '@/utils/types';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useAuth } from '@/hooks/useAuth';
 
 interface InterviewCardProps {
     interview: Interview;
+    onEdit?: (interview: Interview) => void;
+    onDelete?: (interview: Interview) => void;
 }
 
-export default function InterviewCard({ interview, onEdit, onDelete }: InterviewCardProps) {
-    const { isAdmin } = useAuth();
+export default function InterviewCard({ interview }: InterviewCardProps) {
     const formatDate = (dateString: string) => {
         const date = new Date(dateString);
         const year = date.getFullYear();

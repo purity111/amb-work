@@ -54,6 +54,8 @@ export default function BusinessInterviewDetailPage() {
                 router.push('/interview/business');
             } catch (error) {
                 toast.error('エラーが発生しました');
+                console.log(error);
+                
             }
         }
     };

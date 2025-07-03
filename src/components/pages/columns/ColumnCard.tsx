@@ -1,19 +1,13 @@
 import { Column } from '@/utils/types';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useAuth } from '@/hooks/useAuth';
-import { deleteColumn } from '@/lib/api';
-import { useRouter } from 'next/navigation';
 
 interface ColumnCardProps {
     column: Column;
     onEdit?: (column: Column) => void;
 }
 
-export default function ColumnCard({ column, onEdit }: ColumnCardProps) {
-    const { profile } = useAuth();
-    const router = useRouter();
-    const isAdmin = profile?.role === 'admin' || profile?.role === 'subadmin';
+export default function ColumnCard({ column }: ColumnCardProps) {
 
     const formatDate = (dateString: string) => {
         const date = new Date(dateString);
@@ -26,17 +20,19 @@ export default function ColumnCard({ column, onEdit }: ColumnCardProps) {
         return `${year}.${month}.${day} ${hours}:${minutes}`;
     };
 
-    const handleDelete = async () => {
-        if (window.confirm('このコラムを削除してもよろしいですか？')) {
-            try {
-                await deleteColumn(column.id);
-                alert('コラムが削除されました');
-                router.refresh();
-            } catch (error) {
-                alert('エラーが発生しました');
-            }
-        }
-    };
+    // const handleDelete = async () => {
+    //     if (window.confirm('このコラムを削除してもよろしいですか？')) {
+    //         try {
+    //             await deleteColumn(column.id);
+    //             alert('コラムが削除されました');
+    //             router.refresh();
+    //         } catch (error) {
+    //             alert('エラーが発生しました');
+    //             console.log(error);
+                
+    //         }
+    //     }
+    // };
 
     return (
         <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">

@@ -32,7 +32,7 @@ const CATEGORIES = [
 ];
 
 export default function AddColumnModal({ isOpen, onClose }: AddColumnModalProps) {
-    const { control, handleSubmit, formState: { errors, isDirty }, watch, reset, getValues } = useForm({
+    const { control, handleSubmit, formState: { errors }, watch, reset, getValues } = useForm({
         defaultValues: {
             title: '',
             category: '',
@@ -86,6 +86,8 @@ export default function AddColumnModal({ isOpen, onClose }: AddColumnModalProps)
             onClose();
         } catch (error) {
             toast.error('エラーが発生しました');
+            console.log(error);
+            
         } finally {
             setIsLoading(false);
         }

@@ -52,6 +52,8 @@ export default function CareerChangerInterviewDetailPage() {
                 router.push('/interview/career-changer');
             } catch (error) {
                 toast.error('エラーが発生しました');
+                console.log(error);
+                
             }
         }
     };

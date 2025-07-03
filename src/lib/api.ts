@@ -1,6 +1,7 @@
 import { RegisterEmployerParam, RegisterJobSeekerParam, LoginParam, JobParam, RecruitingCriteria, AdminCriteriaFetchParam, BookmarkJobParam, CreateUpdateCriteriaFetchParam, ApplicationFetchParam, BookmarkedJobsFetchParams, ColumnFetchParam, Column, ColumnResponse, InterviewFetchParam, InterviewResponse, Interview } from "@/utils/types";
 import api from './axios';
 import { toQueryString } from "@/utils/helper";
+import type { JobSeekerFilterParam } from '@/utils/types';
 
 //Auth
 export const registerAsEmployer = async (param: RegisterEmployerParam) => {
@@ -121,6 +122,35 @@ export const getJobs = async (
 
 export const getJobById = async (id: number) => {
     const response = await api.get(`/jobs/${id}`);
+    return response.data;
+};
+
+export const getJobSeekers = async (param: JobSeekerFilterParam) => {
+    const { page, limit, sortBy, sortOrder = 'ASC', prefectures, searchTerm } = param;
+    const params = new URLSearchParams();
+    params.set('page', page.toString());
+    params.set('limit', limit.toString());
+    if (sortBy) {
+        params.set('sortBy', sortBy.toString());
+        params.set('sortOrder', sortOrder.toString());
+    }
+    if (prefectures) {
+        params.set('prefectures', prefectures.toString());
+    }
+    if (searchTerm) {
+        params.set('searchTerm', searchTerm.toString());
+    }
+    const response = await api.get(`/job-seekers?${params.toString()}`);
+    return response.data;
+};
+
+export const deleteJobSeekerById = async (id: number) => {
+    const response = await api.delete(`/job-seekers/${id}`);
+    return response.data;
+};
+
+export const updateJobSeekerById = async ({ id, param }: { id: number, param: any }) => {
+    const response = await api.put(`/job-seekers/${id}`, param);
     return response.data;
 };
 

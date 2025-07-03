@@ -13,8 +13,10 @@ import { toast } from 'react-toastify';
 import Breadcrumb from '@/components/Breadcrumb';
 import Image from 'next/image';
 import Footer from '@/components/Footer';
+import type { Interview } from '@/utils/types';
+import { Suspense } from 'react';
 
-export default function CareerChangerInterviewPage() {
+function CareerChangerInterviewPageInner() {
     const searchParams = useSearchParams();
     const initialPage = Number(searchParams.get('page')) || 1;
     const initialLimit = 12;
@@ -27,12 +29,12 @@ export default function CareerChangerInterviewPage() {
     const [totalPage, setTotalPage] = useState(1);
     const [limit] = useState(initialLimit);
     const [interviews, setInterviews] = useState<any[]>([]);
-    const [selectedCategory, setSelectedCategory] = useState(initialCategory);
+    const [selectedCategory] = useState(initialCategory);
     const router = useRouter();
     const { isAdmin } = useAuth();
     const [isAddModalOpen, setAddModalOpen] = useState(false);
     const [isEditModalOpen, setEditModalOpen] = useState(false);
-    const [editingInterview, setEditingInterview] = useState(null);
+    const [editingInterview, setEditingInterview] = useState<Interview | null>(null);
 
     const { data: response, isLoading } = useGetInterviews({
         searchTerm: searchTerm || undefined,
@@ -41,7 +43,7 @@ export default function CareerChangerInterviewPage() {
 
     useEffect(() => {
         if (response) {
-            const filtered = response.InterviewItems.filter((interview) => interview.tag === 1);
+            const filtered = response.InterviewItems.filter((interview: Interview) => interview.tag === 1);
             setInterviews(filtered);
             setTotalPage(Math.ceil(filtered.length / limit));
             setCurrentPage(1);
@@ -80,12 +82,12 @@ export default function CareerChangerInterviewPage() {
         setSearchTerm(tempSearch);
     };
 
-    const handleEdit = (interview) => {
+    const handleEdit = (interview: Interview) => {
         setEditingInterview(interview);
         setEditModalOpen(true);
     };
 
-    const handleDelete = async (interview) => {
+    const handleDelete = async (interview: Interview) => {
         if (window.confirm('このインタビューを削除してもよろしいですか？')) {
             try {
                 await deleteInterview(interview.id);
@@ -93,6 +95,8 @@ export default function CareerChangerInterviewPage() {
                 router.refresh();
             } catch (error) {
                 toast.error('エラーが発生しました');
+                console.log(error);
+                
             }
         }
     };
@@ -189,5 +193,13 @@ export default function CareerChangerInterviewPage() {
             </main>
             <Footer />
         </>
+    );
+}
+
+export default function CareerChangerInterviewPage() {
+    return (
+        <Suspense fallback={<div>読み込む中...</div>}>
+            <CareerChangerInterviewPageInner />
+        </Suspense>
     );
 }

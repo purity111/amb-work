@@ -247,8 +247,7 @@ export default function RegisterForEmployer({ onSuccess }: FormProps) {
                                     isError={!!errors.prefecture}
                                     errorText={errors.prefecture?.message}
                                     options={PrefectureOptions}
-                                    height="h-[40px]"
-                                    className="rounded-sm placeholder-gray-700"
+                                    className="h-[40px] rounded-sm placeholder-gray-700"
                                     onChange={(e) => field.onChange(e)}
                                 />
                             )}
@@ -339,9 +338,8 @@ export default function RegisterForEmployer({ onSuccess }: FormProps) {
                                     isError={!!errors.establishment_year}
                                     errorText={errors.establishment_year?.message}
                                     options={getEstablishmentYearOptions()}
-                                    height="h-[40px]"
                                     width="w-24"
-                                    className="rounded-sm placeholder-gray-700"
+                                    className="h-[40px] rounded-sm placeholder-gray-700"
                                     onChange={(e) => field.onChange(e)}
                                 />
                             )}
@@ -356,9 +354,8 @@ export default function RegisterForEmployer({ onSuccess }: FormProps) {
                                         isError={!!errors.establishment_month}
                                         errorText={errors.establishment_month?.message}
                                         options={MonthOptions}
-                                        height="h-[40px]"
                                         width="w-24"
-                                        className="rounded-sm placeholder-gray-700"
+                                        className="h-[40px] rounded-sm placeholder-gray-700"
                                         onChange={(e) => field.onChange(e)}
                                     />
                                 )}
@@ -374,9 +371,8 @@ export default function RegisterForEmployer({ onSuccess }: FormProps) {
                                         isError={!!errors.establishment_date}
                                         errorText={errors.establishment_date?.message}
                                         options={getEstablishmentDateOptions(getValues('establishment_year') || 2025, getValues('establishment_month') || 1)}
-                                        height="h-[40px]"
                                         width="w-24"
-                                        className="rounded-sm placeholder-gray-700"
+                                        className="h-[40px] rounded-sm placeholder-gray-700"
                                         onChange={(e) => field.onChange(e)}
                                     />
                                 )}

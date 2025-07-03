@@ -1,5 +1,7 @@
 import CButton from '@/components/common/Button';
 import CInput from '@/components/common/Input';
+import CustomCropper from '@/components/Cropper';
+import { blobToBase64 } from '@/utils/helper';
 import Image from 'next/image';
 import React, { ChangeEvent, useState } from 'react';
 import { Controller } from 'react-hook-form';
@@ -16,18 +18,40 @@ interface StaffImageItemProps {
 export default function StaffImageItem({ index, control, errors, setValue, onRemove, onTriggerKeyValue }: StaffImageItemProps) {
   const [preview, setPreview] = useState<string | null>(null);
   const [file, setFile] = useState<File | null>(null);
+  const [cropModalShown, setCropModalShown] = useState(false);
 
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
       setFile(file)
       const reader = new FileReader();
-      reader.onloadend = () => setPreview(reader.result as string);
+      reader.onloadend = () => {
+        setPreview(reader.result as string);
+        setCropModalShown(true)
+      }
       reader.readAsDataURL(file);
       setValue(`staffImages.${index}.photo`, file);
       onTriggerKeyValue(`staffImages.${index}.photo`)
     }
   };
+
+  const onCancelCropThumbnail = () => {
+    setPreview(null);
+    setCropModalShown(false)
+  }
+
+  const onFinishedCropThumbnail = async (image: Blob) => {
+    const base64String = await blobToBase64(image);
+
+    // Convert blob to new File
+    const croppedFile = new File([image], (file as File)?.name ?? 'cropped.jpg', {
+      type: 'image/jpeg',
+    });
+    setValue(`staffImages.${index}.photo`, croppedFile);
+    onTriggerKeyValue(`staffImages.${index}.photo`)
+    setPreview(base64String);
+    setCropModalShown(false)
+  }
 
   const onChangeValue = (key: string, e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setValue(key, e.target.value);
@@ -38,7 +62,7 @@ export default function StaffImageItem({ index, control, errors, setValue, onRem
     <div className="mb-3 border-1 border-gray-700 bg-gray-900 p-5 rounded-sm">
       <div className='flex flex-col md:flex-row gap-4'>
         <div className='flex-1'>
-          <div className="w-[50%] md:w-full mx-auto aspect-1/1 border-dashed border-3 border-gray-700 flex justify-center items-center relative">
+          <div className="w-[50%] md:w-full mx-auto aspect-350/260 border-dashed border-3 border-gray-700 flex justify-center items-center relative">
             <Controller
               name={`staffImages.${index}.photo`}
               control={control}
@@ -186,6 +210,10 @@ export default function StaffImageItem({ index, control, errors, setValue, onRem
                     accept="image/*"
                     onChange={handleImageChange}
                     className="hidden"
+                    onClick={(e) => {
+                      // @ts-expect-error: Reset input to allow same file trigger
+                      e.currentTarget.value = null;
+                    }}
                   />
                 </label>
                 <span className="ml-2">{file?.name || 'No file chosen'}</span>
@@ -232,6 +260,15 @@ export default function StaffImageItem({ index, control, errors, setValue, onRem
           size='small'
         />
       </div>
+      {cropModalShown && preview && (
+        <CustomCropper
+          image={preview}
+          cropWidth={350}
+          cropHeight={260}
+          onCancel={onCancelCropThumbnail}
+          onFinished={onFinishedCropThumbnail}
+        />
+      )}
     </div>
   );
 } 

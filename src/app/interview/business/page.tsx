@@ -7,14 +7,14 @@ import { useState, useEffect, useRef } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import AddInterviewModal from '@/components/modal/AddInterviewModal';
 import EditInterviewModal from '@/components/modal/EditInterviewModal';
-import { deleteInterview } from '@/lib/api';
 import { useAuth } from '@/hooks/useAuth';
-import { toast } from 'react-toastify';
 import Breadcrumb from '@/components/Breadcrumb';
 import Image from 'next/image';
 import Footer from '@/components/Footer';
+import type { Interview } from '@/utils/types';
+import { Suspense } from 'react';
 
-export default function BusinessInterviewPage() {
+function BusinessInterviewPageInner() {
     const searchParams = useSearchParams();
     const initialPage = Number(searchParams.get('page')) || 1;
     const initialLimit = 12;
@@ -27,12 +27,11 @@ export default function BusinessInterviewPage() {
     const [totalPage, setTotalPage] = useState(1);
     const [limit] = useState(initialLimit);
     const [interviews, setInterviews] = useState<any[]>([]);
-    const [selectedCategory, setSelectedCategory] = useState(initialCategory);
+    const [selectedCategory] = useState(initialCategory);
     const router = useRouter();
     const { isAdmin } = useAuth();
     const [isAddModalOpen, setAddModalOpen] = useState(false);
     const [isEditModalOpen, setEditModalOpen] = useState(false);
-    const [editingInterview, setEditingInterview] = useState(null);
 
     const { data: response, isLoading } = useGetInterviews({
         searchTerm: searchTerm || undefined,
@@ -41,7 +40,7 @@ export default function BusinessInterviewPage() {
 
     useEffect(() => {
         if (response) {
-            const filtered = response.InterviewItems.filter((interview) => interview.tag === null);
+            const filtered = response.InterviewItems.filter((interview: Interview) => interview.tag === null);
             setInterviews(filtered);
             setTotalPage(Math.ceil(filtered.length / limit));
             setCurrentPage(1);
@@ -168,9 +167,17 @@ export default function BusinessInterviewPage() {
                     </div>
                 </div>
                 <AddInterviewModal isOpen={isAddModalOpen} onClose={() => setAddModalOpen(false)} />
-                <EditInterviewModal isOpen={isEditModalOpen} onClose={() => setEditModalOpen(false)} interview={editingInterview} />
+                <EditInterviewModal isOpen={isEditModalOpen} onClose={() => setEditModalOpen(false)} interview={null} />
             </main>
             <Footer />
         </>
+    );
+}
+
+export default function BusinessInterviewPage() {
+    return (
+        <Suspense fallback={<div>読み込む中...</div>}>
+            <BusinessInterviewPageInner />
+        </Suspense>
     );
 }

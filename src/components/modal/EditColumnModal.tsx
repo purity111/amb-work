@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useEffect } from 'react';
-import Modal from '@/components/common/Modal';
 import Input from '@/components/common/Input';
 import Select from '@/components/common/Select';
 import { updateColumn } from '@/lib/api';
@@ -104,6 +103,8 @@ export default function EditColumnModal({ isOpen, onClose, column }: EditColumnM
             onClose();
         } catch (error) {
             toast.error('エラーが発生しました');
+            console.log(error);
+            
         } finally {
             setIsLoading(false);
         }
@@ -140,7 +141,8 @@ export default function EditColumnModal({ isOpen, onClose, column }: EditColumnM
                                 <Input
                                     {...register('title', { required: 'タイトルを入力してください' })}
                                     placeholder="タイトルを入力"
-                                    error={errors.title?.message}
+                                    isError={!!errors.title?.message}
+                                    errorText={errors.title?.message}
                                 />
                             </div>
                             <div>
@@ -158,7 +160,8 @@ export default function EditColumnModal({ isOpen, onClose, column }: EditColumnM
                                             onChange={field.onChange}
                                             options={categories.map(cat => ({ value: cat, option: cat }))}
                                             placeholder="カテゴリーを選択"
-                                            error={errors.category?.message}
+                                            isError={!!errors.category?.message}
+                                            errorText={errors.category?.message}
                                         />
                                     )}
                                 />

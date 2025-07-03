@@ -2,6 +2,7 @@ import { lastDayOfMonth, parse, format, isValid } from "date-fns";
 import { ImageDetail } from "./types";
 import { UPLOADS_BASE_URL } from "./config";
 import { PrefectureOptions } from "./constants";
+import { Area } from "react-easy-crop";
 
 export const getEstablishmentYearOptions = () => {
     const cYear = new Date().getFullYear();
@@ -24,11 +25,11 @@ export const getEstablishmentDateOptions = (year: number, month: number) => {
     const date = new Date(year, month - 1); // month is 0-based
     const lastDate = lastDayOfMonth(date);
     const maxDate = lastDate.getDate();
-    return Array.from({ length: maxDate }, (_, i) => {
+    return Array.from({ length: maxDate + 1 }, (_, i) => {
         if (i) {
             return {
-                value: String(i + 1),
-                option: String(i + 1)
+                value: String(i),
+                option: String(i)
             }
         } else {
             return {
@@ -83,4 +84,55 @@ export const parsePublicDate = (date: string, mask = 'yyyy/mm/dd') => {
     } else {
         return '無期限'
     }
+}
+
+export default async function getCroppedImage(
+    imageSrc: string,
+    crop: Area,
+    rotation = 0
+): Promise<Blob> {
+    const image = await loadImage(imageSrc);
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+
+    if (!ctx) throw new Error('Failed to get canvas context');
+
+    canvas.width = crop.width;
+    canvas.height = crop.height;
+
+    // Apply rotation if needed
+    ctx.translate(-crop.x, -crop.y);
+    if (rotation !== 0) {
+        ctx.rotate((rotation * Math.PI) / 180);
+    }
+
+    ctx.drawImage(image, 0, 0);
+
+    return new Promise<Blob>((resolve, reject) => {
+        canvas.toBlob((blob) => {
+            if (blob) resolve(blob);
+            else reject(new Error('Failed to create blob from canvas'));
+        }, 'image/jpeg');
+    });
+}
+
+function loadImage(src: string): Promise<HTMLImageElement> {
+    return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.crossOrigin = 'anonymous';
+        img.onload = () => resolve(img);
+        img.onerror = reject;
+        img.src = src;
+    });
+}
+
+export function blobToBase64(blob: Blob): Promise<string> {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+            resolve(reader.result as string); // This is your base64 string
+        };
+        reader.onerror = reject;
+        reader.readAsDataURL(blob);
+    });
 }
