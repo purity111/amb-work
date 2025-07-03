@@ -208,8 +208,7 @@ export default function RegisterForJobSeeker({ onSuccess }: FormProps) {
                                         {...field}
                                         isError={!!errors.dob_year}
                                         options={getEstablishmentYearOptions()}
-                                        height="h-[40px]"
-                                        className="rounded-sm placeholder-gray-700 w-full sm:w-24"
+                                        className="h-[40px] rounded-sm placeholder-gray-700 w-full sm:w-24"
                                         onChange={(e) => field.onChange(e)}
                                     />
                                 </div>
@@ -224,9 +223,8 @@ export default function RegisterForJobSeeker({ onSuccess }: FormProps) {
                                         {...field}
                                         isError={!!errors.dob_month}
                                         options={MonthOptions}
-                                        height="h-[40px]"
                                         width="w-24"
-                                        className="rounded-sm placeholder-gray-700 w-full sm:w-24"
+                                        className="h-[40px] rounded-sm placeholder-gray-700 w-full sm:w-24"
                                         onChange={(e) => field.onChange(e)}
                                     />
                                 </div>
@@ -242,9 +240,8 @@ export default function RegisterForJobSeeker({ onSuccess }: FormProps) {
                                         isError={!!errors.dob_date}
                                         disabled={!dobYear || !dobMonth}
                                         options={getEstablishmentDateOptions(dobYear, dobMonth)}
-                                        height="h-[40px]"
                                         width="w-24"
-                                        className="rounded-sm placeholder-gray-700 w-full sm:w-24"
+                                        className="h-[40px] rounded-sm placeholder-gray-700 w-full sm:w-24"
                                         onChange={(e) => field.onChange(e)}
                                     />
                                 </div>
@@ -317,8 +314,7 @@ export default function RegisterForJobSeeker({ onSuccess }: FormProps) {
                                     isError={!!errors.prefecture}
                                     errorText={errors.prefecture?.message}
                                     options={PrefectureOptions}
-                                    height="h-[40px]"
-                                    className="rounded-sm placeholder-gray-700"
+                                    className="h-[40px] rounded-sm placeholder-gray-700"
                                     onChange={(e) => field.onChange(e)}
                                 />
                             )}

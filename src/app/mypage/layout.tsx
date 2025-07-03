@@ -26,7 +26,7 @@ export default function MyPageLayout({
         <Sidebar isOpen={isOpen} setIsOpen={setIsOpen} />
         <main
           className={`
-            flex-1 flex-grow transition-all duration-300 ease-in-out pt-20 md:pt-25
+            flex-1 flex-grow transition-all duration-300 ease-in-out pt-20 md:pt-25 overflow-x-auto
             ${isOpen ? 'md:ml-64 md:w-[calc(100%-256px)] xl:ml-80 xl:w-[calc(100%-320px)]' : 'md:ml-0 w-full'}
           `}
         >

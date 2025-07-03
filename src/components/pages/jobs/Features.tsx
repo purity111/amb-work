@@ -67,16 +67,14 @@ export default function JobFeatures({ selectedList, onUpdate }: JobFeaturesProps
             <div className='flex flex-row gap-4'>
                 <CSelect
                     options={regions}
-                    height="h-[40px]"
-                    className="rounded-sm placeholder-gray-700"
+                    className="h-[40px] rounded-sm placeholder-gray-700"
                     onChange={(e) => setRegion(e.target.value)}
                     value={region}
                 />
                 <CSelect
                     options={prefectures}
-                    height="h-[40px]"
                     width="w-[100px]"
-                    className="rounded-sm placeholder-gray-700"
+                    className="h-[40px] rounded-sm placeholder-gray-700"
                     onChange={(e) => onChangeSubSectionItems(e)}
                     value={prefecture}
                 />

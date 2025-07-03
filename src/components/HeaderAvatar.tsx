@@ -20,6 +20,12 @@ export default function HeaderAvatar({ data }: Props) {
         setIsMounted(true);
     }, []);
 
+    const onClickLogout = () => {
+        if (confirm("本当にログアウトしますか？")) {
+            logout()
+        }
+    }
+
     // Use currentUserData if available, otherwise fall back to props data
     const userData = currentUserData?.success ? currentUserData.data : data;
 
@@ -57,7 +63,7 @@ export default function HeaderAvatar({ data }: Props) {
                 <a href="/mypage" className="text-base w-1/1">
                     <p className="p-2 hover:bg-gray-800">My Page</p>
                 </a>
-                <p className="p-2 font-md cursor-pointer hover:bg-gray-800" onClick={logout}>LogOut</p>
+                <p className="p-2 font-md cursor-pointer hover:bg-gray-800" onClick={onClickLogout}>LogOut</p>
             </div>
         </div>
     );
