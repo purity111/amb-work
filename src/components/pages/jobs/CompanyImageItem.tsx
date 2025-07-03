@@ -100,7 +100,7 @@ export default function CompanyImageItem({ index, control, errors, setValue, onR
             onChange={handleImageChange}
             className="hidden"
             onClick={(e) => {
-              // @ts-ignore: Reset input to allow same file trigger
+              // @ts-expect-error: Reset input to allow same file trigger
               e.currentTarget.value = null;
             }}
           />

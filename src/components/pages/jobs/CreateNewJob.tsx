@@ -22,7 +22,6 @@ import { useGetRecruitingCriterias } from "@/hooks/useGetRecruitingCriterias";
 import { useGetEmployerInfoById } from "@/hooks/useGetEmployerInfoById";
 import { createNewJob, updateJobById } from "@/lib/api";
 import { useMutation } from "@tanstack/react-query";
-import Cropper from 'react-easy-crop';
 import { toast } from "react-toastify";
 import { useRouter, useSearchParams } from "next/navigation";
 import { blobToBase64, getFirstFullImage, getImageFile } from "@/utils/helper";
@@ -532,7 +531,7 @@ export default function CreateNewJobComponent({ preLoad }: CreateNewJobProps) {
                                         onChange={handleImageChange}
                                         className="hidden"
                                         onClick={(e) => {
-                                            // @ts-ignore: Reset input to allow same file trigger
+                                            //@ts-expect-error: Reset input to allow same file trigger
                                             e.currentTarget.value = null;
                                         }}
                                     />

@@ -211,7 +211,7 @@ export default function StaffImageItem({ index, control, errors, setValue, onRem
                     onChange={handleImageChange}
                     className="hidden"
                     onClick={(e) => {
-                      // @ts-ignore: Reset input to allow same file trigger
+                      // @ts-expect-error: Reset input to allow same file trigger
                       e.currentTarget.value = null;
                     }}
                   />

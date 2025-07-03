@@ -277,7 +277,6 @@ export default function JobMngPage() {
                         sizes="(min-width: 768px) 20vw, 100vw"
                       />
                     )}
-
                   </div>
                 </div>
 

@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from "react";
-import Cropper, { Area, CropperProps } from "react-easy-crop";
+import Cropper, { Area } from "react-easy-crop";
 import CButton from "./common/Button";
-import getCroppedImage, { blobToBase64 } from "@/utils/helper";
+import getCroppedImage from "@/utils/helper";
 
 interface CustomCropperProps {
     image: string;
