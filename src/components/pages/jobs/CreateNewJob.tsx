@@ -421,7 +421,7 @@ export default function CreateNewJobComponent({ preLoad }: CreateNewJobProps) {
                 <div className="p-5">
                     {isAdmin && (
                         <div className="flex flex-col items-left md:flex-row  py-2">
-                            <div className="flex-1 flex flex-row">
+                            <div className="flex-1 flex flex-row items-center">
                                 <p className="text-sm text-gray-400 py-2">採用企業</p>
                                 <RequiredLabel />
                             </div>
@@ -445,7 +445,7 @@ export default function CreateNewJobComponent({ preLoad }: CreateNewJobProps) {
                         </div>
                     )}
                     <div className="flex flex-col items-left md:flex-row  py-2">
-                        <div className="flex-1 flex flex-row">
+                        <div className="flex-1 flex flex-row items-center">
                             <p className="text-sm text-gray-400 py-2">求人タイトル</p>
                             <RequiredLabel />
                         </div>
@@ -472,7 +472,7 @@ export default function CreateNewJobComponent({ preLoad }: CreateNewJobProps) {
                         </div>
                     </div>
                     <div className="flex flex-col items-left md:flex-row py-2">
-                        <div className="flex-1 flex flex-row">
+                        <div className="flex-1 flex flex-row items-center">
                             <p className="text-sm text-gray-400 py-2">検索時サムネイル画像</p>
                             <RequiredLabel />
                         </div>
@@ -545,7 +545,7 @@ export default function CreateNewJobComponent({ preLoad }: CreateNewJobProps) {
                         </div>
                     </div>
                     <div className="flex flex-col items-left md:flex-row  py-2">
-                        <div className="flex-1 flex flex-row">
+                        <div className="flex-1 flex flex-row items-center">
                             <p className="text-sm text-gray-400 py-2">求人一言紹介</p>
                             <RequiredLabel />
                         </div>
@@ -581,7 +581,7 @@ export default function CreateNewJobComponent({ preLoad }: CreateNewJobProps) {
                 </div>
                 <div className="p-5">
                     <div className="flex flex-col items-left md:flex-row  py-2">
-                        <div className="flex-1 flex flex-row">
+                        <div className="flex-1 flex flex-row items-center">
                             <p className="text-sm text-gray-400 py-2">その他ウェブサイト</p>
                         </div>
                         <div className="flex-3">
@@ -695,7 +695,7 @@ export default function CreateNewJobComponent({ preLoad }: CreateNewJobProps) {
                 </div>
                 <div className="p-5">
                     <div className="flex flex-col items-left md:flex-row  py-2">
-                        <div className="flex-1 flex flex-row">
+                        <div className="flex-1 flex flex-row items-center">
                             <p className="text-sm text-gray-400 py-2">給料</p>
                             <RequiredLabel />
                         </div>
@@ -728,7 +728,7 @@ export default function CreateNewJobComponent({ preLoad }: CreateNewJobProps) {
                         criterias?.map((c: RecruitingCriteria, index: number) => {
                             return (
                                 <div key={index} className="flex flex-col items-left md:flex-row py-2">
-                                    <div className="flex-1 flex flex-row">
+                                    <div className="flex-1 flex flex-row items-center">
                                         <p className="text-sm text-gray-400 py-2">{c.name}</p>
                                     </div>
                                     <div className="flex-3">
@@ -761,7 +761,7 @@ export default function CreateNewJobComponent({ preLoad }: CreateNewJobProps) {
                         </div>
                         <div className="p-5">
                             <div className="flex flex-col items-left md:flex-row  py-2">
-                                <div className="flex-1 flex flex-row">
+                                <div className="flex-1 flex flex-row items-center">
                                     <p className="text-sm text-gray-400 py-2">掲載期間</p>
                                 </div>
                                 <div className="flex-3 flex flex-row">
@@ -811,7 +811,7 @@ export default function CreateNewJobComponent({ preLoad }: CreateNewJobProps) {
                             </div>
 
                             <div className="flex flex-col items-left md:flex-row  py-2">
-                                <div className="flex-1 flex flex-row">
+                                <div className="flex-1 flex flex-row items-center">
                                     <p className="text-sm text-gray-400 py-2">応募先のご選択</p>
                                 </div>
                                 <div className="flex-3">
@@ -838,7 +838,7 @@ export default function CreateNewJobComponent({ preLoad }: CreateNewJobProps) {
                             </div>
 
                             <div className="flex flex-col items-left md:flex-row  py-2">
-                                <div className="flex-1 flex flex-row">
+                                <div className="flex-1 flex flex-row items-center">
                                     <p className="text-sm text-gray-400 py-2">転職サポートのURL</p>
                                 </div>
                                 <div className="flex-3">
@@ -865,7 +865,7 @@ export default function CreateNewJobComponent({ preLoad }: CreateNewJobProps) {
                             </div>
 
                             <div className="flex flex-col items-left md:flex-row  py-2">
-                                <div className="flex-1 flex flex-row">
+                                <div className="flex-1 flex flex-row items-center">
                                     <p className="text-sm text-gray-400 py-2">公開状況</p>
                                 </div>
                                 <div className="flex-3">
