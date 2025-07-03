@@ -228,16 +228,16 @@ export default function ApplicantMngPage() {
         <thead>
           <tr>
             <th scope='col'>No.</th>
-            <th scope='col'>{renderSortableheader('name', 'Name')}</th>
-            <th scope='col'>{renderSortableheader('name_kana', 'Name(kana)')}</th>
-            <th scope='col'>{renderSortableheader('birthdate', 'DOB')}</th>
-            <th scope='col'>{renderSortableheader('sex', 'Sex')}</th>
-            <th scope='col'>{renderSortableheader('zip', 'ZipCode')}</th>
-            <th scope='col'>Prefectures</th>
-            <th scope='col'>{renderSortableheader('tel', 'PhoneNumber')}</th>
-            <th scope='col'>Email</th>
-            <th scope='col'>{renderSortableheader('created', 'Created At')}</th>
-            <th scope='col'>Actions</th>
+            <th scope='col'>{renderSortableheader('name', '氏名')}</th>
+            <th scope='col'>{renderSortableheader('name_kana', '氏名（カナ）')}</th>
+            <th scope='col'>{renderSortableheader('birthdate', '生年月日')}</th>
+            <th scope='col'>{renderSortableheader('sex', '性別')}</th>
+            <th scope='col'>{renderSortableheader('zip', '郵便番号')}</th>
+            <th scope='col'>都道府県</th>
+            <th scope='col'>{renderSortableheader('tel', '電話番号')}</th>
+            <th scope='col'>メールアドレス</th>
+            <th scope='col'>{renderSortableheader('created', '登録日')}</th>
+            <th scope='col'>操作</th>
           </tr>
         </thead>
         <tbody>

@@ -512,6 +512,7 @@ export interface ColumnFetchParam {
     page?: number;
     limit?: number;
     searchTerm?: string;
+    category?: string;
 }
 
 export interface ColumnResponse {
@@ -522,8 +523,9 @@ export interface ColumnResponse {
         totalItems: number;
         itemsPerPage: number;
     };
+}
 
- export interface JobSeekerFilterParam {
+export interface JobSeekerFilterParam {
     page: number;
     limit: number;
     sortBy?: string;
@@ -551,4 +553,40 @@ export interface JobSeekerDetail {
     modified: string;
     employmentTypes: number[];
     desiredConditions: number[];
+}
+
+export interface Interview {
+    id: number;
+    title: string;
+    description: string;
+    tag: number; // 0 or 1 for career-changer
+    category: string;
+    content: string;
+    view_cnt?: number;
+    search_cnt?: number;
+    favourite_cnt?: number;
+    created: string;
+    deleted?: string;
+    modified: string;
+    thumbnail?: {
+        entity_path: string;
+    };
+}
+
+export interface InterviewFetchParam {
+    page?: number;
+    limit?: number;
+    searchTerm?: string;
+    category?: string;
+    tag?: number;
+}
+
+export interface InterviewResponse {
+    InterviewItems: Interview[];
+    pagination: {
+        totalPages: number;
+        currentPage: number;
+        totalItems: number;
+        itemsPerPage: number;
+    };
 }

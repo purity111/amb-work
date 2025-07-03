@@ -1,40 +1,29 @@
-'use client'
-
 import { useState, useEffect, useRef } from 'react';
 import Input from '@/components/common/Input';
 import Select from '@/components/common/Select';
-import { createColumn } from '@/lib/api';
+import { createInterview } from '@/lib/api';
 import { useForm, Controller } from 'react-hook-form';
 import RequiredLabel from '@/components/common/RequiredLabel';
 import { Editor } from '@tinymce/tinymce-react';
 import { toast } from 'react-toastify';
 
-export interface PickOption {
-    value: string;
-    option: string;
-}
-
-interface AddColumnModalProps {
+interface AddInterviewModalProps {
     isOpen: boolean;
     onClose: () => void;
 }
 
-const CATEGORIES = [
-    { value: 'コラム', option: 'コラム' },
-    { value: 'スキルアップ方法', option: 'スキルアップ方法' },
-    { value: 'バイヤー', option: 'バイヤー' },
-    { value: 'ブランド', option: 'ブランド' },
-    { value: '出張買取', option: '出張買取' },
-    { value: '業界ニュース', option: '業界ニュース' },
-    { value: '業界・市場動向', option: '業界・市場動向' },
-    { value: '疑問・悩み', option: '疑問・悩み' },
-    { value: '転職活動ノウハウ', option: '転職活動ノウハウ' }
+const TAGS = [
+    { value: '', option: '選択' },
+    { value: '0', option: 'ビジネス' },
+    { value: '1', option: 'キャリアチェンジ' },
 ];
 
-export default function AddColumnModal({ isOpen, onClose }: AddColumnModalProps) {
+export default function AddInterviewModal({ isOpen, onClose }: AddInterviewModalProps) {
     const { control, handleSubmit, formState: { errors }, watch, reset, getValues } = useForm({
         defaultValues: {
             title: '',
+            description: '',
+            tag: '',
             category: '',
             thumbnail: null as File | null,
         },
@@ -45,7 +34,6 @@ export default function AddColumnModal({ isOpen, onClose }: AddColumnModalProps)
     const thumbnail = watch('thumbnail');
     const modalRef = useRef<HTMLDivElement>(null);
 
-    // Lock scroll when modal is open
     useEffect(() => {
         if (isOpen) {
             document.body.style.overflow = 'hidden';
@@ -73,13 +61,15 @@ export default function AddColumnModal({ isOpen, onClose }: AddColumnModalProps)
             const values = getValues();
             const formData = new FormData();
             formData.append('title', values.title);
+            formData.append('description', values.description);
+            formData.append('tag', values.tag);
             formData.append('category', values.category);
             formData.append('content', htmlContent);
             if (values.thumbnail) {
                 formData.append('thumbnail', values.thumbnail);
             }
-            await createColumn(formData);
-            toast.success('コラムが追加されました');
+            await createInterview(formData);
+            toast.success('インタビューが追加されました');
             reset();
             setStep(1);
             setHtmlContent('');
@@ -108,7 +98,7 @@ export default function AddColumnModal({ isOpen, onClose }: AddColumnModalProps)
                 role="dialog"
                 aria-modal="true"
             >
-                <h2 className="text-xl font-semibold mb-4">新しいコラムを追加</h2>
+                <h2 className="text-xl font-semibold mb-4">新しいインタビューを追加</h2>
                 {step === 1 ? (
                     <form onSubmit={handleNext} className="space-y-4">
                         <div>
@@ -124,7 +114,7 @@ export default function AddColumnModal({ isOpen, onClose }: AddColumnModalProps)
                                     <Input
                                         type="text"
                                         {...field}
-                                        placeholder="コラムのタイトルを入力"
+                                        placeholder="インタビューのタイトルを入力"
                                         isError={!!errors.title}
                                         errorText={errors.title?.message as string}
                                     />
@@ -133,23 +123,47 @@ export default function AddColumnModal({ isOpen, onClose }: AddColumnModalProps)
                         </div>
                         <div>
                             <div className="flex items-center gap-1 mb-1">
-                                <label className="block text-sm font-medium">カテゴリー</label>
+                                <label className="block text-sm font-medium">タグ</label>
                                 <RequiredLabel />
                             </div>
                             <Controller
-                                name="category"
+                                name="tag"
                                 control={control}
-                                rules={{ required: 'カテゴリーは必須です' }}
+                                rules={{ required: 'タグは必須です' }}
                                 render={({ field }) => (
                                     <Select
                                         {...field}
-                                        options={CATEGORIES}
-                                        isError={!!errors.category}
-                                        errorText={errors.category?.message as string}
+                                        options={TAGS}
+                                        isError={!!errors.tag}
+                                        errorText={errors.tag?.message as string}
                                     />
                                 )}
+                                
                             />
                         </div>
+                        {/* Show 説明 only for career-changer (tag === '1'), after タグ */}
+                        {watch('tag') === '1' && (
+                            <div>
+                                <div className="flex items-center gap-1 mb-1">
+                                    <label className="block text-sm font-medium">説明</label>
+                                    <RequiredLabel />
+                                </div>
+                                <Controller
+                                    name="description"
+                                    control={control}
+                                    rules={{ required: '説明は必須です' }}
+                                    render={({ field }) => (
+                                        <Input
+                                            type="text"
+                                            {...field}
+                                            placeholder="インタビューの説明を入力"
+                                            isError={!!errors.description}
+                                            errorText={errors.description?.message as string}
+                                        />
+                                    )}
+                                />
+                            </div>
+                        )}
                         <div>
                             <div className="flex items-center gap-1 mb-1">
                                 <label className="block text-sm font-medium">サムネイル画像</label>
@@ -201,58 +215,48 @@ export default function AddColumnModal({ isOpen, onClose }: AddColumnModalProps)
                             </button>
                             <button
                                 type="submit"
+                                className="cursor-pointer flex-1 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors"
                                 disabled={isLoading}
-                                className="cursor-pointer flex-1 px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
                             >
                                 次へ
                             </button>
                         </div>
                     </form>
                 ) : (
-                    <div className="flex flex-col h-full">
-                        <div className="flex-1 mb-4">
+                    <div>
+                        <div className="mb-4">
                             <Editor
                                 apiKey={process.env.NEXT_PUBLIC_TINYMCE_API_KEY}
                                 value={htmlContent}
-                                onEditorChange={setHtmlContent}
                                 init={{
-                                    className: "flex-1 text-sm font-light border-1 border-gray-200 rounded-md p-2 min-h-20 max-h-100",
-                                    height: '500px',
-                                    // menubar: true,
+                                    height: 500,
                                     menubar: 'file edit view insert format tools table help',
                                     plugins: [
                                         'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
                                         'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
                                         'insertdatetime', 'media', 'table', 'code', 'help', 'wordcount'
                                     ],
-                                    toolbar: 'undo redo | blocks | code | bold italic forecolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | table | removeformat | help',
-                                    content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }',
-                                    file_picker_types: 'image',
-                                    // Optional: clean pasted images into base64
-                                    paste_data_images: true,
+                                    toolbar:
+                                        'undo redo | formatselect | bold italic backcolor | \
+                                        alignleft aligncenter alignright alignjustify | \
+                                        bullist numlist outdent indent | removeformat | help',
                                 }}
+                                onEditorChange={setHtmlContent}
                             />
                         </div>
                         <div className="flex gap-3 pt-4">
                             <button
                                 type="button"
                                 onClick={handleBack}
-                                className="cursor-pointer flex-1 px-4 py-2 bg-[#ff953e] border-gray-300 text-white rounded-md hover:bg-gray-50 transition-colors"
+                                className="cursor-pointer flex-1 px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
                             >
                                 戻る
                             </button>
                             <button
                                 type="button"
-                                onClick={handleCancel}
-                                className="cursor-pointer flex-1 px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
-                            >
-                                キャンセル
-                            </button>
-                            <button
-                                type="button"
                                 onClick={handleAdd}
-                                disabled={isLoading || !htmlContent}
-                                className="cursor-pointer flex-1 px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
+                                className="cursor-pointer flex-1 px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 transition-colors"
+                                disabled={isLoading}
                             >
                                 追加
                             </button>

@@ -176,7 +176,7 @@ export default function JobMngPage() {
     <div className="flex min-h-screen flex-col">
       <div className="w-95/100 max-w-320 mx-auto pt-10">
         <div className="border-b-1 border-gray-700 py-2 flex flex-col">
-          <div className="flex-1 flex flex-row space-x-2 space-y-2">
+          <div className="flex-1 flex flex-row items-center space-x-2 space-y-2">
             <div className="flex-1">
               <CButton
                 text="求人掲載ページ新規作成"
@@ -200,21 +200,23 @@ export default function JobMngPage() {
             />
           </div>
           <div className="flex flex-col lg:flex-row lg:space-x-3">
-            <div className="flex-1 flex flex-row space-x-3 pt-2">
+            <div className="flex-1 flex flex-row items-center space-x-3 pt-2">
               <CSelect
                 options={JobTypeOptions}
                 value={jobType}
                 onChange={onSelectJobType}
                 width="w-40"
                 height="h-10"
+                className="truncate"
               />
               {isAdmin && (
                 <CSelect
                   options={companyOptions}
                   value={company}
                   onChange={onSelectCompany}
-                  height="h-10"
                   width="w-60"
+                  height="h-10"
+                  className="truncate"
                 />
               )}
             </div>
@@ -281,7 +283,7 @@ export default function JobMngPage() {
                   </div>
                 </div>
 
-                <div className="flex-1 flex flex-row flex-wrap content-start border-l-1 border-gray-700">
+                <div className="flex-1 flex flex-row items-center flex-wrap content-start border-l-1 border-gray-700">
 
                   <div className="w-1/1 lg:w-1/2 flex flex-row h-fit border-b-1 border-gray-700">
                     <div className="flex-1">

@@ -50,12 +50,12 @@ export default function CustomCropper({ image, cropWidth, cropHeight, onCancel, 
                 </div>
                 <div className="flex flex-row pt-10 justify-between">
                     <CButton
-                        text="Finish"
+                        text="確認"
                         className='bg-blue text-white w-[40%]'
                         onClick={handleFinish}
                     />
                     <CButton
-                        text="Cancel"
+                        text="キャンセル"
                         className='bg-gray-600 text-white w-[40%]'
                         onClick={onCancel}
                     />

@@ -14,13 +14,18 @@ const pathToName: { [key: string]: string } = {
     '/simplified-test': '真贋スキル簡易テスト',
     '/qualifications': '資格一覧',
     '/career-counseling': '転職支援サービス',
-    '/column': 'コラム一覧',
+    '/columns': 'コラム一覧',
     '/about': 'リユース転職について',
     '/contact': 'お問い合わせ',
+    '/interview': 'インタビュー'
     // Add more paths and their corresponding names as needed
 }
 
-export default function Breadcrumb() {
+interface BreadcrumbProps {
+    lastItemName?: string;
+}
+
+export default function Breadcrumb({ lastItemName }: BreadcrumbProps) {
     const pathname = usePathname()
 
     // Split the path into segments and filter out empty strings
@@ -28,10 +33,11 @@ export default function Breadcrumb() {
 
     // Build the breadcrumb items
     const breadcrumbItems = segments.map((segment, index) => {
-        // Reconstruct the path up to this segment
         const path = '/' + segments.slice(0, index + 1).join('/')
-        const name = pathToName[path] || segment // Fallback to segment if no mapping exists
-
+        let name = pathToName[path] || segment // Fallback to segment if no mapping exists
+        if (index === segments.length - 1 && lastItemName) {
+            name = lastItemName
+        }
         return {
             path,
             name

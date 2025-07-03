@@ -4,9 +4,11 @@ import Link from 'next/link';
 
 interface ColumnCardProps {
     column: Column;
+    onEdit?: (column: Column) => void;
 }
 
 export default function ColumnCard({ column }: ColumnCardProps) {
+
     const formatDate = (dateString: string) => {
         const date = new Date(dateString);
         const year = date.getFullYear();
@@ -18,9 +20,23 @@ export default function ColumnCard({ column }: ColumnCardProps) {
         return `${year}.${month}.${day} ${hours}:${minutes}`;
     };
 
+    // const handleDelete = async () => {
+    //     if (window.confirm('このコラムを削除してもよろしいですか？')) {
+    //         try {
+    //             await deleteColumn(column.id);
+    //             alert('コラムが削除されました');
+    //             router.refresh();
+    //         } catch (error) {
+    //             alert('エラーが発生しました');
+    //             console.log(error);
+                
+    //         }
+    //     }
+    // };
+
     return (
         <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
-            <Link href={`/column/${column.id}`}>
+            <Link href={`/columns/${column.id}`}>
                 <div className="relative h-48 sm:h-56">
                     {column.thumbnail ? (
                         <Image
@@ -44,11 +60,10 @@ export default function ColumnCard({ column }: ColumnCardProps) {
                         {column?.title}
                     </h3>
                     <div className="">
-                        <span>閲覧: {column?.view_cnt || 0}　　</span>
+                        <span>閲覧数: {column?.view_cnt || 0}　　</span>
                         {/* <span>検索: {column?.search_cnt || 0}　　</span> */}
-                        <span>お気に入り: {column?.favourite_cnt || 0}</span>
+                        {/* <span>お気に入り: {column?.favourite_cnt || 0}</span> */}
                     </div>
-
                 </div>
             </Link>
         </div>
