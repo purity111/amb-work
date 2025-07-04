@@ -19,25 +19,38 @@ interface AddColumnModalProps {
     onClose: () => void;
 }
 
-const CATEGORIES = [
-    { value: 'コラム', option: 'コラム' },
-    { value: 'スキルアップ方法', option: 'スキルアップ方法' },
-    { value: 'バイヤー', option: 'バイヤー' },
-    { value: 'ブランド', option: 'ブランド' },
-    { value: '出張買取', option: '出張買取' },
-    { value: '業界ニュース', option: '業界ニュース' },
-    { value: '業界・市場動向', option: '業界・市場動向' },
-    { value: '疑問・悩み', option: '疑問・悩み' },
-    { value: '転職活動ノウハウ', option: '転職活動ノウハウ' }
+const categories = [
+    { value: '', option: '選択' },
+    ...[
+        'コラム',
+        'スキルアップ方法',
+        'バイヤー',
+        'ブランド',
+        '出張買取',
+        '業界ニュース',
+        '業界・市場動向',
+        '疑問・悩み',
+        '転職活動ノウハウ',
+        '鑑定士',
+    ].map(cat => ({ value: cat, option: cat }))
 ];
 
 export default function AddColumnModal({ isOpen, onClose }: AddColumnModalProps) {
-    const { control, handleSubmit, formState: { errors }, watch, reset, getValues } = useForm({
+    const {
+        register,
+        handleSubmit,
+        control,
+        reset,
+        setValue,
+        watch,
+        getValues, // <-- add this line
+        formState: { errors }
+    } = useForm({
         defaultValues: {
             title: '',
-            category: '',
+            category: '', // Ensure default is empty string
             thumbnail: null as File | null,
-        },
+        }
     });
     const [isLoading, setIsLoading] = useState(false);
     const [step, setStep] = useState(1);
@@ -139,13 +152,15 @@ export default function AddColumnModal({ isOpen, onClose }: AddColumnModalProps)
                             <Controller
                                 name="category"
                                 control={control}
-                                rules={{ required: 'カテゴリーは必須です' }}
+                                rules={{ required: 'カテゴリーを選択してください' }}
                                 render={({ field }) => (
                                     <Select
-                                        {...field}
-                                        options={CATEGORIES}
-                                        isError={!!errors.category}
-                                        errorText={errors.category?.message as string}
+                                        value={field.value}
+                                        onChange={field.onChange}
+                                        options={categories}
+                                        placeholder="カテゴリーを選択"
+                                        isError={!!errors.category?.message}
+                                        errorText={errors.category?.message}
                                     />
                                 )}
                             />
