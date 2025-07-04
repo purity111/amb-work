@@ -37,11 +37,9 @@ const categories = [
 
 export default function AddColumnModal({ isOpen, onClose }: AddColumnModalProps) {
     const {
-        register,
         handleSubmit,
         control,
         reset,
-        setValue,
         watch,
         getValues, // <-- add this line
         formState: { errors }
