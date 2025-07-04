@@ -38,7 +38,7 @@ export default function EditColumnModal({ isOpen, onClose, column }: EditColumnM
     } = useForm({
         defaultValues: {
             title: '',
-            category: '',
+            category: '', // Ensure default is empty string
             thumbnail: null as File | null,
         }
     });
@@ -111,16 +111,19 @@ export default function EditColumnModal({ isOpen, onClose, column }: EditColumnM
     };
 
     const categories = [
-        'コラム',
-        'スキルアップ方法',
-        'バイヤー',
-        'ブランド',
-        '出張買取',
-        '業界ニュース',
-        '業界・市場動向',
-        '疑問・悩み',
-        '転職活動ノウハウ',
-        '鑑定士',
+        { value: '', option: '選択' },
+        ...[
+            'コラム',
+            'スキルアップ方法',
+            'バイヤー',
+            'ブランド',
+            '出張買取',
+            '業界ニュース',
+            '業界・市場動向',
+            '疑問・悩み',
+            '転職活動ノウハウ',
+            '鑑定士',
+        ].map(cat => ({ value: cat, option: cat }))
     ];
 
     if (!isOpen) return null;
@@ -158,7 +161,7 @@ export default function EditColumnModal({ isOpen, onClose, column }: EditColumnM
                                         <Select
                                             value={field.value}
                                             onChange={field.onChange}
-                                            options={categories.map(cat => ({ value: cat, option: cat }))}
+                                            options={categories}
                                             placeholder="カテゴリーを選択"
                                             isError={!!errors.category?.message}
                                             errorText={errors.category?.message}

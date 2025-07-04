@@ -235,20 +235,21 @@ export default function EditInterviewModal({ isOpen, onClose, interview }: EditI
                             <Editor
                                 apiKey={process.env.NEXT_PUBLIC_TINYMCE_API_KEY}
                                 value={htmlContent}
+                                onEditorChange={setHtmlContent}
                                 init={{
-                                    height: 500,
+                                    className: "flex-1 text-sm font-light border-1 border-gray-200 rounded-md p-2 min-h-20 max-h-100",
+                                    height: '500px',
                                     menubar: 'file edit view insert format tools table help',
                                     plugins: [
-                                        'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'print', 'preview', 'anchor',
-                                        'searchreplace', 'visualblocks', 'code', 'fullscreen',
-                                        'insertdatetime', 'media', 'table', 'paste', 'code', 'help', 'wordcount'
+                                        'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
+                                        'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
+                                        'insertdatetime', 'media', 'table', 'code', 'help', 'wordcount'
                                     ],
-                                    toolbar:
-                                        'undo redo | formatselect | bold italic backcolor | \
-                                        alignleft aligncenter alignright alignjustify | \
-                                        bullist numlist outdent indent | removeformat | help',
+                                    toolbar: 'undo redo | blocks | code | bold italic forecolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | table | removeformat | help',
+                                    content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }',
+                                    file_picker_types: 'image',
+                                    paste_data_images: true,
                                 }}
-                                onEditorChange={setHtmlContent}
                             />
                         </div>
                         <div className="flex gap-3 pt-4">

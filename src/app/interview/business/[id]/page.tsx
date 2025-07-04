@@ -127,7 +127,7 @@ export default function BusinessInterviewDetailPage() {
                     </h1>
                 </div>
                 <p className='mb-6 text-sm md:text-md'>{formatDate(interview.created)}</p>
-                <div className="relative md:w-[80%] m-auto aspect-[1/1] mb-4 rounded rounded-[20px] object-contain">
+                <div className="relative md:w-[80%] m-auto aspect-[3/2] mb-4 rounded rounded-[20px] object-contain">
                     {interview.thumbnail?.entity_path && (
                         <Image
                             src={interview.thumbnail.entity_path}
