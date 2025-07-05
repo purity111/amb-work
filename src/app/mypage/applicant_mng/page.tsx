@@ -242,7 +242,7 @@ export default function ApplicantMngPage() {
         </thead>
         <tbody>
           {isLoading && (
-            <p>Loading...</p>
+            <p>読み込む中...</p>
           )}
           {!response?.data?.jobseekers?.length && !isLoading && (
             <p>No results</p>

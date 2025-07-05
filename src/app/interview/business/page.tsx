@@ -40,7 +40,7 @@ function BusinessInterviewPageInner() {
 
     useEffect(() => {
         if (response) {
-            const filtered = response.InterviewItems.filter((interview: Interview) => interview.tag === null);
+            const filtered = response.InterviewItems.filter((interview: Interview) => interview.tag !== 1);
             setInterviews(filtered);
             setTotalPage(Math.ceil(filtered.length / limit));
             setCurrentPage(1);
@@ -111,7 +111,7 @@ function BusinessInterviewPageInner() {
                         <h2 className="text-2xl md:text-3xl font-bold mb-9 text-center relative inline-block mx-auto job-openings">
                             企業インタビュー
                         </h2>
-                        <p className='text-center text-[14px] text-gray-600 font-sans'>BUSINESS INTERVIEW</p>
+                        <p className='text-center text-[14px] text-gray-600 font-sans'>INTERVIEW LIST</p>
                     </div>
                     <div className="flex flex-col-reverse md:flex-row gap-5 mb-6 justify-end">
                         <div className="flex justify-center gap-5">

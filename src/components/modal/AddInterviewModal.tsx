@@ -13,7 +13,6 @@ interface AddInterviewModalProps {
 }
 
 const TAGS = [
-    { value: '', option: '選択' },
     { value: '0', option: 'ビジネス' },
     { value: '1', option: 'キャリアチェンジ' },
 ];
@@ -31,6 +30,7 @@ export default function AddInterviewModal({ isOpen, onClose }: AddInterviewModal
     const [isLoading, setIsLoading] = useState(false);
     const [step, setStep] = useState(1);
     const [htmlContent, setHtmlContent] = useState('');
+    const [selectedTag, setSelectedTag] = useState('');
     const thumbnail = watch('thumbnail');
     const modalRef = useRef<HTMLDivElement>(null);
 
@@ -49,6 +49,7 @@ export default function AddInterviewModal({ isOpen, onClose }: AddInterviewModal
         reset();
         setStep(1);
         setHtmlContent('');
+        setSelectedTag('');
         onClose();
     };
 
@@ -62,22 +63,26 @@ export default function AddInterviewModal({ isOpen, onClose }: AddInterviewModal
             const formData = new FormData();
             formData.append('title', values.title);
             formData.append('description', values.description);
-            formData.append('tag', values.tag);
+            formData.append('tag', selectedTag); // Use selectedTag
             formData.append('category', values.category);
             formData.append('content', htmlContent);
+            formData.append('type', 'career-changer'); // If needed for your backend
+            console.log('formData', selectedTag);
+            
             if (values.thumbnail) {
                 formData.append('thumbnail', values.thumbnail);
             }
+            
             await createInterview(formData);
             toast.success('インタビューが追加されました');
             reset();
             setStep(1);
             setHtmlContent('');
+            setSelectedTag('');
             onClose();
         } catch (error) {
             toast.error('エラーが発生しました');
             console.log(error);
-
         } finally {
             setIsLoading(false);
         }
@@ -133,6 +138,11 @@ export default function AddInterviewModal({ isOpen, onClose }: AddInterviewModal
                                 render={({ field }) => (
                                     <Select
                                         {...field}
+                                        value={selectedTag}
+                                        onChange={e => {
+                                            field.onChange(e);
+                                            setSelectedTag(e.target.value);
+                                        }}
                                         options={TAGS}
                                         isError={!!errors.tag}
                                         errorText={errors.tag?.message as string}
@@ -142,7 +152,7 @@ export default function AddInterviewModal({ isOpen, onClose }: AddInterviewModal
                             />
                         </div>
                         {/* Show 説明 only for career-changer (tag === '1'), after タグ */}
-                        {watch('tag') === '1' && (
+                        {selectedTag === '1' && (
                             <div>
                                 <div className="flex items-center gap-1 mb-1">
                                     <label className="block text-sm font-medium">説明</label>

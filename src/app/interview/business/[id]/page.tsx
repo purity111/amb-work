@@ -30,7 +30,10 @@ export default function BusinessInterviewDetailPage() {
             .catch(() => setInterview(null))
             .finally(() => setIsLoading(false));
     }, [id]);
-
+    
+    useEffect(() => {
+        console.log('Detail', interview);
+    }, [interview])
     const formatDate = (dateString: string) => {
         const date = new Date(dateString);
         const year = date.getFullYear();

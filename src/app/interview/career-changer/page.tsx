@@ -133,7 +133,7 @@ function CareerChangerInterviewPageInner() {
                         <h2 className="text-2xl md:text-3xl font-bold mb-9 text-center relative inline-block mx-auto job-openings">
                             求職者インタビュー
                         </h2>
-                        <p className='text-center text-[14px] text-gray-600 font-sans'>BUSINESS INTERVIEW</p>
+                        <p className='text-center text-[14px] text-gray-600 font-sans'>INTERVIEW LIST</p>
                     </div>
                     <div className="flex flex-col-reverse md:flex-row gap-5 mb-6 justify-end">
                         <div className="flex gap-5 justify-center">

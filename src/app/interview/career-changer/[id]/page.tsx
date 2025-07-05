@@ -45,6 +45,10 @@ export default function CareerChangerInterviewDetailPage() {
         setEditModalOpen(true);
     };
 
+    useEffect(() => {
+        console.log('Detail', interview);
+    }, [interview])
+    
     const handleDelete = async () => {
         if (!interview) return;
         if (window.confirm('このインタビューを削除してもよろしいですか？')) {

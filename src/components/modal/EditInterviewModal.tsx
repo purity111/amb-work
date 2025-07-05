@@ -15,8 +15,7 @@ interface EditInterviewModalProps {
 }
 
 const TAGS = [
-    { value: '', option: '選択' },
-    { value: 'business', option: 'ビジネス' },
+    { value: '0', option: 'ビジネス' },
     { value: '1', option: 'キャリアチェンジ' },
 ];
 
@@ -101,7 +100,7 @@ export default function EditInterviewModal({ isOpen, onClose, interview }: EditI
             const formData = new FormData();
             formData.append('title', values.title);
             formData.append('description', values.description);
-            formData.append('tag', values.tag);
+            formData.append('tag', selectedTag);
             formData.append('category', values.category);
             formData.append('content', htmlContent);
             if (values.thumbnail instanceof File) {
