@@ -142,7 +142,7 @@ export default function RecruiterForm() {
             <CInput
               multiline
               placeholder="お問い合わせ内容を入力してください"
-              {...register("inquiryDetail")}
+              {...register("inquiry")}
               className="w-full"
               height="h-[100px]"
             />

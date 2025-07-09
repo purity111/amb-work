@@ -348,7 +348,6 @@ export const deleteCompanyApplication = async (id: number): Promise<void> => {
 export const getContacts = async (param: ContactFetchParam) => {
   const queryString = toQueryString(param);
   const response = await api.get(`/contacts?${queryString}`);
-  console.log('----------', response.data);
   return response.data;
 };
 

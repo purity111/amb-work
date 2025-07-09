@@ -84,7 +84,7 @@ export default function ContactInquiryList() {
     3: 'その他',
   };
 
-  const truncateText = (text: string, maxLength: number = 20) => {
+  const truncateText = (text: string, maxLength: number = 15) => {
     if (text.length <= maxLength) {
       return text;
     }
@@ -202,7 +202,7 @@ export default function ContactInquiryList() {
               </table>
 
               {/* Pagination Controls */}
-              {totalPage > 1 && (
+              {totalPage > 0 && (
                 <div className="flex flex-row justify-center mt-4">
                   <Pagination
                     page={currentPage}

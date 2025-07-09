@@ -608,7 +608,7 @@ export interface CompanyApplicationItem {
   name: string;
   email: string;
   telephone: string;
-  inquiryDetail: string;
+  inquiry: string;
   created: string;
   modified: string;
 }

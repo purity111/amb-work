@@ -77,7 +77,7 @@ export default function RecruiterInquiryList() {
   };
 
   // Helper function to truncate text longer than 20 characters
-  const truncateText = (text: string, maxLength = 20) => {
+  const truncateText = (text: string, maxLength = 15) => {
     if (!text) return '';
     return text.length > maxLength ? text.slice(0, maxLength) + '...' : text;
   };
@@ -174,7 +174,7 @@ export default function RecruiterInquiryList() {
                         </div>
                       </td>
                       <td data-label="お問い合わせ内容" className="py-2 px-4 border-b border-gray-200 text-center">
-                        <span className="whitespace-pre-wrap" title={app.inquiryDetail}>{truncateText(app.inquiryDetail)}</span>
+                        <span className="whitespace-pre-wrap" title={app.inquiry}>{truncateText(app.inquiry)}</span>
                       </td>
                       <td data-label="作成日" className="py-2 px-4 border-b border-gray-200 text-center hidden md:table-cell">
                         {formatDateTime(app.created)}
