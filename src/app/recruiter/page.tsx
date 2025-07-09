@@ -10,6 +10,7 @@ import PricePlan from "@/components/pages/recruiter/PricePlan";
 import FormField from "@/components/FormField";
 import { RecruiterPainPoints, RecruiterStatistics, aboutItems, customerVoices, RecruiterFlowSteps } from "@/utils/constants";
 import Footer from "@/components/Footer";
+import RecruiterForm from "@/components/pages/recruiter/RecruiterForm";
 
 export default function RecruiterPage() {
     return (
@@ -212,24 +213,7 @@ export default function RecruiterPage() {
                     <div className="py-16 md:py-24 max-w-[1000px] mx-auto px-4 md:px-0">
                         <p className="text-green text-center pb-2">Application Form</p>
                         <h2 className="text-[26px] md:text-[34px] lg:text-[40px] font-bold mb-15 text-center">企業ご担当者様お申込みフォーム</h2>
-                        <form className="space-y-6">
-                            <FormField label="会社名" type="text" required />
-                            <FormField label="部署名" type="text" required />
-                            <FormField label="お名前" type="text" required />
-                            <FormField label="メールアドレス" type="email" required />
-                            <FormField label="電話番号" type="tel" required />
-
-                            {/* Use FormField for the textarea field */}
-                            <FormField
-                                label="お問い合わせ内容について"
-                                component="textarea"
-                                required
-                                rows={6} // Adjust rows as needed
-                            />
-
-                            {/* Keep the submit button */}
-                            <input type="submit" value="送信" className="bg-green text-white w-[20%] flex m-auto py-2 rounded-lg cursor-pointer hover:opacity-80" />
-                        </form>
+                        <RecruiterForm />
                     </div>
                 </div>
             </main >

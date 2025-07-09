@@ -10,6 +10,7 @@ export type MenuItem = {
   label: string;
   path?: string;
   icon?: string; // Optional icon path or name
+  submenu?: Array<{ label: string; path: string }>;
 };
 
 // Move menuItemsByRole outside the component and export it
@@ -37,6 +38,16 @@ export const menuItemsByRole: Record<string, MenuItem[]> = {
     { label: '応募者管理', path: '/mypage/applicant_mng', icon: 'applicants.png' },
     { label: '企業管理', path: '/mypage/company_mng', icon: 'company.png' },
     { label: 'チャット管理', path: '/mypage/chat_mng', icon: 'chat.png' },
+    {
+      label: '問い合わせ対応',
+      path: '/mypage/inquiry_mng',
+      icon: 'inquiry.png',
+      submenu: [
+        { label: 'キャリア相談', path: '/mypage/inquiry/career' },
+        { label: '企業からの問い合わせ', path: '/mypage/inquiry/recruiter' },
+        { label: 'お問い合わせ', path: '/mypage/inquiry/contact' },
+      ],
+    },
     { label: 'ログアウト', path: '/logout', icon: 'logout.png' },
   ],
   subadmin: [
@@ -57,6 +68,7 @@ export default function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
   const [isMounted, setIsMounted] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [logoutModalShown, setLogoutModalShown] = useState(false)
+  const [openSubmenu, setOpenSubmenu] = useState<string | null>(null);
 
   const { formIsDirty } = useAuthContext();
   const { navigate } = useUnsavedChangesPrompt(formIsDirty);
@@ -164,7 +176,7 @@ export default function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
           </p>
           <ul className="space-y-2">
             {menuItems.map((item) => (
-              <li key={item.path}>
+              <li key={item.path || item.label}>
                 {item.path === '/logout' ? (
                   <button
                     onClick={onClickLogout}
@@ -181,6 +193,37 @@ export default function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
                     )}
                     {item.label}
                   </button>
+                ) : item.submenu ? (
+                  <div>
+                    <p
+                      onClick={() => setOpenSubmenu(openSubmenu === item.label ? null : item.label)}
+                      className={`cursor-pointer flex items-center p-2 rounded-lg transition-colors text-base md:text-[18px] ${pathname === item.path ? 'bg-blue-200 text-blue-800' : 'text-gray-700 hover:bg-gray-200'}`}
+                    >
+                      {item.icon && (
+                        <img
+                          src={`/images/icons/${item.icon}`}
+                          alt={item.label}
+                          className="w-6 h-6 mr-3"
+                        />
+                      )}
+                      {item.label}
+                      <span className="ml-auto">{openSubmenu === item.label ? '▲' : '▼'}</span>
+                    </p>
+                    {openSubmenu === item.label && (
+                      <ul className="ml-8 mt-1 space-y-1">
+                        {item.submenu.map((sub) => (
+                          <li key={sub.path}>
+                            <p
+                              onClick={() => goNavigation(sub.path)}
+                              className={`cursor-pointer flex items-center p-2 rounded-lg transition-colors text-base md:text-[16px] ${pathname === sub.path ? 'bg-blue-100 text-blue-700' : 'text-white hover:bg-white-500'}`}
+                            >
+                              {sub.label}
+                            </p>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </div>
                 ) : (
                   <p
                     onClick={() => goNavigation(item.path as string)}
