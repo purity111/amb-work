@@ -12,7 +12,7 @@ const ReasonCardGrid: React.FC<ReasonCardGridProps> = ({ items }) => {
         {items.slice(0, 3).map((item, idx) => (
           <div
             key={idx}
-            className={`flex-1 p-8 rounded-2xl text-center min-h-[170px] flex flex-col items-center justify-center ${idx === 0 ? 'rounded-tl-[40px]' : ''} ${idx % 2 === 0 ? 'bg-[#ffffde]' : 'bg-[#ffffed]'}`}
+            className={`flex-1 p-8 rounded-2xl text-center min-h-[170px] m-auto md:m-0 flex flex-col items-center justify-center ${idx === 0 ? 'rounded-tl-[40px]' : ''} ${idx % 2 === 0 ? 'bg-[#ffffde]' : 'bg-[#ffffed]'}`}
             style={{ maxWidth: 400 }}
           >
             <div className="text-[#65B729] hyphen font-bold text-[30px]">{`0${idx + 1}`}</div>
@@ -25,7 +25,7 @@ const ReasonCardGrid: React.FC<ReasonCardGridProps> = ({ items }) => {
         {items.slice(3, 5).map((item, idx) => (
           <div
             key={idx + 3}
-            className={`flex-1 p-8 rounded-2xl text-center min-h-[170px] flex flex-col items-center justify-center ${(idx + 3) % 2 === 0 ? 'bg-[#ffffde]' : 'bg-[#ffffed]'}`}
+            className={`flex-1 p-8 rounded-2xl text-center min-h-[170px] m-auto md:m-0 flex flex-col items-center justify-center ${(idx + 3) % 2 === 0 ? 'bg-[#ffffde]' : 'bg-[#ffffed]'}`}
             style={{ maxWidth: 400 }}
           >
             <div className="text-[#65B729] hyphen font-bold text-[30px]">{`0${idx + 4}`}</div>

@@ -109,7 +109,7 @@ export default function CompanyPage() {
                                         </span>
                                         <span className="text-left font-semibold">{item}</span>
                                     </li>
-                                    <hr className="border-t mb-6 border-[#dfdfdf]" />
+                                    <hr className="border-t mb-6 border-[#dfdfdf] mt-[10px]" />
                                 </div>
                             ))}
                         </ul>

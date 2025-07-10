@@ -1642,6 +1642,15 @@ export const EXPERIENCE_NAYAMI_ITEMS = [
     '自分に合う環境で働きたいがどんな会社があるかわからない',
 ];
 
+export const INEXPERIENCE_NAYAMI_ITEMS = [
+    'キャリアアップが見込めない',
+    'このままここにいてもいいのか、漠然と不安',
+    '好きなことを仕事にしたい',
+    '本当に未経験から挑戦できるのか不安',
+    'どんな会社や仕事があるのかわからない',
+    'すでに応募済だが他にも自分に合う企業があれば知りたい',
+];
+
 export const EXPERIENCE_REASON_ITEMS = [
   'リユース業界の経験者（元人事・店長）が親身にサポートしている',
   '経験者を求めている企業情報を持つため、キャリアアップできる案件が豊富',
@@ -1676,3 +1685,31 @@ export const EXPERIENCE_SUCCESS_CASES = [
     description: 'コミュニケーション力を活かしつつ、もう少し違うキャリアを築きたいと考えていました。シフト制から土日休みが取れ、長期的にも働きやすい環境になりました。',
   },
 ];
+
+export const INEXPERIENCE_SUCCESS_CASES = [
+    {
+      caseNo: 'CASE 01',
+      caseTitle: '好きを仕事にする',
+      caseSubtitle: '美容師からアパレルリユース企業へ',
+      tag: '20代女性',
+      image: '/images/inexperience/man1.png',
+      description: '手荒れが原因で転職し、ずっと好きだった古着を扱える仕事に就きました。日々様々な洋服に触れることができ刺激的です。土日休みで残業もほとんどないので、働きやすい環境です。',
+    },
+    {
+      caseNo: 'CASE 02',
+      caseTitle: '成長産業にキャリアチェンジする',
+      caseSubtitle: '大手小売業から上場総合リユースへ',
+      tag: '30代男性',
+      image: '/images/inexperience/man2.png',
+      description: '10年間勤めてきた中で、もっとワクワクできる仕事がしたいと考えるように。リユースの可能性はずっと感じていたので、家族からも応援してもらい、思い切って転職しました。',
+    },
+    {
+      caseNo: 'CASE 03',
+      caseTitle: '未経験だが強みを生かす',
+      caseSubtitle: 'コールセンターSVからバイヤーへ',
+      tag: '30代女性',
+      image: '/images/inexperience/man3.png',
+      description: '同じように数字を追いかける仕事でもあり、これまでの目標達成志向がまさかバイヤーでも活かせるとは驚きました。質の良いブランド品をたくさんのお客様に届けたいです。',
+    },
+  ];
+  
