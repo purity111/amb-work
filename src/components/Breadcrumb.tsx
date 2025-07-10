@@ -17,7 +17,8 @@ const pathToName: { [key: string]: string } = {
     '/columns': 'コラム一覧',
     '/about': 'リユース転職について',
     '/contact': 'お問い合わせ',
-    '/interview': 'インタビュー'
+    '/interview': 'インタビュー',
+    '/experience': '経験者サポート'
     // Add more paths and their corresponding names as needed
 }
 

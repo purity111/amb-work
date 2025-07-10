@@ -4,8 +4,8 @@
 @font-face {
   font-family: 'YuGothicWeb';
   src: url('/fonts/yu-gothic-regular.woff2') format('woff2'),
-       url('/fonts/yu-gothic-regular.woff') format('woff'),
-       url('/fonts/yu-gothic-regular.ttf') format('truetype');
+    url('/fonts/yu-gothic-regular.woff') format('woff'),
+    url('/fonts/yu-gothic-regular.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
@@ -331,6 +331,7 @@ dl dt {
     border-collapse: collapse;
   }
 }
+
 @media screen and (min-width: 768px) {
   .rwd-table tr:hover:not(:first-child) {
     background-color: #d8e7f3;
@@ -339,7 +340,7 @@ dl dt {
   .rwd-table {
     width: 100%;
   }
-  
+
   .rwd-table td:before {
     display: none;
   }
@@ -359,7 +360,7 @@ dl dt {
   .rwd-table th:last-child,
   .rwd-table td:last-child {
     padding-right: 0;
-  } 
+  }
 
   .rwd-table th,
   .rwd-table td {
@@ -371,4 +372,26 @@ dl dt {
   width: 95%;
   max-width: 800px;
   margin: auto;
+}
+
+.experience::before {
+  content: "";
+  position: absolute;
+  background: #f0f0f0;
+  width: 50%;
+  height: 100%;
+  left: 0;
+  bottom: 0;
+  z-index: -1;
+}
+
+.experience::after {
+  content: "";
+  position: absolute;
+  background: #f8f8f8;
+  width: 50%;
+  height: 100%;
+  right: 0;
+  bottom: 0;
+  z-index: -1;
 }
