@@ -84,7 +84,7 @@ export default function ContactInquiryList() {
     3: 'その他',
   };
 
-  const truncateText = (text: string, maxLength: number = 15) => {
+  const truncateText = (text: string, maxLength: number = 12) => {
     if (text.length <= maxLength) {
       return text;
     }

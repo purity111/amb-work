@@ -637,3 +637,16 @@ export interface ContactFetchParam {
   limit?: number;
   searchTerm?: string;
 }
+
+// Career Consultation Inquiry
+export interface CareerConsultationParam {
+  name: string;
+  email: string;
+  telephone: string;
+  birthday?: string;
+  prefectures?: string;
+  experience?: string;
+  inquiry?: string;
+  desired_job_type?: string;
+  request?: string;
+}

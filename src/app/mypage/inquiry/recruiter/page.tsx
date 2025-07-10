@@ -77,7 +77,7 @@ export default function RecruiterInquiryList() {
   };
 
   // Helper function to truncate text longer than 20 characters
-  const truncateText = (text: string, maxLength = 15) => {
+  const truncateText = (text: string, maxLength = 12) => {
     if (!text) return '';
     return text.length > maxLength ? text.slice(0, maxLength) + '...' : text;
   };
