@@ -94,7 +94,7 @@ export const HeaderButtonList: HeaderButton[] = [
     {
         title: 'コラム一覧',
         type: 'link',
-        to: '/column'
+        to: '/columns'
     },
     {
         title: '採用担当者の方へ',
@@ -194,7 +194,7 @@ export const FooterButtonList = [
     },
     {
         title: 'コラム一覧',
-        to: '/column'
+        to: '/columns'
     },
     {
         title: 'セミナー情報',
@@ -217,7 +217,7 @@ export const FooterButtonList = [
 export const SocialButtonList = [
     {
         id: 'facebook',
-        icon: '/images/facebook.png',
+        icon: `/images/facebook.png`,
         to: 'https://www.facebook.com/retenshoku/',
     },
     {

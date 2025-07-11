@@ -48,7 +48,7 @@ export default function JobFeatures({ selectedList, onUpdate }: JobFeaturesProps
     if (isLoading) {
         return (
             <div className="flex flex-row gap-4 flex-wrap">
-                <p>Loading...</p>
+                <p>読み込む中...</p>
             </div>
         )
     }

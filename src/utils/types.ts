@@ -504,6 +504,39 @@ export interface SikakuOrderItemProps {
     link?: string;
 }
 
+export interface Column {
+    id: number;
+    title: string;
+    category: string;
+    content: string;
+    view_cnt?: number;
+    search_cnt?: number;
+    favourite_cnt?: number;
+    thumbnail?: {
+        entity_path: string;
+    }
+    created: string;
+    deleted?: string;
+    modified: string;
+}
+
+export interface ColumnFetchParam {
+    page?: number;
+    limit?: number;
+    searchTerm?: string;
+    category?: string;
+}
+
+export interface ColumnResponse {
+    ColumnItems: Column[];
+    pagination: {
+        totalPages: number;
+        currentPage: number;
+        totalItems: number;
+        itemsPerPage: number;
+    };
+}
+
 export interface JobSeekerFilterParam {
     page: number;
     limit: number;
@@ -572,4 +605,40 @@ export interface ChatItem {
     messages: ChatMessage[];
     unreadCount: number;
     lastMessageTime: string;
+}
+
+export interface Interview {
+    id: number;
+    title: string;
+    description: string;
+    tag: number; // 0 or 1 for career-changer
+    category: string;
+    content: string;
+    view_cnt?: number;
+    search_cnt?: number;
+    favourite_cnt?: number;
+    created: string;
+    deleted?: string;
+    modified: string;
+    thumbnail?: {
+        entity_path: string;
+    };
+}
+
+export interface InterviewFetchParam {
+    page?: number;
+    limit?: number;
+    searchTerm?: string;
+    category?: string;
+    tag?: number;
+}
+
+export interface InterviewResponse {
+    InterviewItems: Interview[];
+    pagination: {
+        totalPages: number;
+        currentPage: number;
+        totalItems: number;
+        itemsPerPage: number;
+    };
 }

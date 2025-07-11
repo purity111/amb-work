@@ -1,6 +1,7 @@
-import { RegisterEmployerParam, RegisterJobSeekerParam, LoginParam, JobParam, RecruitingCriteria, AdminCriteriaFetchParam, BookmarkJobParam, CreateUpdateCriteriaFetchParam, ApplicationFetchParam, BookmarkedJobsFetchParams, JobSeekerFilterParam } from "@/utils/types";
+import { RegisterEmployerParam, RegisterJobSeekerParam, LoginParam, JobParam, RecruitingCriteria, AdminCriteriaFetchParam, BookmarkJobParam, CreateUpdateCriteriaFetchParam, ApplicationFetchParam, BookmarkedJobsFetchParams, ColumnFetchParam, Column, ColumnResponse, InterviewFetchParam, InterviewResponse, Interview } from "@/utils/types";
 import api from './axios';
 import { toQueryString } from "@/utils/helper";
+import type { JobSeekerFilterParam } from '@/utils/types';
 
 //Auth
 export const registerAsEmployer = async (param: RegisterEmployerParam) => {
@@ -246,8 +247,89 @@ export const getCurrentUser = async () => {
 };
 
 export const requestChangeEmail = async (newEmail: string) => {
-    console.log('newEmail', newEmail);
-    const response = await api.post('/auth/change-email-request', { newEmail: newEmail });
+    const response = await api.post('/auth/request-change-email', { newEmail });
+    return response.data;
+};
+
+// Column related
+export const getColumns = async (param: ColumnFetchParam = {}): Promise<ColumnResponse> => {
+    const queryString = toQueryString(param);
+    const response = await api.get(`/columns?${queryString}`);
+    console.log(response.data.data);
+    return response.data.data;
+};
+
+// Fetch a single column by id
+export const getColumn = async (id: number): Promise<Column> => {
+    const response = await api.get(`/columns/${id}`);
+    return response.data.data;
+};
+
+// Create a new column
+export const createColumn = async (formData: FormData): Promise<Column> => {
+    const response = await api.post('/columns', formData, {
+        headers: {
+            'Content-Type': 'multipart/form-data',
+        },
+    });
+    return response.data;
+};
+
+// Update a column
+export const updateColumn = async (id: number, formData: FormData): Promise<Column> => {
+    const response = await api.put(`/columns/${id}`, formData, {
+        headers: {
+            'Content-Type': 'multipart/form-data',
+        },
+    });
+    return response.data;
+};
+
+// Delete a column
+export const deleteColumn = async (id: number): Promise<void> => {
+    const response = await api.delete(`/columns/${id}`);
+    return response.data;
+};
+
+// Fetch recommended columns
+export const getRecommendedColumns = async () => {
+    const response = await api.get('/columns/recommended');
+    return response.data.recommended;
+};
+
+// Interview related
+export const getInterviews = async (param: InterviewFetchParam = {}): Promise<InterviewResponse> => {
+    const queryString = toQueryString(param);
+    const response = await api.get(`/interviews?${queryString}`);
+    return response.data.data;
+};
+
+export const getInterview = async (id: number): Promise<Interview> => {
+    const response = await api.get(`/interviews/${id}`);
+    return response.data.data;
+};
+
+export const createInterview = async (formData: FormData): Promise<Interview> => {
+    const response = await api.post('/interviews', formData, {
+        headers: {
+            'Content-Type': 'multipart/form-data',
+        },
+    });
+    
+    return response.data;
+};
+
+export const updateInterview = async (id: number, formData: FormData): Promise<Interview> => {
+    const response = await api.put(`/interviews/${id}`, formData, {
+        headers: {
+            'Content-Type': 'multipart/form-data',
+        },
+    });
+    return response.data;
+};
+
+export const deleteInterview = async (id: number): Promise<void> => {
+    const response = await api.delete(`/interviews/${id}`);
     return response.data;
 };
 

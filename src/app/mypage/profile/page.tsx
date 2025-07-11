@@ -784,7 +784,7 @@ export default function ProfilePage() {
             )}
 
             {/* Email Change Section */}
-            <div className="mb-8 p-4 border rounded mt-20 bg-gray-50">
+            <div className="mb-8 p-4 border-[#dfdfdf] rounded mt-20 bg-gray-50">
 
                 <div className="flex flex-col md:flex-row items-center gap-4 mb-2">
                     <div className="flex items-center gap-1 min-w-[130px]">

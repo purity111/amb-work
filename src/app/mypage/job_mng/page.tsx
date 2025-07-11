@@ -18,6 +18,8 @@ import { deleteJobById } from "@/lib/api";
 import { toast } from "react-toastify";
 import Dialog from "@/components/Dialog";
 import Spinner from "@/components/common/Spinner";
+import { formatDistanceToNow } from "date-fns";
+import { ja } from 'date-fns/locale';
 
 
 export default function JobMngPage() {
@@ -174,13 +176,13 @@ export default function JobMngPage() {
     <div className="flex min-h-screen flex-col">
       <div className="w-95/100 max-w-320 mx-auto pt-10">
         <div className="border-b-1 border-gray-700 py-2 flex flex-col">
-          <div className="flex-1 flex flex-row space-x-2 space-y-2">
+          <div className="flex-1 flex flex-row items-center space-x-2 space-y-2">
             <div className="flex-1">
               <CButton
                 text="求人掲載ページ新規作成"
                 className='bg-blue text-white text-sm h-[40px]'
                 size="small"
-                leftIcon={<span className="text-[18px] md:text-3xl">+</span>}
+                leftIcon={<span className="mr-1 flex items-center"><svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 md:h-6 md:w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" /></svg></span>}
                 onClick={onClickAddNewJob}
               />
             </div>
@@ -188,31 +190,33 @@ export default function JobMngPage() {
               text="全体CSV出⼒"
               className='bg-green text-white text-sm h-[40px]'
               size="small"
-              leftIcon={<span className="text-[18px] md:text-3xl">+</span>}
+              leftIcon={<span className="mr-1 flex items-center"><svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 md:h-6 md:w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" /></svg></span>}
             />
             <CButton
               text="選択のみCSV出⼒"
               className='bg-orange text-white text-sm h-[40px]'
               size="small"
-              leftIcon={<span className="text-[18px] md:text-3xl">+</span>}
+              leftIcon={<span className="mr-1 flex items-center"><svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 md:h-6 md:w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" /></svg></span>}
             />
           </div>
           <div className="flex flex-col lg:flex-row lg:space-x-3">
-            <div className="flex-1 flex flex-row space-x-3 pt-2">
+            <div className="flex-1 flex flex-row items-center space-x-3 pt-2">
               <CSelect
                 options={JobTypeOptions}
                 value={jobType}
                 onChange={onSelectJobType}
                 width="w-40"
-                className="h-10"
+                height="h-10"
+                className="truncate"
               />
               {isAdmin && (
                 <CSelect
                   options={companyOptions}
                   value={company}
                   onChange={onSelectCompany}
-                  height="h-10"
                   width="w-60"
+                  height="h-10"
+                  className="truncate"
                 />
               )}
             </div>
@@ -252,7 +256,7 @@ export default function JobMngPage() {
             <div className="border-1 border-gray-700 overflow-hidden" key={`${currentPage}-${job.id}`}>
               <div className={`flex flex-row justify-between px-2 py-3 ${job.job_detail_page_template_id === 1 ? 'bg-blue' : 'bg-orange-400'}`}>
                 <p className="text-sm text-white pr-10 truncate flex-1">{job.job_title}</p>
-                <p className="text-sm text-white">{formatTimeAgo(new Date(job.created))}</p>
+                <p className="text-sm text-white">{formatDistanceToNow(new Date(job.created), { addSuffix: true, locale: ja })}</p>
               </div>
               <div className="flex flex-col sm:flex-row">
 
@@ -279,7 +283,7 @@ export default function JobMngPage() {
                   </div>
                 </div>
 
-                <div className="flex-1 flex flex-row flex-wrap content-start border-l-1 border-gray-700">
+                <div className="flex-1 flex flex-row items-center flex-wrap content-start border-l-1 border-gray-700">
 
                   <div className="w-1/1 lg:w-1/2 flex flex-row h-fit border-b-1 border-gray-700">
                     <div className="flex-1">

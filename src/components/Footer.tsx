@@ -52,7 +52,7 @@ export default function Footer() {
                 <div className="flex flex-col md:flex-row justify-between">
                     <div className="flex flex-row items-center py-3">
                         {SocialButtonList.map(btn => (
-                            <Link href={btn.to} key={btn.id} className="mr-6">
+                            <Link href={btn.to} key={btn.id} className="mr-6" target="_blank" rel="noopener noreferrer">
                                 <Image src={btn.icon} width={30} height={30} alt={btn.id} />
                             </Link>
                         ))}

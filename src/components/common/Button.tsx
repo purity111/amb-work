@@ -23,7 +23,7 @@ export default function CButton({
     return (
         <button
             className={`
-                relative flex flex-row items-center justify-center rounded-lg cursor-pointer duration-1200 hover:opacity-80
+                relative flex flex-row items-center justify-center rounded-lg cursor-pointer duration-1200 hover:opacity-80 leading-[2] 
                 ${hasNavIcon ? `button-with-nav after:border-r-2 after:border-b-2 after:border-r-${navIconColor}` : ''}
                 ${size === 'large' ? 'py-[15px] px-[20px]' : size === 'normal' ? 'py-[10px] px-[15px]' : 'py-[5px] px-[10px]'}
                 ${className}
