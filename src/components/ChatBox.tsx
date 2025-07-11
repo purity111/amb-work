@@ -51,6 +51,7 @@ export default function ChatBox({ data, onChange }: ChatBoxProps) {
         // :white_check_mark: Join the chat room
         socket.emit('join', data.id);
         // :white_check_mark: Listen for new messages
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         socket.on('newMessage', (message: Message) => {
             refetch()
             onChange()

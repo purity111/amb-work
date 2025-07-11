@@ -23,7 +23,7 @@ export default function ChatMngPage() {
   const searchParams = useSearchParams();
   const hasLoaded = useRef(false);
   const router = useRouter()
-  const { data, isLoading: jLoading, isError: jError } = useGetJobs({
+  const { data, isLoading: jLoading } = useGetJobs({
     page: 1,
     limit: 999999,
     employer_id: profile?.id
@@ -62,6 +62,7 @@ export default function ChatMngPage() {
     const leftPane = document.getElementById('leftPane')!;
     let isDragging = false;
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const startDrag = (e: MouseEvent) => {
       isDragging = true;
       document.body.style.cursor = 'col-resize';
