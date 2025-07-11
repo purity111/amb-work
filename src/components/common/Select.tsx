@@ -12,9 +12,9 @@ interface CSelectProps {
 export default function CSelect({ options, width = 'w-full', className, isError = false, errorText, ...props }: CSelectProps & InputHTMLAttributes<HTMLSelectElement>) {
     return (
         <div>
-            <div className="relative">
+            <div className="relative w-fit">
                 <select
-                    className={`relative appearance-none border rounded-lg focus:outline-none px-4 truncate
+                    className={`relative appearance-none border rounded-lg focus:outline-none pl-4 pr-8 truncate
                     ${isError ? 'border-red-400' : 'border-[#CCC]'}
                     ${width} ${className}
                 `}
@@ -23,7 +23,6 @@ export default function CSelect({ options, width = 'w-full', className, isError 
                     {options.map(option => (
                         <option key={option.value} value={option.value}>{option.option}</option>
                     ))}
-
                 </select>
                 <div className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2">
                     <div className={`h-2 w-2  border-r-2 border-b-2 border-gray-600 duration-400 rotate-45`} />

@@ -1,4 +1,4 @@
-import { lastDayOfMonth, parse, format, isValid } from "date-fns";
+import { lastDayOfMonth, parse, format, isValid, formatDistanceToNow } from "date-fns";
 import { ImageDetail } from "./types";
 import { UPLOADS_BASE_URL } from "./config";
 import { PrefectureOptions } from "./constants";
@@ -135,4 +135,24 @@ export function blobToBase64(blob: Blob): Promise<string> {
         reader.onerror = reject;
         reader.readAsDataURL(blob);
     });
+}
+
+export function linkify(text: string) {
+    const urlPattern = /(\bhttps?:\/\/[^\s]+)/g;
+    const wwwPattern = /(^|[^\/])(www\.[^\s]+)/g;
+    const emailPattern = /([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-z]{2,})/gi;
+
+    return text
+        .replace(urlPattern, '<a href="$1" class="underline" target="_blank">$1</a>')
+        .replace(wwwPattern, '$1<a href="http://$2" class="underline" target="_blank">$2</a>')
+        .replace(emailPattern, '<a href="mailto:$1" class="underline">$1</a>');
+}
+
+export function formatTimeAgo(date: Date) {
+    const now = new Date()
+    const secondsDiff = Math.floor((now.getTime() - date.getTime()) / 1000)
+
+    if (secondsDiff < 5) return 'now' // customize threshold as needed
+
+    return formatDistanceToNow(date, { addSuffix: true })
 }

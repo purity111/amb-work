@@ -64,12 +64,13 @@ export interface LoginParam {
 export interface JobFetchParam {
     page: number;
     limit: number;
-    searchTerm: string;
+    searchTerm?: string;
     companyID?: number;
     jobType?: number;
     features?: string[];
     prefectures?: string[];
     isAdmin?: string;
+    employer_id?: number;
 }
 
 export interface JobParam {
@@ -411,6 +412,9 @@ export interface ApplicationItem {
         deleted: string | null;
         created: string;
         modified: string;
+        avatar: {
+            entity_path: string
+        };
     };
     jobInfo: {
         id: number;
@@ -448,26 +452,34 @@ export interface ApplicationItem {
             zip: string;
             tel: string;
         };
-        recruitingCriterias: Array<{
-            id: number;
-            calling_name: string | null;
-            name: string;
-            created: string;
-            modified: string;
-            display_order: number;
-            clinic_flg: number;
-            JobInfosRecruitingCriteria: {
-                id: number;
-                job_info_id: number;
-                recruiting_criteria_id: number;
-                body: string;
-                public_status: number;
-                deleted: string | null;
-                created: string;
-                modified: string;
-            };
-        }>;
     };
+    chat: ChatDetails
+}
+
+export interface ChatDetails {
+    id: number;
+    job_info_id: number;
+    job_seeker_id: number;
+    job_title: string;
+    is_send_privacy: boolean;
+    created: string;
+    modified: string;
+    messages: ChatMessage[]
+}
+
+export interface ChatMessage {
+    id: number;
+    chat_id: number;
+    is_readed: boolean;
+    no: number;
+    sender: number;
+    body: string;
+    created: string;
+    modified: string;
+    mail_send: number;
+    chat_flg: number;
+    file_path?: string;
+    file_name?: string;
 }
 
 export interface SikakuItemProps {
@@ -520,4 +532,44 @@ export interface JobSeekerDetail {
     modified: string;
     employmentTypes: number[];
     desiredConditions: number[];
+}
+
+export interface ChatItem {
+    id: number;
+    job_info_id: number;
+    job_seeker_id: number;
+    job_title: string;
+    created: string;
+    modified: string;
+    is_send_privacy: boolean;
+    jobInfo: {
+        id: number;
+        job_title: string;
+        employer_id: number;
+        employer: {
+            id: number;
+            clinic_name: string;
+            prefectures: number;
+            city: string;
+            avatar: {
+                entity_path: string
+            }
+        }
+    };
+    jobSeeker: {
+        id: number;
+        name: string;
+        email: string;
+        sex: number;
+        birthdate: string;
+        prefectures: number;
+        zip: string;
+        tel: string;
+        avatar: {
+            entity_path: string;
+        }
+    };
+    messages: ChatMessage[];
+    unreadCount: number;
+    lastMessageTime: string;
 }

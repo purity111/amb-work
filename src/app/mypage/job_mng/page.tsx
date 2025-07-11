@@ -12,13 +12,12 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useGetAllEmployerInfos } from "@/hooks/useGetAllEmployerInfos";
 import { useGetJobs } from "@/hooks/useGetJobs";
 import { JobDetail, PickOption } from "@/utils/types";
-import { getFirstFullImage } from "@/utils/helper";
+import { formatTimeAgo, getFirstFullImage } from "@/utils/helper";
 import { useMutation } from "@tanstack/react-query";
 import { deleteJobById } from "@/lib/api";
 import { toast } from "react-toastify";
 import Dialog from "@/components/Dialog";
 import Spinner from "@/components/common/Spinner";
-import { formatDistanceToNow } from "date-fns";
 
 
 export default function JobMngPage() {
@@ -205,7 +204,7 @@ export default function JobMngPage() {
                 value={jobType}
                 onChange={onSelectJobType}
                 width="w-40"
-                height="h-10"
+                className="h-10"
               />
               {isAdmin && (
                 <CSelect
@@ -253,7 +252,7 @@ export default function JobMngPage() {
             <div className="border-1 border-gray-700 overflow-hidden" key={`${currentPage}-${job.id}`}>
               <div className={`flex flex-row justify-between px-2 py-3 ${job.job_detail_page_template_id === 1 ? 'bg-blue' : 'bg-orange-400'}`}>
                 <p className="text-sm text-white pr-10 truncate flex-1">{job.job_title}</p>
-                <p className="text-sm text-white">{formatDistanceToNow(new Date(job.created), { addSuffix: true })}</p>
+                <p className="text-sm text-white">{formatTimeAgo(new Date(job.created))}</p>
               </div>
               <div className="flex flex-col sm:flex-row">
 

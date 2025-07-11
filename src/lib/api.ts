@@ -98,15 +98,19 @@ export const bookmarkJob = async (param: BookmarkJobParam) => {
 export const getJobs = async (
     page: number,
     limit: number,
-    searchTerm: string,
+    searchTerm?: string,
     jobType?: number,
     companyID?: number,
+    employer_id?: number,
     features?: string[],
     prefectures?: string[]
 ) => {
     const param: Record<string, any> = { page, limit, searchTerm, jobType };
     if (companyID && companyID > 0) {
         param.companyID = companyID;
+    }
+    if (employer_id && employer_id > 0) {
+        param.employer_id = employer_id;
     }
     if (features?.length && features?.length > 0) {
         param.features = features;
@@ -244,5 +248,25 @@ export const getCurrentUser = async () => {
 export const requestChangeEmail = async (newEmail: string) => {
     console.log('newEmail', newEmail);
     const response = await api.post('/auth/change-email-request', { newEmail: newEmail });
+    return response.data;
+};
+
+export const getApplicants = async () => {
+    const response = await api.get(`/applications/employer`);
+    return response.data;
+};
+
+export const getApplicantsByJobId = async (id: number) => {
+    const response = await api.get(`/applications/${id}`);
+    return response.data;
+};
+
+export const getChats = async () => {
+    const response = await api.get(`/chats`);
+    return response.data;
+};
+
+export const getChatById = async (id: number) => {
+    const response = await api.get(`/chats/${id}`);
     return response.data;
 };
