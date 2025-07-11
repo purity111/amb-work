@@ -18,9 +18,6 @@ import { deleteJobById } from "@/lib/api";
 import { toast } from "react-toastify";
 import Dialog from "@/components/Dialog";
 import Spinner from "@/components/common/Spinner";
-import { formatDistanceToNow } from "date-fns";
-import { ja } from 'date-fns/locale';
-
 
 export default function JobMngPage() {
   const [jobType, setJobType] = useState<string>('0');
@@ -256,7 +253,7 @@ export default function JobMngPage() {
             <div className="border-1 border-gray-700 overflow-hidden" key={`${currentPage}-${job.id}`}>
               <div className={`flex flex-row justify-between px-2 py-3 ${job.job_detail_page_template_id === 1 ? 'bg-blue' : 'bg-orange-400'}`}>
                 <p className="text-sm text-white pr-10 truncate flex-1">{job.job_title}</p>
-                <p className="text-sm text-white">{formatDistanceToNow(new Date(job.created), { addSuffix: true, locale: ja })}</p>
+                <p className="text-sm text-white">{formatTimeAgo(new Date(job.created))}</p>
               </div>
               <div className="flex flex-col sm:flex-row">
 

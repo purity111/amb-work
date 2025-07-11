@@ -1,4 +1,5 @@
 import { lastDayOfMonth, parse, format, isValid, formatDistanceToNow } from "date-fns";
+import { ja } from 'date-fns/locale';
 import { ImageDetail } from "./types";
 import { UPLOADS_BASE_URL } from "./config";
 import { PrefectureOptions } from "./constants";
@@ -154,5 +155,5 @@ export function formatTimeAgo(date: Date) {
 
     if (secondsDiff < 5) return 'now' // customize threshold as needed
 
-    return formatDistanceToNow(date, { addSuffix: true })
+    return formatDistanceToNow(date, { addSuffix: true, locale: ja })
 }
