@@ -5,19 +5,23 @@ import DatePicker, { DatePickerProps } from "react-datepicker";
 interface CDatePickerProps {
     isError?: boolean;
     errorText?: string;
+    height?: string;
+    className?: string;
 }
 
 export default function CDatePicker({
     isError,
     errorText,
+    height = 'h-[50px]',
+    className = '',
     ...props
 }: CDatePickerProps & DatePickerProps) {
     return (
         <div>
-            <div className="flex flex-row items-center border-1 border-gray-700 w-fit rounded-sm p-1">
+            <div className={`flex flex-row items-center border rounded-lg px-4 w-full ${isError ? 'border-red-400' : 'border-[#CCC]'} ${height} ${className}`}>
                 <div className="flex-1">
                     <DatePicker
-                        className="px-2 py-1 outline-none w-40"
+                        className="w-full outline-none bg-white"
                         {...props}
                     />
                 </div>

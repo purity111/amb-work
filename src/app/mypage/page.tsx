@@ -18,7 +18,7 @@ export default function MyPage() {
 
   return (
     <div className="flex flex-col p-5">
-      <h1 className="text-2xl font-bold mb-6">My Page</h1>
+      <h1 className="text-2xl font-bold mb-6">マイページ</h1>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {menuItems.map((item: MenuItem) => (
           item.path === '/logout' ? (
@@ -40,7 +40,7 @@ export default function MyPage() {
             <LinkButton
               key={item.path}
               text={item.label}
-              to={item.path}
+              to={item.label === '問い合わせ対応' ? '/mypage/inquiry' : item.path}
               icon={item.icon}
               className="border border-blue-600 text-black hover:bg-blue-600 px-6 py-3"
             />
