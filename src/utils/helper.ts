@@ -1,4 +1,16 @@
-import { lastDayOfMonth, parse, format, isValid, formatDistanceToNow } from "date-fns";
+import {
+    format,
+    isToday,
+    isYesterday,
+    isThisYear,
+    isThisWeek,
+    differenceInMinutes,
+    formatDistanceToNow,
+    parseISO,
+    lastDayOfMonth,
+    parse,
+    isValid
+} from 'date-fns';
 import { ja } from 'date-fns/locale';
 import { ImageDetail } from "./types";
 import { UPLOADS_BASE_URL } from "./config";
@@ -156,4 +168,35 @@ export function formatTimeAgo(date: Date) {
     if (secondsDiff < 5) return 'now' // customize threshold as needed
 
     return formatDistanceToNow(date, { addSuffix: true, locale: ja })
+}
+
+export function formatMessageDate(date: Date): string {
+    const now = new Date();
+    const diffInMinutes = differenceInMinutes(now, date);
+
+    if (diffInMinutes < 1) {
+        return 'Just now';
+    }
+
+    if (diffInMinutes < 60) {
+        return `${formatDistanceToNow(date, { addSuffix: true })}`;
+    }
+
+    if (isToday(date)) {
+        return format(date, 'h:mm a'); // e.g. 2:30 PM
+    }
+
+    if (isYesterday(date)) {
+        return `Yesterday at ${format(date, 'h:mm a')}`;
+    }
+
+    if (isThisWeek(date, { weekStartsOn: 1 })) {
+        return format(date, 'EEEE, h:mm a'); // e.g. Wednesday at 2:30 PM
+    }
+
+    if (isThisYear(date)) {
+        return format(date, 'MMM d, h:mm a'); // e.g. Mar 5 at 2:30 PM
+    }
+
+    return format(date, 'MMM d, yyyy, h:mm a'); // e.g. Mar 5, 2023 at 2:30 PM
 }

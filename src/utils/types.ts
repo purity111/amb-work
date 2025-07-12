@@ -475,6 +475,7 @@ export interface ChatMessage {
     sender: number;
     body: string;
     created: string;
+    deleted: string | null;
     modified: string;
     mail_send: number;
     chat_flg: number;
@@ -642,3 +643,13 @@ export interface InterviewResponse {
         itemsPerPage: number;
     };
 }
+
+export type Message = {
+    id: number;
+    chat_id: number;
+    sender: number;
+    body: string;
+    created: string;
+    deleted: string | null;
+    notifyTo: string; // This key is used to trigger a chat status update for the other user.
+};

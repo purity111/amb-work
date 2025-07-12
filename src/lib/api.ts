@@ -315,7 +315,7 @@ export const createInterview = async (formData: FormData): Promise<Interview> =>
             'Content-Type': 'multipart/form-data',
         },
     });
-    
+
     return response.data;
 };
 
@@ -350,5 +350,10 @@ export const getChats = async () => {
 
 export const getChatById = async (id: number) => {
     const response = await api.get(`/chats/${id}`);
+    return response.data;
+};
+
+export const readChatById = async (id: number) => {
+    const response = await api.get(`/chats/mark/${id}`);
     return response.data;
 };

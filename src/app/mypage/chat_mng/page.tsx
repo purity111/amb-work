@@ -1,5 +1,6 @@
 "use client";
 
+import { io, Socket } from 'socket.io-client';
 import { useAuthContext } from "@/app/layout";
 import CInput from "@/components/common/Input";
 import CSelect from "@/components/common/Select";
@@ -7,12 +8,14 @@ import { useGetChats } from "@/hooks/useGetChats";
 import { useGetJobs } from "@/hooks/useGetJobs";
 import { UPLOADS_BASE_URL } from "@/utils/config";
 import { formatTimeAgo, getImageFile } from "@/utils/helper";
-import { ChatItem, JobDetail } from "@/utils/types";
+import { ChatItem, JobDetail, Message } from "@/utils/types";
 import Image from "next/image";
 import { ChangeEvent, useEffect, useMemo, useRef, useState } from "react";
 import Spinner from "@/components/common/Spinner";
 import ChatBox from "@/components/ChatBox";
 import { useRouter, useSearchParams } from "next/navigation";
+
+const socket: Socket = io(process.env.NEXT_PUBLIC_SOCKET_URL || 'http://172.20.1.185:3000');
 
 export default function ChatMngPage() {
   const [nameSearch, setNameSearch] = useState('');
@@ -29,6 +32,31 @@ export default function ChatMngPage() {
     employer_id: profile?.id
   })
   const { data: chats, isLoading: cLoading, refetch } = useGetChats();
+
+  const isJobSeeker = useMemo(() => {
+    if (profile?.role === 'JobSeeker') return true;
+    return false;
+  }, [profile])
+
+  useEffect(() => {
+    if (!profile) return;
+    const roomId = `${isJobSeeker ? 1 : 2}_${profile.id}`;
+    // Join the room
+    socket.emit('notify_join', roomId);
+    console.log({ roomId })
+    // Define the handler
+    const handleNewMessage = (message: Message) => {
+      console.log('notify', { message });
+      refetch();
+    };
+    // Remove any existing listener (precaution)
+    socket.off('newMessage', handleNewMessage);
+    socket.on('newMessage', handleNewMessage);
+    // Cleanup
+    return () => {
+      socket.off('newMessage', handleNewMessage);
+    };
+  }, [profile, isJobSeeker]);
 
   useEffect(() => {
     const params = new URLSearchParams(searchParams.toString());
@@ -111,6 +139,11 @@ export default function ChatMngPage() {
     setSelectedChatId(chatData.id)
   }
 
+  const getLastMessage = (msg: ChatItem) => {
+    if (msg.messages?.[0]?.deleted) return '[Message deleted]'
+    else return msg.messages?.[0]?.body || 'No messages'
+  }
+
   const renderApplications = () => {
     if (cLoading) return <Spinner />
     if (!chats?.data || chats?.data?.length === 0) return <p>No applications</p>
@@ -129,13 +162,18 @@ export default function ChatMngPage() {
         >
           <div className="min-w-15 w-15 h-15 relative">
             <Image src={avatarUrl} alt="avatar" className="rounded-full" fill />
+            {i.unreadCount > 0 && (
+              <div className="absolute top-0 left-0 bg-red rounded-full w-6 h-6 flex items-center justify-center overflow-hidden">
+                <span className="text-[10px] text-white">{i.unreadCount > 99 ? '99+' : i.unreadCount}</span>
+              </div>
+            )}
           </div>
           <div className="w-[100px] flex-1 pl-2">
             <div className="flex flex-col lg:flex-row justify-between">
               <p className="flex-1">{i.jobSeeker.name}</p>
               <p className="text-[12px] text-gray-600">{formatTimeAgo(new Date(i.lastMessageTime))}</p>
             </div>
-            <p className="truncate whitespace-nowrap overflow-hidden">{i.messages?.[0]?.body || 'No messages'}</p>
+            <p className="truncate whitespace-nowrap overflow-hidden">{getLastMessage(i)}</p>
           </div>
         </div>
       )
@@ -143,7 +181,7 @@ export default function ChatMngPage() {
   }
 
   return (
-    <div className="flex flex-col p-5">
+    <div className="flex flex-col p-5 w-[95%] max-w-[1000px] mx-auto">
       <h1 className="text-2xl font-bold mb-6">チャット管理ページ(Chat Management Page)</h1>
       {jLoading ? <p>Loading...</p> : (
         <CSelect
@@ -155,7 +193,7 @@ export default function ChatMngPage() {
         />
       )}
       {jobList.length > 0 && (
-        <div id="container" className="flex h-[calc(100vh-300px)] border-1 border-gray-700 rounded-lg mt-4 relative w-full">
+        <div id="container" className="bg-white flex h-[calc(100vh-300px)] border-1 border-gray-700 rounded-lg mt-4 relative w-full">
           <div id="leftPane" className="flex flex-col min-w-[200px] max-w-[500px]">
             <div className="p-2 h-15 flex flex-row items-center border-b-1 border-gray-700">
               <CInput
