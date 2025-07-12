@@ -7,7 +7,6 @@ import StatisticItem from "@/components/pages/recruiter/StatisticItem";
 import About from "@/components/pages/recruiter/About";
 import CustomerVoiceItem from "@/components/pages/recruiter/CustomerVoiceItem";
 import PricePlan from "@/components/pages/recruiter/PricePlan";
-import FormField from "@/components/FormField";
 import { RecruiterPainPoints, RecruiterStatistics, aboutItems, customerVoices, RecruiterFlowSteps } from "@/utils/constants";
 import Footer from "@/components/Footer";
 import RecruiterForm from "@/components/pages/recruiter/RecruiterForm";

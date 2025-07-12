@@ -129,7 +129,7 @@ export default function CompanyPage() {
                     {/* Success Cases Section */}
                     <section className="py-6">
                         <div className="max-w-[1200px] md:m-auto mx-3 flex flex-col md:flex-row justify-center gap-15 md:gap-10">
-                            {EXPERIENCE_SUCCESS_CASES.map((props, idx) => (
+                            {EXPERIENCE_SUCCESS_CASES.map((props) => (
                                 <SuccessCaseCard key={props.caseNo} {...props} />
                             ))}
                         </div>

@@ -6,7 +6,7 @@ import type { CompanyApplicationItem } from "@/utils/types";
 import Image from "next/image";
 import Pagination from "@/components/common/Pagination";
 import Modal from "@/components/common/Modal";
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
 import CInput from "@/components/common/Input";
 import CButton from "@/components/common/Button";
@@ -21,7 +21,6 @@ export default function RecruiterInquiryList() {
   const [tempSearch, setTempSearch] = useState('');
   const [showDetailModal, setShowDetailModal] = useState(false);
   const [selectedApplication, setSelectedApplication] = useState<CompanyApplicationItem | null>(null);
-  const queryClient = useQueryClient();
 
   const { data: response, isLoading, refetch } = useGetCompanyApplications({
     page: currentPage,

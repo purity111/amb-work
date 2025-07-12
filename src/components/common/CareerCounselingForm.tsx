@@ -39,6 +39,7 @@ export default function CareerCounselingForm() {
             reset();
         } catch (error) {
             toast.error('送信に失敗しました');
+            console.log(error);
         }
     };
 

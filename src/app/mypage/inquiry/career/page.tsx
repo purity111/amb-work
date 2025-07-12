@@ -98,6 +98,8 @@ export default function CareerInquiryList() {
       setInquiries(prev => prev.filter(item => item.id !== id));
     } catch (error) {
       toast.error('削除に失敗しました');
+      console.log(error);
+      
     }
   };
 

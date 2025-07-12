@@ -7,7 +7,7 @@ import RequiredLabel from "../../common/RequiredLabel";
 import { submitCompanyApplication } from '@/lib/api';
 
 export default function RecruiterForm() {
-  const { register, handleSubmit, formState: { errors }, trigger, setFocus, watch, reset } = useForm({ mode: "onChange" });
+  const { register, handleSubmit, formState: { errors }, trigger, setFocus, reset } = useForm({ mode: "onChange" });
   const [toast, setToast] = useState<string | null>(null);
 
   const onSubmit = async (data: any) => {
@@ -18,6 +18,7 @@ export default function RecruiterForm() {
       setTimeout(() => setToast(null), 2000);
     } catch (error) {
       alert('送信中にエラーが発生しました。');
+      console.log(error);
     }
   };
 

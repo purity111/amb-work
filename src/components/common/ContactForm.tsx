@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react';
+import React from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import CInput from './Input';
 import RequiredLabel from './RequiredLabel';
@@ -16,7 +16,7 @@ const inquiryOptions = [
 ];
 
 export default function ContactForm() {
-    const { register, handleSubmit, control, formState: { errors }, trigger, setFocus, watch, reset } = useForm({ mode: 'onChange' });
+    const { register, handleSubmit, control, formState: { errors }, trigger, setFocus, reset } = useForm({ mode: 'onChange' });
 
     const onSubmit = async (data: any) => {
         try {
@@ -49,8 +49,6 @@ export default function ContactForm() {
         }
         handleSubmit(onSubmit)();
     };
-
-    const inquiryValue = watch('inquiry', '');
 
     return (
         <form className="w-full max-w-[812px] mx-auto bg-white p-4 md:p-8 rounded shadow-lg mb-20" onSubmit={onValidateAndSubmit} noValidate>

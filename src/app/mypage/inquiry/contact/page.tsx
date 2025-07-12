@@ -53,9 +53,10 @@ export default function ContactInquiryList() {
   useEffect(() => {
     console.log('inquiries', inquiries);
   }, [inquiries])
-  const handleDelete = async (index: number) => {
+  const handleDelete = async (id: number | undefined) => {
+    if (!id) return toast.error('IDが取得できません');
     if (!window.confirm("本当に削除しますか？")) return;
-    toast.error('削除機能はIDが必要です');
+    deleteMutation.mutate(id);
   };
 
   // Detail modal handlers
@@ -183,7 +184,7 @@ export default function ContactInquiryList() {
                         text="詳細"
                       />
                       <CButton
-                        onClick={() => handleDelete(index)}
+                        onClick={() => handleDelete(inq.id)}
                         className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-3 text-xs"
                         text="削除"
                       />
@@ -270,7 +271,7 @@ export default function ContactInquiryList() {
                               text="詳細"
                             />
                           <CButton
-                            onClick={() => handleDelete(index)}
+                            onClick={() => handleDelete(inq.id)}
                               className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 text-xs flex items-center"
                             text="削除"
                             leftIcon={(<svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2"><path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>)}
