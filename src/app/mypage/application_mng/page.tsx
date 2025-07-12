@@ -47,24 +47,26 @@ function ApplicationMngContent() {
 
   const { data: response, isLoading: aLoading } = useQuery<{
     data: { applications: ApplicationItem[]; pagination: { totalPages: number } };
-  }>({ queryKey: ['applications', currentPage, limit, searchTerm, jobType !== '0' ? jobType : undefined, profile?.id], queryFn: async () => {
-    const params: ApplicationFetchParam = {
-      limit,
-      page: currentPage,
-      searchTerm,
-    };
-    if (jobType === '1' || jobType === '2') {
-      params.jobType = Number(jobType);
-    }
-    // Role-based filtering
-    if (profile?.role === 'JobSeeker') {
-      params.job_seeker_id = profile.id;
-    } else if (profile?.role === 'Employer') {
-      params.employer_id = profile.id;
-    }
-    const data = await getApplicationsByRole(params);
-    return data;
-  }, enabled: !!profile });
+  }>({
+    queryKey: ['applications', currentPage, limit, searchTerm, jobType !== '0' ? jobType : undefined, profile?.id], queryFn: async () => {
+      const params: ApplicationFetchParam = {
+        limit,
+        page: currentPage,
+        searchTerm,
+      };
+      if (jobType === '1' || jobType === '2') {
+        params.jobType = Number(jobType);
+      }
+      // Role-based filtering
+      if (profile?.role === 'JobSeeker') {
+        params.job_seeker_id = profile.id;
+      } else if (profile?.role === 'Employer') {
+        params.employer_id = profile.id;
+      }
+      const data = await getApplicationsByRole(params);
+      return data;
+    }, enabled: !!profile
+  });
 
   const [applications, setApplications] = useState<ApplicationItem[]>([]);
   const [allApplications, setAllApplications] = useState<ApplicationItem[]>([]);
@@ -72,7 +74,7 @@ function ApplicationMngContent() {
   useEffect(() => {
     if (response?.data) {
       console.log('response.data', response.data);
-      
+
       setAllApplications(response.data.applications);
       setTotalPage(response.data.pagination.totalPages);
     }
@@ -271,10 +273,9 @@ function ApplicationMngContent() {
                 <hr className="my-4 border-gray-600 w-full sm:ml-[150px] sm:w-[calc(100%-150px)]" />
               )
             }
-
             {
               selectedApplication.jobInfo.recruitingCriterias &&
-              selectedApplication.jobInfo.recruitingCriterias.some(criteria => criteria.JobInfosRecruitingCriteria.body) ? (
+                selectedApplication.jobInfo.recruitingCriterias.some(criteria => criteria.JobInfosRecruitingCriteria.body) ? (
                 <ul>
                   {selectedApplication.jobInfo.recruitingCriterias.filter(criteria => criteria.JobInfosRecruitingCriteria.body).map((criteria, index) => (
                     <React.Fragment key={index}>

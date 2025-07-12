@@ -444,6 +444,7 @@ export interface ApplicationItem {
         deleted: string | null;
         created: string;
         modified: string;
+        recruitingCriterias: RecruitingCriteria[],
         employer: {
             id: number;
             clinic_name: string;
