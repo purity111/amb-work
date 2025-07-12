@@ -151,7 +151,8 @@ export default function ChatMngPage() {
       if (!i.jobSeeker) return null;
       if (selectedJob > 0 && i.job_info_id !== selectedJob) return null;
       if (!i.jobSeeker.name.toLowerCase().includes(nameSearch.toLowerCase())) return null;
-      const avatarUrl = i.jobSeeker.avatar ? `${UPLOADS_BASE_URL}/${getImageFile(i.jobSeeker.avatar.entity_path)}` : '/images/default-avatar.jpg';
+      const seekerAvatar = i.jobSeeker.avatar ? `${UPLOADS_BASE_URL}/${getImageFile(i.jobSeeker.avatar.entity_path)}` : '/images/default-avatar.jpg';
+      const employerAvatar = i.jobInfo.employer.avatar ? `${UPLOADS_BASE_URL}/${getImageFile(i.jobInfo.employer.avatar.entity_path)}` : '/images/default-company.png';
       return (
         <div
           className={`w-full max-w-full flex flex-row items-center p-2 hover:bg-gray-800 cursor-pointer
@@ -161,7 +162,7 @@ export default function ChatMngPage() {
           onClick={() => onSelectChat(i)}
         >
           <div className="min-w-15 w-15 h-15 relative">
-            <Image src={avatarUrl} alt="avatar" className="rounded-full" fill />
+            <Image src={isJobSeeker ? employerAvatar : seekerAvatar} alt="avatar" className="rounded-full" fill />
             {i.unreadCount > 0 && (
               <div className="absolute top-0 left-0 bg-red rounded-full w-6 h-6 flex items-center justify-center overflow-hidden">
                 <span className="text-[10px] text-white">{i.unreadCount > 99 ? '99+' : i.unreadCount}</span>
@@ -170,7 +171,7 @@ export default function ChatMngPage() {
           </div>
           <div className="w-[100px] flex-1 pl-2">
             <div className="flex flex-col lg:flex-row justify-between">
-              <p className="flex-1">{i.jobSeeker.name}</p>
+              <p className="flex-1">{isJobSeeker ? i.jobInfo.employer.clinic_name : i.jobSeeker.name}</p>
               <p className="text-[12px] text-gray-600">{formatTimeAgo(new Date(i.lastMessageTime))}</p>
             </div>
             <p className="truncate whitespace-nowrap overflow-hidden">{getLastMessage(i)}</p>
