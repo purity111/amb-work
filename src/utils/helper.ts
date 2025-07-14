@@ -199,3 +199,13 @@ export function formatMessageDate(date: Date): string {
 
     return format(date, 'MMM d, yyyy, h:mm a'); // e.g. Mar 5, 2023 at 2:30 PM
 }
+
+export const formatLongDateTime = (dateString: string) => {
+    if (!dateString) return '';
+    try {
+        return format(new Date(dateString), 'yyyy年MM月dd日HH:mm:ss');
+    } catch (error) {
+        console.error("Error formatting date:", error);
+        return dateString;
+    }
+};

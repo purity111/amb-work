@@ -11,6 +11,7 @@ import CButton from "@/components/common/Button";
 import RequiredLabel from "@/components/common/RequiredLabel";
 import Image from "next/image";
 import { updateJobSeekerProfile, updateEmployerProfile, requestChangeEmail } from "@/lib/api";
+import { UPLOADS_BASE_URL } from "@/utils/config";
 
 type FormValues = {
     name: string;
@@ -80,7 +81,7 @@ export default function ProfilePage() {
     const [emailChangeSuccess, setEmailChangeSuccess] = useState(false);
     const currentEmail = currentUserData?.data?.email || "";
     const [emailError, setEmailError] = useState<string | undefined>(undefined);
-    
+
     useEffect(() => {
         if (!hasPreloaded.current && currentUserData?.success && currentUserData?.data) {
             const userData = currentUserData.data;
@@ -270,7 +271,7 @@ export default function ProfilePage() {
         } catch (err) {
             toast.error("メールアドレスの変更リクエストに失敗しました");
             console.log(err);
-            
+
         } finally {
             setEmailChangeLoading(false);
         }
@@ -310,7 +311,7 @@ export default function ProfilePage() {
                     {/* Avatar section */}
                     <div className="flex flex-col items-center w-1/2 w-1/2 md:w-[25%]">
                         <Image
-                            src={avatarPreview || `${process.env.NEXT_PUBLIC_UPLOADS_BASE_URL}/${currentUserData?.data?.avatar}` || '/images/default-avatar.jpg'}
+                            src={avatarPreview || `${UPLOADS_BASE_URL}/${currentUserData?.data?.avatar}` || '/images/default-avatar.jpg'}
                             alt="avatar"
                             width={160}
                             height={160}

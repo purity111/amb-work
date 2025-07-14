@@ -7,27 +7,35 @@ import { useAuthContext } from "@/app/layout";
 import { useGetChatById } from "@/hooks/useGetChatById";
 import Image from "next/image";
 import { formatMessageDate, getImageFile, linkify } from "@/utils/helper";
-import { UPLOADS_BASE_URL } from "@/utils/config";
+import { CHAT_UPLOADS_BASE_URL, UPLOADS_BASE_URL } from "@/utils/config";
 import { useScrollPosition } from "@/hooks/useScrollPosition";
 import Spinner from "./common/Spinner";
 import { useReadChatById } from "@/hooks/useReadChatById";
 import { differenceInMinutes } from "date-fns";
 import Dialog from "./Dialog";
+import { useMutation } from "@tanstack/react-query";
+import { uploadChatFile } from "@/lib/api";
+import { toast } from "react-toastify";
 
 interface ChatBoxProps {
     data: ChatItem;
+    hasHideButton?: boolean;
+    isHidden?: boolean;
     onChange: () => void;
+    onToggleHidden?: () => void;
 }
 
 const socket: Socket = io(process.env.NEXT_PUBLIC_SOCKET_URL || 'http://172.20.1.185:3000');
 
-export default function ChatBox({ data, onChange }: ChatBoxProps) {
+export default function ChatBox({ data, hasHideButton = false, isHidden, onToggleHidden, onChange }: ChatBoxProps) {
     const [messages, setMessages] = useState<Message[]>([]);
     const [text, setText] = useState('');
     const [isNearBottom, setIsNearBottom] = useState(true)
     const [deleteMessage, setDeleteMessage] = useState<Message | null>(null)
     const [editMessage, setEditMessage] = useState<Message | null>(null)
     const [isEditing, setIsEditing] = useState(false)
+    const [attached, setAttached] = useState<File | null>(null);
+    const [isFileUploading, setIsFileUploading] = useState(false);
 
     const messagesEndRef = useRef<HTMLDivElement>(null);
     const containerRef = useRef<HTMLDivElement | null>(null)
@@ -35,6 +43,10 @@ export default function ChatBox({ data, onChange }: ChatBoxProps) {
     const { profile } = useAuthContext();
     const { data: chats, isLoading: cLoading, isError: cError, refetch } = useGetChatById(data.id)
     const { refetch: markAsRead } = useReadChatById(data.id)
+
+    const uploadFile = useMutation({
+        mutationFn: uploadChatFile,
+    });
 
     useEffect(() => {
         if (isNearBottom) {
@@ -62,6 +74,7 @@ export default function ChatBox({ data, onChange }: ChatBoxProps) {
         socket.on('newMessage', (message: Message) => {
             refetch()
             onChange()
+            scrollToBottom()
         });
         // :white_check_mark: Scroll to latest message
         return () => {
@@ -82,7 +95,13 @@ export default function ChatBox({ data, onChange }: ChatBoxProps) {
         messagesEndRef.current?.scrollIntoView({ behavior: 'instant' });
     };
 
-    const handleSend = () => {
+    const handleCancelEdit = () => {
+        setEditMessage(null);
+        setIsEditing(false);
+        setText('');
+    }
+
+    const handleSend = async () => {
         if (!text.trim()) return;
         if (isEditing) {
             if (!editMessage) return;
@@ -95,18 +114,59 @@ export default function ChatBox({ data, onChange }: ChatBoxProps) {
             setEditMessage(null);
             refetch();
         } else {
-            const newMessage = {
-                chat_id: data.id,
-                sender: isJobSeeker ? 1 : 2,
-                body: text,
-                notifyTo: notifyToId
-            };
-            socket.emit('message', newMessage);
-            scrollToBottom();
+            // if file attached, upload it first
+            console.log({ attached })
+            if (attached) {
+                try {
+                    const formData = new FormData();
+                    formData.append('file', attached);
+                    setIsFileUploading(true);
+                    const res = await uploadFile.mutateAsync(formData);
+                    if (res.success) {
+                        const newMessage = {
+                            chat_id: data.id,
+                            sender: isJobSeeker ? 1 : 2,
+                            body: text,
+                            notifyTo: notifyToId,
+                            file_name: res.fileName,
+                            file_path: getImageFile(res.filePath)
+                        };
+                        socket.emit('message', newMessage);
+                        scrollToBottom();
+                        setAttached(null);
+                    } else if (res.message) {
+                        toast.error(res.message);
+                    } else {
+                        throw Error()
+                    }
+                    setIsFileUploading(false);
+                } catch (err) {
+                    toast.error('Failed to send your message. Try again.');
+                    console.log(err)
+                    return;
+                }
+            } else {
+                const newMessage = {
+                    chat_id: data.id,
+                    sender: isJobSeeker ? 1 : 2,
+                    body: text,
+                    notifyTo: notifyToId
+                };
+                socket.emit('message', newMessage);
+                scrollToBottom();
+            }
         }
         setText('');
         onChange();
     };
+
+    const seekerAvatar = useMemo(() => {
+        return data.jobSeeker?.avatar ? `${UPLOADS_BASE_URL}/${getImageFile(data.jobSeeker.avatar.entity_path)}` : '/images/default-avatar.jpg';
+    }, [data]);
+
+    const employerAvatar = useMemo(() => {
+        return data.jobInfo.employer?.avatar ? `${UPLOADS_BASE_URL}/${getImageFile(data.jobInfo.employer.avatar.entity_path)}` : '/images/default-avatar.jpg';
+    }, [])
 
     const onClickEditMessage = (msg: Message) => {
         setEditMessage(msg);
@@ -125,27 +185,74 @@ export default function ChatBox({ data, onChange }: ChatBoxProps) {
         refetch();
     }
 
+    const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (file) {
+            setAttached(file);
+        }
+    };
+
+    const renderBubbleContent = (msg: Message) => {
+        return (
+            <>
+                {msg.created !== msg.modified && <p className="text-[10px] italic text-gray-700">(Edited)</p>}
+                <div
+                    dangerouslySetInnerHTML={{ __html: linkify(msg.body) }}
+                />
+                {msg.file_path && msg.file_name.endsWith('.pdf') && (
+                    <div className="mt-2">
+                        <a
+                            href={`${CHAT_UPLOADS_BASE_URL}/${msg.file_path}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center px-3 py-2 bg-gray-100 text-blue-600 border rounded hover:bg-gray-700"
+                        >
+                            📄 {msg.file_name}
+                        </a>
+                    </div>
+                )}
+                {msg.file_path &&
+                    msg.file_name.match(/\.(jpe?g|png|gif|webp)$/i) && (
+                        <div className="mt-2">
+                            <a
+                                href={`${CHAT_UPLOADS_BASE_URL}/${msg.file_path}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="block max-w-xs rounded overflow-hidden border hover:opacity-90 transition"
+                            >
+                                <img
+                                    src={`${CHAT_UPLOADS_BASE_URL}/${msg.file_path}`}
+                                    alt={msg.file_name}
+                                    className="w-full h-auto object-cover rounded"
+                                />
+                            </a>
+                        </div>
+                    )}
+            </>
+        )
+    }
+
     return (
-        <div className="flex flex-col h-full relative">
-            <div className="px-2 h-15 flex flex-row justify-between items-center border-b-1 border-gray-700">
-                <div className="flex-1 flex flex-col">
-                    <p className="">{isJobSeeker ? data.jobInfo.employer.clinic_name : data.jobSeeker.name}</p>
-                    <p className="text-sm text-gray-600">Job: {data.job_title}</p>
+        <div className={`flex flex-col relative h-full`}>
+            <div className="px-2 min-h-[60px] flex flex-row justify-between items-center border-b-1 border-gray-700">
+                <div className="flex-1 flex flex-col overflow-x-hidden">
+                    <p>{isJobSeeker ? data.jobInfo.employer.clinic_name : data.jobSeeker.name}</p>
+                    <p className="text-sm text-gray-600 truncate whitespace-nowrap overflow-hidden">Job: {data.job_title}</p>
                 </div>
-                <button className="p-2 hover:bg-gray-700 rounded-full transition">
+                <button className="p-2 hover:bg-gray-700 w-8 h-8 flex justify-center items-center rounded-full transition">
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                     </svg>
                 </button>
-                <button className="p-2 hover:bg-gray-700 rounded-full transition">
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
-                    </svg>
-                </button>
+                {hasHideButton && (
+                    <button className="p-2 hover:bg-gray-700 w-8 h-8 flex justify-center items-center rounded-full transition relative" onClick={onToggleHidden}>
+                        {isHidden && <Image src={'/images/message_bubble.png'} width={20} height={20} alt="chat-avatar" />}
+                        {!isHidden && <span>-</span>}
+                    </button>
+                )}
             </div>
-            <div ref={containerRef} className="flex-1 flex flex-col-reverse space-y-reverse space-y-2 overflow-y-auto p-4">
+            <div ref={containerRef} className="flex-1 flex flex-col-reverse space-y-reverse overflow-y-auto p-4 border-b-1 border-gray-700">
                 {cLoading && <div className="flex-1 flex justify-center items-center"><Spinner /></div>}
                 <div ref={messagesEndRef} />
                 {messages.map((msg, index) => {
@@ -153,11 +260,9 @@ export default function ChatBox({ data, onChange }: ChatBoxProps) {
                     if (isJobSeeker && msg.sender === 1) me = true;
                     if (!isJobSeeker && msg.sender === 2) me = true;
                     if (differenceInMinutes(new Date(), new Date(msg.created)) > 60) editable = false;
-                    const seekerAvatar = data.jobSeeker.avatar ? `${UPLOADS_BASE_URL}/${getImageFile(data.jobSeeker.avatar.entity_path)}` : '/images/default-avatar.jpg';
-                    const employerAvatar = data.jobInfo.employer.avatar ? `${UPLOADS_BASE_URL}/${getImageFile(data.jobInfo.employer.avatar.entity_path)}` : '/images/default-avatar.jpg';
                     if (msg.sender === messages[index - 1]?.sender && formatMessageDate(new Date(msg.created)) === formatMessageDate(new Date(messages[index - 1]?.created))) showMessageDate = false;
                     return (
-                        <div key={msg.id} className={`flex ${me ? 'flex-row-reverse' : 'flex-row'} space-x-2`}>
+                        <div key={msg.id} className={`flex ${me ? 'flex-row-reverse' : 'flex-row'} space-x-2 p-1 rounded-sm ${msg.id === editMessage?.id ? 'bg-gray-800' : 'bg-transparent'}`}>
                             {!me && (
                                 <div className={`w-10 h-10 relative rounded-full overflow-hidden border-2 ${me ? 'border-blue' : 'border-green'}`}>
                                     {!me && <Image src={isJobSeeker ? employerAvatar : seekerAvatar} alt="chat-avatar" fill />}
@@ -165,9 +270,7 @@ export default function ChatBox({ data, onChange }: ChatBoxProps) {
                             )}
                             <div className={`flex flex-col max-w-[70%] ${me ? 'items-end' : 'items-start'}`}>
                                 {msg.deleted ? (
-                                    <div
-                                        className={`p-2 rounded-sm relative ${me ? 'bg-blue text-white' : 'bg-green text-black'}`}
-                                    >
+                                    <div className={`p-2 rounded-sm relative ${me ? 'bg-blue text-white' : 'bg-green text-black'}`}>
                                         <span className="italic text-gray-700">Message deleted</span>
                                     </div>
                                 ) : (
@@ -190,10 +293,9 @@ export default function ChatBox({ data, onChange }: ChatBoxProps) {
                                                 </div>
                                             </div>
                                         )}
-                                        <div
-                                            className={`p-2 rounded-sm relative ${me ? 'bg-blue text-white' : 'bg-green text-black'}`}
-                                            dangerouslySetInnerHTML={{ __html: linkify(msg.body) }}
-                                        />
+                                        <div className={`p-2 rounded-sm relative ${me ? 'bg-blue text-white' : 'bg-green text-black'}`}>
+                                            {renderBubbleContent(msg)}
+                                        </div>
                                     </div>
                                 )}
                                 {showMessageDate && <p className="text-[10px] text-gray-600">{formatMessageDate(new Date(msg.created))}</p>}
@@ -203,7 +305,13 @@ export default function ChatBox({ data, onChange }: ChatBoxProps) {
                     )
                 })}
             </div>
-            <div className="h-25 flex flex-row space-x-2 border-t-1 border-gray-700 p-2 mt-2">
+            {attached && (
+                <div className="flex flex-row items-center px-4 bg-gray-700">
+                    <p className="flex-1">File attached: {attached.name}</p>
+                    <button className="text-gray-600 hover:text-black text-xl font-bold" onClick={() => setAttached(null)}>&times;</button>
+                </div>
+            )}
+            <div className="sm:hidden p-2 pb-0">
                 <CInput
                     placeholder="Type your message"
                     height="h-21"
@@ -212,11 +320,50 @@ export default function ChatBox({ data, onChange }: ChatBoxProps) {
                     onChange={e => setText(e.target.value)}
                     multiline
                 />
-                <CButton
-                    onClick={handleSend}
-                    text={isEditing ? 'Update' : "Send"}
-                    className='border border-green text-white bg-green px-[10px] h-10'
+            </div>
+            <div className="flex flex-row space-x-2 p-2 pt-0 sm:pt-2">
+                <label
+                    htmlFor="file-upload"
+                    className="p-2 h-fit rounded-full hover:bg-gray-700"
+                >
+                    <Image
+                        src={'/svgs/file.svg'}
+                        className={`cursor-pointer`}
+                        width={24}
+                        height={24}
+                        alt="location-icon"
+                    />
+                </label>
+                <input
+                    id="file-upload"
+                    type="file"
+                    className="hidden"
+                    onChange={handleAvatarChange}
                 />
+                <CInput
+                    placeholder="Type your message"
+                    height="h-21"
+                    wrapperClassName="flex-1 h-full"
+                    value={text}
+                    onChange={e => setText(e.target.value)}
+                    multiline
+                    className="flex-1 hidden sm:block"
+                />
+                <div className="flex flex-row space-x-2 sm:flex-col sm:space-y-1 sm:space-x-0">
+                    <CButton
+                        disabled={!text.trim() || isFileUploading}
+                        onClick={handleSend}
+                        text={isFileUploading ? 'Uploading...' : isEditing ? 'Update' : "Send"}
+                        className='text-white bg-green px-[10px] h-10'
+                    />
+                    {isEditing && (
+                        <CButton
+                            onClick={handleCancelEdit}
+                            text={'Cancel'}
+                            className='border border-green text-green px-[10px] h-10'
+                        />
+                    )}
+                </div>
             </div>
             {!isNearBottom && (
                 <div className="absolute bottom-26 right-5 bg-green p-2 rounded-full cursor-pointer" onClick={scrollToBottom}>
@@ -231,9 +378,9 @@ export default function ChatBox({ data, onChange }: ChatBoxProps) {
                     onPressOK={onConfirmDeleteMessage}
                     okButtonTitle='削除'
                     preview={(
-                        <p className="p-2 border-1 rounded-md bg-gray-800 border-gray-600">
-                            {deleteMessage.body}
-                        </p>
+                        <div className="p-2 border-1 rounded-md bg-gray-800 border-gray-600">
+                            {renderBubbleContent(deleteMessage)}
+                        </div>
                     )}
                 />
             )}

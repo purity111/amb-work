@@ -357,3 +357,10 @@ export const readChatById = async (id: number) => {
     const response = await api.get(`/chats/mark/${id}`);
     return response.data;
 };
+
+export const uploadChatFile = async (formData: FormData) => {
+    const response = await api.post('/chat-upload/file', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+    });
+    return response.data;
+};

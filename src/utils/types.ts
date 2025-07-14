@@ -452,6 +452,9 @@ export interface ApplicationItem {
             city: string;
             zip: string;
             tel: string;
+            avatar: {
+                entity_path: string
+            };
         };
     };
     chat: ChatDetails
@@ -651,6 +654,9 @@ export type Message = {
     sender: number;
     body: string;
     created: string;
+    modified: string;
     deleted: string | null;
     notifyTo: string; // This key is used to trigger a chat status update for the other user.
+    file_name: string;
+    file_path: string;
 };
