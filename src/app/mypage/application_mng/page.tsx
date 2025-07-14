@@ -10,7 +10,6 @@ import CInput from '@/components/common/Input';
 import CSelect from '@/components/common/Select';
 import Pagination from '@/components/common/Pagination';
 import { useQuery } from '@tanstack/react-query';
-import { format } from 'date-fns';
 import { PrefectureOptions, JobTypeOptions } from '@/utils/constants';
 import { useAuth } from '@/hooks/useAuth';
 import Modal from '@/components/common/Modal';
