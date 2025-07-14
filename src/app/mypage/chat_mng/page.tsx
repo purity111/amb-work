@@ -14,6 +14,7 @@ import { ChangeEvent, useEffect, useMemo, useRef, useState } from "react";
 import Spinner from "@/components/common/Spinner";
 import ChatBox from "@/components/ChatBox";
 import { useRouter, useSearchParams } from "next/navigation";
+import useWindowSize from '@/hooks/useWindowSize';
 
 const socket: Socket = io(process.env.NEXT_PUBLIC_SOCKET_URL || 'http://172.20.1.185:3000');
 
@@ -21,9 +22,11 @@ export default function ChatMngPage() {
   const [nameSearch, setNameSearch] = useState('');
   const [selectedChatId, setSelectedChatId] = useState(0);
   const [selectedJob, setSelectedJob] = useState<number>(0)
+  const [leftPaneExpanded, setLeftPaneExpanded] = useState(false);
   const { profile } = useAuthContext();
 
   const searchParams = useSearchParams();
+  const [width] = useWindowSize();
   const hasLoaded = useRef(false);
   const router = useRouter()
   const { data, isLoading: jLoading } = useGetJobs({
@@ -37,6 +40,14 @@ export default function ChatMngPage() {
     if (profile?.role === 'JobSeeker') return true;
     return false;
   }, [profile])
+
+  useEffect(() => {
+    if (width < 600) {
+      setLeftPaneExpanded(false);
+    } else {
+      setLeftPaneExpanded(true);
+    }
+  }, [width])
 
   useEffect(() => {
     if (!profile) return;
@@ -155,7 +166,7 @@ export default function ChatMngPage() {
       const employerAvatar = i.jobInfo.employer.avatar ? `${UPLOADS_BASE_URL}/${getImageFile(i.jobInfo.employer.avatar.entity_path)}` : '/images/default-company.png';
       return (
         <div
-          className={`w-full max-w-full flex flex-row items-center p-2 hover:bg-gray-800 cursor-pointer
+          className={`w-full max-w-full flex flex-row items-center p-2 hover:bg-gray-800 cursor-pointer h-20
             ${selectedChatId === i.id ? 'bg-gray-700' : 'transparent'}
             `}
           key={i.id}
@@ -169,13 +180,15 @@ export default function ChatMngPage() {
               </div>
             )}
           </div>
-          <div className="w-[100px] flex-1 pl-2">
-            <div className="flex flex-col lg:flex-row justify-between">
-              <p className="flex-1">{isJobSeeker ? i.jobInfo.employer.clinic_name : i.jobSeeker.name}</p>
-              <p className="text-[12px] text-gray-600">{formatTimeAgo(new Date(i.lastMessageTime))}</p>
+          {leftPaneExpanded && (
+            <div className="w-[100px] flex-1 pl-2">
+              <div className="flex flex-col lg:flex-row justify-between">
+                <p className="flex-1">{isJobSeeker ? i.jobInfo.employer.clinic_name : i.jobSeeker.name}</p>
+                <p className="text-[12px] text-gray-600">{formatTimeAgo(new Date(i.lastMessageTime))}</p>
+              </div>
+              <p className="truncate whitespace-nowrap overflow-hidden text-sm">{getLastMessage(i)}</p>
             </div>
-            <p className="truncate whitespace-nowrap overflow-hidden">{getLastMessage(i)}</p>
-          </div>
+          )}
         </div>
       )
     })
@@ -194,18 +207,42 @@ export default function ChatMngPage() {
         />
       )}
       {jobList.length > 0 && (
-        <div id="container" className="bg-white flex h-[calc(100vh-300px)] border-1 border-gray-700 rounded-lg mt-4 relative w-full">
-          <div id="leftPane" className="flex flex-col min-w-[200px] max-w-[500px]">
-            <div className="p-2 h-15 flex flex-row items-center border-b-1 border-gray-700">
-              <CInput
-                placeholder="検索"
-                height="h-10"
-                wrapperClassName="flex-1"
-                value={nameSearch}
-                onChange={onChangeNameSearch}
-              />
+        <div
+          id="container"
+          className={`
+          bg-white flex h-[calc(100vh-300px)] border-1 border-gray-700 rounded-lg mt-4 relative w-full overflow-hidden
+          pl-20 sm:pl-0
+          `}
+        >
+          <div
+            id="leftPane"
+            className={`
+              absolute left-0 border-r-1 border-gray-600 shadow-[4px_0_6px_-2px_rgba(0,0,0,0.2)] duration-500 ${leftPaneExpanded ? 'w-60' : 'w-20'}
+              sm:static sm:w-fit sm:border-none sm:shadow-none flex flex-col bg-white h-full sm:min-w-[200px] max-w-[500px] z-10
+            `}
+          >
+            <div className="p-2 h-15 flex flex-row justify-center items-center border-b-1 border-gray-700">
+              {leftPaneExpanded && (
+                <CInput
+                  placeholder="検索"
+                  height="h-10"
+                  wrapperClassName="flex-1"
+                  value={nameSearch}
+                  onChange={onChangeNameSearch}
+                />
+              )}
+              <div className='sm:hidden p-2 bg-white rounded-full mx-2 hover:bg-gray-700'>
+                <Image
+                  src={'/svgs/arrow-down.svg'}
+                  onClick={() => setLeftPaneExpanded(!leftPaneExpanded)}
+                  className={`${leftPaneExpanded ? 'rotate-90' : '-rotate-90'} duration-500 cursor-pointer`}
+                  width={24}
+                  height={24}
+                  alt="location-icon"
+                />
+              </div>
             </div>
-            <div className="flex-1 overflow-y-auto">
+            <div className={`flex-1 overflow-y-auto overflow-x-hidden `}>
               {renderApplications()}
             </div>
           </div>
