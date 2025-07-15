@@ -166,6 +166,7 @@ function ApplicationMngContent() {
   const handleChatClick = (app: ApplicationItem) => {
     setSelectedChat({
       ...app.chat,
+      agency: profile?.role === 'admin' ? 1 : 0,
       jobInfo: app.jobInfo,
       jobSeeker: app.jobSeeker,
       unreadCount: 0,
