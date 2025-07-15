@@ -88,6 +88,7 @@ export default function ChatBox({ data, hasHideButton = false, isHidden, onToggl
     }, [profile])
 
     const notifyToId = useMemo(() => {
+        if(data.agency === 1) return 'chat_admin'
         return `${isJobSeeker ? 2 : 1}_${isJobSeeker ? data.jobInfo.employer_id : data.job_seeker_id}`
     }, [isJobSeeker, data])
 
@@ -165,7 +166,7 @@ export default function ChatBox({ data, hasHideButton = false, isHidden, onToggl
     }, [data]);
 
     const employerAvatar = useMemo(() => {
-        return data.jobInfo.employer?.avatar ? `${UPLOADS_BASE_URL}/${getImageFile(data.jobInfo.employer.avatar.entity_path)}` : '/images/default-avatar.jpg';
+        return data.jobInfo.employer?.avatar ? `${UPLOADS_BASE_URL}/${getImageFile(data.jobInfo.employer.avatar.entity_path)}` : '/images/default-company.png';
     }, [])
 
     const onClickEditMessage = (msg: Message) => {
@@ -234,17 +235,18 @@ export default function ChatBox({ data, hasHideButton = false, isHidden, onToggl
 
     return (
         <div className={`flex flex-col relative h-full`}>
-            <div className="px-2 min-h-[60px] flex flex-row justify-between items-center border-b-1 border-gray-700">
+            <div className="px-2 min-h-[60px] flex flex-row justify-between items-center border-b-1 border-gray-700 ">
                 <div className="flex-1 flex flex-col overflow-x-hidden">
                     <p>{isJobSeeker ? data.jobInfo.employer.clinic_name : data.jobSeeker.name}</p>
                     <p className="text-sm text-gray-600 truncate whitespace-nowrap overflow-hidden">Job: {data.job_title}</p>
                 </div>
-                <button className="p-2 hover:bg-gray-700 w-8 h-8 flex justify-center items-center rounded-full transition">
+                
+                <a href={`tel:${isJobSeeker ? data.jobInfo.employer.tel : data.jobSeeker.tel}`} className="p-1 hover:bg-gray-800 w-8 h-8 flex justify-center items-center rounded-full transition">
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                     </svg>
-                </button>
+                </a>
                 {hasHideButton && (
                     <button className="p-2 hover:bg-gray-700 w-8 h-8 flex justify-center items-center rounded-full transition relative" onClick={onToggleHidden}>
                         {isHidden && <Image src={'/images/message_bubble.png'} width={20} height={20} alt="chat-avatar" />}

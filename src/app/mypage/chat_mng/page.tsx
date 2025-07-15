@@ -51,7 +51,7 @@ export default function ChatMngPage() {
 
   useEffect(() => {
     if (!profile) return;
-    const roomId = `${isJobSeeker ? 1 : 2}_${profile.id}`;
+    const roomId = profile.role === 'admin' ? 'chat_admin' : `${isJobSeeker ? 1 : 2}_${profile.id}`;
     // Join the room
     socket.emit('notify_join', roomId);
     console.log({ roomId })
