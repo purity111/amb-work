@@ -290,6 +290,7 @@ export const deleteColumn = async (id: number): Promise<void> => {
 // Fetch recommended columns
 export const getRecommendedColumns = async () => {
     const response = await api.get('/columns/recommended');
+    
     return response.data.recommended;
 };
 
