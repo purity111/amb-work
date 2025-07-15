@@ -62,7 +62,7 @@ export default function HeaderAvatar({ data }: Props) {
                     {userData?.role === 'jobseeker' && userData?.name}
                 </p>
                 <a href="/mypage" className="text-base w-1/1">
-                    <p className="p-2 hover:bg-gray-800">My Page</p>
+                    <p className="p-2 hover:bg-gray-800">マイページ</p>
                 </a>
                 <p className="p-2 font-md cursor-pointer hover:bg-gray-800" onClick={onClickLogout}>LogOut</p>
             </div>

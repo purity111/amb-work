@@ -1,4 +1,4 @@
-import { RegisterEmployerParam, RegisterJobSeekerParam, LoginParam, JobParam, RecruitingCriteria, AdminCriteriaFetchParam, BookmarkJobParam, CreateUpdateCriteriaFetchParam, ApplicationFetchParam, BookmarkedJobsFetchParams, ColumnFetchParam, Column, ColumnResponse, InterviewFetchParam, InterviewResponse, Interview } from "@/utils/types";
+import { RegisterEmployerParam, RegisterJobSeekerParam, LoginParam, JobParam, RecruitingCriteria, AdminCriteriaFetchParam, BookmarkJobParam, CreateUpdateCriteriaFetchParam, ApplicationFetchParam, BookmarkedJobsFetchParams, ColumnFetchParam, Column, ColumnResponse, InterviewFetchParam, InterviewResponse, Interview, CompanyApplicationParam, CompanyApplicationResponse, ContactInquiryParam, ContactFetchParam, CareerConsultationParam } from "@/utils/types";
 import api from './axios';
 import { toQueryString } from "@/utils/helper";
 import type { JobSeekerFilterParam } from '@/utils/types';
@@ -362,5 +362,53 @@ export const uploadChatFile = async (formData: FormData) => {
     const response = await api.post('/chat-upload/file', formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
     });
+    return response.data;
+}
+
+export const submitCompanyApplication = async (param: CompanyApplicationParam) => {
+    const response = await api.post("/company-applications", param);
+    return response.data;
+};
+
+export const getCompanyApplications = async (param: AdminCriteriaFetchParam): Promise<CompanyApplicationResponse> => {
+    const queryString = toQueryString(param);
+    const response = await api.get(`/company-applications?${queryString}`);
+    return response.data.data;
+};
+
+export const deleteCompanyApplication = async (id: number): Promise<void> => {
+    await api.delete(`/company-applications/${id}`);
+};
+
+// Contact Inquiry APIs
+export const getContacts = async (param: ContactFetchParam) => {
+    const queryString = toQueryString(param);
+    const response = await api.get(`/contacts?${queryString}`);
+    return response.data;
+};
+
+export const submitContactInquiry = async (param: ContactInquiryParam) => {
+    const response = await api.post('/contacts', param);
+    return response.data;
+};
+
+export const addCareerInquiry = async (param: CareerConsultationParam) => {
+    const response = await api.post('/career-consultations', param);
+    return response.data;
+};
+
+export const deleteContactInquiry = async (id: number) => {
+    const response = await api.delete(`/contacts/${id}`);
+    return response.data;
+};
+
+export const getCareerConsultations = async (param: AdminCriteriaFetchParam) => {
+    const queryString = toQueryString(param);
+    const response = await api.get(`/career-consultations?${queryString}`);
+    return response.data;
+};
+
+export const deleteCareerConsultation = async (id: number) => {
+    const response = await api.delete(`/career-consultations/${id}`);
     return response.data;
 };

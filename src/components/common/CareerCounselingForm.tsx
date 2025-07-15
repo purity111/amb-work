@@ -6,8 +6,11 @@ import RequiredLabel from './RequiredLabel';
 import CDatePicker from './DatePicker';
 import { PrefectureOptions } from '@/utils/constants';
 import { addYears } from 'date-fns';
+import { addCareerInquiry } from '@/lib/api';
+import { toast } from 'react-toastify';
 
 const inquiryOptions = [
+    { value: '', option: '選択してください' },
     { value: 'career', option: '転職相談をしたい' },
     { value: 'counseling', option: 'キャリアカウンセリングを受けたい' },
     { value: 'industry', option: '業界情報について話を聞きたい' },
@@ -16,12 +19,28 @@ const inquiryOptions = [
 ];
 
 export default function CareerCounselingForm() {
-    const { register, handleSubmit, control, formState: { errors }, trigger, setFocus } = useForm({ mode: 'onChange' });
+    const { register, handleSubmit, control, formState: { errors }, trigger, setFocus, reset } = useForm({ mode: 'onChange' });
     const [privacyChecked, setPrivacyChecked] = useState(false);
 
-    const onSubmit = (data: any) => {
-        console.log('nothing', data);
-        
+    const onSubmit = async (data: any) => {
+        try {
+            await addCareerInquiry({
+                name: data.name,
+                email: data.email,
+                telephone: data.tel,
+                birthday: data.birthdate,
+                prefectures: data.prefecture,
+                experience: data.experience,
+                inquiry: data.inquiry,
+                desired_job_type: data.jobType,
+                request: data.request,
+            });
+            toast.success('キャリア相談が送信されました');
+            reset();
+        } catch (error) {
+            toast.error('送信に失敗しました');
+            console.log(error);
+        }
     };
 
     const onValidateAndSubmit = async (e: React.FormEvent) => {
@@ -39,7 +58,7 @@ export default function CareerCounselingForm() {
     return (
         <form className="w-full max-w-2xl mx-auto bg-white p-4 md:p-8 rounded shadow-lg mb-20" onSubmit={onValidateAndSubmit} noValidate>
             {/* お名前 */}
-            <div className="flex items-center gap-4 mb-2">
+            <div className="flex items-center gap-4 mb-2 flex-col md:flex-row">
                 <label className="min-w-[120px] md:min-w-[160px] flex-shrink-0">お名前 <RequiredLabel /></label>
                 <div className="w-full">
                     <CInput
@@ -53,7 +72,7 @@ export default function CareerCounselingForm() {
             </div>
             <hr className="border-[#dfdfdf] my-6" />
             {/* メールアドレス */}
-            <div className="flex items-center gap-4 mb-2">
+            <div className="flex items-center gap-4 mb-2 flex-col md:flex-row">
                 <label className="min-w-[120px] md:min-w-[160px] flex-shrink-0">メールアドレス <RequiredLabel /></label>
                 <div className="w-full">
                     <CInput type="email" {...register('email', { required: 'メールアドレスは必須です', pattern: { value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, message: '有効なメールアドレスを入力してください' } })} isError={!!errors.email} errorText={errors.email?.message as string} className="w-full" />
@@ -61,7 +80,7 @@ export default function CareerCounselingForm() {
             </div>
             <hr className="border-[#dfdfdf] my-6" />
             {/* 電話番号 */}
-            <div className="flex items-center gap-4 mb-2">
+            <div className="flex items-center gap-4 mb-2 flex-col md:flex-row">
                 <label className="min-w-[120px] md:min-w-[160px] flex-shrink-0">電話番号 <RequiredLabel /></label>
                 <div className="w-full">
                     <CInput type="tel" {...register('tel', { required: '電話番号は必須です' })} isError={!!errors.tel} errorText={errors.tel?.message as string} className="w-full" />
@@ -69,8 +88,8 @@ export default function CareerCounselingForm() {
             </div>
             <hr className="border-[#dfdfdf] my-6" />
             {/* 生年月日 */}
-            <div className="flex items-center gap-4 mb-2">
-                <label className="min-w-[120px] md:min-w-[160px] flex-shrink-0">生年月日</label>
+            <div className="flex items-center gap-4 mb-2 flex-col md:flex-row">
+                <label className="min-w-[120px] text-center md:text-left md:min-w-[160px] flex-shrink-0">生年月日</label>
                 <div className="w-full">
                     <Controller
                         name="birthdate"
@@ -89,6 +108,7 @@ export default function CareerCounselingForm() {
                                 showYearDropdown
                                 dropdownMode="select"
                                 className="w-full"
+                                height="h-[50px]"
                             />
                         )}
                     />
@@ -96,8 +116,8 @@ export default function CareerCounselingForm() {
             </div>
             <hr className="border-[#dfdfdf] my-6" />
             {/* 都道府県 */}
-            <div className="flex items-center gap-4 mb-2">
-                <label className="min-w-[120px] md:min-w-[160px] flex-shrink-0">都道府県</label>
+            <div className="flex items-center gap-4 mb-2 flex-col md:flex-row">
+                <label className="min-w-[120px] text-center md:text-left md:min-w-[160px] flex-shrink-0">都道府県</label>
                 <div className="w-full">
                     <Controller
                         name="prefecture"
@@ -116,21 +136,21 @@ export default function CareerCounselingForm() {
             </div>
             <hr className="border-[#dfdfdf] my-6" />
             {/* リユース業界経験 */}
-            <div className="flex items-center gap-4 mb-2">
-                <label className="min-w-[120px] md:min-w-[160px] flex-shrink-0 text-center">リユース業界、買取業務<br />ご経験について</label>
-                <div className="flex gap-4 w-full">
+            <div className="flex items-center gap-4 mb-2 flex-col md:flex-row">
+                <label className="min-w-[120px] md:min-w-[160px] flex-shrink-0 text-center">リユース業界、買取業務<br className='hidden md:block' />ご経験について</label>
+                <div className="flex gap-4 justify-center w-full">
                     <label className="flex items-center gap-1">
-                        <input type="checkbox" {...register('experience', { required: false })} value="ご経験がある" className="accent-blue-500" /> ご経験がある
+                        <input type="radio" {...register('experience', { required: false })} value="ご経験がある" className="accent-blue-500" /> ご経験がある
                     </label>
                     <label className="flex items-center gap-1">
-                        <input type="checkbox" {...register('experience', { required: false })} value="ご経験がない" className="accent-blue-500" /> ご経験がない
+                        <input type="radio" {...register('experience', { required: false })} value="ご経験がない" className="accent-blue-500" /> ご経験がない
                     </label>
                 </div>
             </div>
             <hr className="border-[#dfdfdf] my-6" />
             {/* お問い合わせ内容について */}
-            <div className="flex items-center gap-4 mb-2">
-                <label className="min-w-[120px] md:min-w-[160px] flex-shrink-0">お問い合わせ<br />内容について</label>
+            <div className="flex items-center gap-4 mb-2 flex-col md:flex-row">
+                <label className="min-w-[120px] md:min-w-[160px] flex-shrink-0">お問い合わせ<br className='hidden md:block' />内容について</label>
                 <div className="w-full">
                     <Controller
                         name="inquiry"
@@ -149,7 +169,7 @@ export default function CareerCounselingForm() {
             </div>
             <hr className="border-[#dfdfdf] my-6" />
             {/* 希望職種 */}
-            <div className="flex items-center gap-4 mb-2">
+            <div className="flex items-center gap-4 mb-2 flex-col md:flex-row">
                 <label className="min-w-[120px] md:min-w-[160px] flex-shrink-0">希望職種</label>
                 <div className="w-full">
                     <CInput {...register('jobType')} className="w-full" />
@@ -157,15 +177,15 @@ export default function CareerCounselingForm() {
             </div>
             <hr className="border-[#dfdfdf] my-6" />
             {/* ご要望 */}
-            <div className="flex items-center gap-4 mb-2">
-                <label className="min-w-[120px] md:min-w-[160px] flex-shrink-0">ご要望となれば、<br />ご記入ください。</label>
+            <div className="flex items-center gap-4 mb-2 flex-col md:flex-row">
+                <label className="min-w-[120px] md:min-w-[160px] flex-shrink-0">ご要望となれば、<br className='hidden md:block' />ご記入ください。</label>
                 <div className="w-full">
                     <CInput multiline {...register('request')} className="w-full" height="h-[100px]" />
                 </div>
             </div>
             <hr className="border-[#dfdfdf] my-6" />
             {/* プライバシーポリシー同意 */}
-            <div className="flex items-center gap-2 m-auto mb-20">
+            <div className="flex items-center justify-center gap-2 m-auto mb-10 md:mb-20">
                 <label className="flex items-center gap-1 ml-2">
                     <input type="checkbox" className="accent-blue-500" checked={privacyChecked} onChange={e => setPrivacyChecked(e.target.checked)} />
                     <a href="/privacy" target="_blank" rel="noopener noreferrer" className="text-blue-600 underline text-sm">プライバシーポリシー</a>

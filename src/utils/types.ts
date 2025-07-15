@@ -660,3 +660,63 @@ export type Message = {
     file_name: string;
     file_path: string;
 };
+
+// Recruiter Inquiry Form
+export interface CompanyApplicationParam {
+    company: string;
+    department: string;
+    name: string;
+    email: string;
+    tel: string;
+    inquiryDetail: string;
+}
+
+export interface CompanyApplicationItem {
+    id: number;
+    company_name: string;
+    department_name: string;
+    name: string;
+    email: string;
+    telephone: string;
+    inquiry: string;
+    created: string;
+    modified: string;
+}
+
+export interface CompanyApplicationResponse {
+    companyApplications: CompanyApplicationItem[];
+    pagination: {
+        totalPages: number;
+        currentPage: number;
+        totalItems: number;
+        itemsPerPage: number;
+    };
+}
+
+export interface ContactInquiryParam {
+    name: string;
+    company_name?: string;
+    email: string;
+    telephone: string;
+    inquiry: string;         // e.g. サービスについて, etc.
+    inquiry_detail?: string; // optional
+}
+
+export interface ContactFetchParam {
+    page?: number;
+    limit?: number;
+    searchTerm?: string;
+}
+
+// Career Consultation Inquiry
+export interface CareerConsultationParam {
+    name: string;
+    email: string;
+    telephone: string;
+    birthday?: string;
+    prefectures?: string;
+    experience?: string;
+    inquiry?: string;
+    desired_job_type?: string;
+    request?: string;
+}
