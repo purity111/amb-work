@@ -250,7 +250,7 @@ export default function JobMngPage() {
             <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto"></div>
           )}
           {(jobs?.data?.jobs?.length > 0) && jobs?.data?.jobs?.map((job: JobDetail) => (
-            <div className="border-1 border-gray-700 overflow-hidden" key={`${currentPage}-${job.id}`}>
+            <div className="border-1 border-gray-700 overflow-hidden bg-white rounded-sm shadow-md" key={`${currentPage}-${job.id}`}>
               <div className={`flex flex-row justify-between px-2 py-3 ${job.job_detail_page_template_id === 1 ? 'bg-blue' : 'bg-orange-400'}`}>
                 <p className="text-sm text-white pr-10 truncate flex-1">{job.job_title}</p>
                 <p className="text-sm text-white">{formatTimeAgo(new Date(job.created))}</p>
