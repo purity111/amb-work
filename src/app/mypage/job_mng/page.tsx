@@ -12,15 +12,12 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useGetAllEmployerInfos } from "@/hooks/useGetAllEmployerInfos";
 import { useGetJobs } from "@/hooks/useGetJobs";
 import { JobDetail, PickOption } from "@/utils/types";
-import { getFirstFullImage } from "@/utils/helper";
+import { formatTimeAgo, getFirstFullImage } from "@/utils/helper";
 import { useMutation } from "@tanstack/react-query";
 import { deleteJobById } from "@/lib/api";
 import { toast } from "react-toastify";
 import Dialog from "@/components/Dialog";
 import Spinner from "@/components/common/Spinner";
-import { formatDistanceToNow } from "date-fns";
-import { ja } from 'date-fns/locale';
-
 
 export default function JobMngPage() {
   const [jobType, setJobType] = useState<string>('0');
@@ -253,10 +250,10 @@ export default function JobMngPage() {
             <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto"></div>
           )}
           {(jobs?.data?.jobs?.length > 0) && jobs?.data?.jobs?.map((job: JobDetail) => (
-            <div className="border-1 border-gray-700 overflow-hidden" key={`${currentPage}-${job.id}`}>
+            <div className="border-1 border-gray-700 overflow-hidden bg-white rounded-sm shadow-md" key={`${currentPage}-${job.id}`}>
               <div className={`flex flex-row justify-between px-2 py-3 ${job.job_detail_page_template_id === 1 ? 'bg-blue' : 'bg-orange-400'}`}>
                 <p className="text-sm text-white pr-10 truncate flex-1">{job.job_title}</p>
-                <p className="text-sm text-white">{formatDistanceToNow(new Date(job.created), { addSuffix: true, locale: ja })}</p>
+                <p className="text-sm text-white">{formatTimeAgo(new Date(job.created))}</p>
               </div>
               <div className="flex flex-col sm:flex-row">
 

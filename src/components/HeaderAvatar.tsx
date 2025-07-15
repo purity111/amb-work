@@ -2,6 +2,7 @@ import { useAuthContext } from "@/app/layout";
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import useGetCurrentUser from "@/hooks/useGetCurrentUser";
+import { UPLOADS_BASE_URL } from "@/utils/config";
 
 interface Props {
     data: any
@@ -42,7 +43,7 @@ export default function HeaderAvatar({ data }: Props) {
         >
             <div className="relative w-full h-full">
                 <Image
-                    src={userData?.avatar ? `${process.env.NEXT_PUBLIC_UPLOADS_BASE_URL}/${userData?.avatar}` : (userData?.role === 'Employer' ? '/images/default-company.png' : '/images/default-avatar.jpg')}
+                    src={userData?.avatar ? `${UPLOADS_BASE_URL}/${userData?.avatar}` : (userData?.role === 'Employer' ? '/images/default-company.png' : '/images/default-avatar.jpg')}
                     alt="avatar"
                     className="rounded-full object-cover"
                     fill

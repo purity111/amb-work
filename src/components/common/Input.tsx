@@ -5,12 +5,13 @@ interface CInputProps {
     height?: string;
     width?: string;
     className?: string;
+    wrapperClassName?: string;
     disabled?: boolean;
     isError?: boolean;
     errorText?: string;
 }
 
-export default function CInput({ multiline = false, height = 'h-[50px]', width = 'w-full', className, disabled = false, isError = false, errorText, ...props }: CInputProps & InputHTMLAttributes<HTMLInputElement | HTMLTextAreaElement>) {
+export default function CInput({ multiline = false, height = 'h-[50px]', width = 'w-full', className, wrapperClassName, disabled = false, isError = false, errorText, ...props }: CInputProps & InputHTMLAttributes<HTMLInputElement | HTMLTextAreaElement>) {
     const renderInput = () => {
         if (multiline) {
             return (
@@ -45,7 +46,7 @@ export default function CInput({ multiline = false, height = 'h-[50px]', width =
     }
 
     return (
-        <div>
+        <div className={wrapperClassName}>
             {renderInput()}
             {isError && errorText && (
                 <p className="text-red-400 text-[10px]">{errorText}</p>
