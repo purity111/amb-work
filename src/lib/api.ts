@@ -99,15 +99,19 @@ export const bookmarkJob = async (param: BookmarkJobParam) => {
 export const getJobs = async (
     page: number,
     limit: number,
-    searchTerm: string,
+    searchTerm?: string,
     jobType?: number,
     companyID?: number,
+    employer_id?: number,
     features?: string[],
     prefectures?: string[]
 ) => {
     const param: Record<string, any> = { page, limit, searchTerm, jobType };
     if (companyID && companyID > 0) {
         param.companyID = companyID;
+    }
+    if (employer_id && employer_id > 0) {
+        param.employer_id = employer_id;
     }
     if (features?.length && features?.length > 0) {
         param.features = features;
@@ -311,7 +315,7 @@ export const createInterview = async (formData: FormData): Promise<Interview> =>
             'Content-Type': 'multipart/form-data',
         },
     });
-    
+
     return response.data;
 };
 
@@ -329,50 +333,82 @@ export const deleteInterview = async (id: number): Promise<void> => {
     return response.data;
 };
 
+export const getApplicants = async () => {
+    const response = await api.get(`/applications/employer`);
+    return response.data;
+};
+
+export const getApplicantsByJobId = async (id: number) => {
+    const response = await api.get(`/applications/${id}`);
+    return response.data;
+};
+
+export const getChats = async () => {
+    const response = await api.get(`/chats`);
+    return response.data;
+};
+
+export const getChatById = async (id: number) => {
+    const response = await api.get(`/chats/${id}`);
+    return response.data;
+};
+
+export const readChatById = async (id: number) => {
+    const response = await api.get(`/chats/mark/${id}`);
+    return response.data;
+};
+
+export const uploadChatFile = async (formData: FormData) => {
+    const response = await api.post('/chat-upload/file', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+    });
+    return response.data;
+}
+
 export const submitCompanyApplication = async (param: CompanyApplicationParam) => {
-  const response = await api.post("/company-applications", param);
-  return response.data;
+    const response = await api.post("/company-applications", param);
+    return response.data;
 };
 
 export const getCompanyApplications = async (param: AdminCriteriaFetchParam): Promise<CompanyApplicationResponse> => {
-  const queryString = toQueryString(param);
-  const response = await api.get(`/company-applications?${queryString}`);
-  return response.data.data;
+    const queryString = toQueryString(param);
+    const response = await api.get(`/company-applications?${queryString}`);
+    return response.data.data;
 };
 
 export const deleteCompanyApplication = async (id: number): Promise<void> => {
-  await api.delete(`/company-applications/${id}`);
+    await api.delete(`/company-applications/${id}`);
 };
 
 // Contact Inquiry APIs
 export const getContacts = async (param: ContactFetchParam) => {
-  const queryString = toQueryString(param);
-  const response = await api.get(`/contacts?${queryString}`);
-  return response.data;
+    const queryString = toQueryString(param);
+    const response = await api.get(`/contacts?${queryString}`);
+    return response.data;
 };
 
 export const submitContactInquiry = async (param: ContactInquiryParam) => {
-  const response = await api.post('/contacts', param);
-  return response.data;
+    const response = await api.post('/contacts', param);
+    return response.data;
 };
 
 export const addCareerInquiry = async (param: CareerConsultationParam) => {
-  const response = await api.post('/career-consultations', param);
-  return response.data;
+    const response = await api.post('/career-consultations', param);
+    return response.data;
 };
 
 export const deleteContactInquiry = async (id: number) => {
-  const response = await api.delete(`/contacts/${id}`);
-  return response.data;
+    const response = await api.delete(`/contacts/${id}`);
+    return response.data;
 };
 
 export const getCareerConsultations = async (param: AdminCriteriaFetchParam) => {
-  const queryString = toQueryString(param);
-  const response = await api.get(`/career-consultations?${queryString}`);
-  return response.data;
+    const queryString = toQueryString(param);
+    const response = await api.get(`/career-consultations?${queryString}`);
+    return response.data;
 };
 
 export const deleteCareerConsultation = async (id: number) => {
-  const response = await api.delete(`/career-consultations/${id}`);
-  return response.data;
+    const response = await api.delete(`/career-consultations/${id}`);
+    return response.data;
 };

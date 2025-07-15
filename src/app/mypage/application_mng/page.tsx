@@ -4,16 +4,18 @@ import React, { ChangeEvent, useEffect, useState, useRef, Suspense } from 'react
 import { useRouter, useSearchParams } from 'next/navigation';
 import ApplicationCard from '@/components/ApplicationCard';
 import { getApplicationsByRole } from '@/lib/api';
-import { ApplicationItem, ApplicationFetchParam } from '@/utils/types';
+import { ApplicationItem, ApplicationFetchParam, ChatItem } from '@/utils/types';
 import CButton from "@/components/common/Button";
 import CInput from '@/components/common/Input';
 import CSelect from '@/components/common/Select';
 import Pagination from '@/components/common/Pagination';
 import { useQuery } from '@tanstack/react-query';
-import { format } from 'date-fns';
 import { PrefectureOptions, JobTypeOptions } from '@/utils/constants';
 import { useAuth } from '@/hooks/useAuth';
 import Modal from '@/components/common/Modal';
+import { formatLongDateTime } from '@/utils/helper';
+import ChatBox from '@/components/ChatBox';
+import Image from 'next/image';
 
 function ApplicationMngContent() {
   const [currentPage, setCurrentPage] = useState(1);
@@ -22,6 +24,9 @@ function ApplicationMngContent() {
   const [searchTerm, setSearchTerm] = useState('');
   const [tempSearch, setTempSearch] = useState('');
   const [jobType, setJobType] = useState<string>('0');
+  const [selectedChat, setSelectedChat] = useState<ChatItem | null>(null);
+  const [isHidden, setIsHidden] = useState(false);
+
   const router = useRouter();
   const { profile, isAdmin } = useAuth();
   const searchParams = useSearchParams();
@@ -47,24 +52,26 @@ function ApplicationMngContent() {
 
   const { data: response, isLoading: aLoading } = useQuery<{
     data: { applications: ApplicationItem[]; pagination: { totalPages: number } };
-  }>({ queryKey: ['applications', currentPage, limit, searchTerm, jobType !== '0' ? jobType : undefined, profile?.id], queryFn: async () => {
-    const params: ApplicationFetchParam = {
-      limit,
-      page: currentPage,
-      searchTerm,
-    };
-    if (jobType === '1' || jobType === '2') {
-      params.jobType = Number(jobType);
-    }
-    // Role-based filtering
-    if (profile?.role === 'JobSeeker') {
-      params.job_seeker_id = profile.id;
-    } else if (profile?.role === 'Employer') {
-      params.employer_id = profile.id;
-    }
-    const data = await getApplicationsByRole(params);
-    return data;
-  }, enabled: !!profile });
+  }>({
+    queryKey: ['applications', currentPage, limit, searchTerm, jobType !== '0' ? jobType : undefined, profile?.id], queryFn: async () => {
+      const params: ApplicationFetchParam = {
+        limit,
+        page: currentPage,
+        searchTerm,
+      };
+      if (jobType === '1' || jobType === '2') {
+        params.jobType = Number(jobType);
+      }
+      // Role-based filtering
+      if (profile?.role === 'JobSeeker') {
+        params.job_seeker_id = profile.id;
+      } else if (profile?.role === 'Employer') {
+        params.employer_id = profile.id;
+      }
+      const data = await getApplicationsByRole(params);
+      return data;
+    }, enabled: !!profile
+  });
 
   const [applications, setApplications] = useState<ApplicationItem[]>([]);
   const [allApplications, setAllApplications] = useState<ApplicationItem[]>([]);
@@ -72,7 +79,7 @@ function ApplicationMngContent() {
   useEffect(() => {
     if (response?.data) {
       console.log('response.data', response.data);
-      
+
       setAllApplications(response.data.applications);
       setTotalPage(response.data.pagination.totalPages);
     }
@@ -141,16 +148,6 @@ function ApplicationMngContent() {
     }
   };
 
-  const formatDateTime = (dateString: string) => {
-    if (!dateString) return '';
-    try {
-      return format(new Date(dateString), 'yyyy年MM月dd日HH:mm:ss');
-    } catch (error) {
-      console.error("Error formatting date:", error);
-      return dateString;
-    }
-  };
-
   const getPrefectureName = (id: number) => {
     const prefecture = PrefectureOptions.find(opt => Number(opt.value) === id);
     return prefecture ? prefecture.option : '';
@@ -166,13 +163,24 @@ function ApplicationMngContent() {
     setShowDetailModal(true);
   };
 
+  const handleChatClick = (app: ApplicationItem) => {
+    setSelectedChat({
+      ...app.chat,
+      jobInfo: app.jobInfo,
+      jobSeeker: app.jobSeeker,
+      unreadCount: 0,
+      lastMessageTime: ''
+    } as ChatItem);
+    setIsHidden(false);
+  };
+
   const handleCloseDetailModal = () => {
     setShowDetailModal(false);
     setSelectedApplication(null);
   };
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container mx-auto px-4 py-8 w-[95%] max-w-[1000px]">
       {aLoading ? (
         <p>読み込む中...</p>
       ) : (
@@ -212,23 +220,10 @@ function ApplicationMngContent() {
               applications.map((app) => (
                 <ApplicationCard
                   key={app.id}
-                  companyName={app.jobInfo.employer.clinic_name}
-                  jobTitle={app.jobInfo.job_title}
-                  storeName={app.jobInfo.employer.city}
-                  applicationDate={formatDateTime(app.created)}
-                  salary={app.jobInfo.pay}
-                  zip={app.jobInfo.employer.zip}
-                  prefecture={getPrefectureName(app.jobInfo.employer.prefectures)}
-                  city={app.jobInfo.employer.city}
-                  tel={app.jobInfo.employer.tel}
-                  templateId={app.jobInfo.job_detail_page_template_id}
-                  jobseekerName={app.jobSeeker.name}
-                  jobseekerBirthdate={app.jobSeeker.birthdate}
-                  jobseekerSex={app.jobSeeker.sex}
-                  jobseekerPrefecture={getPrefectureName(app.jobSeeker.prefectures)}
-                  jobseekerTel={app.jobSeeker.tel}
+                  data={app}
                   userRole={profile?.role}
                   onDetailsClick={() => handleDetailsClick(app)}
+                  onChatClick={() => handleChatClick(app)}
                 />
               ))
             ) : (
@@ -244,7 +239,27 @@ function ApplicationMngContent() {
           </div>
         </div>
       )}
-
+      {selectedChat && (
+        <div className={`
+          fixed bottom-4 right-4  shadow-lg z-100
+          ${isHidden ? 'rounded-full' : 'h-[500px] w-[90%] max-w-[360px] bg-white rounded-sm'} 
+        `}>
+          {isHidden && (
+            <button className="p-2 bg-white w-12 h-12 flex justify-center items-center rounded-full transition relative cursor-pointer" onClick={() => setIsHidden(false)}>
+              <Image src={'/images/message_bubble.png'} width={30} height={30} alt="chat-avatar" />
+            </button>
+          )}
+          {!isHidden && (
+            <ChatBox
+              data={selectedChat}
+              hasHideButton
+              isHidden={isHidden}
+              onToggleHidden={() => setIsHidden(!isHidden)}
+              onChange={() => { }}
+            />
+          )}
+        </div>
+      )}
       {showDetailModal && selectedApplication && (
         <Modal
           isOpen={showDetailModal}
@@ -261,7 +276,7 @@ function ApplicationMngContent() {
               </div>
               <div className="mt-2 flex flex-col sm:flex-row sm:items-baseline">
                 <span className="font-semibold text-md w-full sm:w-[150px] shrink-0">応募日時:</span>
-                <span className="text-left flex-1">{formatDateTime(selectedApplication.created)}</span>
+                <span className="text-left flex-1">{formatLongDateTime(selectedApplication.created)}</span>
               </div>
             </div>
 
@@ -271,10 +286,9 @@ function ApplicationMngContent() {
                 <hr className="my-4 border-gray-600 w-full sm:ml-[150px] sm:w-[calc(100%-150px)]" />
               )
             }
-
             {
               selectedApplication.jobInfo.recruitingCriterias &&
-              selectedApplication.jobInfo.recruitingCriterias.some(criteria => criteria.JobInfosRecruitingCriteria.body) ? (
+                selectedApplication.jobInfo.recruitingCriterias.some(criteria => criteria.JobInfosRecruitingCriteria.body) ? (
                 <ul>
                   {selectedApplication.jobInfo.recruitingCriterias.filter(criteria => criteria.JobInfosRecruitingCriteria.body).map((criteria, index) => (
                     <React.Fragment key={index}>

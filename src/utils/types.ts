@@ -64,12 +64,13 @@ export interface LoginParam {
 export interface JobFetchParam {
     page: number;
     limit: number;
-    searchTerm: string;
+    searchTerm?: string;
     companyID?: number;
     jobType?: number;
     features?: string[];
     prefectures?: string[];
     isAdmin?: string;
+    employer_id?: number;
 }
 
 export interface JobParam {
@@ -411,6 +412,9 @@ export interface ApplicationItem {
         deleted: string | null;
         created: string;
         modified: string;
+        avatar: {
+            entity_path: string
+        };
     };
     jobInfo: {
         id: number;
@@ -440,6 +444,7 @@ export interface ApplicationItem {
         deleted: string | null;
         created: string;
         modified: string;
+        recruitingCriterias: RecruitingCriteria[],
         employer: {
             id: number;
             clinic_name: string;
@@ -447,27 +452,39 @@ export interface ApplicationItem {
             city: string;
             zip: string;
             tel: string;
-        };
-        recruitingCriterias: Array<{
-            id: number;
-            calling_name: string | null;
-            name: string;
-            created: string;
-            modified: string;
-            display_order: number;
-            clinic_flg: number;
-            JobInfosRecruitingCriteria: {
-                id: number;
-                job_info_id: number;
-                recruiting_criteria_id: number;
-                body: string;
-                public_status: number;
-                deleted: string | null;
-                created: string;
-                modified: string;
+            avatar: {
+                entity_path: string
             };
-        }>;
+        };
     };
+    chat: ChatDetails
+}
+
+export interface ChatDetails {
+    id: number;
+    job_info_id: number;
+    job_seeker_id: number;
+    job_title: string;
+    is_send_privacy: boolean;
+    created: string;
+    modified: string;
+    messages: ChatMessage[]
+}
+
+export interface ChatMessage {
+    id: number;
+    chat_id: number;
+    is_readed: boolean;
+    no: number;
+    sender: number;
+    body: string;
+    created: string;
+    deleted: string | null;
+    modified: string;
+    mail_send: number;
+    chat_flg: number;
+    file_path?: string;
+    file_name?: string;
 }
 
 export interface SikakuItemProps {
@@ -555,6 +572,46 @@ export interface JobSeekerDetail {
     desiredConditions: number[];
 }
 
+export interface ChatItem {
+    id: number;
+    job_info_id: number;
+    job_seeker_id: number;
+    job_title: string;
+    created: string;
+    modified: string;
+    is_send_privacy: boolean;
+    jobInfo: {
+        id: number;
+        job_title: string;
+        employer_id: number;
+        employer: {
+            id: number;
+            clinic_name: string;
+            prefectures: number;
+            city: string;
+            avatar: {
+                entity_path: string
+            }
+        }
+    };
+    jobSeeker: {
+        id: number;
+        name: string;
+        email: string;
+        sex: number;
+        birthdate: string;
+        prefectures: number;
+        zip: string;
+        tel: string;
+        avatar: {
+            entity_path: string;
+        }
+    };
+    messages: ChatMessage[];
+    unreadCount: number;
+    lastMessageTime: string;
+}
+
 export interface Interview {
     id: number;
     title: string;
@@ -591,62 +648,75 @@ export interface InterviewResponse {
     };
 }
 
+export type Message = {
+    id: number;
+    chat_id: number;
+    sender: number;
+    body: string;
+    created: string;
+    modified: string;
+    deleted: string | null;
+    notifyTo: string; // This key is used to trigger a chat status update for the other user.
+    file_name: string;
+    file_path: string;
+};
+
 // Recruiter Inquiry Form
 export interface CompanyApplicationParam {
-  company: string;
-  department: string;
-  name: string;
-  email: string;
-  tel: string;
-  inquiryDetail: string;
+    company: string;
+    department: string;
+    name: string;
+    email: string;
+    tel: string;
+    inquiryDetail: string;
 }
 
 export interface CompanyApplicationItem {
-  id: number;
-  company_name: string;
-  department_name: string;
-  name: string;
-  email: string;
-  telephone: string;
-  inquiry: string;
-  created: string;
-  modified: string;
+    id: number;
+    company_name: string;
+    department_name: string;
+    name: string;
+    email: string;
+    telephone: string;
+    inquiry: string;
+    created: string;
+    modified: string;
 }
 
 export interface CompanyApplicationResponse {
-  companyApplications: CompanyApplicationItem[];
-  pagination: {
-    totalPages: number;
-    currentPage: number;
-    totalItems: number;
-    itemsPerPage: number;
-  };
+    companyApplications: CompanyApplicationItem[];
+    pagination: {
+        totalPages: number;
+        currentPage: number;
+        totalItems: number;
+        itemsPerPage: number;
+    };
 }
 
 export interface ContactInquiryParam {
-  name: string;
-  company_name?: string;
-  email: string;
-  telephone: string;
-  inquiry: string;         // e.g. サービスについて, etc.
-  inquiry_detail?: string; // optional
+    name: string;
+    company_name?: string;
+    email: string;
+    telephone: string;
+    inquiry: string;         // e.g. サービスについて, etc.
+    inquiry_detail?: string; // optional
 }
 
 export interface ContactFetchParam {
-  page?: number;
-  limit?: number;
-  searchTerm?: string;
+    page?: number;
+    limit?: number;
+    searchTerm?: string;
 }
 
 // Career Consultation Inquiry
 export interface CareerConsultationParam {
-  name: string;
-  email: string;
-  telephone: string;
-  birthday?: string;
-  prefectures?: string;
-  experience?: string;
-  inquiry?: string;
-  desired_job_type?: string;
-  request?: string;
+    name: string;
+    email: string;
+    telephone: string;
+    birthday?: string;
+    prefectures?: string;
+    experience?: string;
+    inquiry?: string;
+    desired_job_type?: string;
+    request?: string;
 }
