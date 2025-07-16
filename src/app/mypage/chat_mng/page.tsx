@@ -250,7 +250,7 @@ export default function ChatMngPage() {
             id="resizer"
             className="w-[1px] bg-gray-700 hover:bg-gray-400 cursor-col-resize"
           ></div>
-          <div className="flex-1">
+          <div className="flex-1 overflow-x-hidden">
             {chatData && <ChatBox data={chatData} onChange={refetch} />}
           </div>
         </div>
