@@ -174,7 +174,7 @@ export function formatMessageDate(date: Date): string {
     const diffInMinutes = differenceInMinutes(now, date);
 
     if (diffInMinutes < 1) {
-        return 'Just now';
+        return '1分未満';
     }
 
     if (diffInMinutes < 60) {

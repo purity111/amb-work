@@ -96,7 +96,7 @@ export default function ChatMngPage() {
       value: i.id,
       option: i.job_title
     }))
-    return [{ value: 0, option: 'All' }, ...options]
+    return [{ value: 0, option: 'すべて' }, ...options]
   }, [data])
 
   useEffect(() => {
