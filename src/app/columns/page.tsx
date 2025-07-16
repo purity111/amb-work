@@ -45,9 +45,6 @@ function ColumnsPageInner() {
             setTotalPage(response?.pagination?.totalPages || 1);
         }
     }, [response, limit]);
-    useEffect(() => {
-        // console.log('response', response.data);
-    }, [response])
 
     const isFirstRender = useRef(true);
 

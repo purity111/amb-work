@@ -5,25 +5,41 @@ import { Autoplay, Pagination, Navigation } from 'swiper/modules';
 import Image from "next/image";
 import { AboutPosts, HomeSliderData, Posts, QuickJobs, MapData } from '@/utils/constants';
 import CButton from '@/components/common/Button';
-import JobListAndSupportSection from '@/components/JobListAndSupportSection';
 import Footer from '@/components/Footer';
 import JobFilterForm, { JobFilterFormValue } from '@/components/pages/jobs/JobFilterForm';
 import { useRouter } from 'next/navigation';
 import { useGetFeatures } from '@/hooks/useGetFeatures';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import ColumnCard from '@/components/pages/columns/ColumnCard';
+import { getRecommendedColumns } from '@/lib/api';
+import { useGetInterviews } from '@/hooks/useGetInterviews';
+import InterviewCard from '@/components/pages/interview/InterviewCard';
+import Link from 'next/link';
 
 
 export default function HomePage() {
   const router = useRouter();
   const { data: featuresData, isLoading: featuresLoading } = useGetFeatures();
+  const [recommendedColumns, setRecommendedColumns] = useState<any[]>([]);
 
   useEffect(() => {
     document.title = 'リユース転職サービス';
   }, []);
 
+  useEffect(() => {
+    getRecommendedColumns()
+      .then((cols) => {
+        setRecommendedColumns(cols?.slice(0, 3) || []);
+      })
+      .catch((err) => {
+        console.error('getRecommendedColumns error:', err);
+        console.log(err);
+        
+      });
+  }, []);
+
   const getPrefectureNames = (ids: (string | number)[]): string[] => {
     const names: string[] = [];
-    console.log('getPrefectureNames called with:', ids);
     MapData.forEach((region) => {
       region.city.forEach((city) => {
         if (ids.some(id => id.toString() === city.id.toString())) {
@@ -31,13 +47,11 @@ export default function HomePage() {
         }
       });
     });
-    console.log('getPrefectureNames returning:', names);
     return names;
   };
 
   const getFeatureNames = (ids: (string | number)[]): string[] => {
     if (!featuresData?.data) return [];
-    console.log('getFeatureNames called with:', ids);
     const names = ids.map((id) => {
       const found = featuresData.data.find((f: any) => f.id.toString() === id.toString());
       return found ? found.name : '';
@@ -53,7 +67,7 @@ export default function HomePage() {
       console.log('Features still loading, returning early');
       return;
     }
-    
+
     // Convert feature IDs to names using existing helper
     const featureIds = [
       ...(value.conditions || []),
@@ -62,14 +76,14 @@ export default function HomePage() {
       ...(value.jobTypes || [])
     ];
     const featureNames = getFeatureNames(featureIds);
-    
+
     // Convert prefecture IDs to names using existing helper
     const prefectureIds = value.prefectures || [];
     const prefectureNames = getPrefectureNames(prefectureIds);
-    
+
     console.log('Feature IDs:', featureIds, 'Feature Names:', featureNames);
     console.log('Prefecture IDs:', prefectureIds, 'Prefecture Names:', prefectureNames);
-    
+
     const params = new URLSearchParams();
     params.set('page', '1');
     params.set('limit', '10');
@@ -81,6 +95,8 @@ export default function HomePage() {
     router.push(url);
     console.log('=== onSubmitJobSearch END ===');
   };
+
+  const { data: interviewData } = useGetInterviews({ page: 1, limit: 3 });
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -107,10 +123,10 @@ export default function HomePage() {
         ))}
       </Swiper>
       <div className='w-19/20 max-w-240 mx-auto px-3 py-8 sm:py-24'>
-        <h2 className='mb-8 text-[24px] sm:text-[32px] font-medium job-openings text-center relative font-bold text-gray-300'>求人情報</h2>
+        <h2 className='mb-8 text-[24px] sm:text-[32px] font-medium job-openings text-center relative !font-black'>求人情報</h2>
         <p className='text-center text-[14px] sm:text-base text-gray-600 font-sans'>JOB OPENINGS</p>
-        <p className='mt-10 text-center text-[18px] sm:text-[20px] text-gray-300 font-medium'>リユース・リサイクル・買取業界の転職、就活、バイト探しは</p>
-        <p className='text-center text-[20px] sm:text-[24px] text-gray-300 font-medium'>
+        <p className='mt-10 text-center text-[18px] sm:text-[24px] font-semibold'>リユース・リサイクル・買取業界の転職、就活、バイト探しは</p>
+        <p className='text-center text-[20px] sm:text-[34px] font-semibold'>
           <span className='text-green'>「求人数 NO.1」</span>
           のリユース転職で求人検索！
         </p>
@@ -127,13 +143,13 @@ export default function HomePage() {
         ))}
       </div>
       <div className='pt-15 sm:pt-25'>
-        <h2 className='mb-8 text-[24px] sm:text-[28px] job-openings text-center relative font-medium text-gray-300'>転職支援サービス</h2>
+        <h2 className='mb-8 text-[24px] sm:text-[32px] job-openings text-center relative font-semibold text-gray-300'>転職支援サービス</h2>
         <p className='text-center text-[14px] sm:text-base text-gray-600 font-sans'>SUPPORT</p>
-        <p className='text-center text-[18px] sm:text-[24px] text-gray-300 font-bold mt-15 '>
+        <p className='text-center text-[18px] sm:text-[34px] text-gray-300 font-bold mt-15 '>
           <span className='text-green'>専属のキャリアアドバイザー</span>
           無料で徹底サポート！
         </p>
-        <p className='text-center text-[18px] sm:text-[24px] text-gray-300 font-bold'>
+        <p className='text-center text-[18px] sm:text-[34px] text-gray-300 font-bold'>
           <span className='text-green'>非公開求人</span>
           も多数！
         </p>
@@ -162,7 +178,7 @@ export default function HomePage() {
             <a href="about">
               <CButton
                 text="リユース転職とは"
-                className='border border-green mt-11 text-green px-[60px]'
+                className='border border-green mt-11 font-semibold text-green px-[60px]'
                 hasNavIcon
                 navIconColor='green'
               />
@@ -187,9 +203,46 @@ export default function HomePage() {
         ))}
       </div>
 
-      <div className='mt-25'>
-        <JobListAndSupportSection />
-      </div>
+      <section className="mt-25 relative">
+        <div className="pt-[50px] md:pt-[100px] pb-[30px] md:pb-[60px] text-center top-interview">
+          <h2 className="text-2xl md:text-3xl font-bold mb-9 text-center relative inline-block mx-auto job-openings">
+            インタビュー
+          </h2>
+          <p className='text-center text-[14px] text-gray-600 font-sans'>INTERVIEW</p>
+        </div>
+        {interviewData?.InterviewItems && interviewData.InterviewItems.length > 0 && (
+          <div className="max-w-[1200px] mx-auto px-4 lg:px-0 mb-12">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              {interviewData.InterviewItems.map((interview: any) => (
+                <InterviewCard key={interview.id} interview={interview} />
+              ))}
+            </div>
+            <div className="flex justify-center md:justify-end mt-8">
+              <Link href="/interview/business" className="inline-block px-6 py-2 border border-green text-green rounded hover:bg-green hover:text-white transition-colors font-semibold">
+                インタビュー一覧へ &gt;
+              </Link>
+            </div>
+          </div>
+        )}
+      </section>
+      
+      <section>
+        <div className="pt-[50px] md:pt-[100px] pb-[30px] md:pb-[60px] text-center">
+          <h2 className="text-2xl md:text-3xl font-bold mb-9 text-center relative inline-block mx-auto job-openings">
+            コラム
+          </h2>
+          <p className='text-center text-[14px] text-gray-600 font-sans'>COLUMN</p>
+        </div>
+        {recommendedColumns.length > 0 && (
+          <div className="max-w-[1200px] mx-auto px-4 lg:px-0 mb-12">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              {recommendedColumns.map((column) => (
+                <ColumnCard key={column.id} column={column} />
+              ))}
+            </div>
+          </div>
+        )}
+      </section>
 
       <Footer />
     </div >
