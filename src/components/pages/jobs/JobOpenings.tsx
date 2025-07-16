@@ -19,6 +19,7 @@ import { useGetFeatures } from "@/hooks/useGetFeatures";
 import { MapData } from "@/utils/constants";
 import LoginModal from "@/components/modal/Login";
 import Dialog from '@/components/Dialog';
+import Link from "next/link";
 
 const now = new Date();
 
@@ -29,6 +30,7 @@ export default function JobList() {
     const [totalJobCount, setTotalJobCount] = useState(0);
     const [totalPageCount, setTotalPageCount] = useState(0);
     const [jobData, setJobData] = useState<JobDetail[]>([]);
+    const [recommendJobData, setRecommendJobData] = useState<JobDetail[]>([]);
     const [filterModalShown, setFilterModalShown] = useState(false);
     const [prefectures, setPrefectures] = useState<string[]>([]);
     const [features, setFeatures] = useState<string[]>([]);
@@ -71,9 +73,9 @@ export default function JobList() {
     useEffect(() => {
         if (isLoading) return;
         if (data?.success && data.data) {
-            const { jobs, pagination } = data.data;
-            console.log('jobs', jobs);
-            
+            const { jobs, pagination, recommended } = data.data;
+            console.log('recommend', recommended);
+            setRecommendJobData(recommended || [])
             setJobData(jobs || []);
             setTotalJobCount(pagination?.total || 0)
             setTotalPageCount(pagination?.totalPages || 0)
@@ -96,7 +98,7 @@ export default function JobList() {
         hasLoaded.current = true;
     }, [searchParams, featuresData])
 
-    console.log({profile})
+    console.log({ profile })
 
     useEffect(() => {
         if (!hasLoaded.current) return;
@@ -299,7 +301,8 @@ export default function JobList() {
                 try {
                     const parsed = JSON.parse(profileStr);
                     jobSeekerId = parsed?.id;
-                } catch (e) {console.log(e);
+                } catch (e) {
+                    console.log(e);
                 }
             }
             if (!jobSeekerId) {
@@ -322,7 +325,7 @@ export default function JobList() {
     };
 
     return (
-        <div className="pb-30">
+        <div className="pb-10 md:pb-30">
             <div className="py-2 sticky top-20 md:top-25 bg-white z-10 border-b-2 border-gray-700">
                 <div className="flex flex-row justify-between items-center">
                     <p className="text-lg">
@@ -340,7 +343,7 @@ export default function JobList() {
                         return (
                             <CButton
                                 key={tag.value}
-                                className="bg-orange"
+                                className="bg-orange mb-2 md:mb-0"
                                 size="small"
                                 text={tag.option}
                             />
@@ -350,6 +353,31 @@ export default function JobList() {
             </div>
             {!jobData?.length && <p className="text-gray-600 mt-4">No results</p>}
             {renderPagination()}
+
+            {recommendJobData.length > 0 && (
+                <div>
+                    <h3 className="text-[22px] md:text-[26px] text-bold text-[#007eff]">おすすめの求人</h3>
+                    <div className="mt-8 flex flex-col md:flex-row gap-4">
+                        {recommendJobData.map((job) => (
+                            <Link key={job.id} href={`/jobs/recruit/${job.id}`} className="block w-full mb-5 md:w-1/3">
+                                <div className="relative aspect-[4/3] w-full rounded overflow-hidden shadow hover:shadow-lg transition-shadow bg-white">
+                                    <Image
+                                        src={getFirstFullImage(job.jobThumbnails) || '/images/default-company.png'}
+                                        alt={job.job_title}
+                                        fill
+                                        className="object-cover"
+                                    />
+                                    <div className="absolute bottom-0 left-0 w-full bg-black/60 text-white text-center py-2 px-2 text-base md:text-lg font-semibold truncate">
+                                        {job.job_title}
+                                    </div>
+                                </div>
+                            </Link>
+                        ))}
+                    </div>
+                    <hr className="w-full h-[1px] border-gray-700 mt-10" />
+                </div>
+            )}
+
             {jobData.map((job: JobDetail) => {
                 const alreadyApplied = jobseekerApplications.includes(job.id);
                 const isTemplate2 = job.job_detail_page_template_id === 2;
