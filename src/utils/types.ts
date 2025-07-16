@@ -71,6 +71,7 @@ export interface JobFetchParam {
     prefectures?: string[];
     isAdmin?: string;
     employer_id?: number;
+    agency?: number;
 }
 
 export interface JobParam {
