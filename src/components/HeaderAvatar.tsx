@@ -47,7 +47,6 @@ export default function HeaderAvatar({ data }: Props) {
                     alt="avatar"
                     className="rounded-full object-cover"
                     fill
-                    sizes="100px"
                 />
             </div>
             <div

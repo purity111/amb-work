@@ -574,6 +574,7 @@ export interface JobSeekerDetail {
 
 export interface ChatItem {
     id: number;
+    agency: number;
     job_info_id: number;
     job_seeker_id: number;
     job_title: string;
@@ -589,6 +590,7 @@ export interface ChatItem {
             clinic_name: string;
             prefectures: number;
             city: string;
+            tel: string;
             avatar: {
                 entity_path: string
             }

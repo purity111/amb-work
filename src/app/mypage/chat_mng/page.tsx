@@ -51,7 +51,7 @@ export default function ChatMngPage() {
 
   useEffect(() => {
     if (!profile) return;
-    const roomId = `${isJobSeeker ? 1 : 2}_${profile.id}`;
+    const roomId = profile.role === 'admin' ? 'chat_admin' : `${isJobSeeker ? 1 : 2}_${profile.id}`;
     // Join the room
     socket.emit('notify_join', roomId);
     console.log({ roomId })
@@ -250,7 +250,7 @@ export default function ChatMngPage() {
             id="resizer"
             className="w-[1px] bg-gray-700 hover:bg-gray-400 cursor-col-resize"
           ></div>
-          <div className="flex-1">
+          <div className="flex-1 overflow-x-hidden">
             {chatData && <ChatBox data={chatData} onChange={refetch} />}
           </div>
         </div>
