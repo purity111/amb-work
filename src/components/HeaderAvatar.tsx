@@ -46,6 +46,7 @@ export default function HeaderAvatar({ data }: Props) {
                     src={userData?.avatar ? `${UPLOADS_BASE_URL}/${userData?.avatar}` : (userData?.role === 'Employer' ? '/images/default-company.png' : '/images/default-avatar.jpg')}
                     alt="avatar"
                     className="rounded-full object-cover"
+                    sizes="30vw"
                     fill
                 />
             </div>

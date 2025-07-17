@@ -71,6 +71,7 @@ export interface JobFetchParam {
     prefectures?: string[];
     isAdmin?: string;
     employer_id?: number;
+    agency?: number;
 }
 
 export interface JobParam {
@@ -721,4 +722,11 @@ export interface CareerConsultationParam {
     inquiry?: string;
     desired_job_type?: string;
     request?: string;
+}
+
+export interface FeatureParams {
+    jobTypes: number[];
+    items: number[];
+    conditions: number[];
+    employmentTypes: number[];
 }

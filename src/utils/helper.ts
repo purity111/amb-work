@@ -11,10 +11,11 @@ import {
     isValid
 } from 'date-fns';
 import { ja } from 'date-fns/locale';
-import { ImageDetail } from "./types";
+import { FeatureItem, FeatureParams, ImageDetail } from "./types";
 import { UPLOADS_BASE_URL } from "./config";
-import { PrefectureOptions } from "./constants";
+import { MapData, PrefectureOptions } from "./constants";
 import { Area } from "react-easy-crop";
+import { JobFilterFormValue } from '@/components/pages/jobs/JobFilterForm';
 
 export const getEstablishmentYearOptions = () => {
     const cYear = new Date().getFullYear();
@@ -209,3 +210,23 @@ export const formatLongDateTime = (dateString: string) => {
         return dateString;
     }
 };
+
+export const getFeatureParam = (param: FeatureParams | null) => {
+    const {jobTypes = [], items = [], conditions = [], employmentTypes = []} = param || {};
+    return [...jobTypes, ...items, ...conditions, ...employmentTypes]
+}
+
+export const getFilterJobUrl = (value: JobFilterFormValue, featureList: FeatureItem[]) => {
+    let cityList: Array<{ id: number, text: string }> = [];
+    MapData.forEach(item => {
+        cityList = cityList.concat(item.city)
+    })
+
+    const pString = !value.prefectures?.length ? 'na' :  cityList.filter(i => value.prefectures?.includes(i.id)).map(i => i.text).join('-');
+    const { conditions = [], employmentTypes = [], items = [], jobTypes = [] } = value;
+    const jString = !jobTypes?.length ? 'na' :  featureList.filter((i: FeatureItem) => jobTypes.includes(i.id)).map((i: FeatureItem) => i.name).join('-');
+    const iString = !items?.length ? 'na' :  featureList.filter((i: FeatureItem) => items.includes(i.id)).map((i: FeatureItem) => i.name).join('-');
+    const cString = !conditions?.length ? 'na' :  featureList.filter((i: FeatureItem) => conditions.includes(i.id)).map((i: FeatureItem) => i.name).join('-');
+    const eString = !employmentTypes?.length ? 'na' :  featureList.filter((i: FeatureItem) => employmentTypes.includes(i.id)).map((i: FeatureItem) => i.name).join('-');
+    return `/jobs/openings/${pString}/${jString}/${iString}/${cString}/${eString}`
+}

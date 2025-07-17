@@ -29,7 +29,11 @@ export default function ChatMngPage() {
   const [width] = useWindowSize();
   const hasLoaded = useRef(false);
   const router = useRouter()
-  const { data, isLoading: jLoading } = useGetJobs({
+  const { data, isLoading: jLoading } = useGetJobs(profile?.role === 'admin' ? {
+    page: 1,
+    limit: 999999,
+    agency: 2
+  } : {
     page: 1,
     limit: 999999,
     employer_id: profile?.id

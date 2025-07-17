@@ -5,12 +5,12 @@ import JobFilterModal from "@/components/modal/JobFilterModal";
 import { useGetBookmarkedJobs } from "@/hooks/useGetBookmarkedJobs";
 import { useGetJobs } from "@/hooks/useGetJobs";
 import { bookmarkJob, createApplication, getApplicationsByRole } from "@/lib/api";
-import { getFirstFullImage } from "@/utils/helper";
-import { BookmarkJob, FeatureItem, JobDetail, PickOption } from "@/utils/types";
+import { getFeatureParam, getFilterJobUrl, getFirstFullImage } from "@/utils/helper";
+import { BookmarkJob, FeatureItem, FeatureParams, JobDetail, PickOption } from "@/utils/types";
 import { useMutation } from "@tanstack/react-query";
 import { differenceInDays } from "date-fns";
 import Image from "next/image";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "react-toastify";
 import { JobFilterFormValue } from "./JobFilterForm";
@@ -33,7 +33,7 @@ export default function JobList() {
     const [recommendJobData, setRecommendJobData] = useState<JobDetail[]>([]);
     const [filterModalShown, setFilterModalShown] = useState(false);
     const [prefectures, setPrefectures] = useState<string[]>([]);
-    const [features, setFeatures] = useState<string[]>([]);
+    const [features, setFeatures] = useState<FeatureParams | null>(null);
     const [searchTags, setSearchTags] = useState<PickOption[]>([]);
     const [loginModalShown, setLoginModalShown] = useState(false);
     const [applyModalShown, setApplyModalShown] = useState(false);
@@ -42,6 +42,7 @@ export default function JobList() {
     const [optimisticBookmarkedSet, setOptimisticBookmarkedSet] = useState<Set<number>>(new Set());
 
     const router = useRouter()
+    const urlIndexingParam = useParams();
 
     const { data: featuresData } = useGetFeatures();
     const { data, isLoading, isError } = useGetJobs({
@@ -50,7 +51,7 @@ export default function JobList() {
         searchTerm,
         isAdmin: '0',
         prefectures,
-        features
+        features: getFeatureParam(features).map(String)
     })
 
     const { profile } = useAuthContext();
@@ -74,7 +75,6 @@ export default function JobList() {
         if (isLoading) return;
         if (data?.success && data.data) {
             const { jobs, pagination, recommended } = data.data;
-            console.log('recommend', recommended);
             setRecommendJobData(recommended || [])
             setJobData(jobs || []);
             setTotalJobCount(pagination?.total || 0)
@@ -90,15 +90,11 @@ export default function JobList() {
         const params = new URLSearchParams(searchParams.toString());
         const searchText = params.get('searchTerm');
         const page = params.get('page');
-        const featuresParam = params.get('features');
-        const prefecturesParam = params.get('prefectures');
         setSearchTerm(searchText || '')
         setCurrentPage(Number(page) || 1)
-        parseFeaturesAndPrefecturesParam(featuresParam || '', prefecturesParam || '')
+        parseFeaturesAndPrefecturesParam()
         hasLoaded.current = true;
     }, [searchParams, featuresData])
-
-    console.log({ profile })
 
     useEffect(() => {
         if (!hasLoaded.current) return;
@@ -106,10 +102,8 @@ export default function JobList() {
         params.set('page', currentPage.toString());
         params.set('limit', limit.toString());
         params.set('searchTerm', searchTerm)
-        params.set('prefectures', getPrefecturesParam)
-        params.set('features', getFeaturesParam)
         router.push(`?${params.toString()}`);
-    }, [currentPage, limit, searchTerm, prefectures, features])
+    }, [currentPage, limit, searchTerm])
 
     useEffect(() => {
         let bookmarks: BookmarkJob[] = [];
@@ -135,75 +129,62 @@ export default function JobList() {
         return res;
     }, [MapData])
 
-    const getFeaturesParam = useMemo(() => {
-        if (!featuresData?.data) return ''
-        const res: string[] = [];
-        features.forEach(f => {
-            const find = featuresData.data.find((i: FeatureItem) => i.id.toString() === f);
-            if (find) res.push(find.name)
-        })
-        return res.join(',');
-    }, [features, featuresData])
+    const parseFeaturesAndPrefecturesParam = () => {
+        const pString = urlIndexingParam.prefectures as string;
+        const jString = urlIndexingParam.jobTypes as string;
+        const iString = urlIndexingParam.items as string;
+        const cString = urlIndexingParam.conditions as string;
+        const eString = urlIndexingParam.employmentTypes as string;
+        const jArray = jString === 'na' ? [] : jString.split('-');
+        const iArray = iString === 'na' ? [] : iString.split('-');
+        const cArray = cString === 'na' ? [] : cString.split('-');
+        const eArray = eString === 'na' ? [] : eString.split('-');
 
-    const getPrefecturesParam = useMemo(() => {
-        const res: string[] = [];
-        prefectures.forEach(p => {
-            const find = cityAll.find((i) => i.id.toString() === p);
-            if (find) res.push(find.text)
-        })
-        return res.join(',');
-    }, [prefectures, cityAll])
+        const parsedFeatures = {
+            jobTypes: featuresData.data.filter((i: FeatureItem) => !!jArray.includes(encodeURIComponent(i.name))).map((k: FeatureItem) => k.id),
+            items: featuresData.data.filter((i: FeatureItem) => !!iArray.includes(encodeURIComponent(i.name))).map((k: FeatureItem) => k.id),
+            conditions: featuresData.data.filter((i: FeatureItem) => !!cArray.includes(encodeURIComponent(i.name))).map((k: FeatureItem) => k.id),
+            employmentTypes: featuresData.data.filter((i: FeatureItem) => !!eArray.includes(encodeURIComponent(i.name))).map((k: FeatureItem) => k.id),
+        };
+        setFeatures(parsedFeatures);
 
-    useEffect(() => {
-        const res: PickOption[] = [];
-        const fArray = getFeaturesParam.split(',')
-        const pArray = getPrefecturesParam.split(',')
-        features.forEach((f, index) => {
-            res.push({
-                value: f.toString(),
-                option: fArray[index]
-            })
-        })
-        prefectures.forEach((f, index) => {
-            res.push({
-                value: f.toString(),
-                option: pArray[index]
-            })
-        })
-        setSearchTags(res);
-    }, [features, getFeaturesParam, prefectures, getPrefecturesParam])
-
-    const parseFeaturesAndPrefecturesParam = (features: string, prefectures: string) => {
-        const fArray = features.split(',');
-        const pArray = prefectures.split(',');
-        const fTemp: string[] = [], pTemp: string[] = []
-        fArray.forEach(f => {
-            const find = featuresData.data.find((i: FeatureItem) => i.name === f);
-            if (find) fTemp.push(find.id.toString())
-        })
+        // set prefecture data from url
+        const pTemp: string[] = [];
+        const pArray = pString === 'na' ? [] : pString.split('-');
         pArray.forEach(p => {
-            const find = cityAll.find((i) => i.text === p);
+            const find = cityAll.find((i) => encodeURIComponent(i.text) === p);
             if (find) pTemp.push(find.id.toString())
         })
-        setFeatures(fTemp);
         setPrefectures(pTemp);
-    }
 
-    useEffect(() => {
-        // Build title from current filters
-        const prefectureNames = getPrefecturesParam.split(',').filter(Boolean);
-        const featureNames = getFeaturesParam.split(',').filter(Boolean);
-        let title = 'リユース転職の';
-        if (prefectureNames.length > 0) {
-            title += prefectureNames.join('、') + '地域で';
-        }
-        if (featureNames.length > 0) {
-            title += '「' + featureNames.join('」、「') + '」の求人';
-        } else {
-            title += '求人';
-        }
-        document.title = title;
-    }, [getPrefecturesParam, getFeaturesParam]);
+        // set searchTags here
+        const tagList = [
+            ...pTemp.map((item: string, index: number) => ({
+                value: item,
+                option: decodeURIComponent(pArray[index])
+            })),
+            ...parsedFeatures.jobTypes.map((item: number, index: number) => ({
+                value: item,
+                option: decodeURIComponent(jArray[index])
+            })),
+            ...parsedFeatures.items.map((item: number, index: number) => ({
+                value: item,
+                option: decodeURIComponent(iArray[index])
+            })),
+            ...parsedFeatures.conditions.map((item: number, index: number) => ({
+                value: item,
+                option: decodeURIComponent(cArray[index])
+            })),
+            ...parsedFeatures.employmentTypes.map((item: number, index: number) => ({
+                value: item,
+                option: decodeURIComponent(eArray[index])
+            })),
+        ]
+        setSearchTags(tagList);
+
+        // set document title here
+
+    }
 
     useEffect(() => {
         // Fetch applications for the current jobseeker
@@ -236,10 +217,12 @@ export default function JobList() {
 
     const onSubmitFilterForm = (value: JobFilterFormValue, searchText: string) => {
         setFilterModalShown(false);
-        setPrefectures(value.prefectures?.map(String) || []);
-        const { conditions = [], employmentTypes = [], items = [], jobTypes = [] } = value;
-        setFeatures([...conditions, ...employmentTypes, ...items, ...jobTypes].map(String))
-        setSearchTerm(searchText);
+        const url = getFilterJobUrl(value, featuresData.data);
+        const params = new URLSearchParams();
+        params.set('page', currentPage.toString());
+        params.set('limit', limit.toString());
+        params.set('searchTerm', searchText)
+        router.push(`${url}?${params.toString()}`);
     }
 
     const getPrefecture = (features: FeatureItem[]) => {
@@ -338,17 +321,23 @@ export default function JobList() {
                         onClick={() => setFilterModalShown(true)}
                     />
                 </div>
-                <div className="my-2 flex flex-row flex-wrap space-x-2">
+                <div className="my-2 flex flex-row flex-wrap space-x-2 pt-2">
                     {searchTags.map((tag: PickOption) => {
                         return (
                             <CButton
                                 key={tag.value}
-                                className="bg-orange mb-2 md:mb-0"
+                                className="bg-orange mb-2"
                                 size="small"
                                 text={tag.option}
                             />
                         )
                     })}
+                    <CButton
+                        key={'search'}
+                        className="bg-blue mb-2"
+                        size="small"
+                        text={`Job Title Search: ${searchTerm}`}
+                    />
                 </div>
             </div>
             {!jobData?.length && <p className="text-gray-600 mt-4">No results</p>}
@@ -366,6 +355,7 @@ export default function JobList() {
                                         alt={job.job_title}
                                         fill
                                         className="object-cover"
+                                        sizes="20vw"
                                     />
                                     <div className="absolute bottom-0 left-0 w-full bg-black/60 text-white text-center py-2 px-2 text-base md:text-lg font-semibold truncate">
                                         {job.job_title}
@@ -399,12 +389,13 @@ export default function JobList() {
                         </div>
                         <p className="pt-3 text-xl font-bold text-gray-300">{job.job_title}</p>
                         <div className="flex flex-col md:flex-row py-8">
-                            <div className="w-full md:max-w-75 aspect-3/2  relative">
+                            <div className="w-full md:max-w-75 aspect-3/2 relative">
                                 <Image
                                     className="object-cover rounded-tr-[30px]"
                                     src={getFirstFullImage(job.jobThumbnails) || '/images/default-company.png'}
                                     alt="thumbnail"
                                     fill
+                                    sizes="50vw"
                                 />
                             </div>
                             <div className="flex-1 mt-6 md:mt-0 md:pl-6">
@@ -483,7 +474,7 @@ export default function JobList() {
                 <JobFilterModal
                     onClose={() => setFilterModalShown(false)}
                     onSubmit={(value, searchText) => onSubmitFilterForm(value, searchText)}
-                    features={features}
+                    features={getFeatureParam(features).map(String)}
                     prefectures={prefectures}
                     searchText={searchTerm}
                 />

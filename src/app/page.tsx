@@ -3,7 +3,7 @@
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, Pagination, Navigation } from 'swiper/modules';
 import Image from "next/image";
-import { AboutPosts, HomeSliderData, Posts, QuickJobs, MapData } from '@/utils/constants';
+import { AboutPosts, HomeSliderData, Posts, QuickJobs } from '@/utils/constants';
 import CButton from '@/components/common/Button';
 import Footer from '@/components/Footer';
 import JobFilterForm, { JobFilterFormValue } from '@/components/pages/jobs/JobFilterForm';
@@ -15,6 +15,8 @@ import { getRecommendedColumns } from '@/lib/api';
 import { useGetInterviews } from '@/hooks/useGetInterviews';
 import InterviewCard from '@/components/pages/interview/InterviewCard';
 import Link from 'next/link';
+import { getFilterJobUrl } from '@/utils/helper';
+import Spinner from '@/components/common/Spinner';
 
 
 export default function HomePage() {
@@ -34,66 +36,17 @@ export default function HomePage() {
       .catch((err) => {
         console.error('getRecommendedColumns error:', err);
         console.log(err);
-        
+
       });
   }, []);
 
-  const getPrefectureNames = (ids: (string | number)[]): string[] => {
-    const names: string[] = [];
-    MapData.forEach((region) => {
-      region.city.forEach((city) => {
-        if (ids.some(id => id.toString() === city.id.toString())) {
-          names.push(city.text);
-        }
-      });
-    });
-    return names;
-  };
-
-  const getFeatureNames = (ids: (string | number)[]): string[] => {
-    if (!featuresData?.data) return [];
-    const names = ids.map((id) => {
-      const found = featuresData.data.find((f: any) => f.id.toString() === id.toString());
-      return found ? found.name : '';
-    }).filter(Boolean);
-    console.log('getFeatureNames returning:', names);
-    return names;
-  };
-
   const onSubmitJobSearch = (value: JobFilterFormValue, searchText: string) => {
-    console.log('=== onSubmitJobSearch START ===');
-    console.log('onSubmitJobSearch called with:', { value, searchText });
-    if (featuresLoading) {
-      console.log('Features still loading, returning early');
-      return;
-    }
-
-    // Convert feature IDs to names using existing helper
-    const featureIds = [
-      ...(value.conditions || []),
-      ...(value.employmentTypes || []),
-      ...(value.items || []),
-      ...(value.jobTypes || [])
-    ];
-    const featureNames = getFeatureNames(featureIds);
-
-    // Convert prefecture IDs to names using existing helper
-    const prefectureIds = value.prefectures || [];
-    const prefectureNames = getPrefectureNames(prefectureIds);
-
-    console.log('Feature IDs:', featureIds, 'Feature Names:', featureNames);
-    console.log('Prefecture IDs:', prefectureIds, 'Prefecture Names:', prefectureNames);
-
+    const url = getFilterJobUrl(value, featuresData.data);
     const params = new URLSearchParams();
     params.set('page', '1');
     params.set('limit', '10');
     params.set('searchTerm', searchText || '');
-    params.set('prefectures', prefectureNames.join(','));
-    params.set('features', featureNames.join(','));
-    const url = `/jobs?${params.toString()}`;
-    console.log('Redirecting to:', url);
-    router.push(url);
-    console.log('=== onSubmitJobSearch END ===');
+    router.push(`${url}?${params.toString()}`);
   };
 
   const { data: interviewData } = useGetInterviews({ page: 1, limit: 3 });
@@ -130,9 +83,13 @@ export default function HomePage() {
           <span className='text-green'>「求人数 NO.1」</span>
           のリユース転職で求人検索！
         </p>
-        <div className='mt-15'>
-          <JobFilterForm onSubmit={onSubmitJobSearch} />
-        </div>
+        {featuresLoading ? (
+          <Spinner />
+        ) : (
+          <div className='mt-15'>
+            <JobFilterForm onSubmit={onSubmitJobSearch} />
+          </div>
+        )}
       </div>
       <div className='flex flex-wrap max-w-300 mx-auto w-95/100 gap-8 py-25 px-3 sm:px-0'>
         {/* <div className='flex flex-wrap max-w-300 mx-auto gap-8 py-10 sm:py-25 pl-5 sm:mx-0'> */}
@@ -225,7 +182,7 @@ export default function HomePage() {
           </div>
         )}
       </section>
-      
+
       <section>
         <div className="pt-[50px] md:pt-[100px] pb-[30px] md:pb-[60px] text-center">
           <h2 className="text-2xl md:text-3xl font-bold mb-9 text-center relative inline-block mx-auto job-openings">
