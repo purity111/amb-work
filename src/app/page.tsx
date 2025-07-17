@@ -15,6 +15,7 @@ import { getRecommendedColumns } from '@/lib/api';
 import { useGetInterviews } from '@/hooks/useGetInterviews';
 import InterviewCard from '@/components/pages/interview/InterviewCard';
 import Link from 'next/link';
+import { getFilterJobUrl } from '@/utils/helper';
 
 
 export default function HomePage() {
@@ -50,50 +51,13 @@ export default function HomePage() {
     return names;
   };
 
-  const getFeatureNames = (ids: (string | number)[]): string[] => {
-    if (!featuresData?.data) return [];
-    const names = ids.map((id) => {
-      const found = featuresData.data.find((f: any) => f.id.toString() === id.toString());
-      return found ? found.name : '';
-    }).filter(Boolean);
-    console.log('getFeatureNames returning:', names);
-    return names;
-  };
-
   const onSubmitJobSearch = (value: JobFilterFormValue, searchText: string) => {
-    console.log('=== onSubmitJobSearch START ===');
-    console.log('onSubmitJobSearch called with:', { value, searchText });
-    if (featuresLoading) {
-      console.log('Features still loading, returning early');
-      return;
-    }
-
-    // Convert feature IDs to names using existing helper
-    const featureIds = [
-      ...(value.conditions || []),
-      ...(value.employmentTypes || []),
-      ...(value.items || []),
-      ...(value.jobTypes || [])
-    ];
-    const featureNames = getFeatureNames(featureIds);
-
-    // Convert prefecture IDs to names using existing helper
-    const prefectureIds = value.prefectures || [];
-    const prefectureNames = getPrefectureNames(prefectureIds);
-
-    console.log('Feature IDs:', featureIds, 'Feature Names:', featureNames);
-    console.log('Prefecture IDs:', prefectureIds, 'Prefecture Names:', prefectureNames);
-
+    const url = getFilterJobUrl(value, featuresData.data);
     const params = new URLSearchParams();
     params.set('page', '1');
     params.set('limit', '10');
     params.set('searchTerm', searchText || '');
-    params.set('prefectures', prefectureNames.join(','));
-    params.set('features', featureNames.join(','));
-    const url = `/jobs?${params.toString()}`;
-    console.log('Redirecting to:', url);
-    router.push(url);
-    console.log('=== onSubmitJobSearch END ===');
+    router.push(`${url}?${params.toString()}`);
   };
 
   const { data: interviewData } = useGetInterviews({ page: 1, limit: 3 });

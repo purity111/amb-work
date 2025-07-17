@@ -7,11 +7,11 @@ import CButton from '@/components/common/Button';
 import CInput from '@/components/common/Input';
 
 export interface JobFilterFormValue {
-    prefectures?: string[];
-    jobTypes?: string[];
-    items?: string[];
-    conditions?: string[];
-    employmentTypes?: string[];
+    prefectures?: number[];
+    jobTypes?: number[];
+    items?: number[];
+    conditions?: number[];
+    employmentTypes?: number[];
     searchTerm?: string;
 }
 
@@ -31,6 +31,8 @@ export default function JobFilterForm({ onSubmit, hasCloseButton = false, onClos
     const [cityList, setCityList] = useState<Array<{ id: number, text: string }>>([]);
     const [selectedOptions, setSelectedOptions] = useState<any>({})
     const { data, isLoading } = useGetFeatures();
+
+    console.log({selectedOptions})
 
     const filterOptions = useMemo(() => {
         if (!data?.data?.length) return { jobTypes: [], items: [], conditions: [], employmentTypes: [] };

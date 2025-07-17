@@ -723,3 +723,10 @@ export interface CareerConsultationParam {
     desired_job_type?: string;
     request?: string;
 }
+
+export interface FeatureParams {
+    jobTypes: number[];
+    items: number[];
+    conditions: number[];
+    employmentTypes: number[];
+}
