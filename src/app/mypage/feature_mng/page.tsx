@@ -176,7 +176,7 @@ export default function FeatureMngPage() {
         <p>読み込む中...</p>
       ) : (
         <div className="overflow-x-auto">
-          <h2 className='text-center mb-6 text-[32px] font-bold'>特徴管理</h2>
+          <h2 className='text-center mb-6 text-[24px] md:text-[32px] font-bold'>特徵管理</h2>
 
           {/* Top controls */}
           <div className="flex justify-end flex-row mx-auto my-2 w-full sm:w-[80%] md:w-full space-x-2">
@@ -202,68 +202,107 @@ export default function FeatureMngPage() {
             />
           </div>
 
-          {/* Features table */}
-          <table className="rwd-table">
-            <thead>
-              <tr>
-                <th scope='col'>No.</th>
-                <th scope='col'>名前</th>
-                <th scope='col'>タイプ</th>
-                <th scope='col'>親ID</th>
-                <th scope='col'>作成日</th>
-                <th scope='col'>更新日</th>
-                <th scope='col'>操作</th>
-              </tr>
-            </thead>
-            <tbody>
-              {features.map((feature, index) => (
-                <tr key={feature.id} className={index % 2 === 0 ? "bg-gray-50" : "bg-white"}>
-                  <td data-label="No." className="py-2 px-4 border-b border-gray-200">
-                    <span className='md:hidden'>No.　：</span>　{feature.id}
-                  </td>
-                  <td data-label="名前" className="py-2 px-4 border-b border-gray-200">
-                    <span className='md:hidden'>名前　：</span>　{feature.name}
-                  </td>
-                  <td data-label="タイプ" className="py-2 px-4 border-b border-gray-200">
-                    <span className='md:hidden'>タイプ　：</span>　{feature.type}
-                  </td>
-                  <td data-label="親特徴ID" className="py-2 px-4 border-b border-gray-200">
-                    <span className='md:hidden'>親ID　：</span>　{feature.parent_id || '-'}
-                  </td>
-                  <td data-label="作成日" className="py-2 px-4 border-b border-gray-200 hidden md:table-cell">
-                    <span className='md:hidden'>作成日　：</span>　{formatDateTime(feature.created)}
-                  </td>
-                  <td data-label="更新日" className="py-2 px-4 border-b border-gray-200 hidden md:table-cell">
-                    <span className='md:hidden'>更新日　：</span>　{formatDateTime(feature.modified)}
-                  </td>
-                  <td data-label="操作" className="!p-2 border-b border-gray-200">
-                    <div className="flex gap-1 sm:gap-2 sm:space-x-2 justify-center items-center">
-                      <CButton
-                        onClick={() => handleEdit(feature)}
-                        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 text-xs flex items-center"
-                        text="編集"
-                        leftIcon={(
-                          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
-                          </svg>
-                        )}
-                      />
-                      <CButton
-                        onClick={() => handleDelete(feature)}
-                        className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 text-xs flex items-center"
-                        text="削除"
-                        leftIcon={(
-                          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                          </svg>
-                        )}
-                      />
-                    </div>
-                  </td>
+          {/* Card layout for SP */}
+          <div className="block md:hidden">
+            {features.map((feature) => (
+              <div key={feature.id} className="bg-white rounded-lg shadow-md mb-4 p-4 border border-gray-600">
+                <div className="mb-2"><span className="font-semibold">No.：</span>{feature.id}</div>
+                <div className="mb-2"><span className="font-semibold">名前：</span>{feature.name}</div>
+                <div className="mb-2"><span className="font-semibold">タイプ：</span>{feature.type}</div>
+                <div className="mb-2"><span className="font-semibold">親ID：</span>{feature.parent_id || '-'}</div>
+                <div className="mb-2"><span className="font-semibold">作成日：</span>{formatDateTime(feature.created)}</div>
+                <div className="mb-2"><span className="font-semibold">更新日：</span>{formatDateTime(feature.modified)}</div>
+                <div className="flex gap-2 mt-2 justify-end">
+                  <CButton
+                    onClick={() => handleEdit(feature)}
+                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 text-xs flex items-center"
+                    text="編集"
+                    leftIcon={(
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                      </svg>
+                    )}
+                  />
+                  <CButton
+                    onClick={() => handleDelete(feature)}
+                    className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 text-xs flex items-center"
+                    text="削除"
+                    leftIcon={(
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                      </svg>
+                    )}
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Table layout for desktop */}
+          <div className="hidden md:block">
+            {/* Features table */}
+            <table className="rwd-table">
+              <thead>
+                <tr>
+                  <th scope='col'>No.</th>
+                  <th scope='col'>名前</th>
+                  <th scope='col'>タイプ</th>
+                  <th scope='col'>親ID</th>
+                  <th scope='col'>作成日</th>
+                  <th scope='col'>更新日</th>
+                  <th scope='col'>操作</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {features.map((feature, index) => (
+                  <tr key={feature.id} className={index % 2 === 0 ? "bg-gray-50" : "bg-white"}>
+                    <td data-label="No." className="py-2 px-4 border-b border-gray-200">
+                      <span className='md:hidden'>No.　：</span>　{feature.id}
+                    </td>
+                    <td data-label="名前" className="py-2 px-4 border-b border-gray-200">
+                      <span className='md:hidden'>名前　：</span>　{feature.name}
+                    </td>
+                    <td data-label="タイプ" className="py-2 px-4 border-b border-gray-200">
+                      <span className='md:hidden'>タイプ　：</span>　{feature.type}
+                    </td>
+                    <td data-label="親特徴ID" className="py-2 px-4 border-b border-gray-200">
+                      <span className='md:hidden'>親ID　：</span>　{feature.parent_id || '-'}
+                    </td>
+                    <td data-label="作成日" className="py-2 px-4 border-b border-gray-200 hidden md:table-cell">
+                      <span className='md:hidden'>作成日　：</span>　{formatDateTime(feature.created)}
+                    </td>
+                    <td data-label="更新日" className="py-2 px-4 border-b border-gray-200 hidden md:table-cell">
+                      <span className='md:hidden'>更新日　：</span>　{formatDateTime(feature.modified)}
+                    </td>
+                    <td data-label="操作" className="!p-2 border-b border-gray-200">
+                      <div className="flex gap-1 sm:gap-2 sm:space-x-2 justify-center items-center">
+                        <CButton
+                          onClick={() => handleEdit(feature)}
+                          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 text-xs flex items-center"
+                          text="編集"
+                          leftIcon={(
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                            </svg>
+                          )}
+                        />
+                        <CButton
+                          onClick={() => handleDelete(feature)}
+                          className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 text-xs flex items-center"
+                          text="削除"
+                          leftIcon={(
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                            </svg>
+                          )}
+                        />
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
 
           {/* Bottom pagination */}
           <div className='flex justify-center mt-4'>

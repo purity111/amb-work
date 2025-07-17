@@ -46,7 +46,7 @@ export default function ApplicantMngPage() {
       refetch();
     },
     onError: (error: any) => {
-      toast.error(error?.response?.data?.message || "Failed to delete");
+      toast.error(error?.response?.data?.message || "削除失敗");
     },
   });
 
@@ -58,7 +58,7 @@ export default function ApplicantMngPage() {
       refetch();
     },
     onError: (error: any) => {
-      toast.error(error?.response?.data?.message || "Failed to delete");
+      toast.error(error?.response?.data?.message || "削除失敗");
     },
   });
 
@@ -70,7 +70,7 @@ export default function ApplicantMngPage() {
       refetch();
     },
     onError: (error: any) => {
-      toast.error(error?.response?.data?.message || "Failed to delete");
+      toast.error(error?.response?.data?.message || "削除失敗");
     },
   });
 
@@ -191,16 +191,22 @@ export default function ApplicantMngPage() {
 
   return (
     <div className="flex flex-col p-5">
-      <h1 className="text-2xl font-bold mb-6">応募者管理ページ(Applicant Management Page)</h1>
-      <div className="flex justify-between flex-row items-center mx-auto my-2 space-x-2 w-full sm:w-[80%] md:w-full">
-        <CButton
-          text="追加"
-          className='bg-blue text-white text-sm h-[40px] w-40'
-          size="small"
-          leftIcon={<span className="text-[18px] md:text-3xl">+</span>}
-          onClick={onClickAddNew}
-        />
-        <div className="flex justify-end flex-row items-center mx-auto my-2 space-x-2 w-full sm:w-[80%] md:w-full">
+      <h1 className="text-2xl font-bold mb-6">応募者管理ページ</h1>
+      <div className="flex flex-col md:flex-row">
+        <div className="flex justify-between md:justify-start flex-row items-center mx-auto my-2 space-x-2 w-full sm:w-[80%] md:w-full">
+          <CButton
+            text="追加"
+            className='bg-blue-500 text-white text-sm h-[40px]'
+            size="small"
+            leftIcon={
+              <span className="mr-1 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 md:h-6 md:w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+                </svg>
+              </span>
+            }
+            onClick={onClickAddNew}
+          />
           <CSelect
             value={prefectures}
             options={PrefectureOptions}
@@ -209,6 +215,8 @@ export default function ApplicantMngPage() {
             className="h-[40px]"
             width="w-50"
           />
+        </div>
+        <div className="flex justify-end flex-row justify-between md:justify-end items-center mx-auto my-2 space-x-2 w-full sm:w-[80%] md:w-full">
           <CInput
             placeholder="検索"
             height="h-10"
@@ -224,89 +232,115 @@ export default function ApplicantMngPage() {
           />
         </div>
       </div>
-      <table className="rwd-table">
-        <thead>
-          <tr>
-            <th scope='col'>No.</th>
-            <th scope='col'>{renderSortableheader('name', '氏名')}</th>
-            <th scope='col'>{renderSortableheader('name_kana', '氏名（カナ）')}</th>
-            <th scope='col'>{renderSortableheader('birthdate', '生年月日')}</th>
-            <th scope='col'>{renderSortableheader('sex', '性別')}</th>
-            <th scope='col'>{renderSortableheader('zip', '郵便番号')}</th>
-            <th scope='col'>都道府県</th>
-            <th scope='col'>{renderSortableheader('tel', '電話番号')}</th>
-            <th scope='col'>メールアドレス</th>
-            <th scope='col'>{renderSortableheader('created', '登録日')}</th>
-            <th scope='col'>操作</th>
-          </tr>
-        </thead>
-        <tbody>
-          {isLoading && (
-            <p>読み込む中...</p>
-          )}
-          {!response?.data?.jobseekers?.length && !isLoading && (
-            <p>No results</p>
-          )}
-          {response?.data?.jobseekers.map((jobseeker: JobSeekerDetail, index: number) => (
-            <tr key={jobseeker.id} className={index % 2 === 0 ? "bg-gray-50" : "bg-white"}>
-              <td data-label="No." className="py-2 px-4 border-b border-gray-200">
-                {(currentPage - 1) * limit + index + 1}
-              </td>
-              <td data-label="Name" className="py-2 px-4 border-b border-gray-200">
-                {jobseeker.name}
-              </td>
-              <td data-label="Name(kana)" className="py-2 px-4 border-b border-gray-200">
-                {jobseeker.name_kana}
-              </td>
-              <td data-label="DOB" className="py-2 px-4 border-b border-gray-200 hidden sm:table-cell">
-                {format(new Date(jobseeker.birthdate), 'yyyy年MM月dd日')}
-              </td>
-              <td data-label="Sex" className="py-2 px-4 border-b border-gray-200 hidden md:table-cell">
-                {jobseeker.sex === 1 ? 'M' : 'F'}
-              </td>
-              <td data-label="ZipCode" className="py-2 px-4 border-b border-gray-200 hidden md:table-cell">
-                {jobseeker.zip}
-              </td>
-              <td data-label="Prefectures" className="py-2 px-4 border-b border-gray-200 hidden md:table-cell">
-                {PrefectureOptions[jobseeker.prefectures].option || '?'}
-              </td>
-              <td data-label="PhoneNumber" className="py-2 px-4 border-b border-gray-200 hidden md:table-cell">
-                {jobseeker.tel}
-              </td>
-              <td data-label="Email" className="py-2 px-4 border-b border-gray-200 hidden md:table-cell">
-                {jobseeker.email}
-              </td>
-              <td data-label="CreatedAt" className="py-2 px-4 border-b border-gray-200 hidden md:table-cell">
-                {format(new Date(jobseeker.created), 'yyyy年MM月dd日HH:mm:ss')}
-              </td>
-              <td data-label="Actions" className="!p-2 border-b border-gray-200">
-                <div className="flex gap-1 sm:gap-2 sm:space-x-2 justify-center items-center">
-                  <CButton
-                    onClick={() => handleEdit(jobseeker)}
-                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 text-xs flex items-center"
-                    text="編集"
-                    leftIcon={(
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
-                      </svg>
-                    )}
-                  />
-                  <CButton
-                    onClick={() => handleDelete(jobseeker)}
-                    className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 text-xs flex items-center"
-                    text="削除"
-                    leftIcon={(
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                      </svg>
-                    )}
-                  />
-                </div>
-              </td>
+      {/* Card layout for SP */}
+      <div className="block md:hidden">
+        {response?.data?.jobseekers?.map((applicant: JobSeekerDetail, index: number) => (
+          <div key={applicant.id} className="bg-white rounded-lg shadow-md mb-4 p-4 border border-gray-600">
+            <div className="mb-2"><span className="font-semibold">No.：</span>{index + 1}</div>
+            <div className="mb-2"><span className="font-semibold">名前：</span>{applicant.name}</div>
+            <div className="mb-2"><span className="font-semibold">メール：</span>{applicant.email}</div>
+            <div className="mb-2"><span className="font-semibold">電話：</span>{applicant.tel}</div>
+            {/* Add more fields as needed */}
+            <div className="flex gap-2 mt-2 justify-end">
+              <CButton
+                onClick={() => handleEdit(applicant)}
+                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 text-xs flex items-center"
+                text="編集"
+              />
+              <CButton
+                onClick={() => handleDelete(applicant)}
+                className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 text-xs flex items-center"
+                text="削除"
+              />
+            </div>
+          </div>
+        ))}
+      </div>
+      <div className="hidden md:block">
+        <table className="rwd-table">
+          <thead>
+            <tr>
+              <th scope='col'>No.</th>
+              <th scope='col'>{renderSortableheader('name', '氏名')}</th>
+              <th scope='col'>{renderSortableheader('name_kana', '氏名（カナ）')}</th>
+              <th scope='col'>{renderSortableheader('birthdate', '生年月日')}</th>
+              <th scope='col'>{renderSortableheader('sex', '性別')}</th>
+              <th scope='col'>{renderSortableheader('zip', '郵便番号')}</th>
+              <th scope='col'>都道府県</th>
+              <th scope='col'>{renderSortableheader('tel', '電話番号')}</th>
+              <th scope='col'>メールアドレス</th>
+              <th scope='col'>{renderSortableheader('created', '登録日')}</th>
+              <th scope='col'>操作</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {isLoading && (
+              <p>読み込む中...</p>
+            )}
+            {!response?.data?.jobseekers?.length && !isLoading && (
+              <p>No results</p>
+            )}
+            {response?.data?.jobseekers.map((jobseeker: JobSeekerDetail, index: number) => (
+              <tr key={jobseeker.id} className={index % 2 === 0 ? "bg-gray-50" : "bg-white"}>
+                <td data-label="No." className="py-2 px-4 border-b border-gray-200">
+                  {(currentPage - 1) * limit + index + 1}
+                </td>
+                <td data-label="Name" className="py-2 px-4 border-b border-gray-200">
+                  {jobseeker.name}
+                </td>
+                <td data-label="Name(kana)" className="py-2 px-4 border-b border-gray-200">
+                  {jobseeker.name_kana}
+                </td>
+                <td data-label="DOB" className="py-2 px-4 border-b border-gray-200 hidden sm:table-cell">
+                  {format(new Date(jobseeker.birthdate), 'yyyy年MM月dd日')}
+                </td>
+                <td data-label="Sex" className="py-2 px-4 border-b border-gray-200 hidden md:table-cell">
+                  {jobseeker.sex === 1 ? 'M' : 'F'}
+                </td>
+                <td data-label="ZipCode" className="py-2 px-4 border-b border-gray-200 hidden md:table-cell">
+                  {jobseeker.zip}
+                </td>
+                <td data-label="Prefectures" className="py-2 px-4 border-b border-gray-200 hidden md:table-cell">
+                  {PrefectureOptions[jobseeker.prefectures].option || '?'}
+                </td>
+                <td data-label="PhoneNumber" className="py-2 px-4 border-b border-gray-200 hidden md:table-cell">
+                  {jobseeker.tel}
+                </td>
+                <td data-label="Email" className="py-2 px-4 border-b border-gray-200 hidden md:table-cell">
+                  {jobseeker.email}
+                </td>
+                <td data-label="CreatedAt" className="py-2 px-4 border-b border-gray-200 hidden md:table-cell">
+                  {format(new Date(jobseeker.created), 'yyyy年MM月dd日HH:mm:ss')}
+                </td>
+                <td data-label="Actions" className="!p-2 border-b border-gray-200">
+                  <div className="flex gap-1 sm:gap-2 sm:space-x-2 justify-center items-center">
+                    <CButton
+                      onClick={() => handleEdit(jobseeker)}
+                      className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 text-xs flex items-center"
+                      text="編集"
+                      leftIcon={(
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                        </svg>
+                      )}
+                    />
+                    <CButton
+                      onClick={() => handleDelete(jobseeker)}
+                      className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 text-xs flex items-center"
+                      text="削除"
+                      leftIcon={(
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                        </svg>
+                      )}
+                    />
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
       <div className="flex flex-row justify-center mt-4">
         <Pagination
           page={currentPage}

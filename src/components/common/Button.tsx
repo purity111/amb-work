@@ -23,14 +23,14 @@ export default function CButton({
     return (
         <button
             className={`
-                relative flex flex-row items-center justify-center rounded-lg cursor-pointer hover:duration-1200 hover:opacity-80 leading-[2] 
+                relative flex flex-row items-center justify-center rounded-lg cursor-pointer hover:duration-1200 hover:opacity-80 leading-[2] tracking-[-0.1em] md:tracking-[-0.01em] 
                 ${hasNavIcon ? `button-with-nav after:border-r-2 after:border-b-2 after:border-r-${navIconColor}` : ''}
                 ${size === 'large' ? 'py-[15px] px-[20px]' : size === 'normal' ? 'py-[10px] px-[15px]' : 'py-[5px] px-[10px]'}
                 ${className}
             `}
             {...props}
         >
-            {leftIcon && <div className="mr-2">{leftIcon}</div>}
+            {leftIcon && <div className="">{leftIcon}</div>}
             {text}
             {rightIcon && <div className="ml-2">{rightIcon}</div>}
         </button>

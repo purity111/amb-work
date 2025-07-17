@@ -195,8 +195,8 @@ export default function ChatMngPage() {
   }
 
   return (
-    <div className="flex flex-col p-5 w-[95%] max-w-[1000px] mx-auto">
-      <h1 className="text-2xl font-bold mb-6">チャット管理ページ(Chat Management Page)</h1>
+    <div className="flex flex-col p-2 md:p-5 w-[95%] max-w-[1200px] mx-auto">
+      {/* <h1 className="text-2xl font-bold mb-6">チャット管理ページ</h1> */}
       {jLoading ? <p>Loading...</p> : (
         <CSelect
           options={jobList}
@@ -210,7 +210,7 @@ export default function ChatMngPage() {
         <div
           id="container"
           className={`
-          bg-white flex h-[calc(100vh-300px)] border-1 border-gray-700 rounded-lg mt-4 relative w-full overflow-hidden
+          bg-white flex h-[78vh] border-1 border-gray-700 rounded-lg mt-4 relative w-full overflow-hidden
           pl-20 sm:pl-0
           `}
         >

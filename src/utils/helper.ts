@@ -174,7 +174,7 @@ export function formatMessageDate(date: Date): string {
     const diffInMinutes = differenceInMinutes(now, date);
 
     if (diffInMinutes < 1) {
-        return '1分未満';
+        return '1分未満前';
     }
 
     if (diffInMinutes < 60) {

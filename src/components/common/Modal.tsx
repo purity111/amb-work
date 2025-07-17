@@ -42,10 +42,10 @@ export default function Modal({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex transition-opacity items-center justify-center p-4 bg-gray-500/75 overflow-y-auto">
+    <div className="fixed inset-0 z-50 flex transition-opacity items-center justify-center md:p-4 bg-gray-500/75 overflow-y-auto">
       <div
         ref={modalRef}
-        className="relative bg-white rounded-lg shadow-xl py-8 px-12 w-[95%] sm:w-[90%] md:w-[80%] lg:w-[1000px] max-h-[90vh] flex flex-col"
+        className="relative bg-white rounded-lg shadow-xl p-4 md:py-8 md:px-12 w-[95%] sm:w-[90%] md:w-[80%] lg:w-[1000px] max-h-[90vh] flex flex-col"
       >
         {title && (
           <h3 className="text-[24px] md:text-[28px] text-center font-semibold text-[#22aebd] mb-4">

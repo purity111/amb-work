@@ -279,19 +279,19 @@ export default function ChatBox({ data, hasHideButton = false, isHidden, onToggl
                                     <div className="flex flex-row">
                                         {me && (
                                             <div className="relative group flex flex-row flex-row-reverse">
-                                                <button className="text-gray-700 px-2 focus:outline-none h-fit">
+                                                <button className="px-2 focus:outline-none h-fit">
                                                     ⋮
                                                 </button>
-                                                <div className="hidden absolute top-1 right-5 group-hover:flex bg-white h-fit text-black rounded-lg shadow-lg z-10 flex-col">
+                                                <div className="hidden w-[65px] absolute top-1 right-5 group-hover:flex bg-white h-fit text-black rounded-lg shadow-lg z-10 flex-col">
                                                     {editable && (
                                                         <button
                                                             className="block px-4 py-2 border-r-1 border-gray-800 hover:bg-gray-100 text-left"
                                                             onClick={() => onClickEditMessage(msg)}
                                                         >
-                                                            Edit
+                                                            編集
                                                         </button>
                                                     )}
-                                                    <button className="block px-4 py-2 hover:bg-gray-100 text-left" onClick={() => onClickDeleteMessage(msg)}>Delete</button>
+                                                    <button className="block px-4 py-2 hover:bg-gray-100 cursor-pointer text-left" onClick={() => onClickDeleteMessage(msg)}>削除</button>
                                                 </div>
                                             </div>
                                         )}
@@ -315,7 +315,7 @@ export default function ChatBox({ data, hasHideButton = false, isHidden, onToggl
             )}
             <div className="sm:hidden p-2 pb-0">
                 <CInput
-                    placeholder="Type your message"
+                    placeholder="テキストを入力してください。"
                     height="h-21"
                     wrapperClassName="flex-1 h-full"
                     value={text}
@@ -329,7 +329,7 @@ export default function ChatBox({ data, hasHideButton = false, isHidden, onToggl
                     className="p-2 h-fit rounded-full hover:bg-gray-700"
                 >
                     <Image
-                        src={'/svgs/file.svg'}
+                        src={'/images/attach.png'}
                         className={`cursor-pointer`}
                         width={24}
                         height={24}
@@ -343,7 +343,7 @@ export default function ChatBox({ data, hasHideButton = false, isHidden, onToggl
                     onChange={handleAvatarChange}
                 />
                 <CInput
-                    placeholder="Type your message"
+                    placeholder="テキストを入力してください..."
                     height="h-21"
                     wrapperClassName="flex-1 h-full"
                     value={text}
@@ -355,13 +355,13 @@ export default function ChatBox({ data, hasHideButton = false, isHidden, onToggl
                     <CButton
                         disabled={!text.trim() || isFileUploading}
                         onClick={handleSend}
-                        text={isFileUploading ? 'Uploading...' : isEditing ? 'Update' : "Send"}
+                        text={isFileUploading ? 'Uploading...' : isEditing ? '更新' : "転送"}
                         className='text-white bg-green px-[10px] h-10'
                     />
                     {isEditing && (
                         <CButton
                             onClick={handleCancelEdit}
-                            text={'Cancel'}
+                            text={'キャンセル'}
                             className='border border-green text-green px-[10px] h-10'
                         />
                     )}
@@ -375,7 +375,7 @@ export default function ChatBox({ data, hasHideButton = false, isHidden, onToggl
             {deleteMessage && (
                 <Dialog
                     title="警告"
-                    description='Are you sure you want to delete this message?'
+                    description='本当に削除しますか?'
                     onPressCancel={() => setDeleteMessage(null)}
                     onPressOK={onConfirmDeleteMessage}
                     okButtonTitle='削除'

@@ -186,15 +186,15 @@ function ApplicationMngContent() {
         <p>読み込む中...</p>
       ) : (
         <div className="overflow-x-auto">
-          <h2 className='text-center mb-6 text-[32px] font-bold'>応募管理ページ</h2>
-          <div className="flex flex-col sm:flex-row justify-center items-center lg:flex-row lg:space-x-3 mb-4">
+          <h2 className='text-center mb-6 text-[24px] md:text-[32px] font-bold'>応募管理ページ</h2>
+          <div className="flex gap-2 flex-row justify-center items-center lg:flex-row lg:space-x-3 mb-4">
             {(profile?.role === 'JobSeeker' || isAdmin) && (
               <div className="flex flex-row space-x-3">
                 <CSelect
                   options={JobTypeOptions}
                   value={jobType}
                   onChange={onSelectJobType}
-                  width="w-40"
+                  width="w-30"
                   height="h-10"
                 />
               </div>
@@ -210,7 +210,7 @@ function ApplicationMngContent() {
               />
               <CButton
                 text="検索"
-                className='bg-blue text-white h-[40px]'
+                className='bg-blue text-white w-30 h-[40px]'
                 size="small"
                 onClick={onConfirmSearchTerm}
               />
@@ -242,7 +242,7 @@ function ApplicationMngContent() {
       )}
       {selectedChat && (
         <div className={`
-          fixed bottom-4 right-4  shadow-lg z-100
+          fixed bottom-25 right-4  shadow-lg z-100
           ${isHidden ? 'rounded-full' : 'h-[500px] w-[90%] max-w-[360px] bg-white rounded-sm'} 
         `}>
           {isHidden && (
