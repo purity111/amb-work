@@ -333,11 +333,11 @@ export default function JobList() {
                         )
                     })}
                     <CButton
-                                key={'search'}
-                                className="bg-blue mb-2"
-                                size="small"
-                                text={`Job Title Search: ${searchTerm}`}
-                            />
+                        key={'search'}
+                        className="bg-blue mb-2"
+                        size="small"
+                        text={`Job Title Search: ${searchTerm}`}
+                    />
                 </div>
             </div>
             {!jobData?.length && <p className="text-gray-600 mt-4">No results</p>}
