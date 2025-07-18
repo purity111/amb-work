@@ -58,7 +58,6 @@ export default function ChatMngPage() {
     const roomId = profile.role === 'admin' ? 'chat_admin' : `${isJobSeeker ? 1 : 2}_${profile.id}`;
     // Join the room
     socket.emit('notify_join', roomId);
-    console.log({ roomId })
     // Define the handler
     const handleNewMessage = (message: Message) => {
       console.log('notify', { message });
@@ -95,7 +94,9 @@ export default function ChatMngPage() {
     const options = data.data.jobs.map((i: JobDetail) => ({
       value: i.id,
       option: i.job_title
-    }))
+    }));
+    console.log(options);
+    
     return [{ value: 0, option: 'すべて' }, ...options]
   }, [data])
 
@@ -155,7 +156,7 @@ export default function ChatMngPage() {
   }
 
   const getLastMessage = (msg: ChatItem) => {
-    if (msg.messages?.[0]?.deleted) return '[Message deleted]'
+    if (msg.messages?.[0]?.deleted) return '[メッセージが削除されました]'
     else return msg.messages?.[0]?.body || 'No messages'
   }
 

@@ -273,7 +273,7 @@ export default function ChatBox({ data, hasHideButton = false, isHidden, onToggl
                             <div className={`flex flex-col max-w-[70%] ${me ? 'items-end' : 'items-start'}`}>
                                 {msg.deleted ? (
                                     <div className={`p-2 rounded-sm relative ${me ? 'bg-blue text-white' : 'bg-green text-black'}`}>
-                                        <span className="italic text-gray-700">Message deleted</span>
+                                        <span className="italic text-gray-700">メッセージが削除されました</span>
                                     </div>
                                 ) : (
                                     <div className="flex flex-row">
