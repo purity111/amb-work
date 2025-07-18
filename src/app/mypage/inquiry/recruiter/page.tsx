@@ -43,9 +43,9 @@ export default function RecruiterInquiryList() {
 
   useEffect(() => {
     if (response) {
-      setApplications(response.companyApplications);
-      console.log(response.companyApplications);
-      
+      const arr = response.companyApplications || [];
+      arr.sort((a, b) => new Date(b.created).getTime() - new Date(a.created).getTime());
+      setApplications(arr);
       setTotalPage(response.pagination.totalPages);
     }
   }, [response]);

@@ -41,27 +41,28 @@ const AboutPage: React.FC = () => {
           <p className='text-center text-[14px] text-gray-600 font-sans'>SERVICE FEATURES</p>
         </div>
 
-        <div className="flex">
-          <div className="my-5 md:my-8 w-[48%] relative aspect-[7/6] m-auto mb-4">
+        <div className="flex justify-start gap-[5%]">
+          <div className="my-5 md:my-8 w-[48%] relative aspect-[7/6]">
             <Image
               src='/images/about/about1.jpg'
               alt="シンプルイラスト"
               fill
-              className="object-contain rounded-[30px]"
+              className="object-contain rounded-tr-[100px]"
             />
           </div>
           <div className="lg:max-w-[600px]">
-            <div className="relative">
-              <h2 className='text-[24px] md:text-[30px] lg:text-[38px]'>リユース転職とは</h2>
-              <div className="absolute top-[-40px] right-0 w-full relative aspect-[3/2] m-auto mb-4">
+            <h2 className='text-[24px] md:text-[30px] lg:text-[38px] font-bold'>
+              リユース転職とは
+              <div className="absolute top-[50%] -translate-y-1/2 right-0 max-w-[298px] h-auto relative aspect-[3/2] m-auto mb-4">
                 <Image
-                  src='/images/about/about1.jpg'
+                  src='/images/about/about_text.png'
                   alt="シンプルイラスト"
                   fill
                   className="object-contain rounded-[30px]"
                 />
               </div>
-            </div>
+            </h2>
+
             <p className='text-[#65B729]'>リユース転職は、国内唯一のリユース、リサイクル、買取業界専門のトータルキャリア支援サービスです。</p>
           </div>
         </div>
