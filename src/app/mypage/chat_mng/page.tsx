@@ -3,7 +3,6 @@
 import { io, Socket } from 'socket.io-client';
 import { useAuthContext } from "@/app/layout";
 import CInput from "@/components/common/Input";
-import CSelect from "@/components/common/Select";
 import { useGetChats } from "@/hooks/useGetChats";
 import { useGetJobs } from "@/hooks/useGetJobs";
 import { UPLOADS_BASE_URL } from "@/utils/config";
@@ -15,6 +14,7 @@ import Spinner from "@/components/common/Spinner";
 import ChatBox from "@/components/ChatBox";
 import { useRouter, useSearchParams } from "next/navigation";
 import useWindowSize from '@/hooks/useWindowSize';
+import CSearchSelect from '@/components/common/SearchSelect';
 
 const socket: Socket = io(process.env.NEXT_PUBLIC_SOCKET_URL || 'http://172.20.1.185:3000');
 
@@ -94,10 +94,8 @@ export default function ChatMngPage() {
     const options = data.data.jobs.map((i: JobDetail) => ({
       value: i.id,
       option: i.job_title
-    }));
-    console.log(options);
-    
-    return [{ value: 0, option: 'すべて' }, ...options]
+    }))
+    return [{ value: '0', option: 'すべて' }, ...options]
   }, [data])
 
   useEffect(() => {
@@ -141,8 +139,8 @@ export default function ChatMngPage() {
     return chats?.data?.find((i: ChatItem) => i.id === selectedChatId)
   }, [chats, selectedChatId])
 
-  const onSelectJob = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedJob(Number(e.target.value));
+  const onSelectJob = (value: string) => {
+    setSelectedJob(Number(value));
     setSelectedChatId(0);
     setNameSearch('');
   };
@@ -203,12 +201,13 @@ export default function ChatMngPage() {
     <div className="flex flex-col p-2 md:p-5 w-[95%] max-w-[1200px] mx-auto">
       {/* <h1 className="text-2xl font-bold mb-6">チャット管理ページ</h1> */}
       {jLoading ? <p>Loading...</p> : (
-        <CSelect
+        <CSearchSelect
           options={jobList}
-          value={selectedJob}
+          value={selectedJob.toString()}
           onChange={onSelectJob}
           className="h-[40px]"
-          width="w-60"
+          width="w-120"
+          searchable
         />
       )}
       {jobList.length > 0 && (
