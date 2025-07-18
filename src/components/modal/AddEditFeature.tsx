@@ -97,7 +97,7 @@ export default function AddEditFeature({ isOpen, onClose, onSubmit, parentFeatur
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" style={{ background: 'rgba(0, 0, 0, 0.8)' }}>
       <div
         ref={modalRef}
-        className="bg-white p-6 rounded-lg w-full max-w-md"
+        className="bg-white p-6 mx-2 rounded-lg w-full max-w-md"
         onClick={(e) => e.stopPropagation()}
       >
         <h3 className="text-[24px] md:text-[30px] text-center font-medium mb-4">

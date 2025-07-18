@@ -231,7 +231,7 @@ export default function CreateNewJobComponent({ preLoad }: CreateNewJobProps) {
                 value: i.id,
                 option: i.clinic_name
             }));
-            setCompanyOptions([{ value: '', option: 'Select a company' }, ...companyOptions])
+            setCompanyOptions([{ value: '', option: '選択してください' }, ...companyOptions])
         }
     }, [data, isLoading, company])
 
@@ -483,6 +483,7 @@ export default function CreateNewJobComponent({ preLoad }: CreateNewJobProps) {
                                         className="rounded-sm placeholder-gray-700"
                                         onChange={(e) => field.onChange(e)}
                                         maxLength={50}
+                                        placeholder="タイトルを入力してください"
                                     />
                                 )}
                             />
@@ -523,7 +524,7 @@ export default function CreateNewJobComponent({ preLoad }: CreateNewJobProps) {
                                     htmlFor="imageUpload"
                                     className="text-sm text-gray-500 border-1 rounded-sm py-1 px-4 border-gray-700"
                                 >
-                                    Choose File
+                                    画像選択
                                     <input
                                         id="imageUpload"
                                         type="file"
@@ -587,6 +588,7 @@ export default function CreateNewJobComponent({ preLoad }: CreateNewJobProps) {
                                         className="rounded-sm placeholder-gray-700"
                                         onChange={(e) => field.onChange(e)}
                                         maxLength={30}
+                                        placeholder="入力してください"
                                     />
 
                                 )}
@@ -739,6 +741,7 @@ export default function CreateNewJobComponent({ preLoad }: CreateNewJobProps) {
                                         onChange={(e) => field.onChange(e)}
                                         maxLength={30}
                                         height="h-[100px]"
+                                        placeholder="入力してください"
                                     />
 
                                 )}
@@ -770,6 +773,7 @@ export default function CreateNewJobComponent({ preLoad }: CreateNewJobProps) {
                                                     maxLength={2000}
                                                     height="h-[100px]"
                                                     disabled={!!c.clinic_flg && selectedCompany?.data[c.calling_name]}
+                                                    placeholder="入力してください"
                                                 />
                                             )}
                                         />

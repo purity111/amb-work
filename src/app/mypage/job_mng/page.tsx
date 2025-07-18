@@ -103,7 +103,7 @@ export default function JobMngPage() {
       setCompanyOptions([
         {
           value: '0',
-          option: 'All'
+          option: 'すべて'
         },
         ...options
       ])
@@ -171,12 +171,13 @@ export default function JobMngPage() {
 
   return (
     <div className="flex min-h-screen flex-col">
-      <div className="w-95/100 max-w-320 mx-auto pt-10">
-        <div className="border-b-1 border-gray-700 py-2 flex flex-col">
+      <div className="w-95/100 max-w-320 mx-auto">
+        <div className="border-b-1 border-gray-700 pt-10 pb-5 flex flex-col">
+          <h2 className='text-center mb-6 text-[24px] md:text-[32px] font-bold'>応募管理ページ</h2>
           <div className="flex-1 flex flex-row items-center space-x-2 space-y-2">
             <div className="flex-1">
               <CButton
-                text="求人掲載ページ新規作成"
+                text="新規作成"
                 className='bg-blue text-white text-sm h-[40px]'
                 size="small"
                 leftIcon={<span className="mr-1 flex items-center"><svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 md:h-6 md:w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" /></svg></span>}
@@ -187,17 +188,19 @@ export default function JobMngPage() {
               text="全体CSV出⼒"
               className='bg-green text-white text-sm h-[40px]'
               size="small"
-              leftIcon={<span className="mr-1 flex items-center"><svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 md:h-6 md:w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" /></svg></span>}
+            // leftIcon={<span className="mr-1 flex items-center"><svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 md:h-6 md:w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" /></svg></span>}
             />
-            <CButton
-              text="選択のみCSV出⼒"
-              className='bg-orange text-white text-sm h-[40px]'
-              size="small"
-              leftIcon={<span className="mr-1 flex items-center"><svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 md:h-6 md:w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" /></svg></span>}
-            />
+            <div className="mr-2 mb-2">
+              <CButton
+                text="選択のみCSV出⼒"
+                className='bg-orange text-white text-sm h-[40px]'
+                size="small"
+              // leftIcon={<span className="mr-1 flex items-center"><svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 md:h-6 md:w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" /></svg></span>}
+              />
+            </div>
           </div>
           <div className="flex flex-col lg:flex-row lg:space-x-3">
-            <div className="flex-1 flex flex-row items-center space-x-3 pt-2">
+            <div className="flex-1 flex flex-row justify-between md:justify-start items-center space-x-3 pt-2">
               <CSelect
                 options={JobTypeOptions}
                 value={jobType}
@@ -211,13 +214,13 @@ export default function JobMngPage() {
                   options={companyOptions}
                   value={company}
                   onChange={onSelectCompany}
-                  width="w-60"
+                  width="w-40"
                   height="h-10"
                   className="truncate"
                 />
               )}
             </div>
-            <div className="flex flex-row pt-2 space-x-2">
+            <div className="flex flex-row justify-between md:justify-end pt-2 space-x-2">
               <CInput
                 placeholder="検索"
                 height="h-10"
@@ -226,7 +229,7 @@ export default function JobMngPage() {
                 onChange={onChangeSearchTerm}
               />
               <CButton
-                text="Search"
+                text="検索"
                 className='bg-blue text-white h-[40px]'
                 size="small"
                 onClick={onConfirmSearchTerm}
@@ -245,7 +248,7 @@ export default function JobMngPage() {
             />
           )}
         </div>
-        <div className="flex flex-col space-y-5 mt-10 pb-20">
+        <div className="flex flex-col space-y-5 mt-10 pb-10">
           {jobLoading && (
             <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto"></div>
           )}

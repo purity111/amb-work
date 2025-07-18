@@ -114,9 +114,9 @@ export default function ContactInquiryList() {
         <p>読み込む中...</p>
       ) : (
         <div className="overflow-x-auto">
-          <h2 className='text-center mb-6 text-[32px] font-bold'>お問い合わせ一覧</h2>
+          <h2 className='text-center mb-6 text-[24px] md:text-[32px] font-bold'>お問い合わせ一覧</h2>
           {/* Search Bar */}
-          <div className="flex justify-end flex-row items-center mx-auto my-2 space-x-2 w-full sm:w-[80%] md:w-full">
+          <div className="flex justify-between md:justify-end flex-row items-center mx-auto my-2 space-x-2 w-full sm:w-[80%] md:w-full">
             <CInput
               placeholder="検索"
               height="h-10"

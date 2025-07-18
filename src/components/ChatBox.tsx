@@ -279,7 +279,7 @@ export default function ChatBox({ data, hasHideButton = false, isHidden, onToggl
                             <div className={`flex flex-col max-w-[70%] ${me ? 'items-end' : 'items-start'}`}>
                                 {msg.deleted ? (
                                     <div className={`p-2 rounded-sm relative ${me ? 'bg-blue text-white' : 'bg-green text-black'}`}>
-                                        <span className="italic text-gray-700">Message deleted</span>
+                                        <span className="italic text-gray-700">メッセージが削除されました</span>
                                     </div>
                                 ) : (
                                     <div className="flex flex-row">
@@ -316,7 +316,7 @@ export default function ChatBox({ data, hasHideButton = false, isHidden, onToggl
             )}
             <div className="sm:hidden p-2 pb-0">
                 <CInput
-                    placeholder="Type your message"
+                    placeholder="テキストを入力してください。"
                     height="h-21"
                     wrapperClassName="flex-1 h-full"
                     value={text}
@@ -330,7 +330,7 @@ export default function ChatBox({ data, hasHideButton = false, isHidden, onToggl
                     className="p-2 h-fit rounded-full hover:bg-gray-700"
                 >
                     <Image
-                        src={'/svgs/file.svg'}
+                        src={'/images/attach.png'}
                         className={`cursor-pointer`}
                         width={24}
                         height={24}
@@ -344,7 +344,7 @@ export default function ChatBox({ data, hasHideButton = false, isHidden, onToggl
                     onChange={handleAvatarChange}
                 />
                 <CInput
-                    placeholder="Type your message"
+                    placeholder="テキストを入力してください..."
                     height="h-21"
                     wrapperClassName="flex-1 h-full"
                     value={text}
@@ -356,13 +356,13 @@ export default function ChatBox({ data, hasHideButton = false, isHidden, onToggl
                     <CButton
                         disabled={!text.trim() || isFileUploading}
                         onClick={handleSend}
-                        text={isFileUploading ? 'Uploading...' : isEditing ? 'Update' : "Send"}
+                        text={isFileUploading ? 'Uploading...' : isEditing ? '更新' : "転送"}
                         className='text-white bg-green px-[10px] h-10'
                     />
                     {isEditing && (
                         <CButton
                             onClick={handleCancelEdit}
-                            text={'Cancel'}
+                            text={'キャンセル'}
                             className='border border-green text-green px-[10px] h-10'
                         />
                     )}
@@ -376,7 +376,7 @@ export default function ChatBox({ data, hasHideButton = false, isHidden, onToggl
             {deleteMessage && (
                 <Dialog
                     title="警告"
-                    description='Are you sure you want to delete this message?'
+                    description='本当に削除しますか?'
                     onPressCancel={() => setDeleteMessage(null)}
                     onPressOK={onConfirmDeleteMessage}
                     okButtonTitle='削除'

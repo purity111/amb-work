@@ -34,10 +34,10 @@ type FormValues = {
 
 const schema = Yup.object().shape({
     name: Yup.string()
-        .matches(/^[\u4E00-\u9FAF\u30A0–\u30FF]+$/, '全角の日本語文字のみを入力してください') // Matches common Kanji + Katakana range
+        // .matches(/^[\u4E00-\u9FAF\u30A0–\u30FF]+$/, '全角の日本語文字のみを入力してください') // Matches common Kanji + Katakana range
         .required('必須項目です。'),
     name_kana: Yup.string()
-        .matches(/^[ァ-ヶー　]+$/, '漢字のみを入力してください') // Matches common Kanji range
+        // .matches(/^[ァ-ヶー　]+$/, '漢字のみを入力してください') // Matches common Kanji range
         .required('必須項目です。'),
     dob_year: Yup.number().required(),
     dob_month: Yup.number().required(),
