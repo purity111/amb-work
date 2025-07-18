@@ -76,6 +76,7 @@ export default function ChatBox({ data, hasHideButton = false, isHidden, onToggl
             onChange()
             scrollToBottom()
         });
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         socket.on('messageUpdated', (message: Message) => {
             refetch()
             onChange()

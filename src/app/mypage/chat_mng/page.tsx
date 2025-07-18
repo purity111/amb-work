@@ -3,7 +3,6 @@
 import { io, Socket } from 'socket.io-client';
 import { useAuthContext } from "@/app/layout";
 import CInput from "@/components/common/Input";
-import CSelect from "@/components/common/Select";
 import { useGetChats } from "@/hooks/useGetChats";
 import { useGetJobs } from "@/hooks/useGetJobs";
 import { UPLOADS_BASE_URL } from "@/utils/config";
