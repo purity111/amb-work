@@ -24,7 +24,7 @@ const nextConfig: NextConfig = {
     return [
       {
         source: '/jobs',
-        destination: '/jobs/openings/na/na/na/na/na',
+        destination: '/job-openings/na/na/na/na/na',
         permanent: true, // use false for temporary redirect (307)
       },
     ];

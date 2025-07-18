@@ -212,7 +212,7 @@ export const formatLongDateTime = (dateString: string) => {
 };
 
 export const getFeatureParam = (param: FeatureParams | null) => {
-    const {jobTypes = [], items = [], conditions = [], employmentTypes = []} = param || {};
+    const { jobTypes = [], items = [], conditions = [], employmentTypes = [] } = param || {};
     return [...jobTypes, ...items, ...conditions, ...employmentTypes]
 }
 
@@ -222,11 +222,11 @@ export const getFilterJobUrl = (value: JobFilterFormValue, featureList: FeatureI
         cityList = cityList.concat(item.city)
     })
 
-    const pString = !value.prefectures?.length ? 'na' :  cityList.filter(i => value.prefectures?.includes(i.id)).map(i => i.text).join('-');
+    const pString = !value.prefectures?.length ? 'na' : cityList.filter(i => value.prefectures?.includes(i.id)).map(i => i.text).join('-');
     const { conditions = [], employmentTypes = [], items = [], jobTypes = [] } = value;
-    const jString = !jobTypes?.length ? 'na' :  featureList.filter((i: FeatureItem) => jobTypes.includes(i.id)).map((i: FeatureItem) => i.name).join('-');
-    const iString = !items?.length ? 'na' :  featureList.filter((i: FeatureItem) => items.includes(i.id)).map((i: FeatureItem) => i.name).join('-');
-    const cString = !conditions?.length ? 'na' :  featureList.filter((i: FeatureItem) => conditions.includes(i.id)).map((i: FeatureItem) => i.name).join('-');
-    const eString = !employmentTypes?.length ? 'na' :  featureList.filter((i: FeatureItem) => employmentTypes.includes(i.id)).map((i: FeatureItem) => i.name).join('-');
-    return `/jobs/openings/${pString}/${jString}/${iString}/${cString}/${eString}`
+    const jString = !jobTypes?.length ? 'na' : featureList.filter((i: FeatureItem) => jobTypes.includes(i.id)).map((i: FeatureItem) => i.name).join('-');
+    const iString = !items?.length ? 'na' : featureList.filter((i: FeatureItem) => items.includes(i.id)).map((i: FeatureItem) => i.name).join('-');
+    const cString = !conditions?.length ? 'na' : featureList.filter((i: FeatureItem) => conditions.includes(i.id)).map((i: FeatureItem) => i.name).join('-');
+    const eString = !employmentTypes?.length ? 'na' : featureList.filter((i: FeatureItem) => employmentTypes.includes(i.id)).map((i: FeatureItem) => i.name).join('-');
+    return `/job-openings/${pString}/${jString}/${iString}/${cString}/${eString}`
 }

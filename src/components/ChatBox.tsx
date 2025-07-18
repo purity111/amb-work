@@ -76,6 +76,11 @@ export default function ChatBox({ data, hasHideButton = false, isHidden, onToggl
             onChange()
             scrollToBottom()
         });
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        socket.on('messageUpdated', (message: Message) => {
+            refetch()
+            onChange()
+        });
         // :white_check_mark: Scroll to latest message
         return () => {
             socket.off('newMessage');
@@ -88,7 +93,7 @@ export default function ChatBox({ data, hasHideButton = false, isHidden, onToggl
     }, [profile])
 
     const notifyToId = useMemo(() => {
-        if(data.agency === 1) return 'chat_admin'
+        if (data.agency === 1) return 'chat_admin'
         return `${isJobSeeker ? 2 : 1}_${isJobSeeker ? data.jobInfo.employer_id : data.job_seeker_id}`
     }, [isJobSeeker, data])
 
@@ -240,7 +245,7 @@ export default function ChatBox({ data, hasHideButton = false, isHidden, onToggl
                     <p>{isJobSeeker ? data.jobInfo.employer.clinic_name : data.jobSeeker.name}</p>
                     <p className="text-sm text-gray-600 truncate whitespace-nowrap overflow-hidden">Job: {data.job_title}</p>
                 </div>
-                
+
                 <a href={`tel:${isJobSeeker ? data.jobInfo.employer.tel : data.jobSeeker.tel}`} className="p-1 hover:bg-gray-800 w-8 h-8 flex justify-center items-center rounded-full transition">
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -258,11 +263,13 @@ export default function ChatBox({ data, hasHideButton = false, isHidden, onToggl
                 {cLoading && <div className="flex-1 flex justify-center items-center"><Spinner /></div>}
                 <div ref={messagesEndRef} />
                 {messages.map((msg, index) => {
+
                     let me = false, showMessageDate = true, editable = true;
                     if (isJobSeeker && msg.sender === 1) me = true;
                     if (!isJobSeeker && msg.sender === 2) me = true;
                     if (differenceInMinutes(new Date(), new Date(msg.created)) > 60) editable = false;
                     if (msg.sender === messages[index - 1]?.sender && formatMessageDate(new Date(msg.created)) === formatMessageDate(new Date(messages[index - 1]?.created))) showMessageDate = false;
+
                     return (
                         <div key={msg.id} className={`flex ${me ? 'flex-row-reverse' : 'flex-row'} space-x-2 p-1 rounded-sm ${msg.id === editMessage?.id ? 'bg-gray-800' : 'bg-transparent'}`}>
                             {!me && (
@@ -278,21 +285,16 @@ export default function ChatBox({ data, hasHideButton = false, isHidden, onToggl
                                 ) : (
                                     <div className="flex flex-row">
                                         {me && (
-                                            <div className="relative group flex flex-row flex-row-reverse">
-                                                <button className="px-2 focus:outline-none h-fit">
-                                                    ⋮
-                                                </button>
-                                                <div className="hidden w-[65px] absolute top-1 right-5 group-hover:flex bg-white h-fit text-black rounded-lg shadow-lg z-10 flex-col">
-                                                    {editable && (
-                                                        <button
-                                                            className="block px-4 py-2 border-r-1 border-gray-800 hover:bg-gray-100 text-left"
-                                                            onClick={() => onClickEditMessage(msg)}
-                                                        >
-                                                            編集
-                                                        </button>
-                                                    )}
-                                                    <button className="block px-4 py-2 hover:bg-gray-100 cursor-pointer text-left" onClick={() => onClickDeleteMessage(msg)}>削除</button>
+                                            <div className="flex flex-row pr-2">
+                                                {editable && (
+                                                    <div className="w-4 h-4 relative cursor-pointer mr-2" onClick={() => onClickEditMessage(msg)}>
+                                                        <Image src={'/images/icons/edit.png'} alt="chat-avatar" fill />
+                                                    </div>
+                                                )}
+                                                <div className="w-3 h-4 relative cursor-pointer" onClick={() => onClickDeleteMessage(msg)}>
+                                                    <Image src={'/images/icons/del.png'} alt="chat-avatar" fill />
                                                 </div>
+                                                {/* <button className="block px-4 py-2 hover:bg-gray-100 text-left" onClick={() => onClickDeleteMessage(msg)}>Delete</button> */}
                                             </div>
                                         )}
                                         <div className={`p-2 rounded-sm relative ${me ? 'bg-blue text-white' : 'bg-green text-black'}`}>
