@@ -310,10 +310,16 @@ export default function JobList() {
     return (
         <div className="pb-10 md:pb-30">
             <div className="py-2 sticky top-20 md:top-25 bg-white z-10 border-b-2 border-gray-700">
-                <div className="flex flex-row justify-between items-center">
-                    <p className="text-lg">
+                <div className="flex flex-row items-center">
+                    <p className="text-lg flex-1">
                         {`検索結果：${totalJobCount}件`}
                     </p>
+                    <a href='/jobs'>
+                        <CButton
+                            text="フィルターをクリア"
+                            className="bg-red text-white rounded-sm mr-2"
+                        />
+                    </a>
                     <CButton
                         text="さらに条件を追加する"
                         leftIcon={<span>+</span>}
