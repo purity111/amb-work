@@ -24,7 +24,7 @@ export default function LoginModal({ onSuccess, onClose }: LoginModalProps) {
         onSuccess: (data) => {
             // data: {success: true, data: object}
             // logged in successfully
-            toast.success('加入成功!', {
+            toast.success('ログインしました。', {
                 autoClose: 1000,
                 onClose: () => {
                     const { token, user, role } = data.data;

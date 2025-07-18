@@ -201,9 +201,9 @@ export default function StaffImageItem({ index, control, errors, setValue, onRem
               <div className="flex flex-row items-center my-2">
                 <label
                   htmlFor={`staff-image-upload-${index}`}
-                  className="text-sm text-gray-500 border-1 rounded-sm py-1 px-4 border-gray-700"
+                  className="text-sm text-gray-500 border-1 rounded-sm py-1 px-4"
                 >
-                  Choose File
+                  画像選択
                   <input
                     id={`staff-image-upload-${index}`}
                     type="file"

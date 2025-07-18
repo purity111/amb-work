@@ -142,7 +142,7 @@ export default function ChatBox({ data, hasHideButton = false, isHidden, onToggl
                     }
                     setIsFileUploading(false);
                 } catch (err) {
-                    toast.error('Failed to send your message. Try again.');
+                    toast.error('メッセージを転送できません。再度試してください。');
                     console.log(err)
                     return;
                 }

@@ -246,7 +246,7 @@ export default function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
         </nav>
         {logoutModalShown && (
           <Dialog
-            title="警告"
+            title="注意"
             description='本当にログアウトしますか?'
             onPressCancel={() => setLogoutModalShown(false)}
             onPressOK={onConfirmLogout}

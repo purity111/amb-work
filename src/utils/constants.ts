@@ -209,7 +209,7 @@ export const FooterButtonList = [
         to: '/recruiter'
     },
     {
-        title: 'お問い合せ',
+        title: 'お問い合わせ',
         to: '/contact'
     },
 ]
@@ -223,12 +223,12 @@ export const SocialButtonList = [
     {
         id: 'instagram',
         icon: '/images/instagram.png',
-        to: 'https://www.instagram.com/momo_career_retenshoku/',
+        to: 'https://www.instagram.com/reuse_tenshoku/',
     },
     {
         id: 'twitter',
-        icon: '/images/twitter.png',
-        to: 'https://twitter.com/Retenshoku',
+        icon: '/images/x.png',
+        to: 'https://x.com/Reusetenshoku',
     },
 ]
 

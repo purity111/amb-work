@@ -183,7 +183,7 @@ function ApplicationMngContent() {
   return (
     <div className="container mx-auto px-4 py-8 w-[95%] max-w-[1000px]">
       {aLoading ? (
-        <p>読み込む中...</p>
+        <p>読み込み中...</p>
       ) : (
         <div className="overflow-x-auto">
           <h2 className='text-center mb-6 text-[24px] md:text-[32px] font-bold'>応募管理ページ</h2>
@@ -312,7 +312,7 @@ function ApplicationMngContent() {
 
 export default function ApplicationMngPage() {
   return (
-    <Suspense fallback={<div className="container mx-auto px-4 py-8"><p>読み込む中...</p></div>}>
+    <Suspense fallback={<div className="container mx-auto px-4 py-8"><p>読み込み中...</p></div>}>
       <ApplicationMngContent />
     </Suspense>
   );
