@@ -348,7 +348,7 @@ export default function JobList() {
                     )}
                 </div>
             </div>
-            {!jobData?.length && <p className="text-gray-600 mt-4">No results</p>}
+            {!jobData?.length && <p className="text-gray-600 mt-4">結果なし</p>}
             {renderPagination()}
 
             {recommendJobData.length > 0 && (

@@ -272,7 +272,7 @@ export default function RecruiterInquiryList() {
               </div>
 
               {/* Pagination Controls */}
-              {totalPage > 1 && (
+              {totalPage > 0 && (
                 <div className="flex flex-row justify-center mt-4">
                   <Pagination
                     page={currentPage}

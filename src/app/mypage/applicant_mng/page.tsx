@@ -278,7 +278,7 @@ export default function ApplicantMngPage() {
               <p>読み込み中...</p>
             )}
             {!response?.data?.jobseekers?.length && !isLoading && (
-              <p>No results</p>
+              <p>結果なし</p>
             )}
             {response?.data?.jobseekers.map((jobseeker: JobSeekerDetail, index: number) => (
               <tr key={jobseeker.id} className={index % 2 === 0 ? "bg-gray-50" : "bg-white"}>
