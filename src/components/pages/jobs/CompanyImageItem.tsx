@@ -105,7 +105,7 @@ export default function CompanyImageItem({ index, control, errors, setValue, onR
             }}
           />
         </label>
-        <span className="ml-2">{file?.name || 'No file chosen'}</span>
+        <span className="ml-2">{file?.name || '画像なし'}</span>
       </div>
       {errors?.companyImages?.[index]?.image && (
         <p className="text-red-400 text-[10px]">{errors?.companyImages?.[index]?.image.message}</p>
@@ -116,7 +116,7 @@ export default function CompanyImageItem({ index, control, errors, setValue, onR
         ※5:4の比率サイズの画像を載せてください。<br />
         ※推奨サイズは520×380です。
       </p>
-      <div className="flex-1 flex flex-row">
+      <div className="flex-1 flex flex-row items-center">
         <p className="text-sm text-gray-400 py-2">風景画像説明テキスト</p>
         <RequiredLabel />
       </div>

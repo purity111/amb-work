@@ -247,7 +247,7 @@ function ApplicationMngContent() {
         `}>
           {isHidden && (
             <button className="p-2 bg-white w-12 h-12 flex justify-center items-center rounded-full transition relative cursor-pointer" onClick={() => setIsHidden(false)}>
-              <Image src={'/images/message_bubble.png'} width={30} height={30} alt="chat-avatar" />
+              <Image src={'/images/message_bubble.png'} width={30} height={30} alt="チャットアバター" />
             </button>
           )}
           {!isHidden && (

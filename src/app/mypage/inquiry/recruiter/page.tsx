@@ -44,7 +44,7 @@ export default function RecruiterInquiryList() {
   useEffect(() => {
     if (response) {
       const arr = response.companyApplications || [];
-      arr.sort((a, b) => new Date(b.created).getTime() - new Date(a.created).getTime());
+      arr.sort((a: any, b: any) => new Date(b.created).getTime() - new Date(a.created).getTime());
       setApplications(arr);
       setTotalPage(response.pagination.totalPages);
     }

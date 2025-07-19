@@ -176,7 +176,7 @@ export default function ChatMngPage() {
           onClick={() => onSelectChat(i)}
         >
           <div className="min-w-15 w-15 h-15 relative">
-            <Image src={isJobSeeker ? employerAvatar : seekerAvatar} alt="avatar" className="rounded-full" fill />
+            <Image src={isJobSeeker ? employerAvatar : seekerAvatar} alt="アバター" className="rounded-full" fill />
             {i.unreadCount > 0 && (
               <div className="absolute top-0 left-0 bg-red rounded-full w-6 h-6 flex items-center justify-center overflow-hidden">
                 <span className="text-[10px] text-white">{i.unreadCount > 99 ? '99+' : i.unreadCount}</span>

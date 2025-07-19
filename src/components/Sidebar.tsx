@@ -1,6 +1,5 @@
 import { useAuthContext } from '@/app/layout';
 import { useUnsavedChangesPrompt } from '@/hooks/useUnsavedChangesWarning';
-import { BASE_URL } from '@/utils/config';
 import { usePathname } from 'next/navigation';
 import { useMemo, useState, useEffect } from 'react';
 import Dialog from './Dialog';
@@ -169,7 +168,7 @@ export default function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
         )}
         <nav className="p-4 h-full overflow-y-auto">
           <p
-            onClick={() => goNavigation(`${BASE_URL}/mypage`)}
+            onClick={() => goNavigation(`${process.env.NEXT_PUBLIC_BASE_URL}/mypage`)}
             className='cursor-pointer text-white mx-auto my-6 text-[20px] text-center flex justify-center hover:text-blue'
           >
             マイページ

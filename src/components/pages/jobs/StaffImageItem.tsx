@@ -216,7 +216,7 @@ export default function StaffImageItem({ index, control, errors, setValue, onRem
                     }}
                   />
                 </label>
-                <span className="ml-2">{file?.name || 'No file chosen'}</span>
+                <span className="ml-2">{file?.name || '画像なし'}</span>
               </div>
               {errors?.staffImages?.[index]?.photo && (
                 <p className="text-red-400 text-[10px]">{errors?.staffImages?.[index]?.photo.message}</p>

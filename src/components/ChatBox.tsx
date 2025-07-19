@@ -254,7 +254,7 @@ export default function ChatBox({ data, hasHideButton = false, isHidden, onToggl
                 </a>
                 {hasHideButton && (
                     <button className="p-2 hover:bg-gray-700 w-8 h-8 flex justify-center items-center rounded-full transition relative" onClick={onToggleHidden}>
-                        {isHidden && <Image src={'/images/message_bubble.png'} width={20} height={20} alt="chat-avatar" />}
+                        {isHidden && <Image src={'/images/message_bubble.png'} width={20} height={20} alt="チャットアバター" />}
                         {!isHidden && <span>-</span>}
                     </button>
                 )}
@@ -274,7 +274,7 @@ export default function ChatBox({ data, hasHideButton = false, isHidden, onToggl
                         <div key={msg.id} className={`flex ${me ? 'flex-row-reverse' : 'flex-row'} space-x-2 p-1 rounded-sm ${msg.id === editMessage?.id ? 'bg-gray-800' : 'bg-transparent'}`}>
                             {!me && (
                                 <div className={`w-10 h-10 relative rounded-full overflow-hidden border-2 ${me ? 'border-blue' : 'border-green'}`}>
-                                    {!me && <Image src={isJobSeeker ? employerAvatar : seekerAvatar} alt="chat-avatar" fill />}
+                                    {!me && <Image src={isJobSeeker ? employerAvatar : seekerAvatar} alt="チャットアバター" fill />}
                                 </div>
                             )}
                             <div className={`flex flex-col max-w-[70%] ${me ? 'items-end' : 'items-start'}`}>
@@ -288,11 +288,11 @@ export default function ChatBox({ data, hasHideButton = false, isHidden, onToggl
                                             <div className="flex flex-row pr-2">
                                                 {editable && (
                                                     <div className="w-4 h-4 relative cursor-pointer mr-2" onClick={() => onClickEditMessage(msg)}>
-                                                        <Image src={'/images/icons/edit.png'} alt="chat-avatar" fill />
+                                                        <Image src={'/images/icons/edit.png'} alt="チャットアバター" fill />
                                                     </div>
                                                 )}
                                                 <div className="w-3 h-4 relative cursor-pointer" onClick={() => onClickDeleteMessage(msg)}>
-                                                    <Image src={'/images/icons/del.png'} alt="chat-avatar" fill />
+                                                    <Image src={'/images/icons/del.png'} alt="チャットアバター" fill />
                                                 </div>
                                                 {/* <button className="block px-4 py-2 hover:bg-gray-100 text-left" onClick={() => onClickDeleteMessage(msg)}>Delete</button> */}
                                             </div>

@@ -46,7 +46,7 @@ export default function ContactInquiryList() {
   useEffect(() => {
     if (response) {
       const arr = response.data.contacts || [];
-      arr.sort((a, b) => new Date(b.created).getTime() - new Date(a.created).getTime());
+      arr.sort((a: any, b: any) => new Date(b.created).getTime() - new Date(a.created).getTime());
       setInquiries(arr);
       setTotalPage(response.data.pagination?.totalPages || 1);
     }

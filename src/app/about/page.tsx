@@ -42,7 +42,7 @@ const AboutPage: React.FC = () => {
         </div>
 
         <div className="flex justify-start gap-[5%]">
-          <div className="my-5 md:my-8 w-[48%] relative aspect-[7/6]">
+          <div className="my-5 md:my-8 w-[45%] relative aspect-[7/6]">
             <Image
               src='/images/about/about1.jpg'
               alt="シンプルイラスト"
@@ -50,10 +50,10 @@ const AboutPage: React.FC = () => {
               className="object-contain rounded-tr-[100px]"
             />
           </div>
-          <div className="lg:max-w-[600px]">
-            <h2 className='text-[24px] md:text-[30px] lg:text-[38px] font-bold'>
+          <div className="md: max-w-[400px] lg:max-w-[450px] xl:max-w-[600px]">
+            <h2 className='text-[24px] md:text-[30px] lg:text-[38px] font-bold w-full'>
               リユース転職とは
-              <div className="absolute top-[50%] -translate-y-1/2 right-0 max-w-[298px] h-auto relative aspect-[3/2] m-auto mb-4">
+              <div className="absolute top-[50%] -translate-y-1/2 right-0 max-w-[298px] h-auto relative aspect-[3/2]">
                 <Image
                   src='/images/about/about_text.png'
                   alt="シンプルイラスト"
@@ -63,7 +63,10 @@ const AboutPage: React.FC = () => {
               </div>
             </h2>
 
-            <p className='text-[#65B729]'>リユース転職は、国内唯一のリユース、リサイクル、買取業界専門のトータルキャリア支援サービスです。</p>
+            <p className='text-[#65B729] font-semiboldtext-sm md:text-base'>リユース転職は、国内唯一のリユース、リサイクル、買取業界専門のトータルキャリア支援サービスです。</p>
+            <p className='text-sm md:text-base'>
+              <br />リユース、リサイクル、買取業界にどのような業界特性があり、どのような仕事があるのか、まだまだ知られていないことが多いのが現状です。
+            </p>
           </div>
         </div>
       </main>
