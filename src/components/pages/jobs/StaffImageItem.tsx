@@ -92,6 +92,39 @@ export default function StaffImageItem({ index, control, errors, setValue, onRem
               }
             />
           </div>
+          <div className='flex flex-col sm:flex-row mb-3'>
+            <div className='flex-2'>
+              <div className="flex flex-row items-center my-2">
+                <label
+                  htmlFor={`staff-image-upload-${index}`}
+                  className="text-sm text-gray-500 border-1 rounded-sm py-1 px-4"
+                >
+                  画像選択
+                  <input
+                    id={`staff-image-upload-${index}`}
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageChange}
+                    className="hidden"
+                    onClick={(e) => {
+                      // @ts-expect-error: Reset input to allow same file trigger
+                      e.currentTarget.value = null;
+                    }}
+                  />
+                </label>
+                <span className="ml-2">{file?.name || '画像なし'}</span>
+              </div>
+              {errors?.staffImages?.[index]?.photo && (
+                <p className="text-red-400 text-[10px]">{errors?.staffImages?.[index]?.photo.message}</p>
+              )}
+              <p className="text-sm text-gray-600">
+                ※拡張子はjpg/png/gifのいずれかです<br />
+                ※最大ファイルサイズは10MBです<br />
+                ※4:1の比率サイズの画像を載せてください。<br />
+                ※推奨サイズは350×260です。<br />
+              </p>
+            </div>
+          </div>
         </div>
         <div className='flex-2 md:pl-10'>
           <div className='flex flex-col sm:flex-row mb-3'>
@@ -189,43 +222,6 @@ export default function StaffImageItem({ index, control, errors, setValue, onRem
               />
               <p className="text-sm text-gray-600">
                 ※200文字まで入力できます。
-              </p>
-            </div>
-          </div>
-
-          <div className='flex flex-col sm:flex-row mb-3'>
-            <div className='flex-1'>
-              <span className='text-gray-500'>顔写真</span>
-            </div>
-            <div className='flex-2'>
-              <div className="flex flex-row items-center my-2">
-                <label
-                  htmlFor={`staff-image-upload-${index}`}
-                  className="text-sm text-gray-500 border-1 rounded-sm py-1 px-4"
-                >
-                  画像選択
-                  <input
-                    id={`staff-image-upload-${index}`}
-                    type="file"
-                    accept="image/*"
-                    onChange={handleImageChange}
-                    className="hidden"
-                    onClick={(e) => {
-                      // @ts-expect-error: Reset input to allow same file trigger
-                      e.currentTarget.value = null;
-                    }}
-                  />
-                </label>
-                <span className="ml-2">{file?.name || '画像なし'}</span>
-              </div>
-              {errors?.staffImages?.[index]?.photo && (
-                <p className="text-red-400 text-[10px]">{errors?.staffImages?.[index]?.photo.message}</p>
-              )}
-              <p className="text-sm text-gray-600">
-                ※拡張子はjpg/png/gifのいずれかです<br />
-                ※最大ファイルサイズは10MBです<br />
-                ※4:1の比率サイズの画像を載せてください。<br />
-                ※推奨サイズは350×260です。<br />
               </p>
             </div>
           </div>

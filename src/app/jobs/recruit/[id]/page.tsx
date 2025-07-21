@@ -202,8 +202,9 @@ export default function JobPreviewDetails() {
                 try {
                     const parsed = JSON.parse(profileStr);
                     jobSeekerId = parsed?.id;
-                } catch (e) { console.log(e);
-                 }
+                } catch (e) {
+                    console.log(e);
+                }
             }
             if (!jobSeekerId) {
                 toast.error('求職者IDが見つかりません。ログインし直してください。');
@@ -267,12 +268,12 @@ export default function JobPreviewDetails() {
                     <p className={`text-[14px] text-${themeColor} mt-2`}>INFORMATION</p>
                 </div>
             </div>
-            <div>
-                <div className="h-35 relative aspect-250/138 mx-auto w-full max-w-[400px]">
+            <div className="my-8">
+                <div className="h-25 md:h-35 w-auto relative aspect-250/138 mx-auto max-w-[400px]">
                     <Image src={`/images/recruiter/${themeColor === 'orange' ? 'message' : 'message_blue'}.png`} alt="msg" fill />
                 </div>
+                <p className="text-2xl text-center text-gray-300 font-bold break-words">{job.job_lead_statement}</p>
             </div>
-            <p className="text-2xl text-center text-gray-300 font-bold mt-6 break-words">{job.job_lead_statement}</p>
 
             {/* Fixed bottom bar for actions, shown/hide on scroll like <FixedBottomBar> */}
             <div
@@ -413,7 +414,7 @@ export default function JobPreviewDetails() {
             </div>
 
             <div ref={informationSectionRef} id="preview-gallery" className="mt-10 sm:mt-30 relative py-10 sm:py-30 flex flex-col items-center w-full px-2 sm:px-0">
-                <div className="absolute inset-y-0 left-1/2 right-1/2 -translate-x-1/2 w-screen bg-gray-800 rounded-tr-[200px] -z-1" />
+                <div className="absolute inset-y-0 left-1/2 right-1/2 -translate-x-1/2 w-screen bg-gray-800 rounded-tr-[100px] md:rounded-tr-[200px] -z-1" />
                 <p className="text-4xl text-gray-300 font-bold z-10">求人情報</p>
                 <p className={`text-${themeColor} z-10 pb-5`}>INFORMATION</p>
                 <div className="narrow-container mt-6 sm:mt-10 bg-white p-2 sm:p-15 w-full text-sm sm:text-base z-10">

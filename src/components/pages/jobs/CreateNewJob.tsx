@@ -437,7 +437,7 @@ export default function CreateNewJobComponent({ preLoad }: CreateNewJobProps) {
 
     return (
         <div className="flex min-h-screen flex-col pb-20">
-            <div className="w-95/100 max-w-320 mx-auto mt-10 pb-10 border-1 border-gray-700 rounded-sm">
+            <div className="w-95/100 max-w-320 mx-auto mt-10 pb-10 border-1 border-gray-600 rounded-sm">
                 <div className="bg-gray-600 px-5 py-3">
                     <p className="text-white">検索情報</p>
                 </div>
@@ -603,7 +603,7 @@ export default function CreateNewJobComponent({ preLoad }: CreateNewJobProps) {
                 </div>
             </div>
             {renderSaveButtons()}
-            <div className="w-95/100 max-w-320 mx-auto border-1 border-gray-700 rounded-sm">
+            <div className="w-95/100 max-w-320 mx-auto border-1 border-gray-600 rounded-sm">
                 <div className="bg-gray-600 px-5 py-3">
                     <p className="text-white">会社情報</p>
                 </div>
@@ -642,7 +642,7 @@ export default function CreateNewJobComponent({ preLoad }: CreateNewJobProps) {
                 </div>
             </div>
             {renderSaveButtons()}
-            <div className="w-95/100 max-w-320 mx-auto border-1 border-gray-700 rounded-sm">
+            <div className="w-95/100 max-w-320 mx-auto border-1 border-gray-600 rounded-sm">
                 <div className="bg-gray-600 px-5 py-3">
                     <p className="text-white">求人ページ製作情報</p>
                 </div>
@@ -717,7 +717,7 @@ export default function CreateNewJobComponent({ preLoad }: CreateNewJobProps) {
                 </div>
             </div>
             {renderSaveButtons()}
-            <div className="w-95/100 max-w-320 mx-auto border-1 border-gray-700 rounded-sm">
+            <div className="w-95/100 max-w-320 mx-auto border-1 border-gray-600 rounded-sm">
                 <div className="bg-gray-600 px-5 py-3">
                     <p className="text-white">求人情報</p>
                 </div>
@@ -785,7 +785,7 @@ export default function CreateNewJobComponent({ preLoad }: CreateNewJobProps) {
                             )
                         })
                     )}
-                    <div className="border-1 border-gray-700 rounded-sm">
+                    <div className="border-1 border-gray-600 rounded-sm">
                         <div className="bg-gray-600 px-5 py-3">
                             <p className="text-white">掲載ステータス</p>
                         </div>
