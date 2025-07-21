@@ -284,10 +284,16 @@ export default function JobPreviewDetails() {
                         text={isBookmarked ? "お気に入り解除" : "お気に入り登録"}
                         className={`bg-white text-${themeColor} rounded-lg ${!isLoggedIn ? 'cursor-pointer' : bookmarkShouldBeDisabled ? '!cursor-not-allowed opacity-60' : 'cursor-pointer'}`}
                         onClick={() => {
-                            if (!isLoggedIn) setLoginModalShown(true);
-                            else if (profile?.role === 'JobSeeker') onToggleBookmark(job.id);
+                            if (!isLoggedIn) {
+                                setLoginModalShown(true);
+                                return;
+                            }
+                            if (profile?.role === 'JobSeeker') {
+                                onToggleBookmark(job.id);
+                            }
+                            // Do nothing for other roles
                         }}
-                        disabled={bookmarkShouldBeDisabled}
+                        disabled={bookmark.isPending || (isLoggedIn && profile?.role !== 'JobSeeker')}
                         aria-label={bookmarkShouldBeDisabled ? '求職者のみお気に入り登録できます' : undefined}
                         rightIcon={
                             <Image
@@ -307,22 +313,21 @@ export default function JobPreviewDetails() {
                                     ? "企業に直接応募する"
                                     : "転職支援サービスに応募する"
                         }
-                        className={
-                            `border-2
-                            ${themeColor === 'blue' ? 'border-blue text-blue' : 'border-orange text-orange'}
-                            rounded-sm min-w-[140px] transition py-[10px] px-[24px] text-base
-                            ${alreadyApplied ? 'bg-gray-500 text-white cursor-pointer' : 'bg-white'}`
-                        }
+                        className={`border-2 ${themeColor === 'blue' ? 'border-blue text-blue' : 'border-orange text-orange'} rounded-sm min-w-[140px] transition py-[10px] px-[24px] text-base ${alreadyApplied ? 'bg-gray-500 text-white cursor-pointer' : 'bg-white'}`}
                         onClick={() => {
-                            if (!isLoggedIn) setLoginModalShown(true);
-                            else if (profile?.role === 'JobSeeker' && !alreadyApplied) {
+                            if (!isLoggedIn) {
+                                setLoginModalShown(true);
+                                return;
+                            }
+                            if (profile?.role === 'JobSeeker' && !alreadyApplied) {
                                 setSelectedJobId(job.id);
                                 setApplyModalShown(true);
                             } else if (alreadyApplied) {
                                 router.push('/mypage/application_mng');
                             }
+                            // Do nothing for other roles
                         }}
-                        disabled={bookmarkShouldBeDisabled}
+                        disabled={bookmarkShouldBeDisabled || (isLoggedIn && profile?.role !== 'JobSeeker' && !alreadyApplied)}
                     />
                 </div>
             </div>

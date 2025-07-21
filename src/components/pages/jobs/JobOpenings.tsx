@@ -450,10 +450,16 @@ export default function JobList({
                                     text={isBookmarked(job.id) ? "お気に入り解除" : "お気に入り登録"}
                                     className={`flex-1 border-2 border-yellow text-yellow rounded-sm ${!isLoggedIn ? 'cursor-pointer' : bookmarkShouldBeDisabled ? '!cursor-not-allowed opacity-60' : 'cursor-pointer'}`}
                                     onClick={() => {
-                                        if (!isLoggedIn) setLoginModalShown(true);
-                                        else if (profile?.role === 'JobSeeker') onToggleBookmark(job.id);
+                                        if (!isLoggedIn) {
+                                            setLoginModalShown(true);
+                                            return;
+                                        }
+                                        if (profile?.role === 'JobSeeker') {
+                                            onToggleBookmark(job.id);
+                                        }
+                                        // Do nothing for other roles
                                     }}
-                                    disabled={bookmarkShouldBeDisabled}
+                                    disabled={bookmark.isPending || (isLoggedIn && profile?.role !== 'JobSeeker')}
                                     aria-label={bookmarkShouldBeDisabled ? '求職者のみお気に入り登録できます' : undefined}
                                     rightIcon={
                                         bookmark.isPending ?
