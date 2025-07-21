@@ -20,15 +20,15 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-  async redirects() {
-    return [
-      {
-        source: '/jobs',
-        destination: '/job-openings/na/na/na/na/na',
-        permanent: true, // use false for temporary redirect (307)
-      },
-    ];
-  },
+  // async redirects() {
+  //   return [
+  //     {
+  //       source: '/jobs',
+  //       destination: '/job-openings/na/na/na/na/na',
+  //       permanent: true, // use false for temporary redirect (307)
+  //     },
+  //   ];
+  // },
 };
 
 export default nextConfig;

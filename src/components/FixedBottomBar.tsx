@@ -52,7 +52,7 @@ const FixedBottomBar = () => {
               text={isMobile ? "求人情報" : "求人情報はこちら"}
               className="bg-green text-white w-max-content sm:w-50 md:w-70 lg:w-90"
               hasNavIcon
-              to={getFullUrl('/jobs')}
+              to={getFullUrl('/job-openings')}
             />
             <LinkButton
               text={isMobile ? "転職支援サービス" : "転職支援サービス(無料)はこちら"}

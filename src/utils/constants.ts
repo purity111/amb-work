@@ -9,7 +9,7 @@ export const HeaderButtonList: HeaderButton[] = [
     {
         title: '求人情報',
         type: 'link',
-        to: '/jobs'
+        to: '/job-openings'
     },
     {
         title: '業界について',
@@ -110,7 +110,7 @@ export const FooterButtonList = [
     },
     {
         title: '求人情報',
-        to: '/jobs'
+        to: '/job-openings'
     },
     {
         title: '業界について',

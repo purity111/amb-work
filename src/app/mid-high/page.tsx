@@ -200,7 +200,7 @@ export default function MidhighPage() {
             </div>
             <div className="w-full flex justify-center my-8">
                 <a
-                    href="/jobs"
+                    href="/job-openings"
                     className="w-full max-w-[500px] flex items-center justify-center gap-3 py-5 px-4 mx-4 rounded-xl shadow-lg bg-gradient-to-b from-[#b80000] to-[#a10000] hover:opacity-90 transition font-bold text-white text-xl outline-none focus:ring-2 focus:ring-red-400"
                     role="button"
                     tabIndex={0}
