@@ -356,7 +356,7 @@ export default function JobList() {
                     <h3 className="text-[22px] md:text-[26px] text-bold text-[#007eff]">おすすめの求人</h3>
                     <div className="mt-8 flex flex-col md:flex-row gap-4">
                         {recommendJobData.map((job) => (
-                            <Link key={job.id} href={`/job-openings/recruit/${job.id}`} className="block w-full mb-5 md:w-1/3">
+                            <Link key={job.id} href={`/jobs/recruit/${job.id}`} className="block w-full mb-5 md:w-1/3">
                                 <div className="relative aspect-[4/3] w-full rounded overflow-hidden shadow hover:shadow-lg transition-shadow bg-white">
                                     <Image
                                         src={getFirstFullImage(job.jobThumbnails) || '/images/default-company.png'}
@@ -452,7 +452,7 @@ export default function JobList() {
                                             : <Image src={`/images/icons/${isBookmarked(job.id) ? 'favorite' : 'off_favorite'}.png`} alt="favorite-icon" width={20} height={20} />
                                     }
                                 />
-                                <a href={`/job-openings/recruit/${job.id}`} className="flex-1" target="_blank">
+                                <a href={`/jobs/recruit/${job.id}`} className="flex-1" target="_blank">
                                     <CButton
                                         text="詳細を見る"
                                         hasNavIcon

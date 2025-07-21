@@ -160,7 +160,7 @@ export default function JobMngPage() {
   }
 
   const onCopyJobLink = async (id: number) => {
-    const jobLink = `${window.location.origin}/job-openings/recruit/${id}`;
+    const jobLink = `${window.location.origin}/jobs/recruit/${id}`;
     try {
       await navigator.clipboard.writeText(jobLink);
       toast.info('求人リンクをコピーしました。')
@@ -310,7 +310,7 @@ export default function JobMngPage() {
                     <div className="flex-2 lg:flex-5 flex flex-row items-center justify-between overflow-hidden whitespace-nowrap pr-1">
                       <div className="p-1 flex-1 overflow-hidden whitespace-nowrap">
                         <p className="bg-gray-800 my-auto border-1 px-1 border-gray-700 text-sm truncate">
-                          {`${window.location.origin}/job-openings/recruit/${job.id}`}
+                          {`${window.location.origin}/jobs/recruit/${job.id}`}
                         </p>
                       </div>
                       <CButton
@@ -399,7 +399,7 @@ export default function JobMngPage() {
 
                   <div className="flex flex-wrap p-1 w-full">
                     <div className="w-1/2 lg:w-1/4 p-1">
-                      <a href={`/job-openings/recruit/${job.id}`} className="flex-1" target="_blank">
+                      <a href={`/jobs/recruit/${job.id}`} className="flex-1" target="_blank">
                         <CButton
                           text="プレビュー"
                           className="bg-green h-[40px] rounded-none text-white text-sm w-full"

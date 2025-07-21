@@ -40,7 +40,7 @@ export default function HomeLayout({
   const pathname = usePathname();
   // Hide FixedBottomBar on /jobs/recruit/[id] page
   const hideFixedBottomBar =
-    ["/job-openings/recruit/", "/mypage"].some(prefix => pathname?.startsWith(prefix));
+    ["/jobs/recruit/", "/mypage"].some(prefix => pathname?.startsWith(prefix));
 
   return (
     <html lang="ja">

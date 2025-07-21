@@ -110,7 +110,7 @@ export default function FavouritesPage() {
   };
 
   const handleDetailsClick = (job: any) => {
-    window.open(`/job-openings/recruit/${job.jobId}`, '_blank');
+    window.open(`/jobs/recruit/${job.jobId}`, '_blank');
   };
 
   if (!profile?.role || profile.role !== 'JobSeeker') {
