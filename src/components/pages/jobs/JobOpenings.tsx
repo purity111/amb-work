@@ -397,9 +397,9 @@ export default function JobList({
                     ? 'w-full text-white rounded-sm bg-gray-400 cursor-not-allowed'
                     : `w-full text-white rounded-sm ${isTemplate2 ? 'bg-orange' : 'bg-blue'}`;
                 return (
-                    <div className="mb-10 ">
+                    <div className="mb-10 " key={job.id}>
                         <a href={`/jobs/recruit/${job.id}`}>
-                            <div key={job.id} className="hover:bg-gray-800 rounded-br-none rounded-bl-none rounded-md cursor-pointer">
+                            <div className="hover:bg-gray-800 rounded-br-none rounded-bl-none rounded-md cursor-pointer">
                                 <div className="flex flex-row space-x-4 pt-3 px-4">
                                     {differenceInDays(now, new Date(job.created)) < 7 && (
                                         <span className="py-[2px] px-2 text-sm text-white bg-red">NEW</span>
