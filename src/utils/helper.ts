@@ -11,7 +11,7 @@ import {
     isValid
 } from 'date-fns';
 import { ja } from 'date-fns/locale';
-import { FeatureItem, FeatureParams, ImageDetail } from "./types";
+import { FeatureItem, FeatureParams, ImageDetail, JobDetail } from "./types";
 import { UPLOADS_BASE_URL } from "./config";
 import { MapData, PrefectureOptions } from "./constants";
 import { Area } from "react-easy-crop";
@@ -242,4 +242,25 @@ export const getFilterJobUrl = (value: JobFilterFormValue, featureList: FeatureI
     // Build segments array, only including non-empty segments, in order
     const segments = [pString, jString, iString, cString, eString].filter(Boolean);
     return `/job-openings/${segments.join('/')}`;
+}
+
+export const generateJobCSVData = (data: JobDetail[]) => {
+    return data.map(item => ({
+        'ID': item.id,
+        'Job Title': item.job_title,
+        'Job Posting Date': item.job_posting_date,
+        'Job Category': item.job_category,
+        'Job Introduction': item.job_lead_statement,
+        'Salary': item.pay,
+        'Public Status': item.public_status,
+        'Job Type': item.job_detail_page_template_id === 1 ? '直接応募のみ' : '転職⽀援サービス',
+        'Thumbnail': getFirstFullImage(item.jobThumbnails),
+        'Employment Type': item.employmentType.name,
+        'Employer': item.employer.clinic_name,
+        'Public Start Date': item.clinic_public_date_start,
+        'Public End Date': item.clinic_public_date_end,
+        'Youtube Url': item.youtube_url,
+        'Another Url': item.another_url_text,
+        'Features': item.features.map(i => i.name).join(',')
+    }));
 }
