@@ -179,26 +179,26 @@ export function formatMessageDate(date: Date): string {
     }
 
     if (diffInMinutes < 60) {
-        return `${formatDistanceToNow(date, { addSuffix: true })}`;
+        return `${formatDistanceToNow(date, { addSuffix: true, locale: ja })}`;
     }
 
     if (isToday(date)) {
-        return format(date, 'h:mm a'); // e.g. 2:30 PM
+        return format(date, 'h:mm a', { locale: ja }); // e.g. 2:30 PM
     }
 
     if (isYesterday(date)) {
-        return `Yesterday at ${format(date, 'h:mm a')}`;
+        return `昨日 ${format(date, 'h:mm a', { locale: ja })}`;
     }
 
     if (isThisWeek(date, { weekStartsOn: 1 })) {
-        return format(date, 'EEEE, h:mm a'); // e.g. Wednesday at 2:30 PM
+        return format(date, 'EEEE, h:mm a', { locale: ja }); // e.g. Wednesday at 2:30 PM
     }
 
     if (isThisYear(date)) {
-        return format(date, 'MMM d, h:mm a'); // e.g. Mar 5 at 2:30 PM
+        return format(date, 'MMM d, h:mm a', { locale: ja }); // e.g. Mar 5 at 2:30 PM
     }
 
-    return format(date, 'MMM d, yyyy, h:mm a'); // e.g. Mar 5, 2023 at 2:30 PM
+    return format(date, 'MMM d, yyyy, h:mm a', { locale: ja }); // e.g. Mar 5, 2023 at 2:30 PM
 }
 
 export const formatLongDateTime = (dateString: string) => {
