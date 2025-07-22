@@ -244,7 +244,7 @@ export const getFilterJobUrl = (value: JobFilterFormValue, featureList: FeatureI
     return `/job-openings/${segments.join('/')}`;
 }
 
-export const generateCSVData = (data: JobDetail[]) => {
+export const generateJobCSVData = (data: JobDetail[]) => {
     return data.map(item => ({
         'ID': item.id,
         'Job Title': item.job_title,

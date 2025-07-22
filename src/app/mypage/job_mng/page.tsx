@@ -13,7 +13,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useGetAllEmployerInfos } from "@/hooks/useGetAllEmployerInfos";
 import { useGetJobs } from "@/hooks/useGetJobs";
 import { JobDetail, PickOption } from "@/utils/types";
-import { formatTimeAgo, generateCSVData, getFirstFullImage } from "@/utils/helper";
+import { formatTimeAgo, generateJobCSVData, getFirstFullImage } from "@/utils/helper";
 import { useMutation } from "@tanstack/react-query";
 import { deleteJobById } from "@/lib/api";
 import { toast } from "react-toastify";
@@ -216,8 +216,11 @@ export default function JobMngPage() {
                 onClick={onClickAddNewJob}
               />
             </div>
-            {allFilteredJobs?.data?.jobs?.length && (
-              <CSVLink data={generateCSVData(allFilteredJobs?.data?.jobs)} filename={`すべての求人-${format(new Date(), 'yyyy年MM月dd日HH:mm')}`}>
+            {allFilteredJobs?.data?.jobs?.length > 0 && (
+              <CSVLink
+                data={generateJobCSVData(allFilteredJobs?.data?.jobs)}
+                filename={`すべての求人-${format(new Date(), 'yyyy年MM月dd日HH:mm')}`}
+              >
                 <CButton
                   text="全体CSV出⼒"
                   className='bg-green text-white text-sm h-[40px]'
@@ -227,7 +230,10 @@ export default function JobMngPage() {
               </CSVLink>
             )}
             {getSelectedJobs.length > 0 && (
-              <CSVLink data={generateCSVData(Object.values(getSelectedJobs) as JobDetail[])} filename={`選択した求人-${format(new Date(), 'yyyy年MM月dd日HH:mm')}`}>
+              <CSVLink
+                data={generateJobCSVData(Object.values(getSelectedJobs) as JobDetail[])}
+                filename={`選択した求人-${format(new Date(), 'yyyy年MM月dd日HH:mm')}`}
+              >
                 <div className="mr-2 mb-2">
                   <CButton
                     text="選択のみCSV出⼒"
