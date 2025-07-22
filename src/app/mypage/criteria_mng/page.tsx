@@ -164,7 +164,7 @@ export default function CriteriaMngPage() {
   return (
     <div className="container mx-auto px-4 py-8">
       {cLoading ? (
-        <p>読み込む中...</p>
+        <p>読み込み中...</p>
       ) : (
         <div className="overflow-x-auto">
           <h2 className='text-center mb-6 text-[24px] md:text-[32px] font-bold'>募集条件管理</h2>

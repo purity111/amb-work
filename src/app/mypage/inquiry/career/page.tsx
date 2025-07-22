@@ -31,7 +31,9 @@ export default function CareerInquiryList() {
 
   useEffect(() => {
     if (response) {
-      setInquiries(response.data?.careerConsultations || response.careerConsultations || []);
+      const arr = response.data?.careerConsultations || response.careerConsultations || [];
+      arr.sort((a: any, b: any) => new Date(b.created).getTime() - new Date(a.created).getTime());
+      setInquiries(arr);
       setTotalPage(response.data?.pagination?.totalPages || response.pagination?.totalPages || 1);
     }
   }, [response]);
@@ -117,7 +119,7 @@ export default function CareerInquiryList() {
   return (
     <div className="container mx-auto px-4 py-8">
       {isLoading ? (
-        <p>読み込む中...</p>
+        <p>読み込み中...</p>
       ) : (
         <div className="overflow-x-auto">
           <h2 className="text-center mb-6 text-[24px] md:text-[32px] font-bold">キャリア相談一覧</h2>

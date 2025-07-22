@@ -220,7 +220,7 @@ function ColumnsPageInner() {
 
 export default function ColumnsPage() {
     return (
-        <Suspense fallback={<div>読み込む中...</div>}>
+        <Suspense fallback={<div>読み込み中...</div>}>
             <ColumnsPageInner />
         </Suspense>
     );

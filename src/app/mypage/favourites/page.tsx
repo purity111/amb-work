@@ -209,7 +209,7 @@ export default function FavouritesPage() {
       </div>
 
       {/* Pagination */}
-      {totalPageCount > 1 && (
+      {totalPageCount > 0 && (
         <div className="mt-8 flex justify-center">
           <Pagination
             page={currentPage}

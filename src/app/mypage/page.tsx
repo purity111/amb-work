@@ -25,7 +25,7 @@ export default function MyPage() {
             <button
               key={item.path}
               onClick={() => logout()}
-              className="border border-red-600 text-black hover:bg-red-600 hover:text-white px-6 py-3 rounded-lg text-base md:text-[18px] flex items-center justify-center transition-all duration-300 cursor-pointer"
+              className="border border-red-600 text-black hover:bg-red-600 hover:text-white px-6 py-3 rounded-lg text-base flex items-center justify-center transition-all duration-300 cursor-pointer"
             >
               {item.icon && (
                 <img 

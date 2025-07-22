@@ -51,8 +51,8 @@ const ApplicationCard: React.FC<ApplicationCardProps> = ({
             <p className="mt-1">{formatLongDateTime(data.created)}</p>
           </div>
           <div>
-            <span className="font-semibold">給料</span>
-            <p className="mt-1">{data.jobInfo.pay}</p>
+            <span className="font-semibold">メールアドレス</span>
+            <p className="mt-1">{data.jobSeeker.email}</p>
           </div>
         </div>
 

@@ -295,7 +295,7 @@ export default function RegisterForJobSeeker({ onSuccess }: FormProps) {
                                 />
                             )}
                         />
-                        <p className="text-sm text-gray-600 h-0">※ハイフンを含めて入力してください。</p>
+                        <p className="text-[11px] text-gray-600 h-0">※ハイフンを含めて入力してください。</p>
                     </div>
                 </div>
                 <div className="flex flex-col items-left md:flex-row  py-2 mt-3">
@@ -343,7 +343,7 @@ export default function RegisterForJobSeeker({ onSuccess }: FormProps) {
                                 />
                             )}
                         />
-                        <p className="text-sm text-gray-600 h-0">※ハイフンはつけずに入力してください。</p>
+                        <p className="text-[11px] text-gray-600 h-0">※ハイフンはつけずに入力してください。</p>
                     </div>
                 </div>
                 <div className="flex flex-col items-left md:flex-row  py-2">
@@ -388,7 +388,7 @@ export default function RegisterForJobSeeker({ onSuccess }: FormProps) {
                                 />
                             )}
                         />
-                        <p className="text-sm text-gray-600 h-0">※メールアドレス欄と同じものを入力してください。</p>
+                        <p className="text-[11px] text-gray-600 h-0">※メールアドレス欄と同じものを入力してください。</p>
                     </div>
                 </div>
                 <div className="flex flex-col items-left md:flex-row  py-2">
@@ -412,7 +412,7 @@ export default function RegisterForJobSeeker({ onSuccess }: FormProps) {
                                 />
                             )}
                         />
-                        <p className="text-sm text-gray-600 h-0">8文字以上かつ半角英数字及び記号が利用可能です。</p>
+                        <p className="text-[11px] text-gray-600 h-0">8文字以上かつ、半角英数字および特殊記号（!, %, # など）を含めてください。</p>
                     </div>
                 </div>
                 <div className="flex flex-col items-left md:flex-row  py-2">
@@ -436,7 +436,7 @@ export default function RegisterForJobSeeker({ onSuccess }: FormProps) {
                                 />
                             )}
                         />
-                        <p className="text-sm text-gray-600 h-0">パスワード欄と同じものを入力してください。</p>
+                        <p className="text-[11px] text-gray-600 h-0">パスワード欄と同じものを入力してください。</p>
                     </div>
                 </div>
                 <button

@@ -312,7 +312,7 @@ export default function ProfilePage() {
                     <div className="flex flex-col items-center w-1/2 w-1/2 md:w-[25%]">
                         <Image
                             src={avatarPreview || `${UPLOADS_BASE_URL}/${currentUserData?.data?.avatar}` || '/images/default-avatar.jpg'}
-                            alt="avatar"
+                            alt="アバター"
                             width={160}
                             height={160}
                             className="rounded-full border mb-4 w-40 h-40 object-cover"

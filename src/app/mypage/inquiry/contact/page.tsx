@@ -45,7 +45,9 @@ export default function ContactInquiryList() {
 
   useEffect(() => {
     if (response) {
-      setInquiries(response.data.contacts || []);
+      const arr = response.data.contacts || [];
+      arr.sort((a: any, b: any) => new Date(b.created).getTime() - new Date(a.created).getTime());
+      setInquiries(arr);
       setTotalPage(response.data.pagination?.totalPages || 1);
     }
   }, [response]);
@@ -111,7 +113,7 @@ export default function ContactInquiryList() {
   return (
     <div className="container mx-auto px-4 py-8">
       {isLoading ? (
-        <p>読み込む中...</p>
+        <p>読み込み中...</p>
       ) : (
         <div className="overflow-x-auto">
           <h2 className='text-center mb-6 text-[24px] md:text-[32px] font-bold'>お問い合わせ一覧</h2>

@@ -12,7 +12,7 @@ export default function ContactPage() {
         <div className="w-full max-w-[1200px] m-auto text-white px-4 lg:px-0 md:mb-25">
           <div className="md:text-left md:mr-8 xl:mr-20">
             <div className="h-[30px] md:h-15 w-[3px] bg-green-500 mr-2 md:mt-[-30px] mb-5 md:mb-10"></div>
-            <h1 className="text-[26px] md:text-[35px] lg:text-[44px] font-bold text-black mb-2">お問い合せ</h1>
+            <h1 className="text-[26px] md:text-[35px] lg:text-[44px] font-bold text-black mb-2">お問い合わせ</h1>
             <p className="text-[14px] md:text-[18px] text-gray-300 font-bold">Contact</p>
           </div>
         </div>
@@ -33,7 +33,7 @@ export default function ContactPage() {
         <Breadcrumb />
         <div className="pb-[30px] md:pb-[60px] text-center">
           <h2 className="text-2xl md:text-3xl font-bold mb-9 text-center relative inline-block mx-auto job-openings">
-            お問合せフォーム
+            お問い合わせフォーム
           </h2>
           <p className='text-center text-[14px] text-gray-600 font-sans'>CONTACT FORM</p>
         </div>

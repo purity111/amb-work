@@ -23,7 +23,19 @@ import Link from "next/link";
 
 const now = new Date();
 
-export default function JobList() {
+export default function JobList({
+    prefectures: propPrefectures,
+    jobTypes: propJobTypes,
+    items: propItems,
+    conditions: propConditions,
+    employmentTypes: propEmploymentTypes
+}: {
+    prefectures?: string,
+    jobTypes?: string,
+    items?: string,
+    conditions?: string,
+    employmentTypes?: string
+} = {}) {
     const [limit] = useState(10);
     const [currentPage, setCurrentPage] = useState(1);
     const [searchTerm, setSearchTerm] = useState('');
@@ -43,6 +55,12 @@ export default function JobList() {
 
     const router = useRouter()
     const urlIndexingParam = useParams();
+    // Use props if provided, otherwise use params
+    const pString = propPrefectures ?? (urlIndexingParam.prefectures as string);
+    const jString = propJobTypes ?? (urlIndexingParam.jobTypes as string);
+    const iString = propItems ?? (urlIndexingParam.items as string);
+    const cString = propConditions ?? (urlIndexingParam.conditions as string);
+    const eString = propEmploymentTypes ?? (urlIndexingParam.employmentTypes as string);
 
     const { data: featuresData } = useGetFeatures();
     const { data, isLoading, isError } = useGetJobs({
@@ -130,16 +148,10 @@ export default function JobList() {
     }, [MapData])
 
     const parseFeaturesAndPrefecturesParam = () => {
-        const pString = urlIndexingParam.prefectures as string;
-        const jString = urlIndexingParam.jobTypes as string;
-        const iString = urlIndexingParam.items as string;
-        const cString = urlIndexingParam.conditions as string;
-        const eString = urlIndexingParam.employmentTypes as string;
-        const jArray = jString === 'na' ? [] : jString.split('-');
-        const iArray = iString === 'na' ? [] : iString.split('-');
-        const cArray = cString === 'na' ? [] : cString.split('-');
-        const eArray = eString === 'na' ? [] : eString.split('-');
-
+        const jArray = jString ? jString.split('-') : [];
+        const iArray = iString ? iString.split('-') : [];
+        const cArray = cString ? cString.split('-') : [];
+        const eArray = eString ? eString.split('-') : [];
         const parsedFeatures = {
             jobTypes: featuresData.data.filter((i: FeatureItem) => !!jArray.includes(encodeURIComponent(i.name))).map((k: FeatureItem) => k.id),
             items: featuresData.data.filter((i: FeatureItem) => !!iArray.includes(encodeURIComponent(i.name))).map((k: FeatureItem) => k.id),
@@ -147,16 +159,14 @@ export default function JobList() {
             employmentTypes: featuresData.data.filter((i: FeatureItem) => !!eArray.includes(encodeURIComponent(i.name))).map((k: FeatureItem) => k.id),
         };
         setFeatures(parsedFeatures);
-
         // set prefecture data from url
         const pTemp: string[] = [];
-        const pArray = pString === 'na' ? [] : pString.split('-');
+        const pArray = pString ? pString.split('-') : [];
         pArray.forEach(p => {
             const find = cityAll.find((i) => encodeURIComponent(i.text) === p);
             if (find) pTemp.push(find.id.toString())
         })
         setPrefectures(pTemp);
-
         // set searchTags here
         const tagList = [
             ...pTemp.map((item: string, index: number) => ({
@@ -181,7 +191,6 @@ export default function JobList() {
             })),
         ]
         setSearchTags(tagList);
-
         // set document title here
 
     }
@@ -314,7 +323,7 @@ export default function JobList() {
                     <p className="text-lg flex-1">
                         {`検索結果：${totalJobCount}件`}
                     </p>
-                    <a href='/jobs'>
+                    <a href='/job-openings'>
                         <CButton
                             text="フィルターをクリア"
                             className="bg-red text-white rounded-sm mr-2"
@@ -348,7 +357,7 @@ export default function JobList() {
                     )}
                 </div>
             </div>
-            {!jobData?.length && <p className="text-gray-600 mt-4">No results</p>}
+            {!jobData?.length && <p className="text-gray-600 mt-4">結果なし</p>}
             {renderPagination()}
 
             {recommendJobData.length > 0 && (
@@ -441,10 +450,16 @@ export default function JobList() {
                                     text={isBookmarked(job.id) ? "お気に入り解除" : "お気に入り登録"}
                                     className={`flex-1 border-2 border-yellow text-yellow rounded-sm ${!isLoggedIn ? 'cursor-pointer' : bookmarkShouldBeDisabled ? '!cursor-not-allowed opacity-60' : 'cursor-pointer'}`}
                                     onClick={() => {
-                                        if (!isLoggedIn) setLoginModalShown(true);
-                                        else if (profile?.role === 'JobSeeker') onToggleBookmark(job.id);
+                                        if (!isLoggedIn) {
+                                            setLoginModalShown(true);
+                                            return;
+                                        }
+                                        if (profile?.role === 'JobSeeker') {
+                                            onToggleBookmark(job.id);
+                                        }
+                                        // Do nothing for other roles
                                     }}
-                                    disabled={bookmarkShouldBeDisabled}
+                                    disabled={bookmark.isPending || (isLoggedIn && profile?.role !== 'JobSeeker')}
                                     aria-label={bookmarkShouldBeDisabled ? '求職者のみお気に入り登録できます' : undefined}
                                     rightIcon={
                                         bookmark.isPending ?

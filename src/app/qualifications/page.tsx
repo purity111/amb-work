@@ -65,7 +65,7 @@ export default function QualificationsPage() {
                         <SikakuItem key={item.number || idx} {...item} id={`test0${idx + 1}`} />
                     ))}
                     <div className="m-auto flex justify-center">
-                        <LinkButton to={getFullUrl('/jobs')} text="資格やスキルが活かせる求人一覧はこちら" className="bg-[#65B729] flex justify-center hover:opacity-90 inline-block text-white px-8 py-3 rounded-lg font-medium transition-colors" hasNavIcon />
+                        <LinkButton to={getFullUrl('/job-openings')} text="資格やスキルが活かせる求人一覧はこちら" className="bg-[#65B729] flex justify-center hover:opacity-90 inline-block text-white px-8 py-3 rounded-lg font-medium transition-colors" hasNavIcon />
                     </div>
                 </div>
                 <div className="py-[60px] md:py-[100px]">

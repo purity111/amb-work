@@ -43,7 +43,7 @@ export default function HeaderAvatar({ data }: Props) {
         >
             <div className="relative w-full h-full">
                 <Image
-                    src={userData?.avatar ? `${UPLOADS_BASE_URL}/${userData?.avatar}` : (userData?.role === 'Employer' ? '/images/default-company.png' : '/images/default-avatar.jpg')}
+                    src={userData?.avatar ? `${UPLOADS_BASE_URL}/${userData?.avatar}` : (userData?.role === 'employer' ? '/images/default-company.png' : '/images/default-avatar.jpg')}
                     alt="avatar"
                     className="rounded-full object-cover"
                     sizes="30vw"

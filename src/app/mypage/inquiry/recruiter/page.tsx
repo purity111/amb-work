@@ -43,9 +43,9 @@ export default function RecruiterInquiryList() {
 
   useEffect(() => {
     if (response) {
-      setApplications(response.companyApplications);
-      console.log(response.companyApplications);
-      
+      const arr = response.companyApplications || [];
+      arr.sort((a: any, b: any) => new Date(b.created).getTime() - new Date(a.created).getTime());
+      setApplications(arr);
       setTotalPage(response.pagination.totalPages);
     }
   }, [response]);
@@ -98,7 +98,7 @@ export default function RecruiterInquiryList() {
   return (
     <div className="container mx-auto px-4 py-8">
       {isLoading ? (
-        <p>読み込む中...</p>
+        <p>読み込み中...</p>
       ) : (
         <div className="overflow-x-auto">
           <h2 className='text-center mb-6 text-[24px] md:text-[32px] font-bold'>企業からの問い合わせ一覧</h2>
@@ -272,7 +272,7 @@ export default function RecruiterInquiryList() {
               </div>
 
               {/* Pagination Controls */}
-              {totalPage > 1 && (
+              {totalPage > 0 && (
                 <div className="flex flex-row justify-center mt-4">
                   <Pagination
                     page={currentPage}

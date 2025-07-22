@@ -42,7 +42,7 @@ export default function ApplicantMngPage() {
   const deleteJobSeeker = useMutation({
     mutationFn: deleteJobSeekerById,
     onSuccess: () => {
-      toast.success("Deleted successfully");
+      toast.success("削除しました。");
       refetch();
     },
     onError: (error: any) => {
@@ -53,7 +53,7 @@ export default function ApplicantMngPage() {
   const updateJobSeeker = useMutation({
     mutationFn: updateJobSeekerById,
     onSuccess: () => {
-      toast.success("Updated successfully");
+      toast.success("変更しました。");
       setModalShown(false);
       refetch();
     },
@@ -65,7 +65,7 @@ export default function ApplicantMngPage() {
   const createNewJobSeeker = useMutation({
     mutationFn: registerAsJobSeeker,
     onSuccess: () => {
-      toast.success("Created successfully");
+      toast.success("作成しました。");
       setModalShown(false);
       refetch();
     },
@@ -275,10 +275,10 @@ export default function ApplicantMngPage() {
           </thead>
           <tbody>
             {isLoading && (
-              <p>読み込む中...</p>
+              <p>読み込み中...</p>
             )}
             {!response?.data?.jobseekers?.length && !isLoading && (
-              <p>No results</p>
+              <p>結果なし</p>
             )}
             {response?.data?.jobseekers.map((jobseeker: JobSeekerDetail, index: number) => (
               <tr key={jobseeker.id} className={index % 2 === 0 ? "bg-gray-50" : "bg-white"}>

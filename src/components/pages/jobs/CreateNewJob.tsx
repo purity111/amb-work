@@ -67,11 +67,11 @@ export type FormValues = {
 }
 
 const schema = Yup.object().shape({
-    company: Yup.string().required('Company must be selected'),
-    title: Yup.string().required('Job title is required'),
+    company: Yup.string().required('会社を選択してください。'),
+    title: Yup.string().required('求人タイトルは必須項目です。'),
     thumbnail: Yup.mixed().test(
         'file-or-url',
-        'A file or URL is required',
+        'ファイルを選択してください。',
         function (value) {
             // Accept if value is:
             // - a File (uploaded file)
@@ -82,7 +82,7 @@ const schema = Yup.object().shape({
         }
     ),
     features: Yup.array().of(Yup.string().required()).min(1, 'At least one feature must be selected'), // e.g. ['1-34', '2-24', '4-89']
-    introduction: Yup.string().required('Job introduction is required'),
+    introduction: Yup.string().required('求人紹介文は必須項目です。'),
     other_websites: Yup.string()
         .notRequired()
         .test(
@@ -109,7 +109,7 @@ const schema = Yup.object().shape({
                     }
                     return false;
                 }),
-            description: Yup.string().required('Description is required'),
+            description: Yup.string().required('説明は必須項目です。'),
         })
     ),
     staffImages: Yup.array().of(
@@ -127,14 +127,14 @@ const schema = Yup.object().shape({
                     }
                     return false;
                 }),
-            firstName: Yup.string().required('First name is required'),
-            lastName: Yup.string().required('Last name is required'),
-            position: Yup.string().required('Position is required'),
+            firstName: Yup.string().required('姓は必須項目です。'),
+            lastName: Yup.string().required('名は必須項目です。'),
+            position: Yup.string().required('ポジションは必須項目です。'),
             career: Yup.string(),
             introduction: Yup.string(),
         })
     ),
-    salary: Yup.string().required('Salary details are required'),
+    salary: Yup.string().required('報酬詳細は必須項目です。'),
     recruitingCriterias: Yup.array().of(
         Yup.object({
             body: Yup.string(),
@@ -142,8 +142,8 @@ const schema = Yup.object().shape({
     ),
     publicDateStart: Yup.string().test('valid-start', 'Invalid start date', (value) => !isNaN(Date.parse(value || ''))),
     publicDateEnd: Yup.string()
-        .test('valid-end', 'Invalid end date', (value) => !isNaN(Date.parse(value || '')))
-        .test('end-after-start', 'End date must be after or same as start date', function (value) {
+        .test('valid-end', '終了日が無効です。', (value) => !isNaN(Date.parse(value || '')))
+        .test('end-after-start', '終了日は開始日以降か同じである必要があります。', function (value) {
             const { publicDateStart } = this.parent;
             if (!publicDateStart || !value) return false;
             return new Date(value) >= new Date(publicDateStart);
@@ -152,7 +152,7 @@ const schema = Yup.object().shape({
     supportUrl: Yup.string().when('applyType', {
         is: '1',
         then: (schema) => schema.notRequired(),
-        otherwise: (schema) => schema.url('Invalid URL').required('URL is required'),
+        otherwise: (schema) => schema.url('Invalid URL').required('URLは必須項目です。'),
     }),
     status: Yup.string().required(),
 })
@@ -437,7 +437,7 @@ export default function CreateNewJobComponent({ preLoad }: CreateNewJobProps) {
 
     return (
         <div className="flex min-h-screen flex-col pb-20">
-            <div className="w-95/100 max-w-320 mx-auto mt-10 pb-10 border-1 border-gray-700 rounded-sm">
+            <div className="w-95/100 max-w-320 mx-auto mt-10 pb-10 border-1 border-gray-600 rounded-sm">
                 <div className="bg-gray-600 px-5 py-3">
                     <p className="text-white">検索情報</p>
                 </div>
@@ -522,7 +522,7 @@ export default function CreateNewJobComponent({ preLoad }: CreateNewJobProps) {
                             <div className="flex flex-row items-center">
                                 <label
                                     htmlFor="imageUpload"
-                                    className="text-sm text-gray-500 border-1 rounded-sm py-1 px-4 border-gray-700"
+                                    className="text-sm text-gray-500 border-1 rounded-sm py-1 px-4"
                                 >
                                     画像選択
                                     <input
@@ -603,7 +603,7 @@ export default function CreateNewJobComponent({ preLoad }: CreateNewJobProps) {
                 </div>
             </div>
             {renderSaveButtons()}
-            <div className="w-95/100 max-w-320 mx-auto border-1 border-gray-700 rounded-sm">
+            <div className="w-95/100 max-w-320 mx-auto border-1 border-gray-600 rounded-sm">
                 <div className="bg-gray-600 px-5 py-3">
                     <p className="text-white">会社情報</p>
                 </div>
@@ -642,7 +642,7 @@ export default function CreateNewJobComponent({ preLoad }: CreateNewJobProps) {
                 </div>
             </div>
             {renderSaveButtons()}
-            <div className="w-95/100 max-w-320 mx-auto border-1 border-gray-700 rounded-sm">
+            <div className="w-95/100 max-w-320 mx-auto border-1 border-gray-600 rounded-sm">
                 <div className="bg-gray-600 px-5 py-3">
                     <p className="text-white">求人ページ製作情報</p>
                 </div>
@@ -717,7 +717,7 @@ export default function CreateNewJobComponent({ preLoad }: CreateNewJobProps) {
                 </div>
             </div>
             {renderSaveButtons()}
-            <div className="w-95/100 max-w-320 mx-auto border-1 border-gray-700 rounded-sm">
+            <div className="w-95/100 max-w-320 mx-auto border-1 border-gray-600 rounded-sm">
                 <div className="bg-gray-600 px-5 py-3">
                     <p className="text-white">求人情報</p>
                 </div>
@@ -752,7 +752,7 @@ export default function CreateNewJobComponent({ preLoad }: CreateNewJobProps) {
                         </div>
                     </div>
                     {cLoading ? (
-                        <p>読み込む中...</p>
+                        <p>読み込み中...</p>
                     ) : (
                         criterias?.map((c: RecruitingCriteria, index: number) => {
                             return (
@@ -785,7 +785,7 @@ export default function CreateNewJobComponent({ preLoad }: CreateNewJobProps) {
                             )
                         })
                     )}
-                    <div className="border-1 border-gray-700 rounded-sm">
+                    <div className="border-1 border-gray-600 rounded-sm">
                         <div className="bg-gray-600 px-5 py-3">
                             <p className="text-white">掲載ステータス</p>
                         </div>
