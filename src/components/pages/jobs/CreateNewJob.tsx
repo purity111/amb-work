@@ -58,7 +58,7 @@ export type FormValues = {
     companyImages?: CompanyImage[];
     staffImages?: IntroImageItem[];
     salary: string;
-    recruitingCriterias: Array<{ body: string }>
+    recruitingCriterias: Array<{ body: string, id: number }>
     publicDateStart?: string;
     publicDateEnd?: string;
     applyType: string;
@@ -138,6 +138,7 @@ const schema = Yup.object().shape({
     recruitingCriterias: Yup.array().of(
         Yup.object({
             body: Yup.string(),
+            id: Yup.number(),
         })
     ),
     publicDateStart: Yup.string().test('valid-start', 'Invalid start date', (value) => !isNaN(Date.parse(value || ''))),
@@ -240,7 +241,7 @@ export default function CreateNewJobComponent({ preLoad }: CreateNewJobProps) {
         const companyData = selectedCompany?.data;
         criterias?.forEach((c: RecruitingCriteria, index: number) => {
             if (c.clinic_flg && companyData?.[c.calling_name]) {
-                recruitingCriterias[index] = { body: companyData?.[c.calling_name] }
+                recruitingCriterias[index] = { ...recruitingCriterias[index], body: companyData?.[c.calling_name] }
             }
         });
         reset({
@@ -252,9 +253,15 @@ export default function CreateNewJobComponent({ preLoad }: CreateNewJobProps) {
     const presetForm = (preLoad: JobDetailExtra) => {
         const updatedRecruitingCriterias = [...(recruitingCriterias || [])];
         hasPreloaded.current = true;
-        preLoad.recruitingCriterias.sort((i, j) => i.display_order - j.display_order).forEach((i) => {
-            if (!i.clinic_flg || i.JobInfosRecruitingCriteria.body) {
-                updatedRecruitingCriterias[i.display_order - 1] = { body: i.JobInfosRecruitingCriteria.body };
+
+        criterias.sort((i: RecruitingCriteria, j: RecruitingCriteria) => i.display_order - j.display_order).forEach((item: RecruitingCriteria, index: number) => {
+            const find = preLoad.recruitingCriterias.find(j => j.id === item.id);
+            if (!find) {
+                updatedRecruitingCriterias[index] = { body: '', id: item.id };
+            } else if (!find.clinic_flg || find.JobInfosRecruitingCriteria.body) {
+                updatedRecruitingCriterias[index] = { body: find.JobInfosRecruitingCriteria.body, id: item.id };
+            } else {
+                updatedRecruitingCriterias[index] = { body: '', id: item.id };
             }
         })
 
@@ -367,10 +374,11 @@ export default function CreateNewJobComponent({ preLoad }: CreateNewJobProps) {
 
     const submitJob = (formData: FormValues, isDraft: boolean) => {
         const features = formData.features?.map(i => Number(i.split('-')[1])) as number[] || [];
-        const rcData = formData.recruitingCriterias?.map((i, index) => ({
-            id: criterias[index].id,
-            body: i.body || ''
-        })) || [];
+        const rcData = formData.recruitingCriterias?.map((item) => {
+            const find = criterias.find((j: RecruitingCriteria) => j.id === item.id)
+            if (!find) return null;
+            return item;
+        }) || [];
         const params = {
             param: {
                 employer_id: Number(formData.company),
@@ -618,6 +626,8 @@ export default function CreateNewJobComponent({ preLoad }: CreateNewJobProps) {
                                 control={control}
                                 render={({ field }) => (
                                     <CInput
+                                        {...field}
+                                        value={field.value || ''}
                                         isError={!!errors.other_websites}
                                         errorText={errors.other_websites?.message}
                                         height="h-[100px]"
