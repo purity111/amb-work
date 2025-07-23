@@ -11,7 +11,7 @@ import {
     isValid
 } from 'date-fns';
 import { ja } from 'date-fns/locale';
-import { FeatureItem, FeatureParams, ImageDetail, JobDetail } from "./types";
+import { ApplicationItem, FeatureItem, FeatureParams, ImageDetail, JobDetail } from "./types";
 import { UPLOADS_BASE_URL } from "./config";
 import { MapData, PrefectureOptions } from "./constants";
 import { Area } from "react-easy-crop";
@@ -263,4 +263,22 @@ export const generateJobCSVData = (data: JobDetail[]) => {
         'Another Url': item.another_url_text,
         'Features': item.features.map(i => i.name).join(',')
     }));
+}
+
+export const generateApplicationCSVData = (data: ApplicationItem[]) => {
+    return data.map(item => ({
+        'Job ID': item.job_info_id,
+        'Company': item.jobInfo?.employer?.clinic_name,
+        'Job Title': item.job_title,
+        'Job Created': item.created,
+        'Application ID': item.job_seeker_id,
+        'Application Name': item.jobSeeker?.name,
+        'Application DOB': item.jobSeeker?.birthdate,
+        'Application Sex': item.jobSeeker?.sex === 1 ? '男' : '女',
+        'Application PhoneNumber': item.jobSeeker?.tel,
+        'Application Email': item.jobSeeker?.email,
+        'Job Details': item.jobInfo?.job_lead_statement,
+        'Job Public From': item.jobInfo?.clinic_public_date_start,
+        'Job Public To': item.jobInfo?.clinic_public_date_end,
+    }))
 }
