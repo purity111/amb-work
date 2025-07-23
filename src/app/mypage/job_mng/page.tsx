@@ -6,16 +6,18 @@ import CInput from "@/components/common/Input";
 import CSelect from "@/components/common/Select";
 import { JobStatusOptions, JobTypeOptions } from "@/utils/constants";
 import Image from "next/image";
-import { ChangeEvent, useEffect, useRef, useState } from "react";
+import { ChangeEvent, useEffect, useMemo, useRef, useState } from "react";
+import { CSVLink } from "react-csv";
 import Pagination from "@/components/common/Pagination";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useGetAllEmployerInfos } from "@/hooks/useGetAllEmployerInfos";
 import { useGetJobs } from "@/hooks/useGetJobs";
 import { JobDetail, PickOption } from "@/utils/types";
-import { formatTimeAgo, getFirstFullImage } from "@/utils/helper";
+import { formatTimeAgo, generateJobCSVData, getFirstFullImage } from "@/utils/helper";
 import { useMutation } from "@tanstack/react-query";
 import { deleteJobById } from "@/lib/api";
 import { toast } from "react-toastify";
+import { format } from 'date-fns';
 import Dialog from "@/components/Dialog";
 import Spinner from "@/components/common/Spinner";
 
@@ -29,6 +31,7 @@ export default function JobMngPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [tempSearch, setTempSearch] = useState('');
   const [deleteJobId, setDeleteJobId] = useState(0);
+  const [selectedJobs, setSelectedJobs] = useState<Record<number, JobDetail | null>>({});
 
 
   const router = useRouter()
@@ -37,6 +40,15 @@ export default function JobMngPage() {
   const { data: jobs, isLoading: jobLoading, refetch } = useGetJobs({
     page: currentPage,
     limit,
+    searchTerm,
+    companyID: Number(company),
+    jobType: Number(jobType),
+    isAdmin: profile?.role === 'JobSeeker' ? '0' : '1'
+  })
+
+  const { data: allFilteredJobs } = useGetJobs({
+    page: currentPage,
+    limit: 999999,
     searchTerm,
     companyID: Number(company),
     jobType: Number(jobType),
@@ -79,6 +91,10 @@ export default function JobMngPage() {
     router.push(`?${params.toString()}`);
   }, [currentPage, limit, searchTerm, company, jobType])
 
+  useEffect(() => {
+    setSelectedJobs({})
+  }, [company, jobType])
+
   const deleteJob = useMutation({
     mutationFn: deleteJobById,
     onSuccess: (data) => {
@@ -117,6 +133,11 @@ export default function JobMngPage() {
       setTotalPage(pageCount)
     }
   }, [jobs, jobLoading])
+
+  const getSelectedJobs = useMemo(() => {
+    const filtered = Object.values(selectedJobs).filter((job: JobDetail | null) => !!job);
+    return filtered;
+  }, [selectedJobs])
 
   const onSelectJobType = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setJobType(e.target.value as string);
@@ -169,6 +190,17 @@ export default function JobMngPage() {
     }
   }
 
+  const toggleCheckbox = (job: JobDetail) => {
+    setSelectedJobs((prev) => ({
+      ...prev,
+      [job.id]: prev[job.id] ? null : job,
+    }));
+  };
+
+  const onClearSelectedJobs = () => {
+    setSelectedJobs({});
+  }
+
   return (
     <div className="flex min-h-screen flex-col">
       <div className="w-95/100 max-w-320 mx-auto">
@@ -184,20 +216,35 @@ export default function JobMngPage() {
                 onClick={onClickAddNewJob}
               />
             </div>
-            <CButton
-              text="全体CSV出⼒"
-              className='bg-green text-white text-sm h-[40px]'
-              size="small"
-            // leftIcon={<span className="mr-1 flex items-center"><svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 md:h-6 md:w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" /></svg></span>}
-            />
-            <div className="mr-2 mb-2">
-              <CButton
-                text="選択のみCSV出⼒"
-                className='bg-orange text-white text-sm h-[40px]'
-                size="small"
-              // leftIcon={<span className="mr-1 flex items-center"><svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 md:h-6 md:w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" /></svg></span>}
-              />
-            </div>
+            {allFilteredJobs?.data?.jobs?.length > 0 && (
+              <CSVLink
+                data={generateJobCSVData(allFilteredJobs?.data?.jobs)}
+                filename={`すべての求人-${format(new Date(), 'yyyy年MM月dd日HH:mm')}`}
+              >
+                <CButton
+                  text="全体CSV出⼒"
+                  className='bg-green text-white text-sm h-[40px]'
+                  size="small"
+                // leftIcon={<span className="mr-1 flex items-center"><svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 md:h-6 md:w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" /></svg></span>}
+                />
+              </CSVLink>
+            )}
+            {getSelectedJobs.length > 0 && (
+              <CSVLink
+                data={generateJobCSVData(Object.values(getSelectedJobs) as JobDetail[])}
+                filename={`選択した求人-${format(new Date(), 'yyyy年MM月dd日HH:mm')}`}
+              >
+                <div className="mr-2 mb-2">
+                  <CButton
+                    text="選択のみCSV出⼒"
+                    className='bg-orange text-white text-sm h-[40px]'
+                    size="small"
+                  // leftIcon={<span className="mr-1 flex items-center"><svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 md:h-6 md:w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" /></svg></span>}
+                  />
+                </div>
+              </CSVLink>
+            )}
+
           </div>
           <div className="flex flex-col lg:flex-row lg:space-x-3">
             <div className="flex-1 flex flex-row justify-between md:justify-start items-center space-x-3 pt-2">
@@ -248,6 +295,10 @@ export default function JobMngPage() {
             />
           )}
         </div>
+        <div className="flex flex-row items-center">
+          <p>選択済み: {getSelectedJobs.length} 求人</p>
+          <span className="ml-2 text-blue cursor-pointer" onClick={onClearSelectedJobs}>クリア</span>
+        </div>
         <div className="flex flex-col space-y-5 mt-10 pb-10">
           {jobLoading && (
             <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto"></div>
@@ -260,7 +311,7 @@ export default function JobMngPage() {
               </div>
               <div className="flex flex-col sm:flex-row">
 
-                <div className="w-1/1 sm:w-1/4 md:w-1/5 p-2">
+                <div className="w-1/1 sm:w-1/4 md:w-1/5 p-2 relative">
                   <div className="w-full aspect-300/220 relative">
                     {getFirstFullImage(job.jobThumbnails) ? (
                       <Image
@@ -280,6 +331,14 @@ export default function JobMngPage() {
                         sizes="(min-width: 768px) 20vw, 100vw"
                       />
                     )}
+                  </div>
+                  <div className="absolute left-1 bottom-1">
+                    <input
+                      type="checkbox"
+                      checked={!!selectedJobs[job.id]}
+                      onChange={() => toggleCheckbox(job)}
+                      className="form-checkbox h-5 w-5 text-blue-600"
+                    />
                   </div>
                 </div>
 

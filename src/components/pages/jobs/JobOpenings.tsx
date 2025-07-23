@@ -381,7 +381,7 @@ export default function JobList({
                             </Link>
                         ))}
                     </div>
-                    <hr className="w-full h-[1px] border-gray-700 mt-10" />
+                    <hr className="w-full h-[1px] border-gray-700 my-10" />
                 </div>
             )}
 
@@ -397,54 +397,58 @@ export default function JobList({
                     ? 'w-full text-white rounded-sm bg-gray-400 cursor-not-allowed'
                     : `w-full text-white rounded-sm ${isTemplate2 ? 'bg-orange' : 'bg-blue'}`;
                 return (
-                    <div key={job.id} className="py-10">
-                        <div className="flex flex-row space-x-4">
-                            {differenceInDays(now, new Date(job.created)) < 7 && (
-                                <span className="py-[2px] px-2 text-sm text-white bg-red">NEW</span>
-                            )}
-                            {renderEmploymentTypeTags(job.features)}
-                        </div>
-                        <p className="pt-3 text-xl font-bold text-gray-300">{job.job_title}</p>
-                        <div className="flex flex-col md:flex-row py-8">
-                            <div className="w-full md:max-w-75 aspect-3/2 relative">
-                                <Image
-                                    className="object-cover rounded-tr-[30px]"
-                                    src={getFirstFullImage(job.jobThumbnails) || '/images/default-company.png'}
-                                    alt="thumbnail"
-                                    fill
-                                    sizes="50vw"
-                                />
-                            </div>
-                            <div className="flex-1 mt-6 md:mt-0 md:pl-6">
-                                <p className="pb-4 border-b-1 border-gray-700">{job.job_lead_statement || 'No description'}</p>
-                                <div className="flex flex-row py-4 border-b-1 border-gray-700">
-                                    <div className="flex-1">
-                                        <p>勤務地</p>
-                                    </div>
-                                    <div className="flex-3">
-                                        <p>{getPrefecture(job.features)}</p>
-                                    </div>
+                    <div className="mb-10 " key={job.id}>
+                        <a href={`/jobs/recruit/${job.id}`}>
+                            <div className="hover:bg-gray-800 rounded-br-none rounded-bl-none rounded-md cursor-pointer">
+                                <div className="flex flex-row space-x-4 pt-3 px-4">
+                                    {differenceInDays(now, new Date(job.created)) < 7 && (
+                                        <span className="py-[2px] px-2 text-sm text-white bg-red">NEW</span>
+                                    )}
+                                    {renderEmploymentTypeTags(job.features)}
                                 </div>
-                                <div className="flex flex-row py-4 border-b-1 border-gray-700">
-                                    <div className="flex-1">
-                                        <p>最寄り駅</p>
+                                <p className="px-4 pt-3 text-xl font-bold text-gray-300">{job.job_title}</p>
+                                <div className="flex flex-col md:flex-row py-8 px-4">
+                                    <div className="w-full md:max-w-75 aspect-3/2 relative">
+                                        <Image
+                                            className="object-cover rounded-tr-[30px]"
+                                            src={getFirstFullImage(job.jobThumbnails) || '/images/default-company.png'}
+                                            alt="thumbnail"
+                                            fill
+                                            sizes="50vw"
+                                        />
                                     </div>
-                                    <div className="flex-3">
-                                        <p>{job.employer.closest_station || ''}</p>
+                                    <div className="flex-1 mt-6 md:mt-0 md:pl-6">
+                                        <p className="pb-4 border-b-1 border-gray-700">{job.job_lead_statement || 'No description'}</p>
+                                        <div className="flex flex-row py-4 border-b-1 border-gray-700">
+                                            <div className="flex-1">
+                                                <p>勤務地</p>
+                                            </div>
+                                            <div className="flex-3">
+                                                <p>{getPrefecture(job.features)}</p>
+                                            </div>
+                                        </div>
+                                        <div className="flex flex-row py-4 border-b-1 border-gray-700">
+                                            <div className="flex-1">
+                                                <p>最寄り駅</p>
+                                            </div>
+                                            <div className="flex-3">
+                                                <p>{job.employer.closest_station || ''}</p>
+                                            </div>
+                                        </div>
+                                        <div className="flex flex-row py-4 border-b-1 border-gray-700">
+                                            <div className="flex-1">
+                                                <p>給与</p>
+                                            </div>
+                                            <div className="flex-3">
+                                                <p>{job.pay}</p>
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
-                                <div className="flex flex-row py-4 border-b-1 border-gray-700">
-                                    <div className="flex-1">
-                                        <p>給与</p>
-                                    </div>
-                                    <div className="flex-3">
-                                        <p>{job.pay}</p>
-                                    </div>
-                                </div>
-                            </div>
 
-                        </div>
-                        <div className="flex flex-col md:flex-row p-2 sm:p-4 md:p-8 bg-gray-800 rounded-md">
+                                </div>
+                            </div>
+                        </a>
+                        <div className="flex flex-col md:flex-row p-2 sm:p-4 md:p-8 bg-gray-800 rounded-tr-none rounded-tl-none rounded-md">
                             <div className="flex-1 md:flex-4 flex flex-row space-x-4 md:space-x-8">
                                 <CButton
                                     text={isBookmarked(job.id) ? "お気に入り解除" : "お気に入り登録"}

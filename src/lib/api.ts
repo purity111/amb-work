@@ -88,7 +88,7 @@ export const getBookmarkedJobs = async (param: BookmarkedJobsFetchParams) => {
     const queryString = toQueryString(param);
     const response = await api.get(`/jobs/favourites?${queryString}`);
     console.log(response.data);
-    
+
     return response.data;
 };
 
@@ -338,11 +338,6 @@ export const updateInterview = async (id: number, formData: FormData): Promise<I
 
 export const deleteInterview = async (id: number): Promise<void> => {
     const response = await api.delete(`/interviews/${id}`);
-    return response.data;
-};
-
-export const getApplicants = async () => {
-    const response = await api.get(`/applications/employer`);
     return response.data;
 };
 

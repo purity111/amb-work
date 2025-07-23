@@ -11,7 +11,7 @@ import {
     isValid
 } from 'date-fns';
 import { ja } from 'date-fns/locale';
-import { FeatureItem, FeatureParams, ImageDetail } from "./types";
+import { ApplicationItem, FeatureItem, FeatureParams, ImageDetail, JobDetail } from "./types";
 import { UPLOADS_BASE_URL } from "./config";
 import { MapData, PrefectureOptions } from "./constants";
 import { Area } from "react-easy-crop";
@@ -179,26 +179,26 @@ export function formatMessageDate(date: Date): string {
     }
 
     if (diffInMinutes < 60) {
-        return `${formatDistanceToNow(date, { addSuffix: true })}`;
+        return `${formatDistanceToNow(date, { addSuffix: true, locale: ja })}`;
     }
 
     if (isToday(date)) {
-        return format(date, 'h:mm a'); // e.g. 2:30 PM
+        return format(date, 'h:mm a', { locale: ja }); // e.g. 2:30 PM
     }
 
     if (isYesterday(date)) {
-        return `Yesterday at ${format(date, 'h:mm a')}`;
+        return `昨日 ${format(date, 'h:mm a', { locale: ja })}`;
     }
 
     if (isThisWeek(date, { weekStartsOn: 1 })) {
-        return format(date, 'EEEE, h:mm a'); // e.g. Wednesday at 2:30 PM
+        return format(date, 'EEEE, h:mm a', { locale: ja }); // e.g. Wednesday at 2:30 PM
     }
 
     if (isThisYear(date)) {
-        return format(date, 'MMM d, h:mm a'); // e.g. Mar 5 at 2:30 PM
+        return format(date, 'MMM d, h:mm a', { locale: ja }); // e.g. Mar 5 at 2:30 PM
     }
 
-    return format(date, 'MMM d, yyyy, h:mm a'); // e.g. Mar 5, 2023 at 2:30 PM
+    return format(date, 'MMM d, yyyy, h:mm a', { locale: ja }); // e.g. Mar 5, 2023 at 2:30 PM
 }
 
 export const formatLongDateTime = (dateString: string) => {
@@ -242,4 +242,43 @@ export const getFilterJobUrl = (value: JobFilterFormValue, featureList: FeatureI
     // Build segments array, only including non-empty segments, in order
     const segments = [pString, jString, iString, cString, eString].filter(Boolean);
     return `/job-openings/${segments.join('/')}`;
+}
+
+export const generateJobCSVData = (data: JobDetail[]) => {
+    return data.map(item => ({
+        'ID': item.id,
+        'Job Title': item.job_title,
+        'Job Posting Date': item.job_posting_date,
+        'Job Category': item.job_category,
+        'Job Introduction': item.job_lead_statement,
+        'Salary': item.pay,
+        'Public Status': item.public_status,
+        'Job Type': item.job_detail_page_template_id === 1 ? '直接応募のみ' : '転職⽀援サービス',
+        'Thumbnail': getFirstFullImage(item.jobThumbnails),
+        'Employment Type': item.employmentType.name,
+        'Employer': item.employer.clinic_name,
+        'Public Start Date': item.clinic_public_date_start,
+        'Public End Date': item.clinic_public_date_end,
+        'Youtube Url': item.youtube_url,
+        'Another Url': item.another_url_text,
+        'Features': item.features.map(i => i.name).join(',')
+    }));
+}
+
+export const generateApplicationCSVData = (data: ApplicationItem[]) => {
+    return data.map(item => ({
+        'Job ID': item.job_info_id,
+        'Company': item.jobInfo?.employer?.clinic_name,
+        'Job Title': item.job_title,
+        'Job Created': item.created,
+        'Application ID': item.job_seeker_id,
+        'Application Name': item.jobSeeker?.name,
+        'Application DOB': item.jobSeeker?.birthdate,
+        'Application Sex': item.jobSeeker?.sex === 1 ? '男' : '女',
+        'Application PhoneNumber': item.jobSeeker?.tel,
+        'Application Email': item.jobSeeker?.email,
+        'Job Details': item.jobInfo?.job_lead_statement,
+        'Job Public From': item.jobInfo?.clinic_public_date_start,
+        'Job Public To': item.jobInfo?.clinic_public_date_end,
+    }))
 }
