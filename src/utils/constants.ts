@@ -1859,3 +1859,35 @@ export const JobSupportFeatures: { number: string; text: string }[] = [
   { number: "12.", text: "国家資格キャリアコンサルタントによる自己分析やキャリアビジョン設計サポート※" },
 ];
   
+export const BACKGROUNDS_SECTIONS = [
+  {
+    image: '/images/business/back1.jpg', // You may want to update this path to the actual image if different
+    backgroundsTitle: 'BACKGROUNDS 01',
+    mainHeading: '社会トレンドや消費スタイルの変革',
+    description1: `ビジネストレンドのである「シェアリングエコノミー」「サブスクリプション」。\nシェアリングエコノミーはモノやサービスの交換や共有によって成り立つ社会のこと、サブスクリプション、通称、サブスクは継続課金型のビジネスモデルのことです。`,
+    description2: `実はこの二つのキーワードはリユース業界と密接に関わりがあります。\n例えば、フリマアプリの「メルカリ」や洋服をコーディネートして定額制でレンタルできる「エアークローゼット」のサービスはまさにシェアの概念で成り立っています。\n\nモノを所有し続けるのではなく、シェアしたり必要なときに利用する、こういった社会トレンドや消費スタイルの変革が大きく関係しています。\n\nこれまでも"中古品"に対する心理的な障壁がなくなり、むしろモノや物を大切にするという文化の根付きや、"リセールバリュー"を考えて買い物をするというスマートなトレンドが主流になってきたことがあります。\nその結果、先述した通り、今までリユース・リサイクルの中心であったブランド品、貴金属・ジュエリー、チケット・金券、美術・工芸品、骨董などに加えて、家具・インテリア、家電、着物、アウトドア用品、楽器・ホビー用品、ベビー用品等ありとあらゆるものが対象になってきています。`,
+    order: 'image-left', // or 'image-right' if you want to support both
+  },
+  {
+    image: '/images/business/back2.jpg', // You may want to update this path to the actual image if different
+    backgroundsTitle: 'BACKGROUNDS 02',
+    mainHeading: 'IT技術の進歩',
+    description1: `また、IT技術の進歩により、フリマアプリに代表される気軽に売却できるツールが圧倒的に増えたことも市場拡大を後押ししています。越境ECや、インターネットオークションサービスなど成長市場に目をつけて、新規参入する企業も後を絶ちません。`,
+    order: 'image-right', // or 'image-right' if you want to support both
+  },
+  {
+    image: '/images/business/back3.jpg', // You may want to update this path to the actual image if different
+    backgroundsTitle: 'BACKGROUNDS 03',
+    mainHeading: '終活・生前整理ブーム',
+    description1: `さらには、終活・生前整理がブームになっており、これまでリサイクルを活用していなかったシニア層にも急速にリユース・リサイクル・買取が広まってきました。相続という巨大なシニア市場にリサイクルが浸透し始めた今、リユース・リサイクル業界はわが国の産業界で最も注目されているものの一つといえます。`,
+    order: 'image-left', // or 'image-right' if you want to support both
+  },
+  {
+    image: '/images/business/back4.png', // You may want to update this path to the actual image if different
+    backgroundsTitle: 'BACKGROUNDS 04',
+    mainHeading: '世界的潮流である「SDGs」持続可能な社会',
+    description1: `SDGsは、持続可能な開発目標という意味です。2015年に国連で採択された2030年までの国際目標、世界的な優先課題、世界のあるべき姿17項目のことです。\n\n貧困、ジェンダーフリー、環境問題といった視点で世界全体で取り組もうという機運があります。そのため規模の大きい企業やグローバル展開をしている企業はSDGsに取り組むことが必要不可欠となっています。企業は社会貢献的活動として取り組むというよりも、持続可能性を事業の本流にしていくというが大きな時代の流れにあります。`,
+    order: 'image-right', // or 'image-right' if you want to support both
+  },
+];
+  
