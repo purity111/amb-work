@@ -10,7 +10,7 @@ import CSelect from '@/components/common/Select';
 import Pagination from '@/components/common/Pagination';
 import { JobTypeOptions } from '@/utils/constants';
 import Modal from '@/components/common/Modal';
-import { formatLongDateTime, generateApplicationCSVData, generateJobCSVData } from '@/utils/helper';
+import { formatLongDateTime, generateApplicationCSVData } from '@/utils/helper';
 import ChatBox from '@/components/ChatBox';
 import Image from 'next/image';
 import { CSVLink } from "react-csv";
