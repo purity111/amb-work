@@ -1,21 +1,22 @@
 "use client";
 
-import React, { ChangeEvent, useEffect, useState, useRef, Suspense } from 'react';
+import React, { ChangeEvent, useEffect, useState, useRef, Suspense, useMemo } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import ApplicationCard from '@/components/ApplicationCard';
-import { getApplicationsByRole } from '@/lib/api';
-import { ApplicationItem, ApplicationFetchParam, ChatItem } from '@/utils/types';
+import { ApplicationItem, ChatItem } from '@/utils/types';
 import CButton from "@/components/common/Button";
 import CInput from '@/components/common/Input';
 import CSelect from '@/components/common/Select';
 import Pagination from '@/components/common/Pagination';
-import { useQuery } from '@tanstack/react-query';
-import { PrefectureOptions, JobTypeOptions } from '@/utils/constants';
-import { useAuth } from '@/hooks/useAuth';
+import { JobTypeOptions } from '@/utils/constants';
 import Modal from '@/components/common/Modal';
-import { formatLongDateTime } from '@/utils/helper';
+import { formatLongDateTime, generateApplicationCSVData } from '@/utils/helper';
 import ChatBox from '@/components/ChatBox';
 import Image from 'next/image';
+import { CSVLink } from "react-csv";
+import { format } from 'date-fns';
+import { useGetApplicants } from '@/hooks/useGetApplicants';
+import { useAuthContext } from '@/app/layout';
 
 function ApplicationMngContent() {
   const [currentPage, setCurrentPage] = useState(1);
@@ -28,13 +29,14 @@ function ApplicationMngContent() {
   const [isHidden, setIsHidden] = useState(false);
 
   const router = useRouter();
-  const { profile, isAdmin } = useAuth();
+  const { profile, isAdmin } = useAuthContext();
   const searchParams = useSearchParams();
 
   const hasLoaded = useRef(false);
 
   const [showDetailModal, setShowDetailModal] = useState(false);
   const [selectedApplication, setSelectedApplication] = useState<ApplicationItem | null>(null);
+  const [selectedApplications, setSelectedApplications] = useState<Record<number, ApplicationItem | null>>({});
 
   useEffect(() => {
     document.title = 'リユース転職サービス';
@@ -50,70 +52,30 @@ function ApplicationMngContent() {
     hasLoaded.current = true;
   }, [searchParams]);
 
-  const { data: response, isLoading: aLoading } = useQuery<{
-    data: { applications: ApplicationItem[]; pagination: { totalPages: number } };
-  }>({
-    queryKey: ['applications', currentPage, limit, searchTerm, jobType !== '0' ? jobType : undefined, profile?.id], queryFn: async () => {
-      const params: ApplicationFetchParam = {
-        limit,
-        page: currentPage,
-        searchTerm,
-      };
-      if (jobType === '1' || jobType === '2') {
-        params.jobType = Number(jobType);
-      }
-      // Role-based filtering
-      if (profile?.role === 'JobSeeker') {
-        params.job_seeker_id = profile.id;
-      } else if (profile?.role === 'Employer') {
-        params.employer_id = profile.id;
-      }
-      const data = await getApplicationsByRole(params);
-      return data;
-    }, enabled: !!profile
-  });
+  const { data: response, isLoading } = useGetApplicants({
+    limit,
+    page: currentPage,
+    profile,
+    searchTerm,
+    jobType: Number(jobType)
+  })
+
+  const { data: allApplications, isLoading: aLoading } = useGetApplicants({
+    limit: limit + 100,
+    page: currentPage,
+    profile,
+    searchTerm,
+    jobType: Number(jobType)
+  })
 
   const [applications, setApplications] = useState<ApplicationItem[]>([]);
-  const [allApplications, setAllApplications] = useState<ApplicationItem[]>([]);
 
   useEffect(() => {
     if (response?.data) {
-      console.log('response.data', response.data);
-
-      setAllApplications(response.data.applications);
+      setApplications(response.data.applications);
       setTotalPage(response.data.pagination.totalPages);
     }
   }, [response, limit]);
-
-  // Client-side filtering for search and job type
-  useEffect(() => {
-    let filtered = allApplications;
-
-    // Filter by job type (job_detail_page_template_id)
-    if (jobType !== '0') {
-      const templateId = Number(jobType);
-      filtered = filtered.filter(app => app.jobInfo.job_detail_page_template_id === templateId);
-    }
-
-    // Filter by search term
-    if (searchTerm.trim()) {
-      filtered = filtered.filter(app => {
-        const searchLower = searchTerm.toLowerCase();
-        return (
-          app.jobInfo.employer.clinic_name.toLowerCase().includes(searchLower) ||
-          app.jobInfo.job_title.toLowerCase().includes(searchLower) ||
-          app.jobInfo.employer.city.toLowerCase().includes(searchLower) ||
-          app.jobInfo.pay.toLowerCase().includes(searchLower) ||
-          app.jobInfo.employer.zip.toLowerCase().includes(searchLower) ||
-          getPrefectureName(app.jobInfo.employer.prefectures).toLowerCase().includes(searchLower) ||
-          app.jobInfo.employer.tel.toLowerCase().includes(searchLower)
-        );
-      });
-    }
-
-    console.log(`Client-side filtering: ${allApplications.length} total, ${filtered.length} matching filters`);
-    setApplications(filtered);
-  }, [searchTerm, jobType, allApplications]);
 
   useEffect(() => {
     if (!hasLoaded.current) return;
@@ -128,6 +90,16 @@ function ApplicationMngContent() {
     }
     router.push(`?${params.toString()}`);
   }, [currentPage, limit, searchTerm, jobType, router]);
+
+  const getSelectedApplications = useMemo(() => {
+    const filtered = Object.values(selectedApplications).filter((app: ApplicationItem | null) => !!app);
+    return filtered;
+  }, [selectedApplications])
+
+  const getAllApplications = useMemo(() => {
+    if (aLoading || !allApplications?.data?.applications) return [];
+    return allApplications.data.applications;
+  }, [allApplications, aLoading])
 
   const onPageChange = (page: number) => {
     setCurrentPage(page);
@@ -146,11 +118,6 @@ function ApplicationMngContent() {
     if (e.key === 'Enter') {
       setSearchTerm(tempSearch);
     }
-  };
-
-  const getPrefectureName = (id: number) => {
-    const prefecture = PrefectureOptions.find(opt => Number(opt.value) === id);
-    return prefecture ? prefecture.option : '';
   };
 
   const onSelectJobType = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -180,66 +147,113 @@ function ApplicationMngContent() {
     setSelectedApplication(null);
   };
 
+  const toggleCheckbox = (app: ApplicationItem) => {
+    setSelectedApplications((prev) => ({
+      ...prev,
+      [app.id]: prev[app.id] ? null : app,
+    }));
+  };
+
+  const onClearSelectedApplications = () => {
+    setSelectedApplications({});
+  }
+
   return (
     <div className="container mx-auto px-4 py-8 w-[95%] max-w-[1000px]">
-      {aLoading ? (
-        <p>読み込み中...</p>
-      ) : (
-        <div className="overflow-x-auto">
-          <h2 className='text-center mb-6 text-[24px] md:text-[32px] font-bold'>応募管理ページ</h2>
-          <div className="flex gap-2 flex-row justify-center items-center lg:flex-row lg:space-x-3 mb-4">
-            {(profile?.role === 'JobSeeker' || isAdmin) && (
-              <div className="flex flex-row space-x-3">
-                <CSelect
-                  options={JobTypeOptions}
-                  value={jobType}
-                  onChange={onSelectJobType}
-                  width="w-30"
-                  height="h-10"
-                />
-              </div>
-            )}
-            <div className="flex justify-center sm:justify-end flex-row items-center mx-auto my-2 space-x-2 w-full sm:w-[80%] md:w-full">
-              <CInput
-                placeholder="検索"
+      <div className="overflow-x-auto">
+        <h2 className='text-center mb-6 text-[24px] md:text-[32px] font-bold'>応募管理ページ</h2>
+        <div className="flex gap-2 flex-row justify-center items-center lg:flex-row lg:space-x-3 mb-4">
+          {(profile?.role === 'JobSeeker' || isAdmin) && (
+            <div className="flex flex-row space-x-3">
+              <CSelect
+                options={JobTypeOptions}
+                value={jobType}
+                onChange={onSelectJobType}
+                width="w-30"
                 height="h-10"
-                className="flex-1 max-w-[180px] sm:max-w-full"
-                onChange={onChangeSearchTerm}
-                value={tempSearch}
-                onKeyDown={onKeyDown}
-              />
-              <CButton
-                text="検索"
-                className='bg-blue text-white w-30 h-[40px]'
-                size="small"
-                onClick={onConfirmSearchTerm}
               />
             </div>
+          )}
+          <div className="flex justify-center sm:justify-end flex-row items-center mx-auto my-2 space-x-2 w-full sm:w-[80%] md:w-full">
+            <CInput
+              placeholder="検索"
+              height="h-10"
+              className="flex-1 max-w-[180px] sm:max-w-full"
+              onChange={onChangeSearchTerm}
+              value={tempSearch}
+              onKeyDown={onKeyDown}
+            />
+            <CButton
+              text="検索"
+              className='bg-blue text-white w-30 h-[40px]'
+              size="small"
+              onClick={onConfirmSearchTerm}
+            />
           </div>
-          <div className="">
-            {applications && applications.length > 0 ? (
-              applications.map((app) => (
-                <ApplicationCard
-                  key={app.id}
-                  data={app}
-                  userRole={profile?.role}
-                  onDetailsClick={() => handleDetailsClick(app)}
-                  onChatClick={() => handleChatClick(app)}
+        </div>
+        <div className="">
+          <div className='flex'>
+            <p className='flex-1'>
+              Selected: {getSelectedApplications.length} applications
+              <span className="ml-2 text-blue cursor-pointer" onClick={onClearSelectedApplications}>Clear</span>
+            </p>
+            {applications?.length > 0 && (
+              <CSVLink
+                data={generateApplicationCSVData(getAllApplications)}
+                filename={`すべてのアプリ-${format(new Date(), 'yyyy年MM月dd日HH:mm')}`}
+              >
+                <CButton
+                  text="全体CSV出⼒"
+                  className='bg-green text-white text-sm h-[40px]'
+                  size="small"
                 />
-              ))
-            ) : (
-              <div>応募が見つかりませんでした。</div>
+              </CSVLink>
+            )}
+            {getSelectedApplications.length > 0 && (
+              <CSVLink
+                data={generateApplicationCSVData(Object.values(getSelectedApplications) as ApplicationItem[])}
+                filename={`選択中のアプリ-${format(new Date(), 'yyyy年MM月dd日HH:mm')}`}
+              >
+                <div className="mr-2 mb-2">
+                  <CButton
+                    text="選択のみCSV出⼒"
+                    className='bg-orange text-white text-sm h-[40px] ml-4'
+                    size="small"
+                  />
+                </div>
+              </CSVLink>
             )}
           </div>
-          <div className="flex flex-row justify-center mt-4">
+          <div className="flex flex-row justify-center my-4">
             <Pagination
               page={currentPage}
               totalPages={totalPage}
               onPageChange={onPageChange}
             />
           </div>
+          {isLoading && <p>読み込み中...</p>}
+          {!isLoading && applications.map((app) => (
+            <ApplicationCard
+              key={app.id}
+              data={app}
+              checked={!!selectedApplications[app.id]}
+              userRole={profile?.role}
+              onDetailsClick={() => handleDetailsClick(app)}
+              onChatClick={() => handleChatClick(app)}
+              onToggleChecked={() => toggleCheckbox(app)}
+            />
+          ))}
+          {!isLoading && <div className="flex flex-row justify-center my-4">
+            <Pagination
+              page={currentPage}
+              totalPages={totalPage}
+              onPageChange={onPageChange}
+            />
+          </div>}
+          {!isLoading && applications.length === 0 && <div>応募が見つかりませんでした。</div>}
         </div>
-      )}
+
+      </div>
       {selectedChat && (
         <div className={`
           fixed bottom-25 right-4  shadow-lg z-100

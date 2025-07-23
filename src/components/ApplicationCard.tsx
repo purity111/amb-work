@@ -7,15 +7,19 @@ interface ApplicationCardProps {
   data: ApplicationItem
   // User role for conditional display
   userRole?: string;
+  checked: boolean;
   onDetailsClick: () => void; // Callback for details button click
   onChatClick: () => void; // Callback for chat button click
+  onToggleChecked: () => void;
 }
 
 const ApplicationCard: React.FC<ApplicationCardProps> = ({
   data,
   userRole,
+  checked,
   onDetailsClick,
   onChatClick,
+  onToggleChecked
 }) => {
   const headerBgClass = data.jobInfo.job_detail_page_template_id === 1 ? 'bg-blue' : 'bg-orange';
 
@@ -107,7 +111,15 @@ const ApplicationCard: React.FC<ApplicationCardProps> = ({
           </>
         )}
 
-        <div className="flex justify-end space-x-3 mt-6">
+        <div className="flex items-end space-x-3 mt-6">
+          <div className='flex-1'>
+            <input
+              type="checkbox"
+              checked={checked}
+              onChange={onToggleChecked}
+              className="form-checkbox h-5 w-5 text-blue-600"
+            />
+          </div>
           <Button
             text="詳細"
             className="bg-green-600 text-white"

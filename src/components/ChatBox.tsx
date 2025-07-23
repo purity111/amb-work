@@ -58,6 +58,9 @@ export default function ChatBox({ data, hasHideButton = false, isHidden, onToggl
     useEffect(() => {
         if (cLoading || cError || !chats?.data) return;
         setMessages(chats.data)
+        setTimeout(() => {
+            scrollToBottom();
+        }, 500)
     }, [chats, cLoading, cError])
 
     useScrollPosition((scrollTop) => {
@@ -74,7 +77,6 @@ export default function ChatBox({ data, hasHideButton = false, isHidden, onToggl
         socket.on('newMessage', (message: Message) => {
             refetch()
             onChange()
-            scrollToBottom()
         });
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         socket.on('messageUpdated', (message: Message) => {
@@ -121,7 +123,6 @@ export default function ChatBox({ data, hasHideButton = false, isHidden, onToggl
             refetch();
         } else {
             // if file attached, upload it first
-            console.log({ attached })
             if (attached) {
                 try {
                     const formData = new FormData();
@@ -159,7 +160,6 @@ export default function ChatBox({ data, hasHideButton = false, isHidden, onToggl
                     notifyTo: notifyToId
                 };
                 socket.emit('message', newMessage);
-                scrollToBottom();
             }
         }
         setText('');
