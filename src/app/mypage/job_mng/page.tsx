@@ -43,7 +43,8 @@ export default function JobMngPage() {
     searchTerm,
     companyID: Number(company),
     jobType: Number(jobType),
-    isAdmin: profile?.role === 'JobSeeker' ? '0' : '1'
+    isAdmin: profile?.role === 'JobSeeker' ? '0' : '1',
+    employer_id: profile?.role === 'Employer' ? profile.id : 0
   })
 
   const { data: allFilteredJobs } = useGetJobs({
@@ -52,7 +53,8 @@ export default function JobMngPage() {
     searchTerm,
     companyID: Number(company),
     jobType: Number(jobType),
-    isAdmin: profile?.role === 'JobSeeker' ? '0' : '1'
+    isAdmin: profile?.role === 'JobSeeker' ? '0' : '1',
+    employer_id: profile?.role === 'Employer' ? profile.id : 0
   })
 
   const hasLoaded = useRef(false);
