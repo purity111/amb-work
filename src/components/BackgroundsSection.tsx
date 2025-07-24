@@ -1,4 +1,6 @@
-import React from 'react';
+'use client'
+
+import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { BACKGROUNDS_SECTIONS } from '@/utils/constants';
 
@@ -7,14 +9,27 @@ interface BackgroundsSectionProps {
 }
 
 const BackgroundsSection: React.FC<BackgroundsSectionProps> = ({ sectionIndex = 0 }) => {
+  const [isMobile, setIsMobile] = useState(false);
   const section = BACKGROUNDS_SECTIONS[sectionIndex];
+  
+  useEffect(() => {
+    const checkIsMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    checkIsMobile();
+    window.addEventListener('resize', checkIsMobile);
+    
+    return () => window.removeEventListener('resize', checkIsMobile);
+  }, []);
+
   if (!section) return null;
   const isImageLeft = section.order === 'image-left';
 
   return (
     <div className=' my-8 md:my-16'>
       <section className="flex flex-col md:flex-row items-end">
-        {(isImageLeft && window.innerWidth > 768) && (
+        {(isImageLeft && !isMobile) && (
           <div className="w-full md:w-1/2 flex justify-center mb-6 md:mb-0">
             <Image
               src={section.image}
@@ -34,7 +49,7 @@ const BackgroundsSection: React.FC<BackgroundsSectionProps> = ({ sectionIndex = 
           )}
 
         </div>
-        {(!isImageLeft || window.innerWidth < 768) && (
+        {(!isImageLeft || isMobile) && (
           <div className="w-full md:w-1/2 flex justify-center mt-6 md:mt-0">
             <Image
               src={section.image}

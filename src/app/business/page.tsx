@@ -7,14 +7,6 @@ import BackgroundsSection from "@/components/BackgroundsSection";
 import { BACKGROUNDS_SECTIONS } from '@/utils/constants';
 import Link from "next/link";
 
-const businessImages = [
-  "/images/business/back1.jpg",
-  "/images/business/back2.jpg",
-  "/images/business/back3.jpg",
-  "/images/business/back4.png",
-  "/images/business/back5.jpg",
-];
-
 export default function BusinessPage() {
   return (
     <>
