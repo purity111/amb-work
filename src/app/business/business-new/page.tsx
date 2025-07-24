@@ -62,7 +62,7 @@ export default function BusinessNewPage() {
                             </h2>
                             <p className='text-center text-[14px] text-gray-600 font-sans'>LATEST TRENDS</p>
                         </div>
-                        <p className="text-sm md:text-base my-10 leading-[1.8] font-medium">
+                        <p className="text-sm md:text-base mt-10 md:my-10 leading-[1.8] font-medium">
                             最新のリユース市場規模は、前年比7.4%増の2.9兆円です（リサイクル通信の統計による）。2009年以降、13年連続で拡大しており、日本でも有数の成長マーケットといえるでしょう。そのため各社、企業業績が好調で、採用も積極的です。2023年には3兆2500億円、2030年には4兆円規模に拡大すると予測がされているため、業界で働くにはベストタイミングです。<br /><br />
                             <span className="text-[#ff8a34]">■</span>買取<br />
                             コロナ禍ではリモートワークなど、在宅時間の増加から、家の片付け、物の整理をする人が増加。それに伴ってフリマアプリを中心に買取需要が伸びました。<br /><br />
@@ -74,12 +74,12 @@ export default function BusinessNewPage() {
                             その後は、外出機会が増え、衣服・アパレル商材の需要が高まりました。古着ブームなども追い風となり、リユースマーケットの中で一番大きな市場規模となっています。<br /><br />
                             販売経路としては、EC販売を強化する流れが強まっています。その結果、ネット販売のBtoCは8.5％増と前年を上回りました（リサイクル通信の統計による）。<br /><br />
                         </p>
-                        <div className="flex justify-between gap-[4%] items-start">
-                            <p className="text-sm md:text-base leading-[1.8] font-medium w-[55%]">
+                        <div className="flex flex-col md:flex-row justify-between gap-[4%] items-start">
+                            <p className="text-sm md:text-base leading-[1.8] font-medium w-full md:w-[55%] pb-10 md:pb-0">
                                 2022年からの円安傾向はリユースマーケットに追い風となり、越境EC中心に日本のリユース品の海外需要が伸びています。<br />
                                 リアルでも外国人観光客の受け入れが始まったことでインバウンド消費が回復しています。
                             </p>
-                            <div className="w-[41%]">
+                            <div className="w-full md:w-[41%]">
                                 <Image
                                     src="/images/business-new/trend.png"
                                     alt="Trends"
@@ -136,7 +136,7 @@ export default function BusinessNewPage() {
                         リユース転職では、リユース・リサイクル・買取業界の今後のさらなる成長のポイントとしてグローバル化とテクノロジー化の２つがあると考えています。
                     </p>
 
-                    <div className="flex flex-col md:flex-row gap-[3%] max-w-[960px] mx-auto px-4 lg:px-0">
+                    <div className="flex flex-col md:flex-row gap-[3%] max-w-[960px] mx-auto">
                         {GLOBALIZATION_SECTION_DATA.map((sectionData, index) => (
                             <GlobalizationSection key={index} {...sectionData} />
                         ))}
