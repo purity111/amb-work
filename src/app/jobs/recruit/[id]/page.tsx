@@ -19,6 +19,7 @@ import { bookmarkJob, createApplication, getApplicationsByRole } from '@/lib/api
 import { toast } from 'react-toastify';
 import Dialog from "@/components/Dialog";
 import LoginModal from "@/components/modal/Login";
+import RegisterModal from "@/components/modal/Register";
 
 export default function JobPreviewDetails() {
     const params = useParams();
@@ -30,6 +31,7 @@ export default function JobPreviewDetails() {
     const aboutSectionRef = useRef<HTMLDivElement | null>(null);
     const informationSectionRef = useRef<HTMLDivElement | null>(null);
 
+    const [registerModalShown, setRegisterModalShown] = useState(false);
     const [loginModalShown, setLoginModalShown] = useState(false);
     const { data, isLoading } = useGetJobById(Number(id));
     const [width] = useWindowSize();
@@ -226,6 +228,10 @@ export default function JobPreviewDetails() {
         setApplyModalShown(false);
     };
 
+    const onNavigateRegister = () => {
+        setLoginModalShown(false);
+        setRegisterModalShown(true);
+    };
 
     const alreadyApplied = jobseekerApplications.includes(job.id);
 
@@ -439,8 +445,15 @@ export default function JobPreviewDetails() {
                     onPressCancel={() => setApplyModalShown(false)}
                 />
             )}
+            {registerModalShown && (
+                <RegisterModal onClose={() => setRegisterModalShown(false)} />
+            )}
             {loginModalShown && (
-                <LoginModal onClose={() => setLoginModalShown(false)} onSuccess={() => setLoginModalShown(false)} />
+                <LoginModal
+                    onClose={() => setLoginModalShown(false)}
+                    onSuccess={() => setLoginModalShown(false)}
+                    onNavigateRegister={onNavigateRegister}
+                />
             )}
         </div >
     );

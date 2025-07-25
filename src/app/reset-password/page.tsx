@@ -44,6 +44,7 @@ export default function ResetPasswordPage() {
 
     const resetMutation = useMutation({
         mutationFn: resetPassword,
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         onSuccess: (data) => {
             setIsSuccess(true);
         },

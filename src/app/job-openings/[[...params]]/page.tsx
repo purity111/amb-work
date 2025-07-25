@@ -18,6 +18,11 @@ export default function JobOpeningsPage() {
     // Map segments to filters in order: [prefectures, jobTypes, items, conditions, employmentTypes]
     const [prefectures, jobTypes, items, conditions, employmentTypes] = segments;
 
+    const onNavigateRegister = () => {
+        setLoginModalShown(false);
+        setRegisterModalShown(true);
+    };
+
     return (
         <>
             <Suspense>
@@ -64,7 +69,7 @@ export default function JobOpeningsPage() {
                         からお申込ください。
                     </p>
                     {/* Pass parsed filters to JobList as needed */}
-                    <JobList 
+                    <JobList
                         prefectures={prefectures}
                         jobTypes={jobTypes}
                         items={items}
@@ -77,7 +82,11 @@ export default function JobOpeningsPage() {
                 <RegisterModal onClose={() => setRegisterModalShown(false)} />
             )}
             {loginModalShown && (
-                <LoginModal onClose={() => setLoginModalShown(false)} onSuccess={() => setLoginModalShown(false)} />
+                <LoginModal
+                    onClose={() => setLoginModalShown(false)}
+                    onSuccess={() => setLoginModalShown(false)}
+                    onNavigateRegister={onNavigateRegister}
+                />
             )}
         </>
     )

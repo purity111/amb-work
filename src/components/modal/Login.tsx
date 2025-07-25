@@ -51,6 +51,7 @@ export default function LoginModal({ onSuccess, onClose, onNavigateRegister }: L
 
     const forgotMutation = useMutation({
         mutationFn: forgotPassword,
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         onSuccess: (data) => {
             // data: {success: true, data: object}
             // logged in successfully
