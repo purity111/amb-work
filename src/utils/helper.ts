@@ -17,6 +17,11 @@ import { MapData, PrefectureOptions } from "./constants";
 import { Area } from "react-easy-crop";
 import { JobFilterFormValue } from '@/components/pages/jobs/JobFilterForm';
 
+export const isValidEmail = (email: string) => {
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return regex.test(email);
+}
+
 export const getEstablishmentYearOptions = () => {
     const cYear = new Date().getFullYear();
     return Array.from({ length: 150 }, (_, i) => {

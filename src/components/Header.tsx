@@ -59,6 +59,11 @@ export default function Header() {
         if (success) setLoginModalShown(true);
     }
 
+    const onNavigateRegister = () => {
+        setLoginModalShown(false);
+        setRegisterModalShown(true);
+    };
+
     const handleToggleClick = () => {
         setOpen(!open)
     };
@@ -216,7 +221,7 @@ export default function Header() {
                 <RegisterModal onClose={onCloseRegisterModal} />
             )}
             {loginModalShown && (
-                <LoginModal onClose={() => setLoginModalShown(false)} onSuccess={onLoginSuccess} />
+                <LoginModal onClose={() => setLoginModalShown(false)} onSuccess={onLoginSuccess} onNavigateRegister={onNavigateRegister} />
             )}
         </header>
     );

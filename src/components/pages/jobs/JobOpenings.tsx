@@ -20,6 +20,7 @@ import { MapData } from "@/utils/constants";
 import LoginModal from "@/components/modal/Login";
 import Dialog from '@/components/Dialog';
 import Link from "next/link";
+import RegisterModal from "@/components/modal/Register";
 
 const now = new Date();
 
@@ -48,6 +49,7 @@ export default function JobList({
     const [features, setFeatures] = useState<FeatureParams | null>(null);
     const [searchTags, setSearchTags] = useState<PickOption[]>([]);
     const [loginModalShown, setLoginModalShown] = useState(false);
+    const [registerModalShown, setRegisterModalShown] = useState(false);
     const [applyModalShown, setApplyModalShown] = useState(false);
     const [selectedJobId, setSelectedJobId] = useState<number | null>(null);
     const [jobseekerApplications, setJobseekerApplications] = useState<number[]>([]);
@@ -316,6 +318,16 @@ export default function JobList({
         setApplyModalShown(false);
     };
 
+    const onCloseRegisterModal = (success?: boolean) => {
+        setRegisterModalShown(false)
+        if (success) setLoginModalShown(true);
+    }
+
+    const onNavigateRegister = () => {
+        setLoginModalShown(false);
+        setRegisterModalShown(true);
+    };
+
     return (
         <div className="pb-10 md:pb-30">
             <div className="py-2 sticky top-20 md:top-25 bg-white z-10 border-b-2 border-gray-700">
@@ -506,8 +518,11 @@ export default function JobList({
                     searchText={searchTerm}
                 />
             )}
+            {registerModalShown && (
+                <RegisterModal onClose={onCloseRegisterModal} />
+            )}
             {loginModalShown && (
-                <LoginModal onClose={() => setLoginModalShown(false)} onSuccess={() => setLoginModalShown(false)} />
+                <LoginModal onClose={() => setLoginModalShown(false)} onSuccess={() => setLoginModalShown(false)} onNavigateRegister={onNavigateRegister} />
             )}
             {applyModalShown && (
                 <Dialog

@@ -61,6 +61,21 @@ export interface LoginParam {
     password: string;
 }
 
+export interface ForgotPasswordParam {
+    email: string;
+}
+
+export interface ResetPasswordParam {
+    token: string;
+    role: string;
+    newPassword: string;
+}
+
+export interface ConfirmEmailParam {
+    token: string;
+    role: string;
+}
+
 export interface JobFetchParam {
     page: number;
     limit: number;
