@@ -23,18 +23,18 @@ export const HeaderButtonList: HeaderButton[] = [
                 title: '最新動向、採用状況',
                 to: '/business/business-new'
             },
-            {
-                title: 'リユース業界ニュース',
-                to: '/news'
-            },
-            {
-                title: '用語集',
-                to: '/business/glossary'
-            },
-            {
-                title: 'リユース関連の本',
-                to: '/business/book'
-            },
+            // {
+            //     title: 'リユース業界ニュース',
+            //     to: '/news'
+            // },
+            // {
+            //     title: '用語集',
+            //     to: '/business/glossary'
+            // },
+            // {
+            //     title: 'リユース関連の本',
+            //     to: '/business/book'
+            // },
         ]
     },
     {
@@ -124,18 +124,18 @@ export const FooterButtonList = [
                 title: '最新動向、採用状況',
                 to: '/business/business-new'
             },
-            {
-                title: 'リユース関連の本',
-                to: '/business/book'
-            },
-            {
-                title: '用語集',
-                to: '/business/glossary'
-            },
-            {
-                title: 'リユース業界ニュース',
-                to: '/news'
-            }
+            // {
+            //     title: 'リユース関連の本',
+            //     to: '/business/book'
+            // },
+            // {
+            //     title: '用語集',
+            //     to: '/business/glossary'
+            // },
+            // {
+            //     title: 'リユース業界ニュース',
+            //     to: '/news'
+            // }
         ]
     },
     {
@@ -936,7 +936,7 @@ export const customerVoices: CustomerVoiceItemData[] = [
 export const pricePlans: PricePlanData[] = [
     {
         title: "求人広告",
-        subtitle: "※春の企業応援キャンペーン実施中",
+        subtitle: "※夏の企業応援キャンペーン実施中",
         image: "",
         planTitle: "PLAN 01",
         details: [
@@ -950,7 +950,7 @@ export const pricePlans: PricePlanData[] = [
                 label: "料金",
                 value: "40万円→0円（税別）",
                 description: "※求人原稿の作成・入稿は企業様にご対応いただきます。\n作成、入稿代行を希望される場合は別途費用がかかります。",
-                link: { text: "詳細はこちらから", href: "https://reuse-tenshoku.com/recycle-tsushin-25spring%5Fcampaign/" }
+                link: { text: "詳細はこちらから", href: "https://reuse-tenshoku.com/recycle-tsushin-25summer_campaign/" }
             }
         ],
         altText: "求人広告"
