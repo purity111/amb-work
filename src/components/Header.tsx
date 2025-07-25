@@ -6,22 +6,21 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import CollapsibleItem from "./CollapsableItem";
-import RegisterModal from "./modal/Register";
-import LoginModal from "./modal/Login";
 import HeaderAvatar from "./HeaderAvatar";
 import { useRouter } from "next/navigation";
 import { useAuthContext } from "@/app/layout";
 import api from "@/lib/axios";
+import AuthModal from "./modal/Auth";
 
 export default function Header() {
     const [open, setOpen] = useState(false);
-    const [registerModalShown, setRegisterModalShown] = useState(false);
-    const [loginModalShown, setLoginModalShown] = useState(false);
+    const [authModalState, setAuthModalState] = useState(0); // 1: Login, 2: Register
     const [isMounted, setIsMounted] = useState(false);
 
     const { profile, isAuthenticated, token, logout } = useAuthContext();
 
     const router = useRouter();
+
     useEffect(() => {
         setIsMounted(true);
         if (!isAuthenticated) return;
@@ -45,19 +44,6 @@ export default function Header() {
             return config;
         });
     }, [token, router, isAuthenticated])
-
-    const onLoginSuccess = () => {
-        setLoginModalShown(false);
-        // client-side reload only
-        if (typeof window !== 'undefined') {
-            window.location.reload();
-        }
-    }
-
-    const onCloseRegisterModal = (success?: boolean) => {
-        setRegisterModalShown(false)
-        if (success) setLoginModalShown(true);
-    }
 
     const handleToggleClick = () => {
         setOpen(!open)
@@ -156,7 +142,7 @@ export default function Header() {
             <div className="relative flex flex-1 flex-row justify-end items-center lg:hidden">
                 {
                     !isAuthenticated &&
-                    <div className={`flex flex-col items-center mr-3 cursor-pointer hover:opacity-60`} onClick={() => setRegisterModalShown(true)}>
+                    <div className={`flex flex-col items-center mr-3 cursor-pointer hover:opacity-60`} onClick={() => setAuthModalState(2)}>
                         <div className="relative w-4 sm:w-6 aspect-[1]">
                             <Image
                                 src="/svgs/register_icon.svg"
@@ -169,7 +155,7 @@ export default function Header() {
                 }
                 {
                     !isAuthenticated &&
-                    <div className={`flex flex-col items-center mr-3 cursor-pointer hover:opacity-60`} onClick={() => setLoginModalShown(true)}>
+                    <div className={`flex flex-col items-center mr-3 cursor-pointer hover:opacity-60`} onClick={() => setAuthModalState(1)}>
                         <div className="relative w-4 sm:w-6 aspect-[1]">
                             <Image src="/svgs/login_icon.svg" alt="register-icon" width={25} height={25} />
                         </div>
@@ -197,14 +183,14 @@ export default function Header() {
                     <div className="h-full flex-col hidden lg:flex">
                         <div
                             className="cursor-pointer text-white flex-1 flex flex-row items-center px-6 bg-green hover:opacity-50 duration-400"
-                            onClick={() => setRegisterModalShown(true)}
+                            onClick={() => setAuthModalState(2)}
                         >
                             <Image src="/svgs/register_icon.svg" alt="register-icon" width={16} height={16} />
                             <span className="ml-2">会員登録</span>
                         </div>
                         <div
                             className="cursor-pointer text-white flex-1 flex flex-row items-center px-6 bg-blue hover:opacity-50 duration-400"
-                            onClick={() => setLoginModalShown(true)}
+                            onClick={() => setAuthModalState(1)}
                         >
                             <Image src="/svgs/login_icon.svg" alt="register-icon" width={16} height={16} />
                             <span className="ml-2">ログイン</span>
@@ -212,11 +198,8 @@ export default function Header() {
                     </div>
                 )
             )}
-            {registerModalShown && (
-                <RegisterModal onClose={onCloseRegisterModal} />
-            )}
-            {loginModalShown && (
-                <LoginModal onClose={() => setLoginModalShown(false)} onSuccess={onLoginSuccess} />
+            {authModalState > 0 && (
+                <AuthModal initialStep={authModalState === 1 ? 'Login' : 'Register'} onClose={() => setAuthModalState(0)} />
             )}
         </header>
     );

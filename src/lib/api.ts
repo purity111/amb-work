@@ -1,7 +1,7 @@
 import { RegisterEmployerParam, RegisterJobSeekerParam, LoginParam, JobParam, RecruitingCriteria, AdminCriteriaFetchParam, BookmarkJobParam, CreateUpdateCriteriaFetchParam, ApplicationFetchParam, BookmarkedJobsFetchParams, ColumnFetchParam, Column, ColumnResponse, InterviewFetchParam, InterviewResponse, Interview, CompanyApplicationParam, CompanyApplicationResponse, ContactInquiryParam, ContactFetchParam, CareerConsultationParam } from "@/utils/types";
 import api from './axios';
 import { toQueryString } from "@/utils/helper";
-import type { JobSeekerFilterParam } from '@/utils/types';
+import type { ConfirmEmailParam, ForgotPasswordParam, JobSeekerFilterParam, ResetPasswordParam } from '@/utils/types';
 
 //Auth
 export const registerAsEmployer = async (param: RegisterEmployerParam) => {
@@ -16,6 +16,21 @@ export const registerAsJobSeeker = async (param: RegisterJobSeekerParam) => {
 
 export const login = async (param: LoginParam) => {
     const response = await api.post('/auth/login', param);
+    return response.data;
+};
+
+export const forgotPassword = async (param: ForgotPasswordParam) => {
+    const response = await api.post('/auth/forgot-password', param);
+    return response.data;
+};
+
+export const resetPassword = async (param: ResetPasswordParam) => {
+    const response = await api.post('/auth/reset-password', param);
+    return response.data;
+};
+
+export const confirmEmail = async (param: ConfirmEmailParam) => {
+    const response = await api.post('/auth/confirm-email', param);
     return response.data;
 };
 

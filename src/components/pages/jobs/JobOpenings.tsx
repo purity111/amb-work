@@ -17,9 +17,9 @@ import { JobFilterFormValue } from "./JobFilterForm";
 import { useAuthContext } from "@/app/layout";
 import { useGetFeatures } from "@/hooks/useGetFeatures";
 import { MapData } from "@/utils/constants";
-import LoginModal from "@/components/modal/Login";
 import Dialog from '@/components/Dialog';
 import Link from "next/link";
+import AuthModal from "@/components/modal/Auth";
 
 const now = new Date();
 
@@ -47,11 +47,11 @@ export default function JobList({
     const [prefectures, setPrefectures] = useState<string[]>([]);
     const [features, setFeatures] = useState<FeatureParams | null>(null);
     const [searchTags, setSearchTags] = useState<PickOption[]>([]);
-    const [loginModalShown, setLoginModalShown] = useState(false);
     const [applyModalShown, setApplyModalShown] = useState(false);
     const [selectedJobId, setSelectedJobId] = useState<number | null>(null);
     const [jobseekerApplications, setJobseekerApplications] = useState<number[]>([]);
     const [optimisticBookmarkedSet, setOptimisticBookmarkedSet] = useState<Set<number>>(new Set());
+    const [authModalState, setAuthModalState] = useState(0); // 1: Login, 2: Register
 
     const router = useRouter()
     const urlIndexingParam = useParams();
@@ -455,7 +455,7 @@ export default function JobList({
                                     className={`flex-1 border-2 border-yellow text-yellow rounded-sm ${!isLoggedIn ? 'cursor-pointer' : bookmarkShouldBeDisabled ? '!cursor-not-allowed opacity-60' : 'cursor-pointer'}`}
                                     onClick={() => {
                                         if (!isLoggedIn) {
-                                            setLoginModalShown(true);
+                                            setAuthModalState(1);
                                             return;
                                         }
                                         if (profile?.role === 'JobSeeker') {
@@ -484,7 +484,7 @@ export default function JobList({
                                     text={applyButtonText}
                                     hasNavIcon
                                     onClick={() => {
-                                        if (!isLoggedIn) setLoginModalShown(true);
+                                        if (!isLoggedIn) setAuthModalState(1);
                                         else if (profile?.role === 'JobSeeker' && !alreadyApplied) handleApply(job.id);
                                         else if (alreadyApplied) router.push('/mypage/application_mng');
                                     }}
@@ -506,8 +506,8 @@ export default function JobList({
                     searchText={searchTerm}
                 />
             )}
-            {loginModalShown && (
-                <LoginModal onClose={() => setLoginModalShown(false)} onSuccess={() => setLoginModalShown(false)} />
+            {authModalState > 0 && (
+                <AuthModal initialStep={authModalState === 1 ? 'Login' : 'Register'} onClose={() => setAuthModalState(0)} />
             )}
             {applyModalShown && (
                 <Dialog
