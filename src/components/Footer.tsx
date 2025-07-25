@@ -5,14 +5,12 @@ import Image from "next/image";
 import Link from "next/link";
 import { useAuthContext } from "@/app/layout";
 import { useState, useEffect } from "react";
-import RegisterModal from "@/components/modal/Register";
-import LoginModal from "@/components/modal/Login";
+import AuthModal from "./modal/Auth";
 
 export default function Footer() {
     const { isAuthenticated } = useAuthContext();
     const [isMounted, setIsMounted] = useState(false);
-    const [loginModalShown, setLoginModalShown] = useState(false);
-    const [registerModalShown, setRegisterModalShown] = useState(false);
+    const [authModalState, setAuthModalState] = useState(0); // 1: Login, 2: Register
 
     useEffect(() => {
         setIsMounted(true);
@@ -59,8 +57,8 @@ export default function Footer() {
                     </div>
                     <div className="flex flex-row items-center py-3">
                         {isAuthenticated ? (
-                            <Link 
-                                href="/mypage" 
+                            <Link
+                                href="/mypage"
                                 className="cursor-pointer text-white flex-1 flex flex-row justify-center items-center py-2 px-6 bg-blue hover:opacity-50 duration-400"
                             >
                                 <Image src="/svgs/login_icon.svg" alt="mypage-icon" width={16} height={16} />
@@ -68,11 +66,11 @@ export default function Footer() {
                             </Link>
                         ) : (
                             <>
-                                <div className="cursor-pointer text-white flex-1 flex flex-row items-center py-2 px-6 bg-green hover:opacity-50 duration-400" onClick={() => setRegisterModalShown(true)}>
+                                <div className="cursor-pointer text-white flex-1 flex flex-row items-center py-2 px-6 bg-green hover:opacity-50 duration-400" onClick={() => setAuthModalState(2)}>
                                     <Image src="/svgs/register_icon.svg" alt="register-icon" width={16} height={16} />
                                     <span className="ml-2">会員登録</span>
                                 </div>
-                                <div className="cursor-pointer text-white flex-1 flex flex-row items-center py-2 px-6 bg-blue hover:opacity-50 duration-400" onClick={() => setLoginModalShown(true)}>
+                                <div className="cursor-pointer text-white flex-1 flex flex-row items-center py-2 px-6 bg-blue hover:opacity-50 duration-400" onClick={() => setAuthModalState(1)}>
                                     <Image src="/svgs/login_icon.svg" alt="register-icon" width={16} height={16} />
                                     <span className="ml-2">ログイン</span>
                                 </div>
@@ -88,11 +86,8 @@ export default function Footer() {
                     </div>
                 </div>
             </div>
-            {loginModalShown && (
-                <LoginModal onClose={() => setLoginModalShown(false)} onSuccess={() => setLoginModalShown(false)} />
-            )}
-            {registerModalShown && (
-                <RegisterModal onClose={() => setRegisterModalShown(false)} />
+            {authModalState > 0 && (
+                <AuthModal initialStep={authModalState === 1 ? 'Login' : "Register"} onClose={() => setAuthModalState(0)} />
             )}
         </footer>
     );

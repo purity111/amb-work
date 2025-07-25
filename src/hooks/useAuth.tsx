@@ -1,6 +1,6 @@
 // hooks/useAuth.ts
 import api from '@/lib/axios';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
 
 export interface Profile {
@@ -45,6 +45,7 @@ export function useAuth() {
     const [formIsDirty, setFormIsDirty] = useState(false);
 
     const router = useRouter();
+    const pathname = usePathname();
 
     useEffect(() => {
         if (typeof window === 'undefined') return;
@@ -53,10 +54,10 @@ export function useAuth() {
         const savedProfile = localStorage.getItem('profile');
 
         setToken(savedToken);
-
-        // if (!savedToken) {
-        //     router.push('/')
-        // }
+        if (!savedToken && pathname.includes('/mypage')) {
+            console.log({ pathname })
+            router.push(`/?auth=login&redirectTo=${pathname}`)
+        }
 
         if (savedProfile) {
             try {

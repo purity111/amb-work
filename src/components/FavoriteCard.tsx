@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Button from './common/Button';
 import CButton from './common/Button';
 import Spinner from './common/Spinner';
@@ -7,7 +7,6 @@ import { useAuthContext } from '@/app/layout';
 import { bookmarkJob } from '@/lib/api';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
-import LoginModal from './modal/Login';
 import { format } from 'date-fns';
 
 interface FavoriteCardProps {
@@ -46,9 +45,8 @@ const FavoriteCard: React.FC<FavoriteCardProps> = ({
   onDetailsClick,
 }) => {
   const headerBgClass = templateId === 1 ? 'bg-blue' : 'bg-orange';
-  const { profile } = useAuthContext();
+  const { logout, profile } = useAuthContext();
   const queryClient = useQueryClient();
-  const [loginModalShown, setLoginModalShown] = useState(false);
 
   // Format application date in Japanese format
   const formatApplicationDate = (dateString: string) => {
@@ -79,7 +77,7 @@ const FavoriteCard: React.FC<FavoriteCardProps> = ({
 
   const handleBookmarkToggle = () => {
     if (!profile?.role) {
-      setLoginModalShown(true);
+      logout();
       return;
     }
     if (confirm('本当にお気に入りを解除しますか？')) {
@@ -166,13 +164,6 @@ const FavoriteCard: React.FC<FavoriteCardProps> = ({
           </div>
         </div>
       </div>
-
-      {loginModalShown && (
-        <LoginModal
-          onClose={() => setLoginModalShown(false)}
-          onSuccess={() => setLoginModalShown(false)}
-        />
-      )}
     </>
   );
 };

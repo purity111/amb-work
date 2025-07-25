@@ -3,14 +3,12 @@
 import JobList from "@/components/pages/jobs/JobOpenings";
 import React, { Suspense } from "react";
 import { useState } from "react";
-import RegisterModal from "@/components/modal/Register";
-import LoginModal from "@/components/modal/Login";
 import { useAuthContext } from "@/app/layout";
 import { useParams } from 'next/navigation';
+import AuthModal from "@/components/modal/Auth";
 
 export default function JobOpeningsPage() {
-    const [registerModalShown, setRegisterModalShown] = useState(false);
-    const [loginModalShown, setLoginModalShown] = useState(false);
+    const [authModalState, setAuthModalState] = useState(0); // 1: Login, 2: Register
     const { isAuthenticated } = useAuthContext();
     const params = useParams();
     // params.params is an array of segments, may be undefined
@@ -33,14 +31,14 @@ export default function JobOpeningsPage() {
                         <>
                             <span
                                 className="text-blue-600 underline cursor-pointer"
-                                onClick={() => setRegisterModalShown(true)}
+                                onClick={() => setAuthModalState(2)}
                             >
                                 会員登録
                             </span>
                             ・
                             <span
                                 className="text-blue-600 underline cursor-pointer"
-                                onClick={() => setLoginModalShown(true)}
+                                onClick={() => setAuthModalState(1)}
                             >
                                 ログイン
                             </span>
@@ -64,7 +62,7 @@ export default function JobOpeningsPage() {
                         からお申込ください。
                     </p>
                     {/* Pass parsed filters to JobList as needed */}
-                    <JobList 
+                    <JobList
                         prefectures={prefectures}
                         jobTypes={jobTypes}
                         items={items}
@@ -73,11 +71,8 @@ export default function JobOpeningsPage() {
                     />
                 </div>
             </Suspense>
-            {registerModalShown && (
-                <RegisterModal onClose={() => setRegisterModalShown(false)} />
-            )}
-            {loginModalShown && (
-                <LoginModal onClose={() => setLoginModalShown(false)} onSuccess={() => setLoginModalShown(false)} />
+            {authModalState > 0 && (
+                <AuthModal initialStep={authModalState === 1 ? 'Login' : 'Register'} onClose={() => setAuthModalState(0)} />
             )}
         </>
     )

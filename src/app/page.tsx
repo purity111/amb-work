@@ -17,15 +17,30 @@ import InterviewCard from '@/components/pages/interview/InterviewCard';
 import Link from 'next/link';
 import { getFilterJobUrl } from '@/utils/helper';
 import Spinner from '@/components/common/Spinner';
+import AuthModal from '@/components/modal/Auth';
 
 
 export default function HomePage() {
   const router = useRouter();
   const { data: featuresData, isLoading: featuresLoading } = useGetFeatures();
   const [recommendedColumns, setRecommendedColumns] = useState<any[]>([]);
+  const [authModalState, setAuthModalState] = useState(0); // 1: Login, 2: Register
 
   useEffect(() => {
     document.title = 'リユース転職サービス';
+  }, []);
+
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('auth') === 'login') {
+        setAuthModalState(1);
+      }
+      if (params.get('auth') === 'register') {
+        setAuthModalState(2);
+      }
+    }
   }, []);
 
   useEffect(() => {
@@ -202,6 +217,9 @@ export default function HomePage() {
       </section>
 
       <Footer />
+      {authModalState > 0 && (
+        <AuthModal initialStep={authModalState === 1 ? 'Login' : 'Register'} onClose={() => setAuthModalState(0)} />
+      )}
     </div >
   );
 }
