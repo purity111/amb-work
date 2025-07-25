@@ -18,8 +18,7 @@ import { useMutation } from '@tanstack/react-query';
 import { bookmarkJob, createApplication, getApplicationsByRole } from '@/lib/api';
 import { toast } from 'react-toastify';
 import Dialog from "@/components/Dialog";
-import LoginModal from "@/components/modal/Login";
-import RegisterModal from "@/components/modal/Register";
+import AuthModal from "@/components/modal/Auth";
 
 export default function JobPreviewDetails() {
     const params = useParams();
@@ -31,8 +30,7 @@ export default function JobPreviewDetails() {
     const aboutSectionRef = useRef<HTMLDivElement | null>(null);
     const informationSectionRef = useRef<HTMLDivElement | null>(null);
 
-    const [registerModalShown, setRegisterModalShown] = useState(false);
-    const [loginModalShown, setLoginModalShown] = useState(false);
+    const [authModalState, setAuthModalState] = useState(0); // 1: Login, 2: Register
     const { data, isLoading } = useGetJobById(Number(id));
     const [width] = useWindowSize();
     const { profile } = useAuthContext();
@@ -228,11 +226,6 @@ export default function JobPreviewDetails() {
         setApplyModalShown(false);
     };
 
-    const onNavigateRegister = () => {
-        setLoginModalShown(false);
-        setRegisterModalShown(true);
-    };
-
     const alreadyApplied = jobseekerApplications.includes(job.id);
 
     return (
@@ -291,7 +284,7 @@ export default function JobPreviewDetails() {
                         className={`bg-white text-${themeColor} rounded-lg ${!isLoggedIn ? 'cursor-pointer' : bookmarkShouldBeDisabled ? '!cursor-not-allowed opacity-60' : 'cursor-pointer'}`}
                         onClick={() => {
                             if (!isLoggedIn) {
-                                setLoginModalShown(true);
+                                setAuthModalState(1);
                                 return;
                             }
                             if (profile?.role === 'JobSeeker') {
@@ -322,7 +315,7 @@ export default function JobPreviewDetails() {
                         className={`border-2 ${themeColor === 'blue' ? 'border-blue text-blue' : 'border-orange text-orange'} rounded-sm min-w-[140px] transition py-[10px] px-[24px] text-base ${alreadyApplied ? 'bg-gray-500 text-white cursor-pointer' : 'bg-white'}`}
                         onClick={() => {
                             if (!isLoggedIn) {
-                                setLoginModalShown(true);
+                                setAuthModalState(1);
                                 return;
                             }
                             if (profile?.role === 'JobSeeker' && !alreadyApplied) {
@@ -445,15 +438,8 @@ export default function JobPreviewDetails() {
                     onPressCancel={() => setApplyModalShown(false)}
                 />
             )}
-            {registerModalShown && (
-                <RegisterModal onClose={() => setRegisterModalShown(false)} />
-            )}
-            {loginModalShown && (
-                <LoginModal
-                    onClose={() => setLoginModalShown(false)}
-                    onSuccess={() => setLoginModalShown(false)}
-                    onNavigateRegister={onNavigateRegister}
-                />
+            {authModalState > 0 && (
+                <AuthModal initialStep={authModalState === 1 ? 'Login' : 'Register'} onClose={() => setAuthModalState(0)} />
             )}
         </div >
     );

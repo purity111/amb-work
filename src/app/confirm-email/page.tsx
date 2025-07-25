@@ -3,12 +3,12 @@
 import React, { useEffect, useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { confirmEmail } from '@/lib/api';
-import { toast } from 'react-toastify';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Spinner from '@/components/common/Spinner';
 import { useAuthContext } from '../layout';
 
 export default function ConfirmEmailPage() {
+    const [errorText, setErrorText] = useState('')
     const [isSuccess, setIsSuccess] = useState(false);
     const { saveCredentails } = useAuthContext();
     const router = useRouter();
@@ -23,9 +23,7 @@ export default function ConfirmEmailPage() {
             router.push('/');
         },
         onError: (error: any) => {
-            console.log('confirm email error: ', error)
-            console.log(error?.response.data)
-            toast.error(error?.response?.data?.message || '予期しないエラー');
+            setErrorText(error?.response?.data?.message || '予期しないエラー');
         },
     });
 
@@ -52,12 +50,16 @@ export default function ConfirmEmailPage() {
                     <h1 className="ml-4 text-2xl text-center text-black">メールアドレスの確認</h1>
                 </div>
             )}
+            {errorText && (
+                <div className="flex items-center justify-center mt-10">
+                    <h1 className="ml-4 text-2xl text-center text-black">{errorText}</h1>
+                </div>
+            )}
             {isSuccess && (
                 <div className="flex items-center justify-center mt-10">
                     <h1 className="ml-4 text-2xl text-center font-bold text-blue">メールが正常に確認されました。</h1>
                 </div>
             )}
-
         </main>
     )
 }
