@@ -209,7 +209,7 @@ export default function JobMngPage() {
         <div className="border-b-1 border-gray-700 pt-10 pb-5 flex flex-col">
           <h2 className='text-center mb-6 text-[24px] md:text-[32px] font-bold'>応募管理ページ</h2>
           <div className="flex-1 flex flex-row items-center space-x-2 space-y-2">
-            <div className="flex-1">
+            <div className="flex-1 m-0">
               <CButton
                 text="新規作成"
                 className='bg-blue text-white text-sm h-[40px]'
@@ -247,6 +247,10 @@ export default function JobMngPage() {
               </CSVLink>
             )}
 
+          </div>
+          <div className="flex flex-row items-center">
+            <p>選択済み: {getSelectedJobs.length} 求人</p>
+            <span className="ml-2 text-blue cursor-pointer" onClick={onClearSelectedJobs}>クリア</span>
           </div>
           <div className="flex flex-col lg:flex-row lg:space-x-3">
             <div className="flex-1 flex flex-row justify-between md:justify-start items-center space-x-3 pt-2">
@@ -297,10 +301,7 @@ export default function JobMngPage() {
             />
           )}
         </div>
-        <div className="flex flex-row items-center">
-          <p>Selected: {getSelectedJobs.length} jobs</p>
-          <span className="ml-2 text-blue cursor-pointer" onClick={onClearSelectedJobs}>Clear</span>
-        </div>
+
         <div className="flex flex-col space-y-5 mt-10 pb-10">
           {jobLoading && (
             <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto"></div>

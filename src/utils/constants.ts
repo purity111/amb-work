@@ -1596,8 +1596,8 @@ export const FGA_QUALIFICATION_DATA: SikakuItemProps[] = [
         ],
         notes: '※英国宝石学協会が認定する宝石学資格が「FGA」について、日本宝飾クラフト学院　宝石学　講師の鈴木敏文さんにご監修いただきました。詳しくはこちらをご覧ください。',
     },
-    
-    
+
+
 ];
 
 export const SIKAKU_ORDER_ITEMS: SikakuOrderItemProps[] = [
@@ -1652,210 +1652,296 @@ export const INEXPERIENCE_NAYAMI_ITEMS = [
 ];
 
 export const EXPERIENCE_REASON_ITEMS = [
-  'リユース業界の経験者（元人事・店長）が親身にサポートしている',
-  '経験者を求めている企業情報を持つため、キャリアアップできる案件が豊富',
-  '大手（上場）から成長ベンチャー、地元密着企業まで多様な企業と接点あり',
-  '他社エージェントにない、独自保有の求人に出会える',
-  'ニッチ求人やハイクラス求人など、専門性の高いマッチングが可能',
+    'リユース業界の経験者（元人事・店長）が親身にサポートしている',
+    '経験者を求めている企業情報を持つため、キャリアアップできる案件が豊富',
+    '大手（上場）から成長ベンチャー、地元密着企業まで多様な企業と接点あり',
+    '他社エージェントにない、独自保有の求人に出会える',
+    'ニッチ求人やハイクラス求人など、専門性の高いマッチングが可能',
 ];
 
 export const EXPERIENCE_SUCCESS_CASES = [
-  {
-    caseNo: 'CASE 01',
-    caseTitle: '専門性を高める',
-    caseSubtitle: '総合リユースからブランドリユース企業へ',
-    tag: '30代男性',
-    image: '/images/experience/man1.png',
-    description: '8年間務めてきた中で、時計の専門性を高めたいという気持ちが強くなっていきました。腕時計商材に強みを持つブランド買取ショップに転職。日々時計を見て勉強中です。',
-  },
-  {
-    caseNo: 'CASE 02',
-    caseTitle: 'キャリアを上げる',
-    caseSubtitle: '地元リサイクルショップから上場総合リユースへ',
-    tag: '20代男性',
-    image: '/images/experience/man2.png',
-    description: '結婚し、ライフステージが変わったことで、もっとキャリアアップができる環境に移りたいと考えるように。男性でも育休が取得できるという環境にも魅力に感じています。',
-  },
-  {
-    caseNo: 'CASE 03',
-    caseTitle: 'キャリアチェンジする',
-    caseSubtitle: '買取スタッフからリユース業界の法人営業職へ',
-    tag: '30代女性',
-    image: '/images/experience/man3.png',
-    description: 'コミュニケーション力を活かしつつ、もう少し違うキャリアを築きたいと考えていました。シフト制から土日休みが取れ、長期的にも働きやすい環境になりました。',
-  },
+    {
+        caseNo: 'CASE 01',
+        caseTitle: '専門性を高める',
+        caseSubtitle: '総合リユースからブランドリユース企業へ',
+        tag: '30代男性',
+        image: '/images/experience/man1.png',
+        description: '8年間務めてきた中で、時計の専門性を高めたいという気持ちが強くなっていきました。腕時計商材に強みを持つブランド買取ショップに転職。日々時計を見て勉強中です。',
+    },
+    {
+        caseNo: 'CASE 02',
+        caseTitle: 'キャリアを上げる',
+        caseSubtitle: '地元リサイクルショップから上場総合リユースへ',
+        tag: '20代男性',
+        image: '/images/experience/man2.png',
+        description: '結婚し、ライフステージが変わったことで、もっとキャリアアップができる環境に移りたいと考えるように。男性でも育休が取得できるという環境にも魅力に感じています。',
+    },
+    {
+        caseNo: 'CASE 03',
+        caseTitle: 'キャリアチェンジする',
+        caseSubtitle: '買取スタッフからリユース業界の法人営業職へ',
+        tag: '30代女性',
+        image: '/images/experience/man3.png',
+        description: 'コミュニケーション力を活かしつつ、もう少し違うキャリアを築きたいと考えていました。シフト制から土日休みが取れ、長期的にも働きやすい環境になりました。',
+    },
 ];
 
 export const INEXPERIENCE_SUCCESS_CASES = [
     {
-      caseNo: 'CASE 01',
-      caseTitle: '好きを仕事にする',
-      caseSubtitle: '美容師からアパレルリユース企業へ',
-      tag: '20代女性',
-      image: '/images/inexperience/man1.png',
-      description: '手荒れが原因で転職し、ずっと好きだった古着を扱える仕事に就きました。日々様々な洋服に触れることができ刺激的です。土日休みで残業もほとんどないので、働きやすい環境です。',
+        caseNo: 'CASE 01',
+        caseTitle: '好きを仕事にする',
+        caseSubtitle: '美容師からアパレルリユース企業へ',
+        tag: '20代女性',
+        image: '/images/inexperience/man1.png',
+        description: '手荒れが原因で転職し、ずっと好きだった古着を扱える仕事に就きました。日々様々な洋服に触れることができ刺激的です。土日休みで残業もほとんどないので、働きやすい環境です。',
     },
     {
-      caseNo: 'CASE 02',
-      caseTitle: '成長産業にキャリアチェンジする',
-      caseSubtitle: '大手小売業から上場総合リユースへ',
-      tag: '30代男性',
-      image: '/images/inexperience/man2.png',
-      description: '10年間勤めてきた中で、もっとワクワクできる仕事がしたいと考えるように。リユースの可能性はずっと感じていたので、家族からも応援してもらい、思い切って転職しました。',
+        caseNo: 'CASE 02',
+        caseTitle: '成長産業にキャリアチェンジする',
+        caseSubtitle: '大手小売業から上場総合リユースへ',
+        tag: '30代男性',
+        image: '/images/inexperience/man2.png',
+        description: '10年間勤めてきた中で、もっとワクワクできる仕事がしたいと考えるように。リユースの可能性はずっと感じていたので、家族からも応援してもらい、思い切って転職しました。',
     },
     {
-      caseNo: 'CASE 03',
-      caseTitle: '未経験だが強みを生かす',
-      caseSubtitle: 'コールセンターSVからバイヤーへ',
-      tag: '30代女性',
-      image: '/images/inexperience/man3.png',
-      description: '同じように数字を追いかける仕事でもあり、これまでの目標達成志向がまさかバイヤーでも活かせるとは驚きました。質の良いブランド品をたくさんのお客様に届けたいです。',
+        caseNo: 'CASE 03',
+        caseTitle: '未経験だが強みを生かす',
+        caseSubtitle: 'コールセンターSVからバイヤーへ',
+        tag: '30代女性',
+        image: '/images/inexperience/man3.png',
+        description: '同じように数字を追いかける仕事でもあり、これまでの目標達成志向がまさかバイヤーでも活かせるとは驚きました。質の良いブランド品をたくさんのお客様に届けたいです。',
     },
-  ];
-  
+];
+
 export const MID_HIGH_POINTS = [
-  {
-    number: 1,
-    label: 'POINT',
-    imageUrl: '/images/mid-high/point01.png',
-    title: '精度高いマッチング',
-    description: '業界特化型で企業の内部を良く知る弊社コンサルタントが一人ひとりにきめ細かく、柔軟に対応するので、精度高いマッチングが可能。',
-  },
-  {
-    number: 2,
-    label: 'POINT',
-    imageUrl: '/images/mid-high/point02.png',
-    title: '希少性の高い非公開案件',
-    description: 'ミドル・ハイクラスのポジションは、求人媒体等に掲載されてない非公開案件が多く、希少性の高い案件が集まっています。',
-  },
-  {
-    number: 3,
-    label: 'POINT',
-    imageUrl: '/images/mid-high/point03.png',
-    title: '未来の可能性をアドバイス',
-    description: '自分ではミドル・ハイクラスはまだ先と思っている方も、キャリアコンサルタントがあなたの歩まれてきたキャリアを分析して、未来の可能性をアドバイス。',
-  },
-  // Add more points as needed
+    {
+        number: 1,
+        label: 'POINT',
+        imageUrl: '/images/mid-high/point01.png',
+        title: '精度高いマッチング',
+        description: '業界特化型で企業の内部を良く知る弊社コンサルタントが一人ひとりにきめ細かく、柔軟に対応するので、精度高いマッチングが可能。',
+    },
+    {
+        number: 2,
+        label: 'POINT',
+        imageUrl: '/images/mid-high/point02.png',
+        title: '希少性の高い非公開案件',
+        description: 'ミドル・ハイクラスのポジションは、求人媒体等に掲載されてない非公開案件が多く、希少性の高い案件が集まっています。',
+    },
+    {
+        number: 3,
+        label: 'POINT',
+        imageUrl: '/images/mid-high/point03.png',
+        title: '未来の可能性をアドバイス',
+        description: '自分ではミドル・ハイクラスはまだ先と思っている方も、キャリアコンサルタントがあなたの歩まれてきたキャリアを分析して、未来の可能性をアドバイス。',
+    },
+    // Add more points as needed
 ];
 
 export const MID_HIGH_SWIPER_CARDS = [
-  {
-    category: '営業',
-    title: '店舗統括（部長候補）',
-    salaryMin: 800,
-    salaryMax: 1100,
-    salaryUnit: '万円',
-    descriptionTitle: '業務内容',
-    description: '店舗（買取・販売）の統括マネジメント\n数値管理、店長陣のマネジメント\n販促施策、KPI推進',
-  },
-  {
-    category: '管理',
-    title: 'WEBマーケティングマネージャー',
-    salaryMin: 700,
-    salaryMax: 900,
-    salaryUnit: '万円',
-    descriptionTitle: '業務内容',
-    description: 'リスティング、動画、\nSNSなどの各種手法の運用\n外部パートナー（広告代理店等）のディレクション',
-  },
-  {
-    category: '専門',
-    title: '鑑定士（ブランド品・バッグ／時計）',
-    salaryMin: 750,
-    salaryMax: 1000,
-    salaryUnit: '万円',
-    descriptionTitle: '業務内容',
-    description: 'ブランド品の真贋、査定\n各販売チャネルへの仕分け\n偽物を報告レポート',
-  },
-  {
-    category: '営業',
-    title: '店舗開発責任者',
-    salaryMin: 700,
-    salaryMax: 850,
-    salaryUnit: '万円',
-    descriptionTitle: '業務内容',
-    description: '全社出店戦略に基づく新規物件開発\n店舗設計管理・内装デザイン／工程管理',
-  },
-  {
-    category: '管理',
-    title: '経理財務／部署責任者候補',
-    salaryMin: 600,
-    salaryMax: 750,
-    salaryUnit: '万円',
-    descriptionTitle: '業務内容',
-    description: '部署の体制強化\n取引形態の変更に伴う会計処理の安定化\n海外事業展開における会計処理のスキーム構築',
-  },
-  {
-    category: '専門',
-    title: '訪問買取営業',
-    salaryMin: 500,
-    salaryMax: 1000,
-    salaryUnit: '万円',
-    descriptionTitle: '業務内容',
-    description: '個人客を訪問し、査定・買取\n取扱アイテムは貴金属、ブランド品が中心',
-  },
+    {
+        category: '営業',
+        title: '店舗統括（部長候補）',
+        salaryMin: 800,
+        salaryMax: 1100,
+        salaryUnit: '万円',
+        descriptionTitle: '業務内容',
+        description: '店舗（買取・販売）の統括マネジメント\n数値管理、店長陣のマネジメント\n販促施策、KPI推進',
+    },
+    {
+        category: '管理',
+        title: 'WEBマーケティングマネージャー',
+        salaryMin: 700,
+        salaryMax: 900,
+        salaryUnit: '万円',
+        descriptionTitle: '業務内容',
+        description: 'リスティング、動画、\nSNSなどの各種手法の運用\n外部パートナー（広告代理店等）のディレクション',
+    },
+    {
+        category: '専門',
+        title: '鑑定士（ブランド品・バッグ／時計）',
+        salaryMin: 750,
+        salaryMax: 1000,
+        salaryUnit: '万円',
+        descriptionTitle: '業務内容',
+        description: 'ブランド品の真贋、査定\n各販売チャネルへの仕分け\n偽物を報告レポート',
+    },
+    {
+        category: '営業',
+        title: '店舗開発責任者',
+        salaryMin: 700,
+        salaryMax: 850,
+        salaryUnit: '万円',
+        descriptionTitle: '業務内容',
+        description: '全社出店戦略に基づく新規物件開発\n店舗設計管理・内装デザイン／工程管理',
+    },
+    {
+        category: '管理',
+        title: '経理財務／部署責任者候補',
+        salaryMin: 600,
+        salaryMax: 750,
+        salaryUnit: '万円',
+        descriptionTitle: '業務内容',
+        description: '部署の体制強化\n取引形態の変更に伴う会計処理の安定化\n海外事業展開における会計処理のスキーム構築',
+    },
+    {
+        category: '専門',
+        title: '訪問買取営業',
+        salaryMin: 500,
+        salaryMax: 1000,
+        salaryUnit: '万円',
+        descriptionTitle: '業務内容',
+        description: '個人客を訪問し、査定・買取\n取扱アイテムは貴金属、ブランド品が中心',
+    },
 ];
 
 export const MID_HIGH_CASES = [
-  {
-    id: 1,
-    caseNo: 'CASE 01',
-    ageGender: '40代男性の場合',
-    avatar: '/images/mid-high/case01.png',
-    caseImage: '/images/mid-high/case01.png',
-    reasonImage: '/images/mid-high/because.png',
-    reason: 'キャリアを活かし、新しい挑戦をしたい。\n中長期で取り組めるテーマに従事したい。',
-    beforeTitle: '転職前',
-    beforeDesc: '海外事業',
-    beforeSalary: '900',
-    afterTitle: '転職後',
-    afterDesc: '新規事業\n責任者候補',
-    afterSalary: '1000',
-  },
-  {
-    id: 2,
-    caseNo: 'CASE 02',
-    ageGender: '30代女性の場合',
-    avatar: '/images/mid-high/case02.png',
-    caseImage: '/images/mid-high/case02.png',
-    reasonImage: '/images/mid-high/because.png',
-    reason: '地方へ移住することに。\nスキルを活かせる地方のリユース企業を探したい。',
-    beforeTitle: '転職前',  
-    beforeDesc: '東京　リユース企業\nWEBマーケ責任者',
-    beforeSalary: '650',
-    afterTitle: '転職後',
-    afterDesc: '地方　リユース企業\nWEBマーケ責任者',
-    afterSalary: '650',
-  },
-  {
-    id: 2,
-    caseNo: 'CASE 03',
-    ageGender: '30代男性の場合',
-    avatar: '/images/mid-high/case02.png',
-    caseImage: '/images/mid-high/case02.png',
-    reasonImage: '/images/mid-high/because.png',
-    reason: '子供が生まれ、循環型ビジネスへ関心を持つ。\n今後、キャリアアップが見込める環境で働きたい。',
-    beforeTitle: '転職前',
-    beforeDesc: '大手小売店長',
-    beforeSalary: '600',
-    afterTitle: '転職後',
-    afterDesc: '大手リユース店長',
-    afterSalary: '650',
-  },
-  // Add more cases as needed
+    {
+        id: 1,
+        caseNo: 'CASE 01',
+        ageGender: '40代男性の場合',
+        avatar: '/images/mid-high/case01.png',
+        caseImage: '/images/mid-high/case01.png',
+        reasonImage: '/images/mid-high/because.png',
+        reason: 'キャリアを活かし、新しい挑戦をしたい。\n中長期で取り組めるテーマに従事したい。',
+        beforeTitle: '転職前',
+        beforeDesc: '海外事業',
+        beforeSalary: '900',
+        afterTitle: '転職後',
+        afterDesc: '新規事業\n責任者候補',
+        afterSalary: '1000',
+    },
+    {
+        id: 2,
+        caseNo: 'CASE 02',
+        ageGender: '30代女性の場合',
+        avatar: '/images/mid-high/case02.png',
+        caseImage: '/images/mid-high/case02.png',
+        reasonImage: '/images/mid-high/because.png',
+        reason: '地方へ移住することに。\nスキルを活かせる地方のリユース企業を探したい。',
+        beforeTitle: '転職前',
+        beforeDesc: '東京　リユース企業\nWEBマーケ責任者',
+        beforeSalary: '650',
+        afterTitle: '転職後',
+        afterDesc: '地方　リユース企業\nWEBマーケ責任者',
+        afterSalary: '650',
+    },
+    {
+        id: 2,
+        caseNo: 'CASE 03',
+        ageGender: '30代男性の場合',
+        avatar: '/images/mid-high/case02.png',
+        caseImage: '/images/mid-high/case02.png',
+        reasonImage: '/images/mid-high/because.png',
+        reason: '子供が生まれ、循環型ビジネスへ関心を持つ。\n今後、キャリアアップが見込める環境で働きたい。',
+        beforeTitle: '転職前',
+        beforeDesc: '大手小売店長',
+        beforeSalary: '600',
+        afterTitle: '転職後',
+        afterDesc: '大手リユース店長',
+        afterSalary: '650',
+    },
+    // Add more cases as needed
 ];
 
 export const JobSupportFeatures: { number: string; text: string }[] = [
-  { number: "01.", text: "業界出身のキャリアアドバイザーによるリアルかつ最新情報の提供" },
-  { number: "02.", text: "業界特有の仕事とスキルについてのコンテンツ（無料の真贋スキルチェックテスト）提供" },
-  { number: "03.", text: "業界経験者がキャリアアップできる求人多数" },
-  { number: "04.", text: "未経験から挑戦できる求人も豊富" },
-  { number: "05.", text: "正社員、アルバイト、業務委託など幅広い雇用形態に対応" },
-  { number: "06.", text: "バイヤー・鑑定士、店長・店舗スタッフ、営業、管理部門など幅広い職種取り扱い" },
-  { number: "07.", text: "大手企業、ベンチャー企業、地域密着の中小企業まで様々な企業の求人取り扱い" },
-  { number: "08.", text: "総合リユース・高額商材の買取専門店、オークション運営会社、質店など業態も様々" },
-  { number: "09.", text: "ハイクラス求人、非公開求人案件も紹介※" },
-  { number: "10.", text: "履歴書・職務経歴書の添削サポートや、事前の面接アドバイス・面接後フォローアップ※" },
-  { number: "11.", text: "内定及び入社まで及び、入社後の定着までも徹底フォロー※" },
-  { number: "12.", text: "国家資格キャリアコンサルタントによる自己分析やキャリアビジョン設計サポート※" },
+    { number: "01.", text: "業界出身のキャリアアドバイザーによるリアルかつ最新情報の提供" },
+    { number: "02.", text: "業界特有の仕事とスキルについてのコンテンツ（無料の真贋スキルチェックテスト）提供" },
+    { number: "03.", text: "業界経験者がキャリアアップできる求人多数" },
+    { number: "04.", text: "未経験から挑戦できる求人も豊富" },
+    { number: "05.", text: "正社員、アルバイト、業務委託など幅広い雇用形態に対応" },
+    { number: "06.", text: "バイヤー・鑑定士、店長・店舗スタッフ、営業、管理部門など幅広い職種取り扱い" },
+    { number: "07.", text: "大手企業、ベンチャー企業、地域密着の中小企業まで様々な企業の求人取り扱い" },
+    { number: "08.", text: "総合リユース・高額商材の買取専門店、オークション運営会社、質店など業態も様々" },
+    { number: "09.", text: "ハイクラス求人、非公開求人案件も紹介※" },
+    { number: "10.", text: "履歴書・職務経歴書の添削サポートや、事前の面接アドバイス・面接後フォローアップ※" },
+    { number: "11.", text: "内定及び入社まで及び、入社後の定着までも徹底フォロー※" },
+    { number: "12.", text: "国家資格キャリアコンサルタントによる自己分析やキャリアビジョン設計サポート※" },
 ];
-  
+
+export const BACKGROUNDS_SECTIONS = [
+    {
+        image: '/images/business/back1.jpg', // You may want to update this path to the actual image if different
+        backgroundsTitle: 'BACKGROUNDS 01',
+        mainHeading: '社会トレンドや消費スタイルの変革',
+        description1: `ビジネストレンドのである「シェアリングエコノミー」「サブスクリプション」。\nシェアリングエコノミーはモノやサービスの交換や共有によって成り立つ社会のこと、サブスクリプション、通称、サブスクは継続課金型のビジネスモデルのことです。`,
+        description2: `実はこの二つのキーワードはリユース業界と密接に関わりがあります。\n例えば、フリマアプリの「メルカリ」や洋服をコーディネートして定額制でレンタルできる「エアークローゼット」のサービスはまさにシェアの概念で成り立っています。\n\nモノを所有し続けるのではなく、シェアしたり必要なときに利用する、こういった社会トレンドや消費スタイルの変革が大きく関係しています。\n\nこれまでも"中古品"に対する心理的な障壁がなくなり、むしろモノや物を大切にするという文化の根付きや、"リセールバリュー"を考えて買い物をするというスマートなトレンドが主流になってきたことがあります。\nその結果、先述した通り、今までリユース・リサイクルの中心であったブランド品、貴金属・ジュエリー、チケット・金券、美術・工芸品、骨董などに加えて、家具・インテリア、家電、着物、アウトドア用品、楽器・ホビー用品、ベビー用品等ありとあらゆるものが対象になってきています。`,
+        order: 'image-left', // or 'image-right' if you want to support both
+    },
+    {
+        image: '/images/business/back2.jpg', // You may want to update this path to the actual image if different
+        backgroundsTitle: 'BACKGROUNDS 02',
+        mainHeading: 'IT技術の進歩',
+        description1: `また、IT技術の進歩により、フリマアプリに代表される気軽に売却できるツールが圧倒的に増えたことも市場拡大を後押ししています。越境ECや、インターネットオークションサービスなど成長市場に目をつけて、新規参入する企業も後を絶ちません。`,
+        order: 'image-right', // or 'image-right' if you want to support both
+    },
+    {
+        image: '/images/business/back3.jpg', // You may want to update this path to the actual image if different
+        backgroundsTitle: 'BACKGROUNDS 03',
+        mainHeading: '終活・生前整理ブーム',
+        description1: `さらには、終活・生前整理がブームになっており、これまでリサイクルを活用していなかったシニア層にも急速にリユース・リサイクル・買取が広まってきました。相続という巨大なシニア市場にリサイクルが浸透し始めた今、リユース・リサイクル業界はわが国の産業界で最も注目されているものの一つといえます。`,
+        order: 'image-left', // or 'image-right' if you want to support both
+    },
+    {
+        image: '/images/business/back4.png', // You may want to update this path to the actual image if different
+        backgroundsTitle: 'BACKGROUNDS 04',
+        mainHeading: '世界的潮流である「SDGs」持続可能な社会',
+        description1: `SDGsは、持続可能な開発目標という意味です。2015年に国連で採択された2030年までの国際目標、世界的な優先課題、世界のあるべき姿17項目のことです。\n\n貧困、ジェンダーフリー、環境問題といった視点で世界全体で取り組もうという機運があります。そのため規模の大きい企業やグローバル展開をしている企業はSDGsに取り組むことが必要不可欠となっています。企業は社会貢献的活動として取り組むというよりも、持続可能性を事業の本流にしていくというが大きな時代の流れにあります。`,
+        order: 'image-right', // or 'image-right' if you want to support both
+    },
+];
+
+export const GLOBALIZATION_SECTION_DATA = [
+    {
+        order: "01",
+        title: "グローバル化",
+        image: "/images/business-new/point2.jpg", // You'll need to add this image
+        imageAlt: "グローバル化 - 手で持つワイヤーフレームの地球",
+        sections: [
+            {
+                title: "・海外出店",
+                content: [
+                    "大手リユース企業の海外出店店舗数が230店を超えている。",
+                    "また、古着や家電、工具など、日本で仕入れた品物の販路として海外へ輸出する動きも多い。"
+                ]
+            },
+            {
+                title: "・越境EC",
+                content: [
+                    "海外向けのネットショップの運営のことで、ebayやChorno24といったマーケットプレイスも存在。",
+                    "訪日観光客が自国に帰ってリピート買いしたり、知人・友人への口コミを広げている。"
+                ]
+            }
+        ],
+        links: [
+            {
+                title: "戦略がスゴい！日本の中古・リユース企業が世界に羽ばたく",
+                href: "/column/column-25-2"
+            },
+            {
+                title: "【最新動向】リユースに追い風！円安で越境ECが盛り上がるUsed in Japan最前線",
+                href: "/column/column-32"
+            },
+        ]
+    },
+    {
+        order: "02",
+        title: "TECH化",
+        image: "/images/business-new/point3.jpg", // You'll need to add this image
+        imageAlt: "TECH化",
+        sections: [
+            {
+                title: "・AI鑑定",
+                content: [
+                    "ブランド品やトレカ、スニーカーなどの商材ですでに導入されている。AI鑑定の導入によって、接客レベルの向上や、ユーザビリティ向上、売却できる商材の多様化などが期待される。"
+                ]
+            },
+            {
+                title: "・EC",
+                content: [
+                    "また、販売のEC比率が上がっているため、業務オペレーションの効率化が重要。「ささげ業務」と呼ばれるEC出品に関わる業務で、中古品は多品種少量であるため手間がかかりやすい。テクノロジーを導入して生産性の向上に努めている。"
+                ]
+            }
+        ],
+    },
+];

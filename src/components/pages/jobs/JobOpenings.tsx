@@ -335,12 +335,12 @@ export default function JobList({
                     <p className="text-lg flex-1">
                         {`検索結果：${totalJobCount}件`}
                     </p>
-                    <a href='/job-openings'>
+                    <Link href='/job-openings'>
                         <CButton
                             text="フィルターをクリア"
                             className="bg-red text-white rounded-sm mr-2"
                         />
-                    </a>
+                    </Link>
                     <CButton
                         text="さらに条件を追加する"
                         leftIcon={<span>+</span>}

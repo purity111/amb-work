@@ -15,6 +15,7 @@ import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import MidHighCaseSwiperCard from '@/components/pages/mid-high/MidHighCaseSwiperCard';
 import CareerCounselingForm from "@/components/common/CareerCounselingForm";
+import Link from "next/link";
 
 export default function MidhighPage() {
     return (
@@ -199,7 +200,7 @@ export default function MidhighPage() {
                 </div>
             </div>
             <div className="w-full flex justify-center my-8">
-                <a
+                <Link
                     href="/job-openings"
                     className="w-full max-w-[500px] flex items-center justify-center gap-3 py-5 px-4 mx-4 rounded-xl shadow-lg bg-gradient-to-b from-[#b80000] to-[#a10000] hover:opacity-90 transition font-bold text-white text-xl outline-none focus:ring-2 focus:ring-red-400"
                     role="button"
@@ -214,7 +215,7 @@ export default function MidhighPage() {
                         </svg>
                     </span>
                     求人一覧はこちら
-                </a>
+                </Link>
             </div>
             {/* --- MID HIGH CASE SWIPER --- */}
             <section className="relative mt-30 py-16 md:py-24 bg-cover bg-center" style={{ backgroundImage: 'url(/images/mid-high/bg.jpg)' }}>

@@ -159,7 +159,7 @@ function ApplicationMngContent() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8 w-[95%] max-w-[1000px]">
+    <div className="container mx-auto px-4 py-8 w-full md:w-[95%] max-w-[1280px]">
       <div className="overflow-x-auto">
         <h2 className='text-center mb-6 text-[24px] md:text-[32px] font-bold'>応募管理ページ</h2>
         <div className="flex gap-2 flex-row justify-center items-center lg:flex-row lg:space-x-3 mb-4">
@@ -192,10 +192,10 @@ function ApplicationMngContent() {
           </div>
         </div>
         <div className="">
-          <div className='flex'>
+          <div className='flex items-center'>
             <p className='flex-1'>
-              Selected: {getSelectedApplications.length} applications
-              <span className="ml-2 text-blue cursor-pointer" onClick={onClearSelectedApplications}>Clear</span>
+              選択済み: {getSelectedApplications.length} 応募
+              <span className="ml-2 text-blue cursor-pointer" onClick={onClearSelectedApplications}>クリア</span>
             </p>
             {applications?.length > 0 && (
               <CSVLink
