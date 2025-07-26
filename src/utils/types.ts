@@ -71,6 +71,11 @@ export interface ResetPasswordParam {
     newPassword: string;
 }
 
+export interface ChangePasswordParam {
+    currentPassword: string;
+    newPassword: string;
+}
+
 export interface ConfirmEmailParam {
     token: string;
     role: string;

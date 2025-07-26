@@ -9,6 +9,7 @@ import { MonthOptions, PrefectureOptions } from "@/utils/constants";
 import { formatFlexibleDate, getEstablishmentDateOptions, getEstablishmentYearOptions } from "@/utils/helper";
 import { useMutation } from "@tanstack/react-query";
 import { registerAsEmployer } from "@/lib/api";
+import { toast } from "react-toastify";
 
 interface FormProps {
     onSuccess: () => void;
@@ -96,10 +97,19 @@ export default function RegisterForEmployer({ onSuccess }: FormProps) {
         onSuccess: (data) => {
             // Optionally invalidate or refetch queries here
             console.log('login success: ', data)
+            toast.success('企業として登録が完了しました。');
             onSuccess()
         },
-        onError: (error) => {
+        onError: (error: any) => {
             console.error('Error:', error);
+            // Check if the error is due to existing email
+            if (error?.response?.data?.message?.includes('email') || 
+                error?.response?.data?.message?.includes('Email') ||
+                error?.response?.status === 409) {
+                toast.error('このメールアドレスは既に登録されています。');
+            } else {
+                toast.error(error?.response?.data?.message || '登録に失敗しました。');
+            }
         },
     });
 

@@ -292,7 +292,7 @@ export default function JobMngPage() {
 
         <div className="flex flex-row justify-center mt-4">
           {jobs?.data?.jobs?.length === 0 && <p>結果なし</p>}
-          {totalPage > 0 && (
+          {totalPage > 0 && jobs?.data?.jobs?.length > 0 && (
             <Pagination
               page={currentPage}
               totalPages={totalPage}
@@ -498,7 +498,7 @@ export default function JobMngPage() {
             </div>
           ))}
 
-          {totalPage > 0 && (
+          {totalPage > 0 && jobs?.data?.jobs?.length && (
             <div className="flex flex-row justify-center mt-4">
               <Pagination
                 page={currentPage}

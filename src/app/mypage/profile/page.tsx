@@ -9,9 +9,14 @@ import CInput from "@/components/common/Input";
 import CSelect from "@/components/common/Select";
 import CButton from "@/components/common/Button";
 import RequiredLabel from "@/components/common/RequiredLabel";
+import PasswordInput from "@/components/common/PasswordInput";
 import Image from "next/image";
-import { updateJobSeekerProfile, updateEmployerProfile, requestChangeEmail } from "@/lib/api";
+import { updateJobSeekerProfile, updateEmployerProfile, requestChangeEmail, changePassword } from "@/lib/api";
 import { UPLOADS_BASE_URL } from "@/utils/config";
+import * as Yup from 'yup';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { useMutation } from '@tanstack/react-query';
+import Spinner from '@/components/common/Spinner';
 
 type FormValues = {
     name: string;
@@ -34,6 +39,25 @@ type FormValues = {
     address?: string;
     capital_stock?: string;
 };
+
+type ChangePasswordFormValues = {
+    currentPassword: string;
+    newPassword: string;
+    confirmPassword: string;
+};
+
+const changePasswordSchema = Yup.object().shape({
+    currentPassword: Yup.string()
+        .required('現在のパスワードは必須です。'),
+    newPassword: Yup.string()
+        .required('新しいパスワードは必須です。')
+        .min(8, '8文字以上である必要があります')
+        .matches(/[0-9]/, '数字を含めてください。')
+        .matches(/[@$!%*?&#]/, '特殊記号を含めてください。'),
+    confirmPassword: Yup.string()
+        .oneOf([Yup.ref('newPassword')], 'パスワードは一致する必要があります')
+        .required('確認用パスワードは必須です。'),
+});
 
 export default function ProfilePage() {
     const hasPreloaded = useRef(false);
@@ -73,6 +97,17 @@ export default function ProfilePage() {
         }
     });
 
+    // Separate form for change password
+    const {
+        control: passwordControl,
+        handleSubmit: handlePasswordSubmit,
+        reset: resetPasswordForm,
+        formState: { errors: passwordErrors, isDirty: passwordIsDirty },
+    } = useForm<ChangePasswordFormValues>({
+        resolver: yupResolver(changePasswordSchema),
+        mode: 'onChange',
+    });
+
     const watchedRole = watch('role');
     const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
     const [avatarFile, setAvatarFile] = useState<File | null>(null);
@@ -81,6 +116,34 @@ export default function ProfilePage() {
     const [emailChangeSuccess, setEmailChangeSuccess] = useState(false);
     const currentEmail = currentUserData?.data?.email || "";
     const [emailError, setEmailError] = useState<string | undefined>(undefined);
+
+    // Change password mutation
+    const changePasswordMutation = useMutation({
+        mutationFn: changePassword,
+        onSuccess: (data) => {
+            console.log('Password change success: ', data);
+            toast.success('パスワードが正常に変更されました。');
+            resetPasswordForm(); // Reset password form after successful change
+        },
+        onError: (error: any) => {
+            console.error('Password change error: ', error);
+            // Check if the error is due to incorrect current password
+            if (error?.response?.data?.message?.includes('current') || 
+                error?.response?.data?.message?.includes('Current') ||
+                error?.response?.status === 401) {
+                toast.error('現在のパスワードが正しくありません。');
+            } else {
+                toast.error(error?.response?.data?.message || 'パスワードの変更に失敗しました。');
+            }
+        },
+    });
+
+    const onChangePasswordSubmit = (data: ChangePasswordFormValues) => {
+        changePasswordMutation.mutate({
+            currentPassword: data.currentPassword,
+            newPassword: data.newPassword
+        });
+    };
 
     useEffect(() => {
         if (!hasPreloaded.current && currentUserData?.success && currentUserData?.data) {
@@ -298,7 +361,7 @@ export default function ProfilePage() {
     }
 
     return (
-        <div className="flex flex-col p-3 md:p-10 lg:max-w-[960px] mx-auto">
+        <div className="flex flex-col justify-center p-3 md:p-0 lg:max-w-[960px] mx-auto">
             <h1 className="text-2xl md:text-3xl font-bold mb-10 text-center">プロフィール管理</h1>
 
             {/* Show empty page for admin users */}
@@ -307,7 +370,7 @@ export default function ProfilePage() {
                     {/* Empty page for admin users */}
                 </div>
             ) : (
-                <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col md:flex-row gap-8 gap-10 w-full sm:w-[90%] m-auto justify-center items-center md:[align-items:unset]">
+                <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col md:flex-row gap-8 gap-10 w-full sm:w-[90%] md:w-full mx-0 justify-center items-center md:[align-items:unset]">
                     {/* Avatar section */}
                     <div className="flex flex-col items-center w-1/2 w-1/2 md:w-[25%]">
                         <Image
@@ -319,7 +382,7 @@ export default function ProfilePage() {
                         />
                         <label
                             htmlFor="avatar-upload"
-                            className="w-full text-center font-semibold mb-1 bg-blue-100 py-2 px-4 rounded cursor-pointer hover:bg-blue-200"
+                            className="w-full text-center font-semibold border mb-1 bg-blue-100 py-2 px-4 rounded cursor-pointer hover:bg-blue-200"
                         >
                             画像選択
                         </label>
@@ -785,7 +848,7 @@ export default function ProfilePage() {
             )}
 
             {/* Email Change Section */}
-            <div className="mb-8 p-4 border-[#dfdfdf] rounded mt-20 bg-gray-50">
+            <div className="mb-8 p-4 border-[#dfdfdf] rounded mt-10 md:mt-20 bg-gray-50">
 
                 <div className="flex flex-col md:flex-row items-center gap-4 mb-2">
                     <div className="flex items-center gap-1 min-w-[130px]">
@@ -820,6 +883,64 @@ export default function ProfilePage() {
                 </div>
                 {emailChangeSuccess && (
                     <div className="text-green-600 text-sm mt-2">確認メールを送信しました。メールをご確認ください。</div>
+                )}
+            </div>
+
+            {/* Change Password Section */}
+            <div className="mb-8 p-4 border-[#dfdfdf] rounded bg-gray-50">
+                <h2 className="text-xl font-bold mb-4">パスワード変更</h2>
+                <form onSubmit={handlePasswordSubmit(onChangePasswordSubmit)} className="flex flex-col gap-4">
+                    <Controller
+                        name="currentPassword"
+                        control={passwordControl}
+                        rules={{ required: '現在のパスワードは必須です。' }}
+                        render={({ field }) => (
+                            <PasswordInput
+                                {...field}
+                                placeholder="現在のパスワード"
+                                isError={!!passwordErrors.currentPassword}
+                                errorText={passwordErrors.currentPassword?.message}
+                            />
+                        )}
+                    />
+                    <Controller
+                        name="newPassword"
+                        control={passwordControl}
+                        render={({ field }) => (
+                            <PasswordInput
+                                {...field}
+                                placeholder="新しいパスワード"
+                                isError={!!passwordErrors.newPassword}
+                                errorText={passwordErrors.newPassword?.message}
+                            />
+                        )}
+                    />
+                    <Controller
+                        name="confirmPassword"
+                        control={passwordControl}
+                        render={({ field }) => (
+                            <PasswordInput
+                                {...field}
+                                placeholder="確認用パスワード"
+                                isError={!!passwordErrors.confirmPassword}
+                                errorText={passwordErrors.confirmPassword?.message}
+                            />
+                        )}
+                    />
+                    <CButton
+                        text={changePasswordMutation.isPending ? (
+                            <div className="flex items-center justify-center">
+                                <Spinner size={4} />
+                                <span className="ml-2">変更中...</span>
+                            </div>
+                        ) : "パスワードを変更"}
+                        type="submit"
+                        className="bg-blue-500 text-white px-[60px] py-2"
+                        disabled={!passwordIsDirty || changePasswordMutation.isPending}
+                    />
+                </form>
+                {changePasswordMutation.isSuccess && (
+                    <div className="text-green-600 text-sm mt-2">パスワードが変更されました。</div>
                 )}
             </div>
         </div>
