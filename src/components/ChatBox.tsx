@@ -350,7 +350,7 @@ export default function ChatBox({ data, hasHideButton = false, isHidden, onToggl
                     <CButton
                         disabled={!text.trim() || isFileUploading}
                         onClick={handleSend}
-                        text={isFileUploading ? 'Uploading...' : isEditing ? '更新' : "転送"}
+                        text={isFileUploading ? 'アップロード中...' : isEditing ? '更新' : "転送"}
                         className='text-white bg-green px-[10px] h-10'
                     />
                     {isEditing && (

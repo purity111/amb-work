@@ -5,6 +5,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import CInput from "../common/Input";
 import RequiredLabel from "../common/RequiredLabel";
 import CSelect from "../common/Select";
+import BirthDateSelect from "../common/BirthDateSelect";
 import { GenderOptions, MonthOptions, PrefectureOptions } from "@/utils/constants";
 import { getEstablishmentDateOptions, getEstablishmentYearOptions } from "@/utils/helper";
 import CRadioGroup from "../common/RadioGroup";
@@ -204,7 +205,7 @@ export default function RegisterForJobSeeker({ onSuccess }: FormProps) {
                             control={control}
                             render={({ field }) => (
                                 <div className="flex-1">
-                                    <CSelect
+                                    <BirthDateSelect
                                         {...field}
                                         isError={!!errors.dob_year}
                                         options={getEstablishmentYearOptions()}
@@ -221,7 +222,7 @@ export default function RegisterForJobSeeker({ onSuccess }: FormProps) {
                             control={control}
                             render={({ field }) => (
                                 <div className="flex-1">
-                                    <CSelect
+                                    <BirthDateSelect
                                         {...field}
                                         isError={!!errors.dob_month}
                                         options={MonthOptions}
@@ -238,7 +239,7 @@ export default function RegisterForJobSeeker({ onSuccess }: FormProps) {
                             control={control}
                             render={({ field }) => (
                                 <div className="flex-1">
-                                    <CSelect
+                                    <BirthDateSelect
                                         {...field}
                                         isError={!!errors.dob_date}
                                         disabled={!dobYear || !dobMonth}
