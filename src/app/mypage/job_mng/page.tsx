@@ -207,7 +207,7 @@ export default function JobMngPage() {
     <div className="flex min-h-screen flex-col">
       <div className="w-95/100 max-w-320 mx-auto">
         <div className="border-b-1 border-gray-700 pt-10 pb-5 flex flex-col">
-          <h2 className='text-center mb-6 text-[24px] md:text-[32px] font-bold'>応募管理ページ</h2>
+          <h2 className='text-center mb-6 text-[24px] md:text-[32px] font-bold'>求人管理ページ</h2>
           <div className="flex-1 flex flex-row items-center space-x-2 space-y-2">
             <div className="flex-1 m-0">
               <CButton
@@ -218,35 +218,34 @@ export default function JobMngPage() {
                 onClick={onClickAddNewJob}
               />
             </div>
-            {allFilteredJobs?.data?.jobs?.length > 0 && (
-              <CSVLink
-                data={generateJobCSVData(allFilteredJobs?.data?.jobs)}
-                filename={`すべての求人-${format(new Date(), 'yyyy年MM月dd日HH:mm')}`}
-              >
-                <CButton
-                  text="全体CSV出⼒"
-                  className='bg-green text-white text-sm h-[40px]'
-                  size="small"
-                // leftIcon={<span className="mr-1 flex items-center"><svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 md:h-6 md:w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" /></svg></span>}
-                />
-              </CSVLink>
-            )}
-            {getSelectedJobs.length > 0 && (
-              <CSVLink
-                data={generateJobCSVData(Object.values(getSelectedJobs) as JobDetail[])}
-                filename={`選択した求人-${format(new Date(), 'yyyy年MM月dd日HH:mm')}`}
-              >
-                <div className="mr-2 mb-2">
+            <div className="flex flex-row items-center space-x-2">
+              {allFilteredJobs?.data?.jobs?.length > 0 && (
+                <CSVLink
+                  data={generateJobCSVData(allFilteredJobs?.data?.jobs)}
+                  filename={`すべての求人-${format(new Date(), 'yyyy年MM月dd日HH:mm')}`}
+                >
+                  <CButton
+                    text="全体CSV出⼒"
+                    className='bg-green text-white text-sm h-[40px]'
+                    size="small"
+                  // leftIcon={<span className="mr-1 flex items-center"><svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 md:h-6 md:w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" /></svg></span>}
+                  />
+                </CSVLink>
+              )}
+              {getSelectedJobs.length > 0 && (
+                <CSVLink
+                  data={generateJobCSVData(Object.values(getSelectedJobs) as JobDetail[])}
+                  filename={`選択した求人-${format(new Date(), 'yyyy年MM月dd日HH:mm')}`}
+                >
                   <CButton
                     text="選択のみCSV出⼒"
                     className='bg-orange text-white text-sm h-[40px]'
                     size="small"
                   // leftIcon={<span className="mr-1 flex items-center"><svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 md:h-6 md:w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" /></svg></span>}
                   />
-                </div>
-              </CSVLink>
-            )}
-
+                </CSVLink>
+              )}
+            </div>
           </div>
           <div className="flex flex-row items-center">
             <p>選択済み: {getSelectedJobs.length} 求人</p>

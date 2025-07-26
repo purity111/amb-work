@@ -41,7 +41,7 @@ export default function AuthModal({ initialStep, onClose }: RegisterModalProps) 
     return (
         <Suspense>
             <div
-                className="fixed inset-0 z-50 flex  justify-center bg-gray-300/80"
+                className="fixed inset-0 z-[9999] flex  justify-center bg-gray-300/80"
             >
                 {step === 'Register' && (
                     <RegisterModal

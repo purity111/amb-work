@@ -315,6 +315,7 @@ export default function JobPreviewDetails() {
                         className={`border-2 ${themeColor === 'blue' ? 'border-blue text-blue' : 'border-orange text-orange'} rounded-sm min-w-[140px] transition py-[10px] px-[24px] text-base ${alreadyApplied ? 'bg-gray-500 text-white cursor-pointer' : 'bg-white'}`}
                         onClick={() => {
                             if (!isLoggedIn) {
+                                toast.info('応募するにはログインが必要です。');
                                 setAuthModalState(1);
                                 return;
                             }
@@ -326,7 +327,7 @@ export default function JobPreviewDetails() {
                             }
                             // Do nothing for other roles
                         }}
-                        disabled={bookmarkShouldBeDisabled || (isLoggedIn && profile?.role !== 'JobSeeker' && !alreadyApplied)}
+                        disabled={bookmark.isPending || (isLoggedIn && profile?.role !== 'JobSeeker' && !alreadyApplied)}
                     />
                 </div>
             </div>

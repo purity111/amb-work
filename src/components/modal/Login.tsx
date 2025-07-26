@@ -97,10 +97,10 @@ export default function LoginModal({ onSuccess, onClose, onNavigateRegister }: L
     if (isForgotPassword) {
         return (
             <div
-                className="fixed inset-0 z-50 flex  justify-center bg-gray-300/80"
+                className="fixed inset-0 z-[9999] flex  justify-center bg-gray-300/80"
             >
                 <div className="relative flex flex-col bg-white rounded-lg border-none shadow-xl my-auto w-full h-fit max-h-3/4 max-w-md pt-6 pb-8 relative border-1 border-gray-700 overflow-hidden">
-                    <p className="text-center text-blue text-2xl pb-6 border-b-1 border-gray-800">パスワード忘れた？</p>
+                    <p className="text-center text-blue text-2xl pb-6 border-b-1 border-gray-800">パスワードをお忘れの方はこちら</p>
 
                     <div className="p-6">
                         <div className="flex">
@@ -139,7 +139,8 @@ export default function LoginModal({ onSuccess, onClose, onNavigateRegister }: L
                             `}
                             onClick={onClose}
                         >
-                            キャンセル
+
+                            閉じる
                         </button>
                     </div>
 
@@ -150,7 +151,7 @@ export default function LoginModal({ onSuccess, onClose, onNavigateRegister }: L
 
     return (
         <div
-            className="fixed inset-0 z-50 flex  justify-center bg-gray-300/80"
+            className="fixed inset-0 z-[9999] flex  justify-center bg-gray-300/80"
         >
             <div className="relative flex flex-col bg-white rounded-lg border-none shadow-xl my-auto w-full h-fit max-h-3/4 max-w-md pt-6 pb-8 relative border-1 border-gray-700 overflow-hidden">
                 <p className="text-center text-blue text-2xl pb-6 border-b-1 border-gray-800">ログイン</p>
@@ -182,7 +183,7 @@ export default function LoginModal({ onSuccess, onClose, onNavigateRegister }: L
                         </div>
                     </div>
                     <div className="flex justify-end">
-                        <p className="text-[12px] underline text-gray-500 cursor-pointer" onClick={onClickForgotPassword}>パスワード忘れた？</p>
+                        <p className="text-[12px] underline text-gray-500 cursor-pointer" onClick={onClickForgotPassword}>パスワードをお忘れの方はこちら</p>
                     </div>
                 </div>
                 <div className="flex flex-row items-center px-4 space-x-4">
@@ -196,7 +197,7 @@ export default function LoginModal({ onSuccess, onClose, onNavigateRegister }: L
                     >
                         {loginMutation.isPending ?
                             <div className="w-full h-full items-center flex justify-center"><Spinner size={4} /></div>
-                            : '確認'}
+                            : 'ログイン'}
                     </button>
                     <button
                         className={`
@@ -205,11 +206,12 @@ export default function LoginModal({ onSuccess, onClose, onNavigateRegister }: L
                             `}
                         onClick={onClose}
                     >
-                        キャンセル
+
+                        閉じる
                     </button>
                 </div>
                 <div className="flex justify-center pt-4">
-                    <p className="text-[12px] underline text-blue cursor-pointer" onClick={onClickGotoRegister}>新規の方はこちら</p>
+                    <p className="text-[12px] underline text-blue cursor-pointer" onClick={onClickGotoRegister}>会員登録がまだの方はこちら</p>
                 </div>
             </div>
         </div>

@@ -192,37 +192,37 @@ function ApplicationMngContent() {
           </div>
         </div>
         <div className="">
-          <div className='flex items-center'>
-            <p className='flex-1'>
+          <div className='flex flex-col md:flex-row items-center'>
+            <p className='flex-1 mb-2 md:mb-0'>
               選択済み: {getSelectedApplications.length} 応募
               <span className="ml-2 text-blue cursor-pointer" onClick={onClearSelectedApplications}>クリア</span>
             </p>
-            {applications?.length > 0 && (
-              <CSVLink
-                data={generateApplicationCSVData(getAllApplications)}
-                filename={`すべてのアプリ-${format(new Date(), 'yyyy年MM月dd日HH:mm')}`}
-              >
-                <CButton
-                  text="全体CSV出⼒"
-                  className='bg-green text-white text-sm h-[40px]'
-                  size="small"
-                />
-              </CSVLink>
-            )}
-            {getSelectedApplications.length > 0 && (
-              <CSVLink
-                data={generateApplicationCSVData(Object.values(getSelectedApplications) as ApplicationItem[])}
-                filename={`選択中のアプリ-${format(new Date(), 'yyyy年MM月dd日HH:mm')}`}
-              >
-                <div className="mr-2 mb-2">
+            <div className="flex items-center">
+              {applications?.length > 0 && (
+                <CSVLink
+                  data={generateApplicationCSVData(getAllApplications)}
+                  filename={`すべてのアプリ-${format(new Date(), 'yyyy年MM月dd日HH:mm')}`}
+                >
+                  <CButton
+                    text="全体CSV出⼒"
+                    className='bg-green text-white text-sm h-[40px]'
+                    size="small"
+                  />
+                </CSVLink>
+              )}
+              {getSelectedApplications.length > 0 && (
+                <CSVLink
+                  data={generateApplicationCSVData(Object.values(getSelectedApplications) as ApplicationItem[])}
+                  filename={`選択中のアプリ-${format(new Date(), 'yyyy年MM月dd日HH:mm')}`}
+                >
                   <CButton
                     text="選択のみCSV出⼒"
                     className='bg-orange text-white text-sm h-[40px] ml-4'
                     size="small"
                   />
-                </div>
-              </CSVLink>
-            )}
+                </CSVLink>
+              )}
+            </div>
           </div>
           <div className="flex flex-row justify-center my-4">
             <Pagination

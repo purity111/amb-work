@@ -216,9 +216,9 @@ export const FooterButtonList = [
 
 export const SocialButtonList = [
     {
-        id: 'facebook',
-        icon: `/images/facebook.png`,
-        to: 'https://www.facebook.com/retenshoku/',
+        id: 'youtube',
+        icon: `/images/youtube.png`,
+        to: 'https://www.youtube.com/@Re-wr5fc',
     },
     {
         id: 'instagram',
