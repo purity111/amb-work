@@ -211,6 +211,7 @@ export default function RegisterForJobSeeker({ onSuccess }: FormProps) {
                                         width="w-full"
                                         className="h-[40px] rounded-sm placeholder-gray-700"
                                         onChange={(e) => field.onChange(e)}
+                                        placeholder="年"
                                     />
                                 </div>
                             )}
@@ -227,6 +228,7 @@ export default function RegisterForJobSeeker({ onSuccess }: FormProps) {
                                         width="w-full"
                                         className="h-[40px] rounded-sm placeholder-gray-700"
                                         onChange={(e) => field.onChange(e)}
+                                        placeholder="月"
                                     />
                                 </div>
                             )}
@@ -244,6 +246,7 @@ export default function RegisterForJobSeeker({ onSuccess }: FormProps) {
                                         width="w-full"
                                         className="h-[40px] rounded-sm placeholder-gray-700"
                                         onChange={(e) => field.onChange(e)}
+                                        placeholder="日"
                                     />
                                 </div>
                             )}
