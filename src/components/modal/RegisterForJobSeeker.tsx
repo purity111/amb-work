@@ -203,12 +203,13 @@ export default function RegisterForJobSeeker({ onSuccess }: FormProps) {
                             name="dob_year"
                             control={control}
                             render={({ field }) => (
-                                <div className="flex-1 sm:flex-none">
+                                <div className="flex-1">
                                     <CSelect
                                         {...field}
                                         isError={!!errors.dob_year}
                                         options={getEstablishmentYearOptions()}
-                                        className="h-[40px] rounded-sm placeholder-gray-700 w-full sm:w-24"
+                                        width="w-full"
+                                        className="h-[40px] rounded-sm placeholder-gray-700"
                                         onChange={(e) => field.onChange(e)}
                                     />
                                 </div>
@@ -218,13 +219,13 @@ export default function RegisterForJobSeeker({ onSuccess }: FormProps) {
                             name="dob_month"
                             control={control}
                             render={({ field }) => (
-                                <div className="flex-1 sm:flex-none">
+                                <div className="flex-1">
                                     <CSelect
                                         {...field}
                                         isError={!!errors.dob_month}
                                         options={MonthOptions}
-                                        width="w-24"
-                                        className="h-[40px] rounded-sm placeholder-gray-700 w-full sm:w-24"
+                                        width="w-full"
+                                        className="h-[40px] rounded-sm placeholder-gray-700"
                                         onChange={(e) => field.onChange(e)}
                                     />
                                 </div>
@@ -234,14 +235,14 @@ export default function RegisterForJobSeeker({ onSuccess }: FormProps) {
                             name="dob_date"
                             control={control}
                             render={({ field }) => (
-                                <div className="flex-1 sm:flex-none">
+                                <div className="flex-1">
                                     <CSelect
                                         {...field}
                                         isError={!!errors.dob_date}
                                         disabled={!dobYear || !dobMonth}
                                         options={getEstablishmentDateOptions(dobYear, dobMonth)}
-                                        width="w-24"
-                                        className="h-[40px] rounded-sm placeholder-gray-700 w-full sm:w-24"
+                                        width="w-full"
+                                        className="h-[40px] rounded-sm placeholder-gray-700"
                                         onChange={(e) => field.onChange(e)}
                                     />
                                 </div>

@@ -24,7 +24,7 @@ export const isValidEmail = (email: string) => {
 
 export const getEstablishmentYearOptions = () => {
     const cYear = new Date().getFullYear();
-    return Array.from({ length: 150 }, (_, i) => {
+    return Array.from({ length: 100 }, (_, i) => {
         if (i) {
             return {
                 value: String(cYear - i),
@@ -42,7 +42,7 @@ export const getEstablishmentYearOptions = () => {
 export const getEstablishmentDateOptions = (year: number, month: number) => {
     const date = new Date(year, month - 1); // month is 0-based
     const lastDate = lastDayOfMonth(date);
-    const maxDate = lastDate.getDate();
+    const maxDate = lastDate.getDate(); // Show all days
     return Array.from({ length: maxDate + 1 }, (_, i) => {
         if (i) {
             return {
