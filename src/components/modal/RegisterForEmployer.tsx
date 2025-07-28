@@ -41,7 +41,7 @@ const schema = Yup.object().shape({
         .required('必須項目です。'),
     postCode: Yup.string()
         .required('必須項目です。')
-        .matches(/^\d{3}-\d{4}$/, 'PostCode is not valid'),
+        .matches(/^\d{3}-\d{4}$/, '有効な郵便番号を入力してください。'),
     prefecture: Yup.number().required('必須項目です。'),
     address: Yup.string().required('必須項目です。'),
     phonenumber: Yup.string()

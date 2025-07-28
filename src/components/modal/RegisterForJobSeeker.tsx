@@ -210,8 +210,9 @@ export default function RegisterForJobSeeker({ onSuccess }: FormProps) {
                     </div>
                 </div>
                 <div className="flex flex-col items-left md:flex-row  py-2">
-                    <div className="flex-2 flex flex-row ">
+                    <div className="flex-2 flex flex-row items-center">
                         <p className="text-sm text-gray-400 py-2">生年月日</p>
+                        <RequiredLabel />
                     </div>
                     <div className="flex-3 flex flex-row space-x-2">
                         <Controller

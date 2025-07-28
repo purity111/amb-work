@@ -34,7 +34,7 @@ export const menuItemsByRole: Record<string, MenuItem[]> = {
     { label: '募集条件', path: '/mypage/criteria_mng', icon: 'criteria.png' },
     { label: '求人管理', path: '/mypage/job_mng', icon: 'job.png' },
     { label: '応募管理', path: '/mypage/application_mng', icon: 'application.png' },
-    { label: '応募者管理', path: '/mypage/applicant_mng', icon: 'applicants.png' },
+    { label: '会員全体管理', path: '/mypage/applicant_mng', icon: 'applicants.png' },
     { label: '企業管理', path: '/mypage/company_mng', icon: 'company.png' },
     { label: 'チャット管理', path: '/mypage/chat_mng', icon: 'chat.png' },
     {
