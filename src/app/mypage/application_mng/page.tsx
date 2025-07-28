@@ -72,10 +72,14 @@ function ApplicationMngContent() {
 
   useEffect(() => {
     if (response?.data) {
-      setApplications(response.data.applications);
-      setTotalPage(response.data.pagination.totalPages);
+      setApplications(response?.data?.applications);
+      setTotalPage(response?.data?.pagination?.totalPages);
     }
   }, [response, limit]);
+
+  useEffect(() => {
+    console.log(response?.data);
+  }, []);
 
   useEffect(() => {
     if (!hasLoaded.current) return;
@@ -234,7 +238,7 @@ function ApplicationMngContent() {
             )}
           </div>
           {isLoading && <p>読み込み中...</p>}
-          {!isLoading && applications.map((app) => (
+          {!isLoading && applications?.length > 0 && applications?.map((app) => (
             <ApplicationCard
               key={app.id}
               data={app}
@@ -254,7 +258,7 @@ function ApplicationMngContent() {
               />
             )}
           </div>}
-          {!isLoading && applications.length === 0 && <div>応募が見つかりませんでした。</div>}
+          {!isLoading && applications?.length === 0 && <div>応募が見つかりませんでした。</div>}
         </div>
 
       </div>
