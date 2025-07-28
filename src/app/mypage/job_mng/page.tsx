@@ -42,9 +42,10 @@ export default function JobMngPage() {
     limit,
     searchTerm,
     companyID: Number(company),
-    jobType: Number(jobType),
+    jobType: jobType === '3' ? 0 : Number(jobType),
     isAdmin: profile?.role === 'JobSeeker' ? '0' : '1',
-    employer_id: profile?.role === 'Employer' ? profile.id : 0
+    employer_id: profile?.role === 'Employer' ? profile.id : 0,
+    public_status: jobType === '3' ? 2 : 1
   })
 
   const { data: allFilteredJobs } = useGetJobs({

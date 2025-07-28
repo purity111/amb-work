@@ -122,7 +122,7 @@ export const getJobs = async (
     employer_id?: number,
     features?: string[],
     prefectures?: string[],
-    agency?: number,
+    public_status?: number,
 ) => {
     const param: Record<string, any> = { page, limit, searchTerm, jobType };
     if (companyID && companyID > 0) {
@@ -137,9 +137,8 @@ export const getJobs = async (
     if (prefectures?.length && prefectures?.length > 0) {
         param.prefectures = prefectures;
     }
-    console.log({ agency })
-    if (agency !== undefined) {
-        param.agency = agency;
+    if (public_status !== undefined) {
+        param.public_status = public_status;
     }
     const queryString = toQueryString(param);
     const response = await api.get(`/jobs?${queryString}`);

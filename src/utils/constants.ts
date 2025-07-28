@@ -1002,6 +1002,10 @@ export const RecruiterFlowSteps: RecruiterFlowStep[] = [
 
 export const JobTypeOptions = [
     {
+        value: '0',
+        option: 'すべて'
+    },
+    {
         value: '1',
         option: '直接応募のみ'
     },
@@ -1010,9 +1014,9 @@ export const JobTypeOptions = [
         option: '転職⽀援サービス'
     },
     {
-        value: '0',
-        option: 'すべて'
-    }
+        value: '3',
+        option: 'ドラフトジョブ'
+    },
 ]
 
 export const JobPageLimitOptions = [
