@@ -292,7 +292,8 @@ export default function CreateNewJobComponent({ preLoad }: CreateNewJobProps) {
             salary: preLoad.pay,
             recruitingCriterias: updatedRecruitingCriterias,
             publicDateStart: format(parse(preLoad.clinic_public_date_start, 'yyyymmdd', new Date()), 'mm/dd/yyyy'),
-            publicDateEnd: format(parse(preLoad.clinic_public_date_end, 'yyyymmdd', new Date()), 'mm/dd/yyyy'),
+            // if public end date is undefined, it should be after 3 years from public start date (e.g. 20240611 -> 20270611)
+            publicDateEnd: format(parse(preLoad.clinic_public_date_end || (Number(preLoad.clinic_public_date_start) + 30000).toString(), 'yyyymmdd', new Date()), 'mm/dd/yyyy'),
             applyType: preLoad.job_detail_page_template_id.toString(),
             supportUrl: preLoad.clinic_public_form_url,
             status: preLoad.public_status.toString()
