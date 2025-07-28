@@ -93,6 +93,7 @@ export interface JobFetchParam {
     isAdmin?: string;
     employer_id?: number;
     public_status?: number;
+    sortBy?: string;
 }
 
 export interface JobParam {

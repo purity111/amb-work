@@ -128,6 +128,7 @@ export const getJobs = async (
     features?: string[],
     prefectures?: string[],
     public_status?: number,
+    sortBy?: string,
 ) => {
     const param: Record<string, any> = { page, limit, searchTerm, jobType };
     if (companyID && companyID > 0) {
@@ -144,6 +145,9 @@ export const getJobs = async (
     }
     if (public_status !== undefined) {
         param.public_status = public_status;
+    }
+    if (sortBy !== undefined) {
+        param.sortBy = sortBy;
     }
     const queryString = toQueryString(param);
     const response = await api.get(`/jobs?${queryString}`);
