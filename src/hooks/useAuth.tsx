@@ -32,6 +32,7 @@ export interface Profile {
     tel: string;
     token_expiry?: string;
     zip: string;
+    service_content: number;
 };
 
 export function useAuth() {

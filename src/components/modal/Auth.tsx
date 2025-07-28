@@ -2,6 +2,7 @@ import React, { Suspense, useState } from "react";
 import RegisterModal from "./Register";
 import LoginModal from "./Login";
 import { useRouter } from "next/navigation";
+import { Profile } from "@/hooks/useAuth";
 
 interface RegisterModalProps {
     initialStep: 'Login' | 'Register';
@@ -20,17 +21,20 @@ export default function AuthModal({ initialStep, onClose }: RegisterModalProps) 
         setStep('Register');
     }
 
-    const onLoginSuccess = () => {
+    const onLoginSuccess = (profile: Profile) => {
         // client-side reload only
         if (typeof window !== 'undefined') {
             const params = new URLSearchParams(window.location.search);
             const redirectTo = params.get('redirectTo');
+            onClose()
             if (redirectTo) {
                 router.push(redirectTo);
-                onClose()
+            } else if (profile?.service_content) {
+                router.push('/mypage');
             } else {
-                window.location.reload();
+                router.push('/career-counseling')
             }
+
         }
     }
 

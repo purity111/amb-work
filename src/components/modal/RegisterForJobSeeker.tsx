@@ -4,9 +4,8 @@ import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import CInput from "../common/Input";
 import RequiredLabel from "../common/RequiredLabel";
-import CSelect from "../common/Select";
 import BirthDateSelect from "../common/BirthDateSelect";
-import { GenderOptions, MonthOptions, PrefectureOptions } from "@/utils/constants";
+import { GenderOptions, MonthOptions, PrefectureOptions, ServiceContentOptions } from "@/utils/constants";
 import { getEstablishmentDateOptions, getEstablishmentYearOptions } from "@/utils/helper";
 import CRadioGroup from "../common/RadioGroup";
 import { useMutation } from "@tanstack/react-query";
@@ -32,6 +31,7 @@ type FormValues = {
     password: string;
     confirmPassword: string;
     others?: string;
+    serviceContent: string;
 };
 
 const schema = Yup.object().shape({
@@ -66,7 +66,8 @@ const schema = Yup.object().shape({
     confirmPassword: Yup.string()
         .oneOf([Yup.ref('password')], 'パスワードは一致する必要があります')
         .required('必須項目です。'),
-    others: Yup.string()
+    others: Yup.string(),
+    serviceContent: Yup.string().required()
 });
 
 export default function RegisterForJobSeeker({ onSuccess }: FormProps) {
@@ -79,13 +80,15 @@ export default function RegisterForJobSeeker({ onSuccess }: FormProps) {
         resolver: yupResolver(schema),
         mode: 'onChange',
         defaultValues: {
-            sex: '1'
+            sex: '1',
+            serviceContent: '1'
         },
     });
 
     const dobYear = useWatch({ control, name: 'dob_year' });
     const dobMonth = useWatch({ control, name: 'dob_month' });
-
+    const sc = useWatch({ control, name: 'serviceContent' });
+    console.log({ sc })
     const mutation = useMutation({
         mutationFn: registerAsJobSeeker,
         onSuccess: (data) => {
@@ -128,7 +131,8 @@ export default function RegisterForJobSeeker({ onSuccess }: FormProps) {
             prefectures: Number(data.prefecture),
             tel: data.phonenumber,
             email: data.email,
-            password: data.password
+            password: data.password,
+            service_content: Number(data.serviceContent)
         })
     };
 
@@ -276,11 +280,7 @@ export default function RegisterForJobSeeker({ onSuccess }: FormProps) {
                             render={({ field }) => (
                                 <CRadioGroup
                                     {...field}
-                                    // isError={!!errors.sex}
-                                    // errorText={errors.sex?.message}
-                                    // height="h-[40px]"
                                     options={GenderOptions}
-                                    name="sex"
                                     value={field.value}
                                     onChange={(e) => field.onChange(e)}
                                 />
@@ -324,7 +324,7 @@ export default function RegisterForJobSeeker({ onSuccess }: FormProps) {
                             control={control}
                             defaultValue=""
                             render={({ field }) => (
-                                <CSelect
+                                <BirthDateSelect
                                     {...field}
                                     isError={!!errors.prefecture}
                                     errorText={errors.prefecture?.message}
@@ -452,6 +452,27 @@ export default function RegisterForJobSeeker({ onSuccess }: FormProps) {
                             )}
                         />
                         <p className="text-[11px] text-gray-600 h-0">パスワード欄と同じものを入力してください。</p>
+                    </div>
+                </div>
+                <div className="flex flex-col items-left md:flex-row  py-2">
+                    <div className="flex-2 flex flex-row items-center">
+                        <p className="text-sm text-gray-400 py-2">転職支援サービス利用ご希望有・無</p>
+                        <RequiredLabel />
+                    </div>
+                    <div className="flex-3">
+                        <Controller
+                            name="serviceContent"
+                            control={control}
+                            render={({ field }) => (
+                                <CRadioGroup
+                                    {...field}
+                                    direction="column"
+                                    options={ServiceContentOptions}
+                                    value={field.value}
+                                    onChange={(e) => field.onChange(e)}
+                                />
+                            )}
+                        />
                     </div>
                 </div>
                 <button

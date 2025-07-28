@@ -30,7 +30,7 @@ export default function CRadioGroup({
                         type="radio"
                         name={name}
                         value={option.value}
-                        checked={value === option.value}
+                        defaultChecked={value === option.value}
                         onChange={() => onChange(option.value)}
                         className="accent-blue-500"
                         {...props}

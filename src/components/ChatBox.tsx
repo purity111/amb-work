@@ -110,7 +110,7 @@ export default function ChatBox({ data, hasHideButton = false, isHidden, onToggl
     }
 
     const handleSend = async () => {
-        if (!text.trim()) return;
+        if (!text.trim() && !attached) return;
         if (isEditing) {
             if (!editMessage) return;
             socket.emit('editMessage', {
@@ -348,9 +348,9 @@ export default function ChatBox({ data, hasHideButton = false, isHidden, onToggl
                 />
                 <div className="flex flex-row space-x-2 sm:flex-col sm:space-y-1 sm:space-x-0">
                     <CButton
-                        disabled={!text.trim() || isFileUploading}
+                        disabled={isFileUploading}
                         onClick={handleSend}
-                        text={isFileUploading ? 'アップロード中...' : isEditing ? '更新' : "転送"}
+                        text={isFileUploading ? 'アップロード中...' : isEditing ? '更新' : "送信"}
                         className='text-white bg-green px-[10px] h-10'
                     />
                     {isEditing && (

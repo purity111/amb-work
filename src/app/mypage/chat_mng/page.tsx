@@ -32,7 +32,7 @@ export default function ChatMngPage() {
   const { data, isLoading: jLoading } = useGetJobs(profile?.role === 'admin' ? {
     page: 1,
     limit: 999999,
-    agency: 2
+    jobType: 2
   } : {
     page: 1,
     limit: 999999,

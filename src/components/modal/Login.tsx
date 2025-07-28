@@ -8,9 +8,10 @@ import { toast } from "react-toastify";
 import { useAuthContext } from "@/app/layout";
 import Spinner from "../common/Spinner";
 import { isValidEmail } from "@/utils/helper";
+import { Profile } from "@/hooks/useAuth";
 
 interface LoginModalProps {
-    onSuccess: () => void;
+    onSuccess: (profile: Profile) => void;
     onClose: () => void;
     onNavigateRegister: () => void;
 }
@@ -33,7 +34,7 @@ export default function LoginModal({ onSuccess, onClose, onNavigateRegister }: L
                     onClose: () => {
                         const { token, user, role } = data.data;
                         saveCredentails(token, { role, ...user })
-                        onSuccess();
+                        onSuccess({ role, ...user });
                     }
                 });
             } else {

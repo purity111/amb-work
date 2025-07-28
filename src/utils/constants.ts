@@ -845,6 +845,17 @@ export const GenderOptions = [
     }
 ]
 
+export const ServiceContentOptions = [
+    {
+        value: '1',
+        option: '転職支援サービス利用を希望する'
+    },
+    {
+        value: '0',
+        option: '希望しない'
+    }
+]
+
 export const UserRoleOptions = [
     {
         value: 'admin',
@@ -1002,6 +1013,10 @@ export const RecruiterFlowSteps: RecruiterFlowStep[] = [
 
 export const JobTypeOptions = [
     {
+        value: '0',
+        option: 'すべて'
+    },
+    {
         value: '1',
         option: '直接応募のみ'
     },
@@ -1010,9 +1025,9 @@ export const JobTypeOptions = [
         option: '転職⽀援サービス'
     },
     {
-        value: '0',
-        option: 'すべて'
-    }
+        value: '3',
+        option: 'ドラフトジョブ'
+    },
 ]
 
 export const JobPageLimitOptions = [

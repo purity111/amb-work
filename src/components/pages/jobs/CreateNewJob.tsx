@@ -137,7 +137,7 @@ const schema = Yup.object().shape({
     salary: Yup.string().required('報酬詳細は必須項目です。'),
     recruitingCriterias: Yup.array().of(
         Yup.object({
-            body: Yup.string(),
+            body: Yup.string().notRequired(),
             id: Yup.number(),
         })
     ),
@@ -205,7 +205,7 @@ export default function CreateNewJobComponent({ preLoad }: CreateNewJobProps) {
     const { data, isLoading } = useGetAllEmployerInfos(profile?.role);
     const { data: criterias, isLoading: cLoading } = useGetRecruitingCriterias({ refetchOnWindowFocus: false });
     const { data: cloneJobData, isLoading: cloneJobLoading } = useGetJobById(Number(cloneJobId), { refetchOnWindowFocus: false });
-    const { data: selectedCompany, isLoading: scLoading } = useGetEmployerInfoById(Number(company), { refetchOnWindowFocus: false });
+    const { data: selectedCompany, isLoading: eLoading } = useGetEmployerInfoById(Number(company), { refetchOnWindowFocus: false });
     const hasPreloaded = useRef(false);
 
     useEffect(() => {
@@ -237,31 +237,32 @@ export default function CreateNewJobComponent({ preLoad }: CreateNewJobProps) {
     }, [data, isLoading, company])
 
     useEffect(() => {
-        if (cLoading || scLoading || !selectedCompany || !criterias || !recruitingCriterias) return;
+        if (cLoading || eLoading || !selectedCompany || !criterias) return;
         const companyData = selectedCompany?.data;
+        const temp = [...(recruitingCriterias || Array(criterias.length))];
         criterias?.forEach((c: RecruitingCriteria, index: number) => {
-            if (c.clinic_flg && companyData?.[c.calling_name]) {
-                recruitingCriterias[index] = { ...recruitingCriterias[index], body: companyData?.[c.calling_name] }
+            if (c.clinic_flg && companyData?.[c.calling_name]?.length) {
+                temp[index] = { id: c.id, body: companyData?.[c.calling_name] }
+            } else {
+                temp[index] = { ...temp[index], id: c.id }
             }
         });
         reset({
             ...getValues(),
-            recruitingCriterias
+            recruitingCriterias: temp
         })
-    }, [criterias, cLoading, selectedCompany, scLoading])
+    }, [criterias, cLoading, selectedCompany, eLoading])
 
     const presetForm = (preLoad: JobDetailExtra) => {
         const updatedRecruitingCriterias = [...(recruitingCriterias || [])];
         hasPreloaded.current = true;
 
-        criterias.sort((i: RecruitingCriteria, j: RecruitingCriteria) => i.display_order - j.display_order).forEach((item: RecruitingCriteria, index: number) => {
+        criterias.forEach((item: RecruitingCriteria, index: number) => {
             const find = preLoad.recruitingCriterias.find(j => j.id === item.id);
             if (!find) {
                 updatedRecruitingCriterias[index] = { body: '', id: item.id };
             } else if (!find.clinic_flg || find.JobInfosRecruitingCriteria.body) {
                 updatedRecruitingCriterias[index] = { body: find.JobInfosRecruitingCriteria.body, id: item.id };
-            } else {
-                updatedRecruitingCriterias[index] = { body: '', id: item.id };
             }
         })
 
@@ -291,7 +292,8 @@ export default function CreateNewJobComponent({ preLoad }: CreateNewJobProps) {
             salary: preLoad.pay,
             recruitingCriterias: updatedRecruitingCriterias,
             publicDateStart: format(parse(preLoad.clinic_public_date_start, 'yyyymmdd', new Date()), 'mm/dd/yyyy'),
-            publicDateEnd: format(parse(preLoad.clinic_public_date_end, 'yyyymmdd', new Date()), 'mm/dd/yyyy'),
+            // if public end date is undefined, it should be after 3 years from public start date (e.g. 20240611 -> 20270611)
+            publicDateEnd: format(parse(preLoad.clinic_public_date_end || (Number(preLoad.clinic_public_date_start) + 30000).toString(), 'yyyymmdd', new Date()), 'mm/dd/yyyy'),
             applyType: preLoad.job_detail_page_template_id.toString(),
             supportUrl: preLoad.clinic_public_form_url,
             status: preLoad.public_status.toString()
@@ -776,13 +778,12 @@ export default function CreateNewJobComponent({ preLoad }: CreateNewJobProps) {
                                             control={control}
                                             render={({ field }) => (
                                                 <CInput
-                                                    {...field}
+                                                    value={field.value || ''}
                                                     multiline
                                                     className="rounded-sm placeholder-gray-700"
                                                     onChange={(e) => field.onChange(e)}
                                                     maxLength={2000}
                                                     height="h-[100px]"
-                                                    disabled={!!c.clinic_flg && selectedCompany?.data[c.calling_name]}
                                                     placeholder="入力してください"
                                                 />
                                             )}

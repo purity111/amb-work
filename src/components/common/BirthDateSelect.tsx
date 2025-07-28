@@ -52,9 +52,9 @@ export default function BirthDateSelect({ options, width = 'w-full', className, 
                             <div className={`h-2 w-2 border-r-2 border-b-2 border-gray-600 duration-400 rotate-45 ${isOpen ? 'rotate-[225deg]' : ''}`} />
                         </div>
                     </div>
-                    
+
                     {isOpen && (
-                        <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-300 rounded-lg shadow-lg z-50 max-h-28 overflow-y-auto">
+                        <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-700 shadow-lg z-50 max-h-40 overflow-y-auto">
                             {options.map(option => (
                                 <div
                                     key={option.value}

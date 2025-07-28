@@ -54,6 +54,7 @@ export interface RegisterJobSeekerParam {
     tel: string;
     email: string;
     password: string;
+    service_content: number;
 }
 
 export interface LoginParam {
@@ -91,7 +92,7 @@ export interface JobFetchParam {
     prefectures?: string[];
     isAdmin?: string;
     employer_id?: number;
-    agency?: number;
+    public_status?: number;
 }
 
 export interface JobParam {
