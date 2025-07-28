@@ -845,6 +845,17 @@ export const GenderOptions = [
     }
 ]
 
+export const ServiceContentOptions = [
+    {
+        value: '1',
+        option: '転職支援サービス利用を希望する'
+    },
+    {
+        value: '0',
+        option: '希望しない'
+    }
+]
+
 export const UserRoleOptions = [
     {
         value: 'admin',

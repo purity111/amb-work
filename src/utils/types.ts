@@ -54,6 +54,7 @@ export interface RegisterJobSeekerParam {
     tel: string;
     email: string;
     password: string;
+    service_content: number;
 }
 
 export interface LoginParam {

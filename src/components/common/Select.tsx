@@ -13,7 +13,7 @@ interface CSelectProps {
 export default function CSelect({ options, width = 'w-full', height, className, isError = false, errorText, ...props }: CSelectProps & InputHTMLAttributes<HTMLSelectElement>) {
     return (
         <div>
-            <div className="relative w-fit">
+            <div className="relative">
                 <select
                     className={`relative appearance-none border rounded-lg px-4 py-2 focus:border-blue focus:outline-none focus:shadow-sm
                     ${isError ? 'border-red-400' : 'border-[#CCC]'}
