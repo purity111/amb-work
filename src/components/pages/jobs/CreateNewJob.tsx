@@ -777,7 +777,7 @@ export default function CreateNewJobComponent({ preLoad }: CreateNewJobProps) {
                                             control={control}
                                             render={({ field }) => (
                                                 <CInput
-                                                    {...field}
+                                                    value={field.value || ''}
                                                     multiline
                                                     className="rounded-sm placeholder-gray-700"
                                                     onChange={(e) => field.onChange(e)}
