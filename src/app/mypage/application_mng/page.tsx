@@ -225,11 +225,13 @@ function ApplicationMngContent() {
             </div>
           </div>
           <div className="flex flex-row justify-center my-4">
-            <Pagination
-              page={currentPage}
-              totalPages={totalPage}
-              onPageChange={onPageChange}
-            />
+            {totalPage > 0 && (
+              <Pagination
+                page={currentPage}
+                totalPages={totalPage}
+                onPageChange={onPageChange}
+              />
+            )}
           </div>
           {isLoading && <p>読み込み中...</p>}
           {!isLoading && applications.map((app) => (
@@ -244,11 +246,13 @@ function ApplicationMngContent() {
             />
           ))}
           {!isLoading && <div className="flex flex-row justify-center my-4">
-            <Pagination
-              page={currentPage}
-              totalPages={totalPage}
-              onPageChange={onPageChange}
-            />
+            {totalPage > 0 && (
+              <Pagination
+                page={currentPage}
+                totalPages={totalPage}
+                onPageChange={onPageChange}
+              />
+            )}
           </div>}
           {!isLoading && applications.length === 0 && <div>応募が見つかりませんでした。</div>}
         </div>
