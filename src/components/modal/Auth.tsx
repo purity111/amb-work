@@ -29,6 +29,8 @@ export default function AuthModal({ initialStep, onClose }: RegisterModalProps) 
             onClose()
             if (redirectTo) {
                 router.push(redirectTo);
+            } else if (profile.role !== 'JobSeeker') {
+                router.push('/mypage');
             } else if (profile?.service_content) {
                 router.push('/mypage');
             } else {
