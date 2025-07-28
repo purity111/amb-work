@@ -92,7 +92,7 @@ export default function AddJobSeekerModal({ onSubmit, preLoad, onClose }: Regist
                 <p className="text-center text-blue text-2xl">{preLoad ? 'Edit a JobSeeker' : 'Create new JobSeeker'}</p>
                 <div className="flex-1 flex flex-col overflow-y-auto px-6">
                     <form onSubmit={handleSubmit(onSubmit)} className="mt-6 space-y-4">
-                        <div className="flex flex-col items-left md:flex-row  py-2">
+                        <div className="flex flex-col items-start md:flex-row  py-2">
                             <div className="flex-2 flex flex-row items-center">
                                 <p className="text-sm text-gray-400 py-2">氏名</p>
                                 <RequiredLabel />
@@ -116,7 +116,7 @@ export default function AddJobSeekerModal({ onSubmit, preLoad, onClose }: Regist
                                 />
                             </div>
                         </div>
-                        <div className="flex flex-col items-left md:flex-row  py-2">
+                        <div className="flex flex-col items-start md:flex-row  py-2">
                             <div className="flex-2 flex flex-row items-center">
                                 <p className="text-sm text-gray-400 py-2">氏名フリガナ</p>
                                 <RequiredLabel />
@@ -140,7 +140,7 @@ export default function AddJobSeekerModal({ onSubmit, preLoad, onClose }: Regist
                                 />
                             </div>
                         </div>
-                        <div className="flex flex-col items-left md:flex-row  py-2">
+                        <div className="flex flex-col items-start md:flex-row  py-2">
                             <div className="flex-2 flex flex-row ">
                                 <p className="text-sm text-gray-400 py-2">生年月日</p>
                             </div>
@@ -195,7 +195,7 @@ export default function AddJobSeekerModal({ onSubmit, preLoad, onClose }: Regist
                                 />
                             </div>
                         </div>
-                        <div className="flex flex-col items-left md:flex-row  py-2">
+                        <div className="flex flex-col items-start md:flex-row  py-2">
                             <div className="flex-2 flex flex-row items-center">
                                 <p className="text-sm text-gray-400 py-2">性別</p>
                                 <RequiredLabel />
@@ -219,7 +219,7 @@ export default function AddJobSeekerModal({ onSubmit, preLoad, onClose }: Regist
                                 />
                             </div>
                         </div>
-                        <div className="flex flex-col items-left md:flex-row  py-2">
+                        <div className="flex flex-col items-start md:flex-row  py-2">
                             <div className="flex-2 flex flex-row items-center">
                                 <p className="text-sm text-gray-400 py-2">郵便番号</p>
                                 <RequiredLabel />
@@ -244,7 +244,7 @@ export default function AddJobSeekerModal({ onSubmit, preLoad, onClose }: Regist
                                 <p className="text-[11px] text-gray-600 h-0">※ハイフンを含めて入力してください。</p>
                             </div>
                         </div>
-                        <div className="flex flex-col items-left md:flex-row  py-2 mt-3">
+                        <div className="flex flex-col items-start md:flex-row  py-2 mt-3">
                             <div className="flex-2 flex flex-row items-center">
                                 <p className="text-sm text-gray-400 py-2">都道府県</p>
                                 <RequiredLabel />
@@ -267,7 +267,7 @@ export default function AddJobSeekerModal({ onSubmit, preLoad, onClose }: Regist
                                 />
                             </div>
                         </div>
-                        <div className="flex flex-col items-left md:flex-row  py-2">
+                        <div className="flex flex-col items-start md:flex-row  py-2">
                             <div className="flex-2 flex flex-row items-center">
                                 <p className="text-sm text-gray-400 py-2">電話番号</p>
                                 <RequiredLabel />
@@ -292,7 +292,7 @@ export default function AddJobSeekerModal({ onSubmit, preLoad, onClose }: Regist
                                 <p className="text-[11px] text-gray-600 h-0">※ハイフンはつけずに入力してください。</p>
                             </div>
                         </div>
-                        <div className="flex flex-col items-left md:flex-row  py-2">
+                        <div className="flex flex-col items-start md:flex-row  py-2">
                             <div className="flex-2 flex flex-row items-center">
                                 <p className="text-sm text-gray-400 py-2">メールアドレス</p>
                                 <RequiredLabel />
@@ -314,7 +314,7 @@ export default function AddJobSeekerModal({ onSubmit, preLoad, onClose }: Regist
                                 />
                             </div>
                         </div>
-                        <div className="flex flex-col items-left md:flex-row  py-2">
+                        <div className="flex flex-col items-start md:flex-row  py-2">
                             <div className="flex-2 flex flex-row items-center">
                                 <p className="text-sm text-gray-400 py-2">パスワード</p>
                                 <RequiredLabel />

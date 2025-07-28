@@ -158,7 +158,7 @@ export default function LoginModal({ onSuccess, onClose, onNavigateRegister }: L
                 <p className="text-center text-blue text-2xl pb-6 border-b-1 border-gray-800">ログイン</p>
 
                 <div className="p-6">
-                    <div className="flex flex-col items-left md:flex-row  py-2">
+                    <div className="flex flex-col items-start md:flex-row  py-2">
                         <div className="flex-2 flex flex-row items-center">
                             <p className="text-sm text-gray-400 py-2">メールアドレス</p>
                         </div>
@@ -170,7 +170,7 @@ export default function LoginModal({ onSuccess, onClose, onNavigateRegister }: L
                             />
                         </div>
                     </div>
-                    <div className="flex flex-col items-left md:flex-row  py-2">
+                    <div className="flex flex-col items-start md:flex-row  py-2">
                         <div className="flex-2 flex flex-row items-center">
                             <p className="text-sm text-gray-400 py-2">パスワード</p>
                         </div>

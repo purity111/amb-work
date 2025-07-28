@@ -161,7 +161,7 @@ export default function RegisterForJobSeeker({ onSuccess }: FormProps) {
                 </label>
             </div> */}
             <form onSubmit={handleSubmit(onSubmit)} className="mt-6 space-y-4">
-                <div className="flex flex-col items-left md:flex-row  py-2">
+                <div className="flex flex-col items-start md:flex-row  py-2">
                     <div className="flex-2 flex flex-row items-center">
                         <p className="text-sm text-gray-400 py-2">氏名</p>
                         <RequiredLabel />
@@ -185,7 +185,7 @@ export default function RegisterForJobSeeker({ onSuccess }: FormProps) {
                         />
                     </div>
                 </div>
-                <div className="flex flex-col items-left md:flex-row  py-2">
+                <div className="flex flex-col items-start md:flex-row  py-2">
                     <div className="flex-2 flex flex-row items-center">
                         <p className="text-sm text-gray-400 py-2">氏名フリガナ</p>
                         <RequiredLabel />
@@ -209,7 +209,7 @@ export default function RegisterForJobSeeker({ onSuccess }: FormProps) {
                         />
                     </div>
                 </div>
-                <div className="flex flex-col items-left md:flex-row  py-2">
+                <div className="flex flex-col items-start md:flex-row  py-2">
                     <div className="flex-2 flex flex-row items-center">
                         <p className="text-sm text-gray-400 py-2">生年月日</p>
                         <RequiredLabel />
@@ -269,7 +269,7 @@ export default function RegisterForJobSeeker({ onSuccess }: FormProps) {
                         />
                     </div>
                 </div>
-                <div className="flex flex-col items-left md:flex-row  py-2">
+                <div className="flex flex-col items-start md:flex-row  py-2">
                     <div className="flex-2 flex flex-row items-center">
                         <p className="text-sm text-gray-400 py-2">性別</p>
                         <RequiredLabel />
@@ -289,7 +289,7 @@ export default function RegisterForJobSeeker({ onSuccess }: FormProps) {
                         />
                     </div>
                 </div>
-                <div className="flex flex-col items-left md:flex-row  py-2">
+                <div className="flex flex-col items-start md:flex-row  py-2">
                     <div className="flex-2 flex flex-row items-center">
                         <p className="text-sm text-gray-400 py-2">郵便番号</p>
                         <RequiredLabel />
@@ -314,7 +314,7 @@ export default function RegisterForJobSeeker({ onSuccess }: FormProps) {
                         <p className="text-[11px] text-gray-600 h-0">※ハイフンを含めて入力してください。</p>
                     </div>
                 </div>
-                <div className="flex flex-col items-left md:flex-row  py-2 mt-3">
+                <div className="flex flex-col items-start md:flex-row  py-2 mt-3">
                     <div className="flex-2 flex flex-row items-center">
                         <p className="text-sm text-gray-400 py-2">都道府県</p>
                         <RequiredLabel />
@@ -337,7 +337,7 @@ export default function RegisterForJobSeeker({ onSuccess }: FormProps) {
                         />
                     </div>
                 </div>
-                <div className="flex flex-col items-left md:flex-row  py-2">
+                <div className="flex flex-col items-start md:flex-row  py-2">
                     <div className="flex-2 flex flex-row items-center">
                         <p className="text-sm text-gray-400 py-2">電話番号</p>
                         <RequiredLabel />
@@ -362,7 +362,7 @@ export default function RegisterForJobSeeker({ onSuccess }: FormProps) {
                         <p className="text-[11px] text-gray-600 h-0">※ハイフンはつけずに入力してください。</p>
                     </div>
                 </div>
-                <div className="flex flex-col items-left md:flex-row  py-2">
+                <div className="flex flex-col items-start md:flex-row  py-2">
                     <div className="flex-2 flex flex-row items-center">
                         <p className="text-sm text-gray-400 py-2">メールアドレス</p>
                         <RequiredLabel />
@@ -384,7 +384,7 @@ export default function RegisterForJobSeeker({ onSuccess }: FormProps) {
                         />
                     </div>
                 </div>
-                <div className="flex flex-col items-left md:flex-row  py-2">
+                <div className="flex flex-col items-start md:flex-row  py-2">
                     <div className="flex-2 flex flex-row items-center">
                         <p className="text-sm text-gray-400 py-2">メールアドレス確認</p>
                         <RequiredLabel />
@@ -407,7 +407,7 @@ export default function RegisterForJobSeeker({ onSuccess }: FormProps) {
                         <p className="text-[11px] text-gray-600 h-0">※メールアドレス欄と同じものを入力してください。</p>
                     </div>
                 </div>
-                <div className="flex flex-col items-left md:flex-row  py-2">
+                <div className="flex flex-col items-start md:flex-row  py-2">
                     <div className="flex-2 flex flex-row items-center">
                         <p className="text-sm text-gray-400 py-2">パスワード</p>
                         <RequiredLabel />
@@ -431,7 +431,7 @@ export default function RegisterForJobSeeker({ onSuccess }: FormProps) {
                         <p className="text-[11px] text-gray-600 h-0">8文字以上かつ、半角英数字および特殊記号（!, %, # など）を含めてください。</p>
                     </div>
                 </div>
-                <div className="flex flex-col items-left md:flex-row  py-2">
+                <div className="flex flex-col items-start md:flex-row  py-2">
                     <div className="flex-2 flex flex-row items-center">
                         <p className="text-sm text-gray-400 py-2">確認用パスワード</p>
                         <RequiredLabel />

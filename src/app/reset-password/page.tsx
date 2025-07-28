@@ -92,7 +92,7 @@ export default function ResetPasswordPage() {
                 </div>
                 <div className='w-9/10 max-w-100 mx-auto'>
                     <form onSubmit={handleSubmit(onSubmit)} className="mt-6 space-y-4">
-                        <div className="flex flex-col items-left py-2">
+                        <div className="flex flex-col items-start py-2">
                             <div className="flex-2 flex flex-row items-center">
                                 <p className="text-sm text-gray-400 py-2">パスワード</p>
                                 <RequiredLabel />
@@ -116,7 +116,7 @@ export default function ResetPasswordPage() {
                                 <p className="text-[11px] text-gray-600 h-0">8文字以上かつ、半角英数字および特殊記号（!, %, # など）を含めてください。</p>
                             </div>
                         </div>
-                        <div className="flex flex-col items-left  py-2">
+                        <div className="flex flex-col items-start  py-2">
                             <div className="flex-2 flex flex-row items-center">
                                 <p className="text-sm text-gray-400 py-2">確認用パスワード</p>
                                 <RequiredLabel />

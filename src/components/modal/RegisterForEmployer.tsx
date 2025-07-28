@@ -103,7 +103,7 @@ export default function RegisterForEmployer({ onSuccess }: FormProps) {
         onError: (error: any) => {
             console.error('Error:', error);
             // Check if the error is due to existing email
-            if (error?.response?.data?.message?.includes('email') || 
+            if (error?.response?.data?.message?.includes('email') ||
                 error?.response?.data?.message?.includes('Email') ||
                 error?.response?.status === 409) {
                 toast.error('このメールアドレスは既に登録されています。');
@@ -167,7 +167,7 @@ export default function RegisterForEmployer({ onSuccess }: FormProps) {
                 </label>
             </div> */}
             <form onSubmit={handleSubmit(onSubmit)} className="mt-6 space-y-4">
-                <div className="flex flex-col items-left md:flex-row  py-2">
+                <div className="flex flex-col items-start md:flex-row  py-2">
                     <div className="flex-2 flex flex-row items-center">
                         <p className="text-sm text-gray-400 py-2">会社名</p>
                         <RequiredLabel />
@@ -192,7 +192,7 @@ export default function RegisterForEmployer({ onSuccess }: FormProps) {
                         />
                     </div>
                 </div>
-                <div className="flex flex-col items-left md:flex-row  py-2">
+                <div className="flex flex-col items-start md:flex-row  py-2">
                     <div className="flex-2 flex flex-row items-center">
                         <p className="text-sm text-gray-400 py-2">会社名フリガナ</p>
                         <RequiredLabel />
@@ -217,7 +217,7 @@ export default function RegisterForEmployer({ onSuccess }: FormProps) {
                         />
                     </div>
                 </div>
-                <div className="flex flex-col items-left md:flex-row  py-2">
+                <div className="flex flex-col items-start md:flex-row  py-2">
                     <div className="flex-2 flex flex-row items-center">
                         <p className="text-sm text-gray-400 py-2">郵便番号</p>
                         <RequiredLabel />
@@ -242,7 +242,7 @@ export default function RegisterForEmployer({ onSuccess }: FormProps) {
                         <p className="text-[11px] text-gray-600">※ハイフンを含めて入力してください。</p>
                     </div>
                 </div>
-                <div className="flex flex-col items-left md:flex-row  py-2 mt-3">
+                <div className="flex flex-col items-start md:flex-row  py-2 mt-3">
                     <div className="flex-2 flex flex-row items-center">
                         <p className="text-sm text-gray-400 py-2">都道府県</p>
                         <RequiredLabel />
@@ -264,7 +264,7 @@ export default function RegisterForEmployer({ onSuccess }: FormProps) {
                         />
                     </div>
                 </div>
-                <div className="flex flex-col items-left md:flex-row  py-2">
+                <div className="flex flex-col items-start md:flex-row  py-2">
                     <div className="flex-2 flex flex-row items-center">
                         <p className="text-sm text-gray-400 py-2">都道府県以降の住所</p>
                         <RequiredLabel />
@@ -287,7 +287,7 @@ export default function RegisterForEmployer({ onSuccess }: FormProps) {
                         />
                     </div>
                 </div>
-                <div className="flex flex-col items-left md:flex-row  py-2">
+                <div className="flex flex-col items-start md:flex-row  py-2">
                     <div className="flex-2 flex flex-row items-center">
                         <p className="text-sm text-gray-400 py-2">電話番号</p>
                         <RequiredLabel />
@@ -312,7 +312,7 @@ export default function RegisterForEmployer({ onSuccess }: FormProps) {
                         <p className="text-[11px] text-gray-600">※ハイフンはつけずに入力してください。</p>
                     </div>
                 </div>
-                <div className="flex flex-col items-left md:flex-row  py-2 mt-4">
+                <div className="flex flex-col items-start md:flex-row  py-2 mt-4">
                     <div className="flex-2 flex flex-row ">
                         <p className="text-sm text-gray-400 py-2">従業員数</p>
                     </div>
@@ -334,7 +334,7 @@ export default function RegisterForEmployer({ onSuccess }: FormProps) {
                         />
                     </div>
                 </div>
-                <div className="flex flex-col items-left md:flex-row  py-2">
+                <div className="flex flex-col items-start md:flex-row  py-2">
                     <div className="flex-2 flex flex-row ">
                         <p className="text-sm text-gray-400 py-2">設立年月日</p>
                     </div>
@@ -391,7 +391,7 @@ export default function RegisterForEmployer({ onSuccess }: FormProps) {
 
                     </div>
                 </div>
-                <div className="flex flex-col items-left md:flex-row  py-2">
+                <div className="flex flex-col items-start md:flex-row  py-2">
                     <div className="flex-2 flex flex-row ">
                         <p className="text-sm text-gray-400 py-2">資本金（万円）</p>
                     </div>
@@ -412,7 +412,7 @@ export default function RegisterForEmployer({ onSuccess }: FormProps) {
                         />
                     </div>
                 </div>
-                <div className="flex flex-col items-left md:flex-row  py-2">
+                <div className="flex flex-col items-start md:flex-row  py-2">
                     <div className="flex-2 flex flex-row ">
                         <p className="text-sm text-gray-400 py-2">事業内容</p>
                     </div>
@@ -426,7 +426,7 @@ export default function RegisterForEmployer({ onSuccess }: FormProps) {
                         />
                     </div>
                 </div>
-                <div className="flex flex-col items-left md:flex-row  py-2">
+                <div className="flex flex-col items-start md:flex-row  py-2">
                     <div className="flex-2 flex flex-row ">
                         <p className="text-sm text-gray-400 py-2">サイトURL</p>
                     </div>
@@ -447,7 +447,7 @@ export default function RegisterForEmployer({ onSuccess }: FormProps) {
                         />
                     </div>
                 </div>
-                <div className="flex flex-col items-left md:flex-row  py-2">
+                <div className="flex flex-col items-start md:flex-row  py-2">
                     <div className="flex-2 flex flex-row items-center">
                         <p className="text-sm text-gray-400 py-2">メールアドレス</p>
                         <RequiredLabel />
@@ -469,7 +469,7 @@ export default function RegisterForEmployer({ onSuccess }: FormProps) {
                         />
                     </div>
                 </div>
-                <div className="flex flex-col items-left md:flex-row  py-2">
+                <div className="flex flex-col items-start md:flex-row  py-2">
                     <div className="flex-2 flex flex-row items-center">
                         <p className="text-sm text-gray-400 py-2">パスワード</p>
                         <RequiredLabel />
@@ -493,7 +493,7 @@ export default function RegisterForEmployer({ onSuccess }: FormProps) {
                         <p className="text-[11px] text-gray-600">8文字以上かつ、半角英数字および特殊記号（!, %, # など）を含めてください。</p>
                     </div>
                 </div>
-                <div className="flex flex-col items-left md:flex-row  py-2">
+                <div className="flex flex-col items-start md:flex-row  py-2">
                     <div className="flex-2 flex flex-row items-center">
                         <p className="text-sm text-gray-400 py-2">確認用パスワード</p>
                         <RequiredLabel />
