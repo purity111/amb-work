@@ -100,7 +100,7 @@ export default function RegisterForJobSeeker({ onSuccess }: FormProps) {
         onError: (error: any) => {
             console.error('Error:', error);
             // Check if the error is due to existing email
-            if (error?.response?.data?.message?.includes('email') || 
+            if (error?.response?.data?.message?.includes('email') ||
                 error?.response?.data?.message?.includes('Email') ||
                 error?.response?.status === 409) {
                 toast.error('このメールアドレスは既に登録されています。');
@@ -455,9 +455,9 @@ export default function RegisterForJobSeeker({ onSuccess }: FormProps) {
                         <p className="text-[11px] text-gray-600 h-0">パスワード欄と同じものを入力してください。</p>
                     </div>
                 </div>
-                <div className="flex flex-col items-left md:flex-row  py-2">
+                <div className="flex flex-col items-start md:flex-row  py-2">
                     <div className="flex-2 flex flex-row items-center">
-                        <p className="text-sm text-gray-400 py-2">転職支援サービス利用ご希望有・無</p>
+                        <p className="text-sm text-gray-400 py-2">転職支援サービスの利用希望</p>
                         <RequiredLabel />
                     </div>
                     <div className="flex-3">
@@ -474,6 +474,7 @@ export default function RegisterForJobSeeker({ onSuccess }: FormProps) {
                                 />
                             )}
                         />
+                        <p className="text-[11px] text-gray-400 py-2">専門のキャリアアドバイザーによる無料相談を受けられます。非公開求人も多数。お気軽にご相談ください。</p>
                     </div>
                 </div>
                 <button
