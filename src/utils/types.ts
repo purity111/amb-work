@@ -93,6 +93,7 @@ export interface JobFetchParam {
     isAdmin?: string;
     employer_id?: number;
     public_status?: number;
+    sortBy?: string;
 }
 
 export interface JobParam {
@@ -588,6 +589,7 @@ export interface JobSeekerDetail {
     other_desired_criteria?: string;
     reset_token?: string;
     deleted?: string;
+    service_content: number;
     created: string;
     modified: string;
     employmentTypes: number[];

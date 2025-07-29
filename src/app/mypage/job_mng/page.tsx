@@ -49,13 +49,14 @@ export default function JobMngPage() {
   })
 
   const { data: allFilteredJobs } = useGetJobs({
-    page: currentPage,
+    page: 1,
     limit: 999999,
     searchTerm,
     companyID: Number(company),
     jobType: Number(jobType),
     isAdmin: profile?.role === 'JobSeeker' ? '0' : '1',
-    employer_id: profile?.role === 'Employer' ? profile.id : 0
+    employer_id: profile?.role === 'Employer' ? profile.id : 0,
+    sortBy: 'employer_id'
   })
 
   const hasLoaded = useRef(false);
@@ -222,8 +223,8 @@ export default function JobMngPage() {
             <div className="flex flex-row items-center space-x-2">
               {allFilteredJobs?.data?.jobs?.length > 0 && (
                 <CSVLink
-                  data={generateJobCSVData(allFilteredJobs?.data?.jobs)}
-                  filename={`すべての求人-${format(new Date(), 'yyyy年MM月dd日HH:mm')}`}
+                  data={generateJobCSVData(allFilteredJobs?.data?.jobs, window.location.origin)}
+                  filename={`求職者一覧-${format(new Date(), 'yyyy年MM月dd日-HHmm')}`}
                 >
                   <CButton
                     text="全体CSV出⼒"
@@ -235,8 +236,8 @@ export default function JobMngPage() {
               )}
               {getSelectedJobs.length > 0 && (
                 <CSVLink
-                  data={generateJobCSVData(Object.values(getSelectedJobs) as JobDetail[])}
-                  filename={`選択した求人-${format(new Date(), 'yyyy年MM月dd日HH:mm')}`}
+                  data={generateJobCSVData(Object.values(getSelectedJobs) as JobDetail[], window.location.origin)}
+                  filename={`求職者一覧-${format(new Date(), 'yyyy年MM月dd日-HHmm')}`}
                 >
                   <CButton
                     text="選択のみCSV出⼒"

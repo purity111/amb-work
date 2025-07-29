@@ -22,13 +22,14 @@ export default function AuthModal({ initialStep, onClose }: RegisterModalProps) 
     }
 
     const onLoginSuccess = (profile: Profile) => {
-        // client-side reload only
         if (typeof window !== 'undefined') {
             const params = new URLSearchParams(window.location.search);
             const redirectTo = params.get('redirectTo');
             onClose()
             if (redirectTo) {
                 router.push(redirectTo);
+            } else if (profile.role !== 'JobSeeker') {
+                router.push('/mypage');
             } else if (profile?.service_content) {
                 router.push('/mypage');
             } else {

@@ -249,24 +249,24 @@ export const getFilterJobUrl = (value: JobFilterFormValue, featureList: FeatureI
     return `/job-openings/${segments.join('/')}`;
 }
 
-export const generateJobCSVData = (data: JobDetail[]) => {
+export const generateJobCSVData = (data: JobDetail[], baseURL: string) => {
     return data.map(item => ({
-        'ID': item.id,
-        'Job Title': item.job_title,
-        'Job Posting Date': item.job_posting_date,
-        'Job Category': item.job_category,
-        'Job Introduction': item.job_lead_statement,
-        'Salary': item.pay,
-        'Public Status': item.public_status,
-        'Job Type': item.job_detail_page_template_id === 1 ? '直接応募のみ' : '転職⽀援サービス',
-        'Thumbnail': getFirstFullImage(item.jobThumbnails),
-        'Employment Type': item.employmentType.name,
-        'Employer': item.employer.clinic_name,
-        'Public Start Date': item.clinic_public_date_start,
-        'Public End Date': item.clinic_public_date_end,
-        'Youtube Url': item.youtube_url,
-        'Another Url': item.another_url_text,
-        'Features': item.features.map(i => i.name).join(',')
+        '求人ID': item.id,
+        '会社名': item.employer.clinic_name,
+        '求人名': item.job_title,
+        '設定タグ': item.features.map(i => i.name).join(', '),
+        '掲載開始日': format(parse(item.clinic_public_date_start, 'yyyymmdd', new Date()), 'yyyy年MM月dd日'),
+        '掲載終了日': item.clinic_public_date_end ? format(parse(item.clinic_public_date_end, 'yyyymmdd', new Date()), 'yyyy年MM月dd日') : '無制限',
+        '求人のリンク': `${baseURL}/jobs/recruit/${item.id}`,
+        '求人閲覧数': item.recruits_count,
+        'お気に入り数': item.favourite_count,
+        '応募総数': item.application_count,
+        '応募数（面接日決定数）': 0,
+        '応募数（面接済数）': 0,
+        '応募数（最終面接済）': 0,
+        '応募数（面接決定済）': 0,
+        '公開／非公開': item.public_status === 1 ? '公開' : '非公開',
+        '応募方法': item.job_detail_page_template_id === 1 ? '直接応募' : '転職サポート',
     }));
 }
 
