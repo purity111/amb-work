@@ -269,6 +269,7 @@ export default function ApplicantMngPage() {
               <th scope='col'>都道府県</th>
               <th scope='col'>{renderSortableheader('tel', '電話番号')}</th>
               <th scope='col'>メールアドレス</th>
+              <th scope='col'>{renderSortableheader('service_content', '転職サポート希望')}</th>
               <th scope='col'>{renderSortableheader('created', '登録日')}</th>
               <th scope='col'>操作</th>
             </tr>
@@ -308,6 +309,9 @@ export default function ApplicantMngPage() {
                 </td>
                 <td data-label="Email" className="py-2 px-4 border-b border-gray-200 hidden md:table-cell">
                   {jobseeker.email}
+                </td>
+                <td data-label="ServiceContent" className="py-2 px-4 border-b border-gray-200 hidden md:table-cell">
+                  {jobseeker.service_content ? '有' : '無'}
                 </td>
                 <td data-label="CreatedAt" className="py-2 px-4 border-b border-gray-200 hidden md:table-cell">
                   {format(new Date(jobseeker.created), 'yyyy年MM月dd日HH:mm:ss')}

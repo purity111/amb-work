@@ -22,7 +22,6 @@ export default function AuthModal({ initialStep, onClose }: RegisterModalProps) 
     }
 
     const onLoginSuccess = (profile: Profile) => {
-        // client-side reload only
         if (typeof window !== 'undefined') {
             const params = new URLSearchParams(window.location.search);
             const redirectTo = params.get('redirectTo');

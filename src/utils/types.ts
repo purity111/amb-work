@@ -589,6 +589,7 @@ export interface JobSeekerDetail {
     other_desired_criteria?: string;
     reset_token?: string;
     deleted?: string;
+    service_content: number;
     created: string;
     modified: string;
     employmentTypes: number[];
