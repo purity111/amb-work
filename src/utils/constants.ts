@@ -1026,7 +1026,7 @@ export const JobTypeOptions = [
     },
     {
         value: '3',
-        option: 'ドラフトジョブ'
+        option: '下書き'
     },
 ]
 

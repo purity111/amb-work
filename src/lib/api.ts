@@ -123,6 +123,7 @@ export const getJobs = async (
     limit: number,
     searchTerm?: string,
     jobType?: number,
+    isAdmin?: string,
     companyID?: number,
     employer_id?: number,
     features?: string[],
@@ -130,7 +131,7 @@ export const getJobs = async (
     public_status?: number,
     sortBy?: string,
 ) => {
-    const param: Record<string, any> = { page, limit, searchTerm, jobType };
+    const param: Record<string, any> = { page, limit, searchTerm, jobType, isAdmin };
     if (companyID && companyID > 0) {
         param.companyID = companyID;
     }
