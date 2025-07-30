@@ -22,13 +22,15 @@ export default function RecruiterInquiryList() {
   const [showDetailModal, setShowDetailModal] = useState(false);
   const [selectedApplication, setSelectedApplication] = useState<CompanyApplicationItem | null>(null);
 
+  // Fetch all data for proper sorting
   const { data: response, isLoading, refetch } = useGetCompanyApplications({
-    page: currentPage,
-    limit,
+    page: 1,
+    limit: 1000, // Fetch a large number to get all data
     searchTerm
   });
 
   const [applications, setApplications] = useState<CompanyApplicationItem[]>([]);
+  const [allApplications, setAllApplications] = useState<CompanyApplicationItem[]>([]);
 
   const deleteMutation = useMutation({
     mutationFn: deleteCompanyApplication,
@@ -44,9 +46,9 @@ export default function RecruiterInquiryList() {
   useEffect(() => {
     if (response) {
       const arr = response.companyApplications || [];
+      // Sort all data by creation date (latest first)
       arr.sort((a: any, b: any) => new Date(b.created).getTime() - new Date(a.created).getTime());
-      setApplications(arr);
-      setTotalPage(response.pagination.totalPages);
+      setAllApplications(arr);
     }
   }, [response]);
 
@@ -78,6 +80,36 @@ export default function RecruiterInquiryList() {
     setSearchTerm(tempSearch);
     setCurrentPage(1); // Reset to first page when searching
   };
+
+  // Filter and paginate data based on search term
+  useEffect(() => {
+    if (allApplications.length > 0) {
+      let filteredData = allApplications;
+      
+      // Apply search filter if search term exists
+      if (searchTerm.trim()) {
+        filteredData = allApplications.filter(app => 
+          app.company_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          app.department_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          app.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          app.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          app.telephone?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          app.inquiry?.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+      }
+      
+      // Calculate pagination for filtered data
+      const totalItems = filteredData.length;
+      const totalPages = Math.ceil(totalItems / limit);
+      setTotalPage(totalPages);
+      
+      // Get current page data
+      const startIndex = (currentPage - 1) * limit;
+      const endIndex = startIndex + limit;
+      const currentPageData = filteredData.slice(startIndex, endIndex);
+      setApplications(currentPageData);
+    }
+  }, [allApplications, searchTerm, currentPage, limit]);
 
   const formatDateTime = (dateString: string) => {
     if (!dateString) return '';

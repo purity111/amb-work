@@ -1,21 +1,23 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import { useForm } from "react-hook-form";
+import { useRouter } from 'next/navigation';
 import CInput from "../../common/Input";
 import RequiredLabel from "../../common/RequiredLabel";
 import { submitCompanyApplication } from '@/lib/api';
 
 export default function RecruiterForm() {
-  const { register, handleSubmit, formState: { errors }, trigger, setFocus, reset } = useForm({ mode: "onChange" });
-  const [toast, setToast] = useState<string | null>(null);
+  const router = useRouter();
+  const { register, handleSubmit, formState: { errors }, trigger, setFocus } = useForm({ mode: "onChange" });
 
   const onSubmit = async (data: any) => {
     try {
+      // Submit the company application
       await submitCompanyApplication(data);
-      setToast('送信が完了しました。');
-      reset();
-      setTimeout(() => setToast(null), 2000);
+      
+      // Redirect to thank you page
+      router.push('/recruiter/finish');
     } catch (error) {
       alert('送信中にエラーが発生しました。');
       console.log(error);
@@ -36,11 +38,6 @@ export default function RecruiterForm() {
 
   return (
     <>
-      {toast && (
-        <div className="fixed top-6 right-6 z-50 bg-green-500 text-white px-6 py-3 rounded shadow-lg animate-fadein">
-          {toast}
-        </div>
-      )}
       <form
         className="w-full max-w-[960px] mx-auto bg-white p-4 sm:p-8 md:px-15 md:py-20 rounded shadow-lg"
         onSubmit={onValidateAndSubmit}

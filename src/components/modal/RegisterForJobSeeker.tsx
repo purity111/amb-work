@@ -11,6 +11,7 @@ import CRadioGroup from "../common/RadioGroup";
 import { useMutation } from "@tanstack/react-query";
 import { registerAsJobSeeker } from "@/lib/api";
 import { toast } from "react-toastify";
+import PrivacyPolicyCheckbox from '../common/PrivacyPolicyCheckbox';
 
 interface FormProps {
     onSuccess: () => void;
@@ -32,6 +33,7 @@ type FormValues = {
     confirmPassword: string;
     others?: string;
     serviceContent: string;
+    privacyPolicy: boolean;
 };
 
 const schema = Yup.object().shape({
@@ -67,7 +69,10 @@ const schema = Yup.object().shape({
         .oneOf([Yup.ref('password')], 'パスワードは一致する必要があります')
         .required('必須項目です。'),
     others: Yup.string(),
-    serviceContent: Yup.string().required()
+    serviceContent: Yup.string().required(),
+    privacyPolicy: Yup.boolean()
+        .oneOf([true], '利用規約への同意が必要です')
+        .required('利用規約への同意が必要です')
 });
 
 export default function RegisterForJobSeeker({ onSuccess }: FormProps) {
@@ -76,12 +81,15 @@ export default function RegisterForJobSeeker({ onSuccess }: FormProps) {
         handleSubmit,
         control,
         formState: { errors },
+        setValue,
+        trigger,
     } = useForm({
         resolver: yupResolver(schema),
-        mode: 'onChange',
+        mode: 'onSubmit',
         defaultValues: {
             sex: '1',
-            serviceContent: '1'
+            serviceContent: '1',
+            privacyPolicy: false
         },
     });
 
@@ -110,6 +118,17 @@ export default function RegisterForJobSeeker({ onSuccess }: FormProps) {
         },
     });
 
+    const [privacyChecked, setPrivacyChecked] = React.useState(false);
+    
+    // Watch the privacy policy field for validation
+    const privacyPolicyError = errors.privacyPolicy?.message;
+    
+    // Update form value when checkbox changes
+    const handlePrivacyChange = (checked: boolean) => {
+        setPrivacyChecked(checked);
+        setValue('privacyPolicy', checked);
+    };
+
     // const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
     //     const file = e.target.files?.[0];
     //     if (file && file.type.startsWith('image/')) {
@@ -121,7 +140,15 @@ export default function RegisterForJobSeeker({ onSuccess }: FormProps) {
     //     }
     // };
 
-    const onSubmit = (data: FormValues) => {
+    const onSubmit = async (data: FormValues) => {
+        // Trigger validation for all fields including privacy policy
+        const isValid = await trigger();
+        
+        if (!isValid) {
+            // If validation fails, don't submit
+            return;
+        }
+        
         mutation.mutate({
             name: data.name,
             name_kana: data.name_kana,
@@ -477,6 +504,14 @@ export default function RegisterForJobSeeker({ onSuccess }: FormProps) {
                         <p className="text-[11px] text-gray-400 py-2">専門のキャリアアドバイザーによる無料相談を受けられます。非公開求人も多数。お気軽にご相談ください。</p>
                     </div>
                 </div>
+                {/* Privacy Policy Checkbox */}
+                <PrivacyPolicyCheckbox
+                    text="利用規約"
+                    link="/terms"
+                    checked={privacyChecked}
+                    onChange={handlePrivacyChange}
+                    error={privacyPolicyError}
+                />
                 <button
                     type="submit"
                     className="absolute left-0 bottom-0 right-0 bg-blue h-12 flex items-center justify-center cursor-pointer"

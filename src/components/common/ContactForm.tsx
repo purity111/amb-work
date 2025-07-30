@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { useForm, Controller } from 'react-hook-form';
+import { useRouter } from 'next/navigation';
 import CInput from './Input';
 import RequiredLabel from './RequiredLabel';
 import CRadioGroup from './RadioGroup';
@@ -16,7 +17,8 @@ const inquiryOptions = [
 ];
 
 export default function ContactForm() {
-    const { register, handleSubmit, control, formState: { errors }, trigger, setFocus, reset } = useForm({ mode: 'onChange' });
+    const router = useRouter();
+    const { register, handleSubmit, control, formState: { errors }, trigger, setFocus } = useForm({ mode: 'onChange' });
 
     const onSubmit = async (data: any) => {
         try {
@@ -29,9 +31,12 @@ export default function ContactForm() {
                 inquiry: data.inquiry,
                 inquiry_detail: data.inquiry_detail,
             };
+            
+            // Submit the contact inquiry
             await submitContactInquiry(contactData);
-            toast.success('お問い合わせが送信されました。');
-            reset(); // Clear the form after successful submit
+            
+            // Redirect to thank you page
+            router.push('/contact/finish');
         } catch (error) {
             toast.error('送信に失敗しました。');
             console.error(error);

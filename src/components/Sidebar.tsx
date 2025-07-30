@@ -67,7 +67,6 @@ export default function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
   const [isMounted, setIsMounted] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [logoutModalShown, setLogoutModalShown] = useState(false)
-  const [openSubmenu, setOpenSubmenu] = useState<string | null>(null);
 
   const { formIsDirty } = useAuthContext();
   const { navigate } = useUnsavedChangesPrompt(formIsDirty);
@@ -195,7 +194,6 @@ export default function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
                 ) : item.submenu ? (
                   <div>
                     <p
-                      onClick={() => setOpenSubmenu(openSubmenu === item.label ? null : item.label)}
                       className={`cursor-pointer flex items-center p-2 rounded-lg transition-colors text-base md:text-[18px] ${pathname === item.path ? 'bg-blue-200 text-blue-800' : 'text-gray-700 hover:bg-gray-200'}`}
                     >
                       {item.icon && (
@@ -206,22 +204,19 @@ export default function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
                         />
                       )}
                       {item.label}
-                      <span className="ml-auto">{openSubmenu === item.label ? '▲' : '▼'}</span>
                     </p>
-                    {openSubmenu === item.label && (
-                      <ul className="ml-8 mt-1 space-y-1">
-                        {item.submenu.map((sub) => (
-                          <li key={sub.path}>
-                            <p
-                              onClick={() => goNavigation(sub.path)}
-                              className={`cursor-pointer flex items-center p-2 rounded-lg transition-colors text-base md:text-[16px] ${pathname === sub.path ? 'bg-blue-100 text-blue-700' : 'text-white hover:bg-white-500'}`}
-                            >
-                              {sub.label}
-                            </p>
-                          </li>
-                        ))}
-                      </ul>
-                    )}
+                    <ul className="ml-8 mt-1 space-y-1">
+                      {item.submenu.map((sub) => (
+                        <li key={sub.path}>
+                          <p
+                            onClick={() => goNavigation(sub.path)}
+                            className={`cursor-pointer flex items-center p-2 rounded-lg transition-colors text-base md:text-[16px] ${pathname === sub.path ? 'bg-blue-100 text-blue-700' : 'text-white hover:bg-white-500'}`}
+                          >
+                            {sub.label}
+                          </p>
+                        </li>
+                      ))}
+                    </ul>
                   </div>
                 ) : (
                   <p

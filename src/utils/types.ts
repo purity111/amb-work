@@ -282,6 +282,8 @@ export interface AdminCriteriaFetchParam {
     page: number;
     limit: number;
     searchTerm: string;
+    sortBy?: string;
+    sortOrder?: 'DESC' | 'ASC';
 }
 
 export interface CreateUpdateCriteriaFetchParam {

@@ -8,6 +8,7 @@ import { PrefectureOptions } from '@/utils/constants';
 import { addYears } from 'date-fns';
 import { addCareerInquiry } from '@/lib/api';
 import { toast } from 'react-toastify';
+import PrivacyPolicyCheckbox from './PrivacyPolicyCheckbox';
 
 const inquiryOptions = [
     { value: '', option: '選択してください' },
@@ -21,25 +22,38 @@ const inquiryOptions = [
 export default function CareerCounselingForm() {
     const { register, handleSubmit, control, formState: { errors }, trigger, setFocus, reset } = useForm({ mode: 'onChange' });
     const [privacyChecked, setPrivacyChecked] = useState(false);
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     const onSubmit = async (data: any) => {
+        setIsSubmitting(true);
         try {
-            await addCareerInquiry({
-                name: data.name,
-                email: data.email,
-                telephone: data.tel,
-                birthday: data.birthdate,
-                prefectures: data.prefecture,
-                experience: data.experience,
-                inquiry: data.inquiry,
-                desired_job_type: data.jobType,
-                request: data.request,
-            });
+            // Submit with timeout
+            const timeoutPromise = new Promise((_, reject) => 
+                setTimeout(() => reject(new Error('Request timeout')), 15000)
+            );
+            
+            await Promise.race([
+                addCareerInquiry({
+                    name: data.name,
+                    email: data.email,
+                    telephone: data.tel,
+                    birthday: data.birthdate,
+                    prefectures: data.prefecture,
+                    experience: data.experience,
+                    inquiry: data.inquiry,
+                    desired_job_type: data.jobType,
+                    request: data.request,
+                }),
+                timeoutPromise
+            ]);
             toast.success('キャリア相談が送信されました');
             reset();
+            setPrivacyChecked(false);
         } catch (error) {
             toast.error('送信に失敗しました');
             console.log(error);
+        } finally {
+            setIsSubmitting(false);
         }
     };
 
@@ -185,20 +199,33 @@ export default function CareerCounselingForm() {
             </div>
             <hr className="border-[#dfdfdf] my-6" />
             {/* プライバシーポリシー同意 */}
-            <div className="flex items-center justify-center gap-2 m-auto mb-10 md:mb-20">
-                <label className="flex items-center gap-1 ml-2">
-                    <input type="checkbox" className="accent-blue-500" checked={privacyChecked} onChange={e => setPrivacyChecked(e.target.checked)} />
-                    <a href="/privacy" target="_blank" rel="noopener noreferrer" className="text-blue-600 underline text-sm">プライバシーポリシー</a>
-                    <span className="text-sm">に同意する</span>
-                </label>
+            <div className="flex items-center justify-center m-auto mb-10 md:mb-20">
+                <PrivacyPolicyCheckbox
+                    text="プライバシーポリシー"
+                    link="/privacy"
+                    checked={privacyChecked}
+                    onChange={setPrivacyChecked}
+                />
             </div>
             <div className="flex justify-center">
                 <button
                     type="submit"
-                    className={`cursor-pointer bg-blue-500 text-white px-15 py-3 rounded text-base transition-all duration-300 ease-in-out hover:opacity-90 ${(!privacyChecked) ? 'opacity-50 pointer-events-none' : ''}`}
-                    disabled={!privacyChecked}
+                    disabled={!privacyChecked || isSubmitting}
+                    className={`cursor-pointer bg-blue-500 text-white px-15 py-3 rounded text-base transition-all duration-300 ease-in-out ${
+                        (!privacyChecked || isSubmitting) ? 'opacity-50 cursor-not-allowed' : 'hover:opacity-90'
+                    }`}
                 >
-                    確認する
+                    {isSubmitting ? (
+                        <div className="flex items-center">
+                            <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                            送信中...
+                        </div>
+                    ) : (
+                        '確認する'
+                    )}
                 </button>
             </div>
         </form>
