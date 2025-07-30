@@ -45,7 +45,7 @@ export default function JobMngPage() {
     jobType: jobType === '3' ? 0 : Number(jobType),
     isAdmin: profile?.role === 'JobSeeker' ? '0' : '1',
     employer_id: profile?.role === 'Employer' ? profile.id : 0,
-    public_status: jobType === '3' ? 2 : 1
+    public_status: jobType === '3' ? 2 : undefined
   })
 
   const { data: allFilteredJobs } = useGetJobs({
