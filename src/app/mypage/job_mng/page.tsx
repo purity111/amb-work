@@ -513,7 +513,7 @@ export default function JobMngPage() {
         {deleteJobId > 0 && (
           <Dialog
             title="警告"
-            description='Are you sure you want to delete this job?'
+            description='本当に削除しますか。'
             onPressCancel={() => setDeleteJobId(0)}
             onPressOK={onConfirmDeleteJob}
             okButtonTitle='削除'
