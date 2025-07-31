@@ -8,10 +8,11 @@ import SuccessCaseCard from "@/components/pages/experience/SuccessCaseCard";
 import ReasonCardGrid from "@/components/pages/experience/ReasonCardGrid";
 import { EXPERIENCE_SUPPORT_ITEMS, EXPERIENCE_NAYAMI_ITEMS, EXPERIENCE_SUCCESS_CASES, EXPERIENCE_REASON_ITEMS } from "@/utils/constants";
 import CareerCounselingForm from "@/components/common/CareerCounselingForm";
+import ProtectedRoute from "@/components/ProtectedRoute";
 
 export default function CompanyPage() {
     return (
-        <>
+        <ProtectedRoute>
             <main>
                 <div className="h-20 sm:h-30 md:h-75 bg-[#414141]"></div>
                 {/* Text Content (Left Side - Dark Grey Background) */}
@@ -159,6 +160,6 @@ export default function CompanyPage() {
                 </div>
             </main>
             <Footer />
-        </>
+        </ProtectedRoute>
     );
 }

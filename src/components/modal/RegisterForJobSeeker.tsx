@@ -12,6 +12,7 @@ import { useMutation } from "@tanstack/react-query";
 import { registerAsJobSeeker } from "@/lib/api";
 import { toast } from "react-toastify";
 import PrivacyPolicyCheckbox from '../common/PrivacyPolicyCheckbox';
+import { useRouter } from 'next/navigation';
 
 interface FormProps {
     onSuccess: () => void;
@@ -76,6 +77,7 @@ const schema = Yup.object().shape({
 });
 
 export default function RegisterForJobSeeker({ onSuccess }: FormProps) {
+    const router = useRouter();
     // const [imagePreview, setImagePreview] = useState<string | null>(null);
     const {
         handleSubmit,
@@ -103,7 +105,8 @@ export default function RegisterForJobSeeker({ onSuccess }: FormProps) {
             // Optionally invalidate or refetch queries here
             console.log('register success: ', data)
             toast.success('求職者として登録が完了しました。');
-            onSuccess()
+            onSuccess();
+            router.push('/register/thanks');
         },
         onError: (error: any) => {
             console.error('Error:', error);

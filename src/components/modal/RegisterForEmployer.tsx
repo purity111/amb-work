@@ -10,6 +10,7 @@ import { formatFlexibleDate, getEstablishmentDateOptions, getEstablishmentYearOp
 import { useMutation } from "@tanstack/react-query";
 import { registerAsEmployer } from "@/lib/api";
 import { toast } from "react-toastify";
+import { useRouter } from 'next/navigation';
 
 interface FormProps {
     onSuccess: () => void;
@@ -76,6 +77,7 @@ const schema = Yup.object().shape({
 });
 
 export default function RegisterForEmployer({ onSuccess }: FormProps) {
+    const router = useRouter();
     // const [imagePreview, setImagePreview] = useState<string | null>(null);
     const {
         handleSubmit,
@@ -98,7 +100,8 @@ export default function RegisterForEmployer({ onSuccess }: FormProps) {
             // Optionally invalidate or refetch queries here
             console.log('login success: ', data)
             toast.success('企業として登録が完了しました。');
-            onSuccess()
+            onSuccess();
+            router.push('/register/thanks');
         },
         onError: (error: any) => {
             console.error('Error:', error);

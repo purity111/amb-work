@@ -4,10 +4,11 @@ import Breadcrumb from '@/components/Breadcrumb';
 import CareerCounselingForm from '@/components/common/CareerCounselingForm';
 import Footer from '@/components/Footer';
 import Image from 'next/image';
+import ProtectedRoute from '@/components/ProtectedRoute';
 
 export default function CareerCounselingPage() {
     return (
-        <>
+        <ProtectedRoute>
             <main className="bg-white">
                 <div className="h-20 sm:h-30 md:h-75 bg-[#414141]"></div>
                 {/* Text Content (Left Side - Dark Grey Background) */}
@@ -43,6 +44,6 @@ export default function CareerCounselingPage() {
                 <CareerCounselingForm />
             </main>
             <Footer />
-        </>
+        </ProtectedRoute>
     );
 }

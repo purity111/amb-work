@@ -21,7 +21,11 @@ const pathToName: { [key: string]: string } = {
     '/experience': '経験者サポート',
     '/inexperience': '未経験者サポート',
     '/business': 'リユース業界について知る',
-    '/business/business-new': '最新動向、採用状況'
+    '/business/business-new': '最新動向、採用状況',
+    '/register/thanks': 'ありがとう',
+    '/register': '登録',
+    '/contact/finish': 'ありがとう',
+    '/recruiter/finish': 'ありがとう'
     // Add more paths and their corresponding names as needed
 }
 

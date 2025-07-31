@@ -9,10 +9,12 @@ import { submitCompanyApplication } from '@/lib/api';
 
 export default function RecruiterForm() {
   const router = useRouter();
+  const [isSubmitting, setIsSubmitting] = React.useState(false);
   const { register, handleSubmit, formState: { errors }, trigger, setFocus } = useForm({ mode: "onChange" });
 
   const onSubmit = async (data: any) => {
     try {
+      setIsSubmitting(true);
       // Submit the company application
       await submitCompanyApplication(data);
       
@@ -21,6 +23,8 @@ export default function RecruiterForm() {
     } catch (error) {
       alert('送信中にエラーが発生しました。');
       console.log(error);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -150,9 +154,16 @@ export default function RecruiterForm() {
         <div className="flex justify-center">
           <button
             type="submit"
-            className="cursor-pointer bg-blue-500 text-white px-15 py-3 rounded text-base transition-all duration-300 ease-in-out hover:opacity-90"
+            disabled={isSubmitting}
+            className="cursor-pointer bg-blue-500 text-white px-15 py-3 rounded text-base transition-all duration-300 ease-in-out hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
           >
-            送信
+            {isSubmitting && (
+              <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+            )}
+            {isSubmitting ? '送信中...' : '送信'}
           </button>
         </div>
       </form>

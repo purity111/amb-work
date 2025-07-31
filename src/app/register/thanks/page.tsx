@@ -2,7 +2,7 @@ import Breadcrumb from '@/components/Breadcrumb';
 import Footer from '@/components/Footer';
 import Link from 'next/link';
 
-export default function ContactFinishPage() {
+export default function RegisterThanksPage() {
   return (
     <>
       <main className="bg-white">
@@ -12,8 +12,8 @@ export default function ContactFinishPage() {
         <div className="w-full max-w-[1200px] m-auto text-white px-4 lg:px-0 md:mb-25">
           <div className="md:text-left md:mr-8 xl:mr-20">
             <div className="h-[30px] md:h-15 w-[3px] bg-green-500 mr-2 md:mt-[-30px] mb-5 md:mb-10"></div>
-            <h1 className="text-[26px] md:text-[35px] lg:text-[44px] font-bold text-black mb-2">お問い合わせ完了</h1>
-            <p className="text-[14px] md:text-[18px] text-gray-300 font-bold">Contact Complete</p>
+            <h1 className="text-[26px] md:text-[35px] lg:text-[44px] font-bold text-black mb-2">登録完了</h1>
+            <p className="text-[14px] md:text-[18px] text-gray-300 font-bold">Registration Complete</p>
           </div>
         </div>
 
@@ -29,21 +29,23 @@ export default function ContactFinishPage() {
                 </svg>
               </div>
               <h2 className="text-2xl md:text-3xl font-bold mb-4">
-                お問い合わせありがとうございます
+                ご登録ありがとうございます
               </h2>
               <p className="text-lg text-gray-600 mb-8">
-                内容を確認の上、担当者よりご連絡差し上げます。
+                ご入力いただいたメールアドレスに確認メールをお送りしました。
+                <br />
+                24時間以内にメール内のリンクをクリックして登録を完了してください。
               </p>
             </div>
 
             <div className="bg-gray-50 rounded-lg p-6 mb-8">
-              <h3 className="text-lg font-semibold mb-4">お問い合わせ内容について</h3>
+              <h3 className="text-lg font-semibold mb-4">登録確認について</h3>
               <p className="text-gray-600 mb-4">
-                ご入力いただいた内容は、リユース転職運営事務局で確認いたします。
-                通常、3営業日以内にご連絡いたしますが、内容によってはお時間をいただく場合がございます。
+                ご登録いただいた内容は、リユース転職運営事務局で確認いたします。
+                確認メールが届かない場合は、迷惑メールフォルダをご確認ください。
               </p>
               <p className="text-gray-600">
-                お急ぎの場合は、お電話にてお問い合わせください。
+                メール内のリンクをクリックしていただくことで、登録が完了いたします。
               </p>
             </div>
 
@@ -54,13 +56,8 @@ export default function ContactFinishPage() {
               >
                 ホームに戻る
               </Link>
-              <Link 
-                href="/contact"
-                className="bg-gray-500 hover:bg-gray-600 text-white px-8 py-3 rounded-lg transition-colors duration-300"
-              >
-                お問い合わせフォームに戻る
-              </Link>
             </div>
+
           </div>
         </div>
       </main>

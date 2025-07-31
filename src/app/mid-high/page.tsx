@@ -16,10 +16,11 @@ import 'swiper/css/pagination';
 import MidHighCaseSwiperCard from '@/components/pages/mid-high/MidHighCaseSwiperCard';
 import CareerCounselingForm from "@/components/common/CareerCounselingForm";
 import Link from "next/link";
+import ProtectedRoute from "@/components/ProtectedRoute";
 
 export default function MidhighPage() {
     return (
-        <>
+        <ProtectedRoute>
             <div className="relative w-full">
                 {/* Mobile (SP) Layout */}
                 <div className="md:hidden w-full flex flex-col bg-[#F6F8F6]">
@@ -271,6 +272,6 @@ export default function MidhighPage() {
                     border-color: #22305A;
                 }
             `}</style>
-        </>
+        </ProtectedRoute>
     );
 }
