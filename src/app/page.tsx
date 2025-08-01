@@ -109,7 +109,7 @@ export default function HomePage() {
       <div className='flex flex-wrap max-w-300 mx-auto w-95/100 gap-8 py-25 px-3 sm:px-0'>
         {/* <div className='flex flex-wrap max-w-300 mx-auto gap-8 py-10 sm:py-25 pl-5 sm:mx-0'> */}
         {QuickJobs.map(job => (
-          <a key={job.to} href={job.to} className='w-full sm:w-[calc(50%-16px)] aspect-580/205 relative'>
+          <a key={job.to} href={'/'} className='w-full sm:w-[calc(50%-16px)] aspect-580/205 relative'>
             <Image src={job.image} alt='job' fill />
           </a>
         ))}

@@ -255,7 +255,7 @@ export default function AddInterviewModal({ isOpen, onClose, defaultTag = '' }: 
                                 init={{
                                     className: "flex-1 text-sm font-light border-1 border-gray-200 rounded-md p-2 min-h-20 max-h-100",
                                     height: '500px',
-                                    // menubar: true,
+                                    language: 'ja',
                                     menubar: 'file edit view insert format tools table help',
                                     plugins: [
                                         'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
@@ -264,8 +264,8 @@ export default function AddInterviewModal({ isOpen, onClose, defaultTag = '' }: 
                                     ],
                                     toolbar: 'undo redo | blocks | code | bold italic forecolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | table | removeformat | help',
                                     content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }',
+                                    content_css: '/css/style.css',
                                     file_picker_types: 'image',
-                                    // Optional: clean pasted images into base64
                                     paste_data_images: true,
                                 }}
                             />

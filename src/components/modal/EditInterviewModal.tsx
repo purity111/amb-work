@@ -244,6 +244,7 @@ export default function EditInterviewModal({ isOpen, onClose, interview }: EditI
                                 init={{
                                     className: "flex-1 text-sm font-light border-1 border-gray-200 rounded-md p-2 min-h-20 max-h-100",
                                     height: '500px',
+                                    language: 'ja',
                                     menubar: 'file edit view insert format tools table help',
                                     plugins: [
                                         'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',

@@ -740,7 +740,7 @@ export const Posts = [
     },
     {
         image: '/images/home/job-2.png',
-        to: 'inexperience=15'
+        to: 'inexperience'
     },
     {
         image: '/images/home/job-3.png',
@@ -748,7 +748,7 @@ export const Posts = [
     },
     {
         image: '/images/home/job-4.png',
-        to: '841dsceu?openQrModal=true'
+        to: 'https://page.line.me/841dsceu?openQrModal=true'
     },
 ]
 

@@ -44,6 +44,9 @@ export default function HomeLayout({
 
   return (
     <html lang="ja">
+      <head>
+        <script src="/tinymce/langs/ja.js"></script>
+      </head>
       {/* 👇 Apply the custom font class to <body> */}
       <body className={inter.className}>
         <LayoutWrapper>
