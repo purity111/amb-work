@@ -308,7 +308,8 @@ export default function CreateNewJobComponent({ preLoad }: CreateNewJobProps) {
             // Optionally invalidate or refetch queries here
             console.log('Create new job: ', data)
             toast.success('求人作成が完了されました。')
-            router.push('/mypage/job_mng')
+            router.push('/mypage/job_mng');
+            router.refresh();
         },
         onError: (error) => {
             console.error('Error with creating new job:', error);
@@ -322,7 +323,8 @@ export default function CreateNewJobComponent({ preLoad }: CreateNewJobProps) {
             // Optionally invalidate or refetch queries here
             console.log('Create new job: ', data)
             toast.success('新しい求人を作成しました。')
-            router.push('/mypage/job_mng')
+            router.push('/mypage/job_mng');
+            router.refresh();
         },
         onError: (error) => {
             console.error('Error with update the job:', error);
@@ -613,47 +615,49 @@ export default function CreateNewJobComponent({ preLoad }: CreateNewJobProps) {
                 </div>
             </div>
             {renderSaveButtons()}
-            <div className="w-95/100 max-w-320 mx-auto border-1 border-gray-700 bg-white rounded-sm">
-                <div className="bg-gray-600 px-5 py-3">
-                    <p className="text-white">会社情報</p>
-                </div>
-                <div className="p-5">
-                    <div className="flex flex-col items-start md:flex-row  py-2">
-                        <div className="flex-1 flex flex-row items-center">
-                            <p className="text-sm text-gray-400 py-2">その他ウェブサイト</p>
-                        </div>
-                        <div className="flex-3">
-                            <Controller
-                                name="other_websites"
-                                control={control}
-                                render={({ field }) => (
-                                    <CInput
-                                        {...field}
-                                        value={field.value || ''}
-                                        isError={!!errors.other_websites}
-                                        errorText={errors.other_websites?.message}
-                                        height="h-[100px]"
-                                        multiline
-                                        className="rounded-sm placeholder-gray-700"
-                                        onChange={(e) => field.onChange(e)}
-                                        placeholder="項目名:URLの形式で入力してください"
-                                    />
-                                )}
-                            />
-                            <p className="text-sm text-gray-600 leading-loose">
-                                ※500文字まで入力できます。
-                                <br />
-                                ※1行毎に項目名: URLの形式で入力してください。
-                                <br />
-                                ※複数設定したい場合は改行してください。
-                                <br />
-                                ※求人ページの会社情報カテゴリのウェブサイト項目の下に表示されます。
-                            </p>
+            {profile?.role === 'admin' && (
+                <div className="w-95/100 max-w-320 mx-auto border-1 border-gray-700 bg-white rounded-sm">
+                    <div className="bg-gray-600 px-5 py-3">
+                        <p className="text-white">会社情報</p>
+                    </div>
+                    <div className="p-5">
+                        <div className="flex flex-col items-start md:flex-row  py-2">
+                            <div className="flex-1 flex flex-row items-center">
+                                <p className="text-sm text-gray-400 py-2">その他ウェブサイト</p>
+                            </div>
+                            <div className="flex-3">
+                                <Controller
+                                    name="other_websites"
+                                    control={control}
+                                    render={({ field }) => (
+                                        <CInput
+                                            {...field}
+                                            value={field.value || ''}
+                                            isError={!!errors.other_websites}
+                                            errorText={errors.other_websites?.message}
+                                            height="h-[100px]"
+                                            multiline
+                                            className="rounded-sm placeholder-gray-700"
+                                            onChange={(e) => field.onChange(e)}
+                                            placeholder="項目名:URLの形式で入力してください"
+                                        />
+                                    )}
+                                />
+                                <p className="text-sm text-gray-600 leading-loose">
+                                    ※500文字まで入力できます。
+                                    <br />
+                                    ※1行毎に項目名: URLの形式で入力してください。
+                                    <br />
+                                    ※複数設定したい場合は改行してください。
+                                    <br />
+                                    ※求人ページの会社情報カテゴリのウェブサイト項目の下に表示されます。
+                                </p>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            {renderSaveButtons()}
+            )}
+            {profile?.role === 'admin' && renderSaveButtons()}
             <div className="w-95/100 max-w-320 mx-auto border-1 border-gray-700 bg-white rounded-sm">
                 <div className="bg-gray-600 px-5 py-3">
                     <p className="text-white">求人ページ製作情報</p>
