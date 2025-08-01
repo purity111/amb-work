@@ -6,23 +6,26 @@ import { useForm, Controller } from 'react-hook-form';
 import RequiredLabel from '@/components/common/RequiredLabel';
 import { Editor } from '@tinymce/tinymce-react';
 import { toast } from 'react-toastify';
+import { useQueryClient } from '@tanstack/react-query';
 
 interface AddInterviewModalProps {
     isOpen: boolean;
     onClose: () => void;
+    defaultTag?: string; // Add defaultTag prop
 }
 
 const TAGS = [
+    { value: '', option: '選択' }, // Add "選択" option
     { value: '0', option: 'ビジネス' },
     { value: '1', option: 'キャリアチェンジ' },
 ];
 
-export default function AddInterviewModal({ isOpen, onClose }: AddInterviewModalProps) {
+export default function AddInterviewModal({ isOpen, onClose, defaultTag = '' }: AddInterviewModalProps) {
     const { control, handleSubmit, formState: { errors }, watch, reset, getValues } = useForm({
         defaultValues: {
             title: '',
             description: '',
-            tag: '',
+            tag: defaultTag, // Use defaultTag as default value
             category: '',
             thumbnail: null as File | null,
         },
@@ -30,9 +33,15 @@ export default function AddInterviewModal({ isOpen, onClose }: AddInterviewModal
     const [isLoading, setIsLoading] = useState(false);
     const [step, setStep] = useState(1);
     const [htmlContent, setHtmlContent] = useState('');
-    const [selectedTag, setSelectedTag] = useState('');
+    const [selectedTag, setSelectedTag] = useState(defaultTag); // Initialize with defaultTag
     const thumbnail = watch('thumbnail');
     const modalRef = useRef<HTMLDivElement>(null);
+    const queryClient = useQueryClient();
+
+    // Update selectedTag when defaultTag changes
+    useEffect(() => {
+        setSelectedTag(defaultTag);
+    }, [defaultTag]);
 
     useEffect(() => {
         if (isOpen) {
@@ -49,7 +58,7 @@ export default function AddInterviewModal({ isOpen, onClose }: AddInterviewModal
         reset();
         setStep(1);
         setHtmlContent('');
-        setSelectedTag('');
+        setSelectedTag(defaultTag); // Reset to defaultTag
         onClose();
     };
 
@@ -75,10 +84,14 @@ export default function AddInterviewModal({ isOpen, onClose }: AddInterviewModal
             
             await createInterview(formData);
             toast.success('インタビューが追加されました');
+            
+            // Invalidate and refetch interview queries to show the new interview
+            queryClient.invalidateQueries({ queryKey: ['getInterviews'] });
+            
             reset();
             setStep(1);
             setHtmlContent('');
-            setSelectedTag('');
+            setSelectedTag(defaultTag); // Reset to defaultTag
             onClose();
         } catch (error) {
             toast.error('エラーが発生しました');

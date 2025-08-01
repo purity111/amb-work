@@ -15,6 +15,7 @@ import Image from 'next/image';
 import Footer from '@/components/Footer';
 import type { Interview } from '@/utils/types';
 import { Suspense } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 
 function CareerChangerInterviewPageInner() {
     const searchParams = useSearchParams();
@@ -35,6 +36,7 @@ function CareerChangerInterviewPageInner() {
     const [isAddModalOpen, setAddModalOpen] = useState(false);
     const [isEditModalOpen, setEditModalOpen] = useState(false);
     const [editingInterview, setEditingInterview] = useState<Interview | null>(null);
+    const queryClient = useQueryClient();
 
     const { data: response, isLoading } = useGetInterviews({
         searchTerm: searchTerm || undefined,
@@ -92,7 +94,9 @@ function CareerChangerInterviewPageInner() {
             try {
                 await deleteInterview(interview.id);
                 toast.success('インタビューが削除されました');
-                router.refresh();
+                
+                // Invalidate and refetch interview queries to update the list
+                queryClient.invalidateQueries({ queryKey: ['getInterviews'] });
             } catch (error) {
                 toast.error('エラーが発生しました');
                 console.log(error);
@@ -188,7 +192,7 @@ function CareerChangerInterviewPageInner() {
                         />
                     </div>
                 </div>
-                <AddInterviewModal isOpen={isAddModalOpen} onClose={() => setAddModalOpen(false)} />
+                <AddInterviewModal isOpen={isAddModalOpen} onClose={() => setAddModalOpen(false)} defaultTag="1" />
                 <EditInterviewModal isOpen={isEditModalOpen} onClose={() => setEditModalOpen(false)} interview={editingInterview} />
             </main>
             <Footer />

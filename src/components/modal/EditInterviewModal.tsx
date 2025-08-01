@@ -7,6 +7,7 @@ import RequiredLabel from '@/components/common/RequiredLabel';
 import { Editor } from '@tinymce/tinymce-react';
 import type { Interview } from '@/utils/types';
 import { toast } from 'react-toastify';
+import { useQueryClient } from '@tanstack/react-query';
 
 interface EditInterviewModalProps {
     isOpen: boolean;
@@ -25,6 +26,7 @@ export default function EditInterviewModal({ isOpen, onClose, interview }: EditI
     const [htmlContent, setHtmlContent] = useState('');
     const [previewImage, setPreviewImage] = useState<string | null>(null);
     const [selectedTag, setSelectedTag] = useState('');
+    const queryClient = useQueryClient();
 
     const {
         register,
@@ -108,6 +110,10 @@ export default function EditInterviewModal({ isOpen, onClose, interview }: EditI
             }
             await updateInterview(interview.id, formData);
             toast.success('インタビューが更新されました');
+            
+            // Invalidate and refetch interview queries to show the updated interview
+            queryClient.invalidateQueries({ queryKey: ['getInterviews'] });
+            
             reset();
             setStep(1);
             setHtmlContent('');

@@ -166,7 +166,7 @@ function BusinessInterviewPageInner() {
                         />
                     </div>
                 </div>
-                <AddInterviewModal isOpen={isAddModalOpen} onClose={() => setAddModalOpen(false)} />
+                <AddInterviewModal isOpen={isAddModalOpen} onClose={() => setAddModalOpen(false)} defaultTag="0" />
                 <EditInterviewModal isOpen={isEditModalOpen} onClose={() => setEditModalOpen(false)} interview={null} />
             </main>
             <Footer />
