@@ -40,7 +40,7 @@ export default function AuthModal({ initialStep, onClose }: RegisterModalProps) 
     }
 
     const onRegisterSuccess = () => {
-        setStep('Login');
+        onClose();
     }
 
     return (

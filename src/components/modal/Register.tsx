@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import RegisterForEmployer from "./RegisterForEmployer";
 import RegisterForJobSeeker from "./RegisterForJobSeeker";
-import { toast } from "react-toastify";
 
 interface RegisterModalProps {
     onClose: () => void;
@@ -13,7 +12,7 @@ export default function RegisterModal({ onClose, onSuccess, onNavigateLogin }: R
     const [roleIndex, setRoleIndex] = useState(2) // 1: Employer  2: Employee
 
     const onRegisterSuccess = () => {
-        toast.success('登録完了! ログインしてください。');
+        // toast.success('登録完了! ログインしてください。');
         onSuccess();
     }
 

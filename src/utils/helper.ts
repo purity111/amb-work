@@ -170,7 +170,7 @@ export function formatTimeAgo(date: Date) {
     const now = new Date()
     const secondsDiff = Math.floor((now.getTime() - date.getTime()) / 1000)
 
-    if (secondsDiff < 5) return 'now' // customize threshold as needed
+    if (secondsDiff < 5) return '現在' // customize threshold as needed
 
     return formatDistanceToNow(date, { addSuffix: true, locale: ja })
 }

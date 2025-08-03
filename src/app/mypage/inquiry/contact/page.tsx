@@ -24,13 +24,15 @@ export default function ContactInquiryList() {
   const [showDetailModal, setShowDetailModal] = useState(false);
   const [selectedInquiry, setSelectedInquiry] = useState<ContactInquiryWithMeta | null>(null);
 
+  // Fetch all data for proper sorting
   const { data: response, isLoading, refetch } = useGetContactInquiries({
-    page: currentPage,
-    limit,
+    page: 1,
+    limit: 1000, // Fetch a large number to get all data
     searchTerm
   });
 
   const [inquiries, setInquiries] = useState<ContactInquiryWithMeta[]>([]);
+  const [allInquiries, setAllInquiries] = useState<ContactInquiryWithMeta[]>([]);
 
   const deleteMutation = useMutation({
     mutationFn: deleteContactInquiry,
@@ -46,9 +48,9 @@ export default function ContactInquiryList() {
   useEffect(() => {
     if (response) {
       const arr = response.data.contacts || [];
+      // Sort all data by creation date (latest first)
       arr.sort((a: any, b: any) => new Date(b.created).getTime() - new Date(a.created).getTime());
-      setInquiries(arr);
-      setTotalPage(response.data.pagination?.totalPages || 1);
+      setAllInquiries(arr);
     }
   }, [response]);
 
@@ -84,6 +86,36 @@ export default function ContactInquiryList() {
     setSearchTerm(tempSearch);
     setCurrentPage(1); // Reset to first page when searching
   };
+
+  // Filter and paginate data based on search term
+  useEffect(() => {
+    if (allInquiries.length > 0) {
+      let filteredData = allInquiries;
+      
+      // Apply search filter if search term exists
+      if (searchTerm.trim()) {
+        filteredData = allInquiries.filter(inq => 
+          inq.company_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          inq.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          inq.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          inq.telephone?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          inq.inquiry?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          inq.inquiry_detail?.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+      }
+      
+      // Calculate pagination for filtered data
+      const totalItems = filteredData.length;
+      const totalPages = Math.ceil(totalItems / limit);
+      setTotalPage(totalPages);
+      
+      // Get current page data
+      const startIndex = (currentPage - 1) * limit;
+      const endIndex = startIndex + limit;
+      const currentPageData = filteredData.slice(startIndex, endIndex);
+      setInquiries(currentPageData);
+    }
+  }, [allInquiries, searchTerm, currentPage, limit]);
 
   const formatDateTime = (dateString: string) => {
     if (!dateString) return '';

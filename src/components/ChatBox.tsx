@@ -243,7 +243,7 @@ export default function ChatBox({ data, hasHideButton = false, isHidden, onToggl
             <div className="px-2 min-h-[60px] flex flex-row justify-between items-center border-b-1 border-gray-700 ">
                 <div className="flex-1 flex flex-col overflow-x-hidden">
                     <p>{isJobSeeker ? data.jobInfo.employer.clinic_name : data.jobSeeker.name}</p>
-                    <p className="text-sm text-gray-600 truncate whitespace-nowrap overflow-hidden">Job: {data.job_title}</p>
+                    <p className="text-sm text-gray-600 truncate whitespace-nowrap overflow-hidden">求人: {data.job_title}</p>
                 </div>
                 {hasHideButton && (
                     <button className="p-2 hover:bg-gray-700 w-8 h-8 flex justify-center items-center rounded-full transition relative" onClick={onToggleHidden}>

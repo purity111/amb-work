@@ -244,7 +244,7 @@ export default function AddInterviewModal({ isOpen, onClose, defaultTag = '' }: 
                                 次へ
                             </button>
                         </div>
-                    </form>
+                    </form>  
                 ) : (
                     <div>
                         <div className="mb-4">

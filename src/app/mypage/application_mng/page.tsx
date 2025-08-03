@@ -264,7 +264,7 @@ function ApplicationMngContent() {
       </div>
       {selectedChat && (
         <div className={`
-          fixed bottom-25 right-4  shadow-lg z-100
+          fixed bottom-10 right-4 shadow-lg z-100
           ${isHidden ? 'rounded-full' : 'h-[500px] w-[90%] max-w-[360px] bg-white rounded-sm'} 
         `}>
           {isHidden && (

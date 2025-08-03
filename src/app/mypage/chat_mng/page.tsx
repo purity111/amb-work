@@ -154,13 +154,18 @@ export default function ChatMngPage() {
   }
 
   const getLastMessage = (msg: ChatItem) => {
-    if (msg.messages?.[0]?.deleted) return '[メッセージが削除されました]'
-    else return msg.messages?.[0]?.body || 'No messages'
+    if (!msg.messages || msg.messages.length === 0) return 'No messages';
+    
+    // Get the last message (most recent)
+    const lastMessage = msg.messages[msg.messages.length - 1];
+    
+    if (lastMessage?.deleted) return '[メッセージが削除されました]';
+    else return lastMessage?.body || 'No messages';
   }
 
   const renderApplications = () => {
     if (cLoading) return <Spinner />
-    if (!chats?.data || chats?.data?.length === 0) return <p>No applications</p>
+    if (!chats?.data || chats?.data?.length === 0) return <p className='text-center pt-2'>チャット履歴なし</p>
     return chats.data.map((i: ChatItem) => {
       if (!i.jobSeeker) return null;
       if (selectedJob > 0 && i.job_info_id !== selectedJob) return null;
