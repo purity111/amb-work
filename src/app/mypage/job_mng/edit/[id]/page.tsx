@@ -25,9 +25,7 @@ export default function JobEditPage() {
     )
 
     return (
-        <div className="flex flex-col p-5">
-            <CreateNewJobComponent preLoad={data.data as JobDetailExtra} />
-        </div >
+        <CreateNewJobComponent preLoad={data.data as JobDetailExtra} />
     );
 }
 
