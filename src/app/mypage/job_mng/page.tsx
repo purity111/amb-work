@@ -370,18 +370,26 @@ export default function JobMngPage() {
                     <div className="flex-1">
                       <p className="p-2 bg-gray-800 text-sm border-r-1 border-gray-700">掲載URL</p>
                     </div>
-                    <div className="flex-2 lg:flex-5 flex flex-row items-center justify-between overflow-hidden whitespace-nowrap pr-1">
-                      <div className="p-1 flex-1 overflow-hidden whitespace-nowrap">
-                        <p className="bg-gray-800 my-auto border-1 px-1 border-gray-700 text-sm truncate">
-                          {`${window.location.origin}/jobs/recruit/${job.id}`}
+                    {job.public_status === 1 ? (
+                      <div className="flex-2 lg:flex-5 flex flex-row items-center justify-between overflow-hidden whitespace-nowrap pr-1">
+                        <div className="p-1 flex-1 overflow-hidden whitespace-nowrap">
+                          <p className="bg-gray-800 my-auto border-1 px-1 border-gray-700 text-sm truncate">
+                            {`${window.location.origin}/jobs/recruit/${job.id}`}
+                          </p>
+                        </div>
+                        <CButton
+                          text="コピー"
+                          className="bg-gray-400 h-[25px] rounded-none text-white text-sm"
+                          onClick={() => onCopyJobLink(job.id)}
+                        />
+                      </div>
+                    ) : (
+                      <div className="flex-2 lg:flex-5 flex flex-row items-center justify-between overflow-hidden whitespace-nowrap pr-1">
+                        <p className="my-auto pl-2 text-sm">
+                          URL は利用できません。
                         </p>
                       </div>
-                      <CButton
-                        text="コピー"
-                        className="bg-gray-400 h-[25px] rounded-none text-white text-sm"
-                        onClick={() => onCopyJobLink(job.id)}
-                      />
-                    </div>
+                    )}
                   </div>
 
                   <div className="w-1/1 lg:w-1/2 flex flex-row h-fit border-b-1 border-gray-700">
@@ -462,12 +470,20 @@ export default function JobMngPage() {
 
                   <div className="flex flex-wrap p-1 w-full">
                     <div className="w-1/2 lg:w-1/4 p-1">
-                      <a href={`/jobs/recruit/${job.id}`} className="flex-1" target="_blank">
+                      {job.public_status === 2 ? (
                         <CButton
                           text="プレビュー"
-                          className="bg-green h-[40px] rounded-none text-white text-sm w-full"
+                          className="bg-green h-[40px] rounded-none text-white text-sm w-full !cursor-not-allowed"
                         />
-                      </a>
+                      ) : (
+                        <a href={`/jobs/recruit/${job.id}`} className="flex-1" target="_blank">
+                          <CButton
+                            text="プレビュー"
+                            className="bg-green h-[40px] rounded-none text-white text-sm w-full"
+                          />
+                        </a>
+                      )}
+
                     </div>
 
                     <div className="w-1/2 lg:w-1/4 p-1">
