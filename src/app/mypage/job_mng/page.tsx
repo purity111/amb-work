@@ -249,7 +249,7 @@ export default function JobMngPage() {
               )}
             </div>
           </div>
-          <div className="flex flex-row items-center">
+          <div className="flex flex-row items-center mt-2">
             <p>選択済み: {getSelectedJobs.length} 求人</p>
             <span className="ml-2 text-blue cursor-pointer" onClick={onClearSelectedJobs}>クリア</span>
           </div>
@@ -278,7 +278,7 @@ export default function JobMngPage() {
               <CInput
                 placeholder="検索"
                 height="h-10"
-                className="flex-1"
+                wrapperClassName="flex-1"
                 value={tempSearch}
                 onChange={onChangeSearchTerm}
               />
@@ -312,10 +312,16 @@ export default function JobMngPage() {
               <div className={`flex flex-row justify-between px-2 py-3 ${job.job_detail_page_template_id === 1 ? 'bg-blue' : 'bg-orange-400'}`}>
                 <p className="text-sm text-white pr-10 truncate flex-1">{job.job_title}</p>
                 <p className="text-sm text-white">{formatTimeAgo(new Date(job.created))}</p>
+                <input
+                  type="checkbox"
+                  checked={!!selectedJobs[job.id]}
+                  onChange={() => toggleCheckbox(job)}
+                  className="form-checkbox h-5 w-5 ml-2 text-green-600"
+                />
               </div>
               <div className="flex flex-col sm:flex-row">
 
-                <div className="w-1/1 sm:w-1/4 md:w-1/5 p-2 relative">
+                <div className="w-1/1 sm:w-1/4 md:w-1/5 p-0 md:p-2 relative">
                   <div className="w-full aspect-300/220 relative">
                     {getFirstFullImage(job.jobThumbnails) ? (
                       <Image
@@ -336,17 +342,9 @@ export default function JobMngPage() {
                       />
                     )}
                   </div>
-                  <div className="absolute left-1 bottom-1">
-                    <input
-                      type="checkbox"
-                      checked={!!selectedJobs[job.id]}
-                      onChange={() => toggleCheckbox(job)}
-                      className="form-checkbox h-5 w-5 text-blue-600"
-                    />
-                  </div>
                 </div>
 
-                <div className="flex-1 flex flex-row items-center flex-wrap content-start border-l-1 border-gray-700">
+                <div className="flex-1 flex flex-row items-center flex-wrap content-start border-l-0 md:border-l-1 border-gray-700 border-t-1 md:border-t-0">
 
                   <div className="w-1/1 lg:w-1/2 flex flex-row h-fit border-b-1 border-gray-700">
                     <div className="flex-1">
@@ -371,20 +369,20 @@ export default function JobMngPage() {
                       <p className="p-2 bg-gray-800 text-sm border-r-1 border-gray-700">掲載URL</p>
                     </div>
                     {job.public_status === 1 ? (
-                      <div className="flex-2 lg:flex-5 flex flex-row items-center justify-between overflow-hidden whitespace-nowrap pr-1">
-                        <div className="p-1 flex-1 overflow-hidden whitespace-nowrap">
-                          <p className="bg-gray-800 my-auto border-1 px-1 border-gray-700 text-sm truncate">
+                      <div className="flex-2 lg:flex-5 flex flex-row items-center justify-between overflow-hidden whitespace-nowrap">
+                        <div className="mx-2 flex-1 overflow-hidden whitespace-nowrap">
+                          <p className="bg-gray-800 my-auto border-1 py-0.5 px-1 border-gray-700 text-sm truncate">
                             {`${window.location.origin}/jobs/recruit/${job.id}`}
                           </p>
                         </div>
                         <CButton
                           text="コピー"
-                          className="bg-gray-400 h-[25px] rounded-none text-white text-sm"
+                          className="bg-gray-400 h-[25px] rounded-none text-white text-sm mr-2"
                           onClick={() => onCopyJobLink(job.id)}
                         />
                       </div>
                     ) : (
-                      <div className="flex-2 lg:flex-5 flex flex-row items-center justify-between overflow-hidden whitespace-nowrap pr-1">
+                      <div className="flex-2 lg:flex-5 flex flex-row items-center justify-between overflow-hidden whitespace-nowrap">
                         <p className="my-auto pl-2 text-sm">
                           URL は利用できません。
                         </p>
@@ -403,7 +401,7 @@ export default function JobMngPage() {
 
                   <div className="w-1/1 lg:w-1/2 flex flex-row h-fit border-b-1 border-gray-700">
                     <div className="flex-1">
-                      <p className="p-2 bg-gray-800 text-sm border-r-1 border-gray-700 lg:border-l-1 lg:border-gray-700">求人ページ閲覧数</p>
+                      <p className="p-2 bg-gray-800 text-sm border-r-1 border-gray-700 lg:border-l-1 lg:border-gray-700">求人閲覧数</p>
                     </div>
                     <div className="flex-2">
                       <p className="p-2 text-sm">{Number(job.recruits_count)}</p>
@@ -412,10 +410,10 @@ export default function JobMngPage() {
 
                   <div className="w-1/1 flex flex-row h-fit border-b-1 border-gray-700">
                     <div className="flex-1">
-                      <p className="p-2 bg-gray-800 text-sm border-r-1 border-gray-700">お気に入り登録会員数</p>
+                      <p className="p-2 bg-gray-800 text-sm border-r-1 border-gray-700">お気に入り数</p>
                     </div>
                     <div className="flex-2 lg:flex-5 overflow-hidden whitespace-nowrap">
-                      <p className="p-2 truncate text-sm">{Number(job.favourite_count)}</p>
+                      <p className="p-2 truncate text-sm">{Number(job.favourite_count || 0)}</p>
                     </div>
                   </div>
 

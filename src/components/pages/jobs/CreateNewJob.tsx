@@ -400,11 +400,11 @@ export default function CreateNewJobComponent({ preLoad }: CreateNewJobProps) {
                     introduction_text: i.introduction,
                     type: typeof i.photo
                 })) || [],
-                pay: formData.salary,
+                pay: formData.salary || '',
                 recruitingCriterias: rcData.filter(i => !!i),
                 clinic_public_date_start: format(parse(formData.publicDateStart || '', 'mm/dd/yyyy', new Date()), 'yyyymmdd'),
                 clinic_public_date_end: format(parse(formData.publicDateEnd || '', 'mm/dd/yyyy', new Date()), 'yyyymmdd'),
-                clinic_public_form_url: formData.supportUrl,
+                clinic_public_form_url: formData.supportUrl || '',
                 job_detail_page_template_id: Number(formData.applyType),
                 public_status: isDraft ? 2 : 1 // private (draft)
             },
@@ -431,15 +431,15 @@ export default function CreateNewJobComponent({ preLoad }: CreateNewJobProps) {
     const renderSaveButtons = () => {
         return (
             <div className="w-95/100 max-w-320 mx-auto">
-                <div className="flex flex-row items-center gap-10 py-4">
+                <div className="flex flex-row items-center justify-between gap-10 py-4">
                     <CButton
                         text="下書き更新"
-                        className='bg-blue mx-auto text-white w-[40%]'
+                        className='bg-blue mx-0 text-white w-[50%]'
                         onClick={onClickSaveDraft}
                     />
                     <CButton
                         text="公開更新"
-                        className='bg-blue mx-auto text-white w-[40%]'
+                        className='bg-blue mx-0 text-white w-[50%]'
                         onClick={handleSubmit(onSubmit)}
                     />
                 </div>
@@ -450,10 +450,10 @@ export default function CreateNewJobComponent({ preLoad }: CreateNewJobProps) {
     return (
         <div className="flex min-h-screen flex-col pb-20">
             <div className="w-95/100 max-w-320 mx-auto mt-10 pb-10 border-1 border-gray-700 rounded-sm bg-white">
-                <div className="bg-gray-600 px-5 py-3">
+                <div className="bg-gray-600 px-3 md:px-5 py-3">
                     <p className="text-white">検索情報</p>
                 </div>
-                <div className="p-5">
+                <div className="p-3 md:p-5">
                     {isAdmin && (
                         <div className="flex flex-col items-start md:flex-row  py-2">
                             <div className="flex-1 flex flex-row items-center">
@@ -511,18 +511,19 @@ export default function CreateNewJobComponent({ preLoad }: CreateNewJobProps) {
                             <p className="text-sm text-gray-400 py-2">検索時サムネイル画像</p>
                             <RequiredLabel />
                         </div>
-                        <div className="flex-3">
+                        <div className="w-full md:flex-3">
                             {imagePreview && (
-                                <div className="mt-4 mb-3 w-[300px] h-[220px]">
-                                    <img
+                                <div className="relative mt-4 mb-3 w-full aspect-[300/220] md:w-[300px] md:h-[220px]">
+                                    <Image
                                         src={imagePreview || '/images/default-avatar.jpg'}
                                         alt="Preview"
                                         className="w-full h-full shadow-md"
+                                        fill
                                     />
                                 </div>
                             )}
                             {!imagePreview && thumbnail && (
-                                <div className="mt-4 mb-3 w-[300px] h-[220px] relative">
+                                <div className="relative mt-4 mb-3 w-full aspect-[300/220] md:w-[300px] md:h-[220px]">
                                     <Image
                                         src={thumbnail as string}
                                         alt="Preview"
@@ -617,10 +618,10 @@ export default function CreateNewJobComponent({ preLoad }: CreateNewJobProps) {
             {renderSaveButtons()}
             {profile?.role === 'admin' && (
                 <div className="w-95/100 max-w-320 mx-auto border-1 border-gray-700 bg-white rounded-sm">
-                    <div className="bg-gray-600 px-5 py-3">
+                    <div className="bg-gray-600 px-3 md:px-5 py-3">
                         <p className="text-white">会社情報</p>
                     </div>
-                    <div className="p-5">
+                    <div className="p-3 md:p-5">
                         <div className="flex flex-col items-start md:flex-row  py-2">
                             <div className="flex-1 flex flex-row items-center">
                                 <p className="text-sm text-gray-400 py-2">その他ウェブサイト</p>
@@ -659,10 +660,10 @@ export default function CreateNewJobComponent({ preLoad }: CreateNewJobProps) {
             )}
             {profile?.role === 'admin' && renderSaveButtons()}
             <div className="w-95/100 max-w-320 mx-auto border-1 border-gray-700 bg-white rounded-sm">
-                <div className="bg-gray-600 px-5 py-3">
+                <div className="bg-gray-600 px-3 md:px-5 py-3">
                     <p className="text-white">求人ページ製作情報</p>
                 </div>
-                <div className="p-5">
+                <div className="p-3 md:p-5">
                     <div className="flex flex-col items-start lg:flex-row  py-2">
                         <div className="flex-1">
                             <p className="text-sm text-gray-400 py-2">社内風景画像画像</p>
@@ -734,16 +735,16 @@ export default function CreateNewJobComponent({ preLoad }: CreateNewJobProps) {
             </div>
             {renderSaveButtons()}
             <div className="w-95/100 max-w-320 mx-auto border-1 border-gray-700 bg-white rounded-sm">
-                <div className="bg-gray-600 px-5 py-3">
+                <div className="bg-gray-600 px-3 md:px-5 py-3">
                     <p className="text-white">求人情報</p>
                 </div>
-                <div className="p-5">
+                <div className="p-3 md:p-5">
                     <div className="flex flex-col items-start md:flex-row  py-2">
                         <div className="flex-1 flex flex-row items-center">
                             <p className="text-sm text-gray-400 py-2">給料</p>
                             <RequiredLabel />
                         </div>
-                        <div className="flex-3">
+                        <div className="w-full md:flex-3">
                             <Controller
                                 name="salary"
                                 control={control}
@@ -776,7 +777,7 @@ export default function CreateNewJobComponent({ preLoad }: CreateNewJobProps) {
                                     <div className="flex-1 flex flex-row items-center">
                                         <p className="text-sm text-gray-400 py-2">{c.name}</p>
                                     </div>
-                                    <div className="flex-3">
+                                    <div className="w-full md:flex-3">
                                         <Controller
                                             name={`recruitingCriterias.${index}.body`}
                                             control={control}
@@ -801,10 +802,10 @@ export default function CreateNewJobComponent({ preLoad }: CreateNewJobProps) {
                         })
                     )}
                     <div className="border-1 border-gray-600 rounded-sm">
-                        <div className="bg-gray-600 px-5 py-3">
+                        <div className="bg-gray-600 px-3 md:px-5 py-3">
                             <p className="text-white">掲載ステータス</p>
                         </div>
-                        <div className="p-5">
+                        <div className="p-3 md:p-5">
                             <div className="flex flex-col items-start md:flex-row  py-2">
                                 <div className="flex-1 flex flex-row items-center">
                                     <p className="text-sm text-gray-400 py-2">掲載期間</p>
@@ -886,13 +887,13 @@ export default function CreateNewJobComponent({ preLoad }: CreateNewJobProps) {
                                 <div className="flex-1 flex flex-row items-center">
                                     <p className="text-sm text-gray-400 py-2">転職サポートのURL</p>
                                 </div>
-                                <div className="flex-3">
+                                <div className="w-full md:flex-3">
                                     <Controller
                                         name="supportUrl"
                                         control={control}
                                         render={({ field }) => (
                                             <CInput
-                                                {...field}
+                                                value={field.value || ''}
                                                 disabled={applyType === '1'}
                                                 isError={!!errors.supportUrl}
                                                 errorText={errors.supportUrl?.message}
