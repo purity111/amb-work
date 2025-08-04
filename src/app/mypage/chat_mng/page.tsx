@@ -170,8 +170,8 @@ export default function ChatMngPage() {
       if (!i.jobSeeker) return null;
       if (selectedJob > 0 && i.job_info_id !== selectedJob) return null;
       if (!i.jobSeeker.name.toLowerCase().includes(nameSearch.toLowerCase())) return null;
-      const seekerAvatar = i.jobSeeker.avatar ? `${UPLOADS_BASE_URL}/${getImageFile(i.jobSeeker.avatar.entity_path)}` : '/images/default-avatar.jpg';
-      const employerAvatar = i.jobInfo.employer.avatar ? `${UPLOADS_BASE_URL}/${getImageFile(i.jobInfo.employer.avatar.entity_path)}` : '/images/default-company.png';
+      const seekerAvatar = i.jobSeeker?.avatar ? `${UPLOADS_BASE_URL}/${getImageFile(i.jobSeeker.avatar.entity_path)}` : '/images/default-avatar.jpg';
+      const employerAvatar = i.jobInfo.employer?.avatar ? `${UPLOADS_BASE_URL}/${getImageFile(i.jobInfo.employer.avatar.entity_path)}` : '/images/default-company.png';
       return (
         <div
           className={`w-full max-w-full flex flex-row items-center p-2 hover:bg-gray-800 cursor-pointer h-20
@@ -191,7 +191,7 @@ export default function ChatMngPage() {
           {leftPaneExpanded && (
             <div className="w-[100px] flex-1 pl-2">
               <div className="flex flex-col lg:flex-row justify-between">
-                <p className="flex-1">{isJobSeeker ? i.jobInfo.employer.clinic_name : i.jobSeeker.name}</p>
+                <p className="flex-1">{isJobSeeker ? i.jobInfo.employer?.clinic_name || 'Unknown Company' : i.jobSeeker.name}</p>
                 <p className="text-[12px] text-gray-600">{formatTimeAgo(new Date(i.lastMessageTime))}</p>
               </div>
               <p className="truncate whitespace-nowrap overflow-hidden text-sm">{getLastMessage(i)}</p>
