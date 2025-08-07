@@ -88,7 +88,7 @@ export default function ResetPasswordPage() {
                 <div className="h-20 sm:h-30 md:h-75 bg-[#414141]"></div>
                 {/* Text Content (Left Side - Dark Grey Background) */}
                 <div className="w-full max-w-[1200px] m-auto text-white mt-10 px-4 lg:px-0 md:mb-10">
-                    <h1 className="text-[26px] text-center md:text-[35px] lg:text-[44px] font-bold text-black mb-2">パスワードをリセットする</h1>
+                    <h2 className="text-[26px] text-center md:text-[35px] lg:text-[44px] font-bold text-black mb-2">パスワードをリセットする</h2>
                 </div>
                 <div className='w-9/10 max-w-100 mx-auto'>
                     <form onSubmit={handleSubmit(onSubmit)} className="mt-6 space-y-4">

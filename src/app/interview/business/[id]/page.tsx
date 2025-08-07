@@ -125,9 +125,9 @@ export default function BusinessInterviewDetailPage() {
                     </div>
                 )}
                 <div className="flex flex-col-reverse md:flex-row flex-wrap items-start gap-4">
-                    <h1 className="text-[24px] md:text-[36px] font-bold min-w-0 flex-1">
+                    <h2 className="text-[24px] md:text-[36px] font-bold min-w-0 flex-1">
                         {interview.title}
-                    </h1>
+                    </h2>
                 </div>
                 <p className='mb-6 text-sm md:text-md'>{formatDate(interview.created)}</p>
                 <div className="relative md:w-[80%] m-auto aspect-[3/2] mb-4 rounded rounded-[20px] object-contain">

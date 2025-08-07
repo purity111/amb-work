@@ -52,12 +52,12 @@ export default function ConfirmEmailPage() {
             )}
             {errorText && (
                 <div className="flex items-center justify-center mt-10">
-                    <h1 className="ml-4 text-2xl text-center text-black">{errorText}</h1>
+                    <h2 className="ml-4 text-2xl text-center text-black">{errorText}</h2>
                 </div>
             )}
             {isSuccess && (
                 <div className="flex items-center justify-center mt-10">
-                    <h1 className="ml-4 text-2xl text-center font-bold text-blue">メールが正常に確認されました。</h1>
+                    <h2 className="ml-4 text-2xl text-center font-bold text-blue">メールが正常に確認されました。</h2>
                 </div>
             )}
         </main>

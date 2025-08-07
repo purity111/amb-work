@@ -1,6 +1,7 @@
 'use client'
 
 import { Suspense } from "react";
+import FaviconEnforcer from "@/components/FaviconEnforcer";
 
 export default function JobsLayout({
     children,
@@ -8,8 +9,11 @@ export default function JobsLayout({
     children: React.ReactNode;
 }>) {
     return (
-        <Suspense>
-            {children}
-        </Suspense>
+        <>
+            <FaviconEnforcer />
+            <Suspense>
+                {children}
+            </Suspense>
+        </>
     );
 }

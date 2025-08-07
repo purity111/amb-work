@@ -125,7 +125,7 @@ export default function FavouritesPage() {
   if (isLoading) {
     return (
       <div className="flex flex-col p-5">
-        <h1 className="text-2xl font-bold mb-6">お気に入り</h1>
+        <h2 className="text-2xl font-bold mb-6">お気に入り</h2>
         <Spinner />
       </div>
     );
@@ -134,7 +134,7 @@ export default function FavouritesPage() {
   if (isError) {
     return (
       <div className="flex flex-col p-5">
-        <h1 className="text-2xl font-bold mb-6">お気に入り</h1>
+        <h2 className="text-2xl font-bold mb-6">お気に入り</h2>
         <p className="text-red-600">お気に入りの取得に失敗しました。</p>
       </div>
     );
@@ -152,7 +152,7 @@ export default function FavouritesPage() {
 
   return (
     <div className="flex flex-col p-5">
-      <h1 className="text-2xl font-bold mb-6">お気に入り</h1>
+      <h2 className="text-2xl font-bold mb-6">お気に入り</h2>
 
       {/* Search Section */}
       <div className="mb-6 flex justify-start gap-2 items-center">

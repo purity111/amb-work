@@ -4,6 +4,7 @@ import { useState, useEffect, Suspense } from "react";
 import Sidebar from '@/components/Sidebar';
 import useWindowSize from "@/hooks/useWindowSize";
 import { AuthProvider } from "@/app/layout";
+import FaviconEnforcer from "@/components/FaviconEnforcer";
 
 
 export default function MyPageLayout({
@@ -22,6 +23,7 @@ export default function MyPageLayout({
 
   return (
     <AuthProvider>
+      <FaviconEnforcer />
       <div className="flex flex-row min-h-screen max-w-full">
         <Sidebar isOpen={isOpen} setIsOpen={setIsOpen} />
         <main

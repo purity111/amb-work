@@ -121,7 +121,7 @@ export default function ColumnDetailPage() {
             <div className="w-full max-w-[1200px] m-auto text-white px-4 lg:px-0 md:mb-25">
                 <div className="md:text-left md:mr-8 xl:mr-20">
                     <div className="h-[30px] md:h-15 w-[3px] bg-green-500 mr-2 md:mt-[-30px] mb-5 md:mb-10"></div>
-                    <h1 className="text-[26px] md:text-[35px] lg:text-[44px] font-bold text-black mb-2">コラム</h1>
+                    <h2 className="text-[26px] md:text-[35px] lg:text-[44px] font-bold text-black mb-2">コラム</h2>
                     <p className="text-[14px] md:text-[18px] text-gray-300 font-bold">Column</p>
                 </div>
             </div>
