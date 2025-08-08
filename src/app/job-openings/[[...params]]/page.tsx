@@ -6,6 +6,8 @@ import { useState } from "react";
 import { useAuthContext } from "@/app/layout";
 import { useParams } from 'next/navigation';
 import AuthModal from "@/components/modal/Auth";
+import PageTitle from '@/components/PageTitle';
+import { getPageTitle } from '@/utils/titles';
 
 export default function JobOpeningsPage() {
     const [authModalState, setAuthModalState] = useState(0); // 1: Login, 2: Register
@@ -15,14 +17,18 @@ export default function JobOpeningsPage() {
     const segments = Array.isArray(params?.params) ? params.params : [];
     // Map segments to filters in order: [prefectures, jobTypes, items, conditions, employmentTypes]
     const [prefectures, jobTypes, items, conditions, employmentTypes] = segments;
+    const pageInfo = getPageTitle('jobOpenings');
 
     return (
         <>
+            <PageTitle 
+                title={pageInfo.title}
+                description={pageInfo.description}
+                keywords={pageInfo.keywords}
+            />
             <Suspense>
                 <div className="narrow-container pt-10 md:pt-20">
-                    <div className="flex mb-10 items-center justify-between">
-                        <p className="job-openings-title text-3xl font-bold text-gray-300 relative">求人検索結果</p>
-                    </div>
+                    <h1 className="job-openings-title text-3xl font-bold text-gray-300 relative mb-10">求人検索結果</h1>
                     <p className="text-gray-300 text-lg">
                         リユース・リサイクル・買取業界の求人情報を探すならリユース転職！リユース・リサイクル・買取の最新の求人情報をお届けします。
                     </p>

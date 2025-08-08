@@ -2,10 +2,18 @@ import Breadcrumb from '@/components/Breadcrumb';
 import ContactForm from '@/components/common/ContactForm';
 import Footer from '@/components/Footer';
 import Image from 'next/image';
+import PageTitle from '@/components/PageTitle';
+import { getPageTitle } from '@/utils/titles';
 
 export default function ContactPage() {
+  const pageInfo = getPageTitle('contact');
   return (
     <>
+      <PageTitle 
+        title={pageInfo.title}
+        description={pageInfo.description}
+        keywords={pageInfo.keywords}
+      />
       <main className="bg-white">
         <div className="h-20 sm:h-30 md:h-75 bg-[#414141]"></div>
         {/* Text Content (Left Side - Dark Grey Background) */}

@@ -262,11 +262,33 @@ export default function AddInterviewModal({ isOpen, onClose, defaultTag = '' }: 
                                         'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
                                         'insertdatetime', 'media', 'table', 'code', 'help', 'wordcount'
                                     ],
-                                    toolbar: 'undo redo | blocks | code | bold italic forecolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | table | removeformat | help',
+                                    toolbar: 'undo redo | formatselect | bold italic forecolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | table | removeformat | help',
+                                    block_formats: '段落=p; 見出し1=h1; 見出し2=h2; 見出し3=h3; 見出し4=h4; 見出し5=h5; 見出し6=h6; 引用=blockquote; コード=code; 整形済み=pre',
                                     content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }',
                                     content_css: '/css/style.css',
                                     file_picker_types: 'image',
                                     paste_data_images: true,
+                                    forced_root_block: 'p',
+                                    force_br_newlines: false,
+                                    force_p_newlines: true,
+                                    convert_newlines_to_brs: false,
+                                    remove_linebreaks: false,
+                                    entity_encoding: 'raw',
+                                    verify_html: false,
+                                    cleanup: true,
+                                    cleanup_on_startup: true,
+                                    formats: {
+                                        p: { block: 'p', title: '段落' },
+                                        h1: { block: 'h1', title: '見出し1' },
+                                        h2: { block: 'h2', title: '見出し2' },
+                                        h3: { block: 'h3', title: '見出し3' },
+                                        h4: { block: 'h4', title: '見出し4' },
+                                        h5: { block: 'h5', title: '見出し5' },
+                                        h6: { block: 'h6', title: '見出し6' },
+                                        blockquote: { block: 'blockquote', title: '引用' },
+                                        code: { block: 'code', title: 'コード' },
+                                        pre: { block: 'pre', title: '整形済み' }
+                                    }
                                 }}
                             />
                         </div>

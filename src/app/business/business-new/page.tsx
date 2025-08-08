@@ -6,10 +6,19 @@ import GlobalizationSection from "@/components/pages/business-new/GlobalizationS
 import { GLOBALIZATION_SECTION_DATA } from '@/utils/constants';
 import Image from "next/image";
 import Link from "next/link";
+import PageTitle from '@/components/PageTitle';
+import { getPageTitle } from '@/utils/titles';
 
 export default function BusinessNewPage() {
+    const pageInfo = getPageTitle('businessNew');
+
     return (
         <>
+            <PageTitle
+                title={pageInfo.title}
+                description={pageInfo.description}
+                keywords={pageInfo.keywords}
+            />
             <main>
                 <div className="h-20 sm:h-30 md:h-75 bg-[#414141]"></div>
                 {/* Text Content (Left Side - Dark Grey Background) */}

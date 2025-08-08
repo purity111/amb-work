@@ -12,6 +12,8 @@ import AddColumnModal from '@/components/modal/AddColumnModal';
 import CategorySidebar from '@/components/pages/columns/CategorySidebar';
 import ColumnCard from '@/components/pages/columns/ColumnCard';
 import { Suspense } from 'react';
+import PageTitle from '@/components/PageTitle';
+import { getPageTitle } from '@/utils/titles';
 
 function ColumnsPageInner() {
     const searchParams = useSearchParams();
@@ -219,9 +221,18 @@ function ColumnsPageInner() {
 }
 
 export default function ColumnsPage() {
+    const pageInfo = getPageTitle('columns');
+
     return (
-        <Suspense fallback={<div>読み込み中...</div>}>
-            <ColumnsPageInner />
-        </Suspense>
+        <>
+            <PageTitle
+                title={pageInfo.title}
+                description={pageInfo.description}
+                keywords={pageInfo.keywords}
+            />
+            <Suspense fallback={<div>読み込み中...</div>}>
+                <ColumnsPageInner />
+            </Suspense>
+        </>
     );
 }

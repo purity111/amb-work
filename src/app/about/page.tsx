@@ -3,15 +3,20 @@ import Breadcrumb from '@/components/Breadcrumb';
 import Footer from '@/components/Footer';
 import JobSupportFeatureList from '@/components/JobSupportFeatureList';
 import Image from 'next/image';
-import React, { useEffect } from 'react';
+import React from 'react';
+import PageTitle from '@/components/PageTitle';
+import { getPageTitle } from '@/utils/titles';
 
 const AboutPage: React.FC = () => {
-  useEffect(() => {
-    document.title = 'リユース転職サービス';
-  }, []);
+  const pageInfo = getPageTitle('about');
 
   return (
     <>
+      <PageTitle 
+        title={pageInfo.title}
+        description={pageInfo.description}
+        keywords={pageInfo.keywords}
+      />
       <main>
         <div className="h-20 sm:h-30 md:h-75 bg-[#414141]"></div>
         {/* Text Content (Left Side - Dark Grey Background) */}

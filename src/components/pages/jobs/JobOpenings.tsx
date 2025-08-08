@@ -352,7 +352,7 @@ export default function JobList({
                             key={'search'}
                             className="bg-blue mb-2"
                             size="small"
-                            text={`Job Title Search: ${searchTerm}`}
+                            text={`キーワード検索(タイトル): ${searchTerm}`}
                         />
                     )}
                 </div>

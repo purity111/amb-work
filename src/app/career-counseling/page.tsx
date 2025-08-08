@@ -5,10 +5,19 @@ import CareerCounselingForm from '@/components/common/CareerCounselingForm';
 import Footer from '@/components/Footer';
 import Image from 'next/image';
 import ProtectedRoute from '@/components/ProtectedRoute';
+import PageTitle from '@/components/PageTitle';
+import { getPageTitle } from '@/utils/titles';
 
 export default function CareerCounselingPage() {
+    const pageInfo = getPageTitle('careerCounseling');
+
     return (
         <ProtectedRoute>
+            <PageTitle
+                title={pageInfo.title}
+                description={pageInfo.description}
+                keywords={pageInfo.keywords}
+            />
             <main className="bg-white">
                 <div className="h-20 sm:h-30 md:h-75 bg-[#414141]"></div>
                 {/* Text Content (Left Side - Dark Grey Background) */}

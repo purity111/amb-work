@@ -6,6 +6,8 @@ import Breadcrumb from "@/components/Breadcrumb";
 import DefinitionSection from "@/components/pages/privacy/DefinitionSection";
 import { PrivacyPolicySectionData } from "@/utils/types";
 import Footer from '@/components/Footer';
+import PageTitle from '@/components/PageTitle';
+import { getPageTitle } from '@/utils/titles';
 
 const PrivacyPolicySections: PrivacyPolicySectionData[] = [
     {
@@ -66,8 +68,14 @@ const PrivacyPolicySections: PrivacyPolicySectionData[] = [
 ];
 
 export default function PrivacyPolicyPage() {
+    const pageInfo = getPageTitle('privacy');
     return (
         <>
+            <PageTitle 
+                title={pageInfo.title}
+                description={pageInfo.description}
+                keywords={pageInfo.keywords}
+            />
             <main>
                 {/* Hero Section - Identical Split Layout */}
                 <div className="h-20 sm:h-30 md:h-75 bg-[#414141]"></div>

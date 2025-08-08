@@ -8,10 +8,19 @@ import PointItem from '@/components/pages/skill-test/PointItem';
 import TestItem from '@/components/pages/skill-test/TestItem';
 import LinkButton from '@/components/LinkButton';
 import { getFullUrl } from '@/utils/config';
+import PageTitle from '@/components/PageTitle';
+import { getPageTitle } from '@/utils/titles';
 
 export default function SimplifiedTestPage() {
+    const pageInfo = getPageTitle('simplifiedTest');
+
     return (
         <>
+            <PageTitle
+                title={pageInfo.title}
+                description={pageInfo.description}
+                keywords={pageInfo.keywords}
+            />
             <main className="min-h-screen">
                 {/* Hero Section - Identical Split Layout */}
                 <div className="h-20 sm:h-30 md:h-75 bg-[#414141]"></div>

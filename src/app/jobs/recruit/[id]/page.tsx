@@ -126,7 +126,7 @@ export default function JobPreviewDetails() {
 
     if (!job) {
         return (
-            <p>Failed to get job details</p>
+            <p>求人の詳細を取得できませんでした。</p>
         )
     }
 

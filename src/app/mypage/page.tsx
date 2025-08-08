@@ -4,9 +4,12 @@ import { useAuthContext } from '@/app/layout';
 import LinkButton from "@/components/LinkButton";
 import { useMemo } from 'react';
 import { menuItemsByRole, MenuItem } from '@/components/Sidebar';
+import PageTitle from '@/components/PageTitle';
+import { getPageTitle } from '@/utils/titles';
 
 export default function MyPage() {
   const { profile, logout } = useAuthContext();
+  const pageInfo = getPageTitle('mypage');
 
   const menuItems = useMemo(() => {
     if (!profile?.role) {
@@ -18,6 +21,11 @@ export default function MyPage() {
 
   return (
     <div className="flex flex-col p-5">
+      <PageTitle 
+        title={pageInfo.title}
+        description={pageInfo.description}
+        keywords={pageInfo.keywords}
+      />
       <h1 className="text-2xl font-bold mb-6">マイページ</h1>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {menuItems.map((item: MenuItem) => (

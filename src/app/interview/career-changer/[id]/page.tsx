@@ -1,8 +1,7 @@
 "use client";
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useParams } from 'next/navigation';
 import Spinner from '@/components/common/Spinner';
-import { getInterview } from '@/lib/api';
 import type { Interview } from '@/utils/types';
 import Image from 'next/image';
 import EditInterviewModal from '@/components/modal/EditInterviewModal';
@@ -12,24 +11,16 @@ import { toast } from 'react-toastify';
 import { useRouter } from 'next/navigation';
 import Breadcrumb from '@/components/Breadcrumb';
 import Footer from '@/components/Footer';
+import { useGetInterview } from '@/hooks/useGetInterview';
 
 export default function CareerChangerInterviewDetailPage() {
     const params = useParams();
     const id = Number(params.id);
-    const [interview, setInterview] = useState<Interview | null>(null);
-    const [isLoading, setIsLoading] = useState(true);
     const { isAdmin } = useAuth();
     const [isEditModalOpen, setEditModalOpen] = useState(false);
     const router = useRouter();
 
-    useEffect(() => {
-        if (!id) return;
-        setIsLoading(true);
-        getInterview(id)
-            .then((data) => setInterview(data))
-            .catch(() => setInterview(null))
-            .finally(() => setIsLoading(false));
-    }, [id]);
+    const { data: interview, isLoading, error } = useGetInterview(id);
 
     const formatDate = (dateString: string) => {
         const date = new Date(dateString);
@@ -45,10 +36,6 @@ export default function CareerChangerInterviewDetailPage() {
         setEditModalOpen(true);
     };
 
-    useEffect(() => {
-        console.log('Detail', interview);
-    }, [interview])
-    
     const handleDelete = async () => {
         if (!interview) return;
         if (window.confirm('このインタビューを削除してもよろしいですか？')) {
@@ -59,6 +46,7 @@ export default function CareerChangerInterviewDetailPage() {
             } catch (error) {
                 toast.error('エラーが発生しました');
                 console.log(error);
+                
             }
         }
     };
@@ -71,7 +59,7 @@ export default function CareerChangerInterviewDetailPage() {
         );
     }
 
-    if (!interview) {
+    if (error || !interview) {
         return <div className="text-center py-10">Not found</div>;
     }
 

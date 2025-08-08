@@ -6,6 +6,8 @@ import JobCategorySection from '@/components/pages/works/JobCategorySection';
 import Breadcrumb from '@/components/Breadcrumb';
 import { getFullUrl } from '@/utils/config';
 import Footer from '@/components/Footer';
+import PageTitle from '@/components/PageTitle';
+import { getPageTitle } from '@/utils/titles';
 
 interface JobDetail {
     title: string;
@@ -98,37 +100,68 @@ const jobCategories: JobCategory[] = [
                 location: "本部、店舗、ロジスティクスセンター",
                 description: "・商品撮影・検品、出品・梱包、発送・顧客対応・入力業務",
                 requiredSkills: [
-                    "処理スピード、正確性",
-                    "オペレーション構築力",
-                    "データ分析力",
-                    "コミュニケーション力"
+                    "ITスキル （ECサイト運営スキル、データ分析スキル）",
+                    "コミュニケーション力（接客スキル、ヒアリング力）",
+                    "査定スキル、真贋・鑑定スキル （商品知識、相場情報、相続・終活知識などの知識）",
+                    "マネジメント力 （店舗運営スキル、人材育成スキル）",
+                    "丁寧さ、誠実さといったヒューマンスキル"
                 ],
-                articleLink: { text: "中古品オークションとは、オークション運営の仕事の舞台裏と適した人材の特徴を解説！", href: "#" } // Replace # with actual link
+                articleLink: { text: "EC運営スタッフの仕事内容とは？リユース業界でのEC運営の特徴を解説！", href: "#" } // Replace # with actual link
             }
         ]
     },
     {
         id: 5,
-        title: "本部部門",
-        description: "まずは成長中のリユース・買取企業の経営をサポートしたり、事業を推進するための本部部門の仕事があります。",
-        image: "/images/works/headquarter.jpg",
-        subCategories: [
-            "管理部門（経理、財務、人事、総務）",
-            "販促、マーケティング",
-            "店舗開発",
-            "WEB・IT系職種（WEBマーケ、エンジニア）",
-            "事業責任者、幹部候補"
-        ],
-        link: { text: "専用ページはこちら", href: `${getFullUrl('/mid-high')}` } // Replace # with actual link
+        title: "事務・管理",
+        description: "企業の運営を支える事務業務や管理業務を行う仕事です。",
+        image: "/images/works/admin.jpg",
+        jobs: [
+            {
+                title: "事務（営業事務）、人事、経理、総務、商品管理、在庫管理、品質管理、物流管理",
+                location: "本部、店舗、ロジスティクスセンター",
+                description: "・データ入力・書類作成・在庫管理・品質管理・物流管理・人事・経理・総務業務",
+                requiredSkills: [
+                    "ITスキル （Excel、Word、PowerPoint、ERPシステムなど）",
+                    "コミュニケーション力（接客スキル、ヒアリング力）",
+                    "マネジメント力 （店舗運営スキル、人材育成スキル）",
+                    "丁寧さ、誠実さといったヒューマンスキル"
+                ],
+                articleLink: { text: "事務職の仕事内容とは？リユース業界での事務職の特徴を解説！", href: "#" } // Replace # with actual link
+            }
+        ]
+    },
+    {
+        id: 6,
+        title: "管理職・幹部",
+        description: "企業の経営戦略や組織運営を担う管理職・幹部の仕事です。",
+        image: "/images/works/management.jpg",
+        jobs: [
+            {
+                title: "店長、エリアマネージャー、事業部長、取締役、代表取締役",
+                location: "本部、店舗、ロジスティクスセンター",
+                description: "・経営戦略の立案・組織運営・人材育成・業績管理・顧客対応",
+                requiredSkills: [
+                    "マネジメント力 （組織運営スキル、人材育成スキル、業績管理スキル）",
+                    "コミュニケーション力（接客スキル、ヒアリング力）",
+                    "査定スキル、真贋・鑑定スキル （商品知識、相場情報、相続・終活知識などの知識）",
+                    "丁寧さ、誠実さといったヒューマンスキル"
+                ],
+                articleLink: { text: "管理職になるには？リユース業界での管理職の特徴を解説！", href: "#" } // Replace # with actual link
+            }
+        ]
     }
 ];
 
 export default function WorksPage() {
-    useEffect(() => {
-        document.title = 'リユース転職サービス';
-    }, []);
+    const pageInfo = getPageTitle('works');
+
     return (
         <>
+            <PageTitle
+                title={pageInfo.title}
+                description={pageInfo.description}
+                keywords={pageInfo.keywords}
+            />
             <main className="min-h-screen">
                 {/* Hero Section */}
                 <div className="h-20 sm:h-30 md:h-75 bg-[#414141]"></div>

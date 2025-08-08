@@ -10,10 +10,19 @@ import PricePlan from "@/components/pages/recruiter/PricePlan";
 import { RecruiterPainPoints, RecruiterStatistics, aboutItems, customerVoices, RecruiterFlowSteps } from "@/utils/constants";
 import Footer from "@/components/Footer";
 import RecruiterForm from "@/components/pages/recruiter/RecruiterForm";
+import PageTitle from '@/components/PageTitle';
+import { getPageTitle } from '@/utils/titles';
 
 export default function RecruiterPage() {
+    const pageInfo = getPageTitle('recruiter');
+
     return (
         <>
+            <PageTitle
+                title={pageInfo.title}
+                description={pageInfo.description}
+                keywords={pageInfo.keywords}
+            />
             <main>
                 {/* Hero Section */}
                 <div className="h-20 sm:h-30 md:h-75 bg-[#414141]"></div>

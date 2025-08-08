@@ -18,6 +18,8 @@ import Link from 'next/link';
 import { getFilterJobUrl } from '@/utils/helper';
 import Spinner from '@/components/common/Spinner';
 import AuthModal from '@/components/modal/Auth';
+import PageTitle from '@/components/PageTitle';
+import { getPageTitle } from '@/utils/titles';
 
 
 export default function HomePage() {
@@ -26,9 +28,7 @@ export default function HomePage() {
   const [recommendedColumns, setRecommendedColumns] = useState<any[]>([]);
   const [authModalState, setAuthModalState] = useState(0); // 1: Login, 2: Register
 
-  useEffect(() => {
-    document.title = 'リユース転職サービス';
-  }, []);
+  const pageInfo = getPageTitle('home');
 
 
   useEffect(() => {
@@ -68,7 +68,13 @@ export default function HomePage() {
 
   return (
     <div className="flex min-h-screen flex-col">
+      <PageTitle 
+        title={pageInfo.title}
+        description={pageInfo.description}
+        keywords={pageInfo.keywords}
+      />
       <div className='bg-[#414141] h-[140px] md:h-[160px] w-full'></div>
+      <h1 className="sr-only">AMB - 転職支援サービス | あなたの次のキャリアチャンスを見つけましょう</h1>
       <Swiper
         spaceBetween={30}
         speed={2000}
@@ -142,11 +148,17 @@ export default function HomePage() {
           </div>
           <div className='flex-1 px-4 md:px-0 md:pr-25'>
             <Image src="/images/home/about-title.png" alt="about-title" width={304} height={121} />
-            <p className='text-gray-300 text-wrap text-[14px] sm:text-base/7 font-normal'>
-              国内初、リユース・リサイクル・買取業界に特化した求人サイト。バイヤー・鑑定士など専門性の高い求人から、未経験歓迎求人まで。大手企業からベンチャー企業、地域密着企業まで幅広く求人があります。条件に合わせて検索いただけます。<br />
-              また、転職支援サービスでは、専任キャリアアドバイザーが履歴書・職務経歴書の添削や、面接対策まで徹底サポートしています。<br />
-              チャンスの多い業界であなたらしい輝くキャリアへの一歩を支援します。
-            </p>
+            <div className='text-gray-300 text-wrap text-[14px] sm:text-base/7 font-normal space-y-2'>
+              <p>
+                国内初、リユース・リサイクル・買取業界に特化した求人サイト。バイヤー・鑑定士など専門性の高い求人から、未経験歓迎求人まで。大手企業からベンチャー企業、地域密着企業まで幅広く求人があります。条件に合わせて検索いただけます。
+              </p>
+              <p>
+                また、転職支援サービスでは、専任キャリアアドバイザーが履歴書・職務経歴書の添削や、面接対策まで徹底サポートしています。
+              </p>
+              <p>
+                チャンスの多い業界であなたらしい輝くキャリアへの一歩を支援します。
+              </p>
+            </div>
             <a href="about">
               <CButton
                 text="リユース転職とは"

@@ -3,10 +3,19 @@
 import Image from "next/image";
 import Breadcrumb from "@/components/Breadcrumb";
 import Footer from "@/components/Footer";
+import PageTitle from '@/components/PageTitle';
+import { getPageTitle } from '@/utils/titles';
 
 export default function CompanyPage() {
+    const pageInfo = getPageTitle('company');
+
     return (
         <>
+            <PageTitle
+                title={pageInfo.title}
+                description={pageInfo.description}
+                keywords={pageInfo.keywords}
+            />
             <main>
                 {/* Hero Section - Identical Split Layout */}
                 <div className="h-20 sm:h-30 md:h-75 bg-[#414141]"></div>
