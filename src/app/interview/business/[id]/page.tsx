@@ -2,7 +2,6 @@
 import { useState } from 'react';
 import { useParams } from 'next/navigation';
 import Spinner from '@/components/common/Spinner';
-import type { Interview } from '@/utils/types';
 import Image from 'next/image';
 import EditInterviewModal from '@/components/modal/EditInterviewModal';
 import { deleteInterview } from '@/lib/api';

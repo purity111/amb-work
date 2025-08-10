@@ -46,7 +46,6 @@ export default function HomeLayout({
   return (
     <html lang="ja">
       <Head>
-        <script src="/tinymce/langs/ja.js"></script>
         {/* Comprehensive favicon configuration to prevent flashing */}
         <link rel="icon" type="image/x-icon" href="/favicon.ico" />
         <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />

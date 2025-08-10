@@ -1,10 +1,9 @@
 'use client'
 
-import React, { useEffect } from 'react';
+import React from 'react';
 import Image from 'next/image'; // Image is now used in JobCategorySection
 import JobCategorySection from '@/components/pages/works/JobCategorySection';
 import Breadcrumb from '@/components/Breadcrumb';
-import { getFullUrl } from '@/utils/config';
 import Footer from '@/components/Footer';
 import PageTitle from '@/components/PageTitle';
 import { getPageTitle } from '@/utils/titles';
