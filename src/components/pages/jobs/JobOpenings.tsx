@@ -432,7 +432,7 @@ export default function JobList({
                                                 <p>最寄り駅</p>
                                             </div>
                                             <div className="flex-3">
-                                                <p>{job.employer.closest_station || ''}</p>
+                                                <p>{job.employer?.closest_station || ''}</p>
                                             </div>
                                         </div>
                                         <div className="flex flex-row py-4 border-b-1 border-gray-700">

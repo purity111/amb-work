@@ -231,7 +231,7 @@ export default function JobPreviewDetails() {
     return (
         <div className="flex flex-col pt-5">
 
-            <p className="text-[24px] md:text-4xl text-center text-gray-300 mb-3 break-words">{job.employer.clinic_name}</p>
+            <p className="text-[24px] md:text-4xl text-center text-gray-300 mb-3 break-words">{job.employer?.clinic_name}</p>
             <p className={`text-2xl text-center text-${themeColor} mb-6 break-words`}>{job.job_title}</p>
             <div className="mt-10 flex flex-wrap flex-row justify-center items-stretch sm:items-center w-full gap-2 sm:gap-0">
                 {job?.staffInfos?.length > 0 && (
@@ -396,14 +396,14 @@ export default function JobPreviewDetails() {
                 <p className={`text-${themeColor} pb-5`}>ABOUT</p>
                 <div className="narrow-container w-full border-1 border-gray-700 mt-6 sm:mt-10 text-sm sm:text-base">
                     {[
-                        { label: '会社名', value: `${job.employer.clinic_name} (${job.employer.clinic_name_kana})` },
+                        { label: '会社名', value: `${job.employer?.clinic_name} (${job.employer?.clinic_name_kana})` },
                         { label: '事業形態', value: '法人' },
-                        { label: '住所', value: (<><span>〒{job.employer.zip}</span><br /><span>{getPrefectureName(job.employer.prefectures)} {job.employer.city}</span></>) },
-                        { label: '従業員数', value: job.employer.employee_number },
-                        { label: '設立年月日', value: job.employer.establishment_year },
-                        { label: '資本金', value: job.employer.capital_stock },
-                        { label: '事業内容', value: job.employer.business },
-                        { label: 'ウェブサイト', value: job.employer.home_page_url },
+                        { label: '住所', value: (<><span>〒{job.employer?.zip}</span><br /><span>{getPrefectureName(job.employer?.prefectures)} {job.employer?.city}</span></>) },
+                        { label: '従業員数', value: job.employer?.employee_number },
+                        { label: '設立年月日', value: job.employer?.establishment_year },
+                        { label: '資本金', value: job.employer?.capital_stock },
+                        { label: '事業内容', value: job.employer?.business },
+                        { label: 'ウェブサイト', value: job.employer?.home_page_url },
                         { label: '掲載期間', value: `${parsePublicDate(job.clinic_public_date_start)} ~ ${parsePublicDate(job.clinic_public_date_end)}` },
                     ].map((row) => (
                         <div key={row.label} className={`flex flex-col sm:flex-row border-b-1 last:border-b-0 border-gray-700`}>

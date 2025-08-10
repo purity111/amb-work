@@ -569,7 +569,7 @@ export default function CreateNewJobComponent({ preLoad }: CreateNewJobProps) {
                     </div>
                     <div className="flex flex-col items-start md:flex-row py-2">
                         <div className="flex-1">
-                            <div className="flex flex-row">
+                            <div className="flex flex-row items-center">
                                 <p className="text-sm text-gray-400 py-2">検索条件</p>
                                 <RequiredLabel />
                             </div>

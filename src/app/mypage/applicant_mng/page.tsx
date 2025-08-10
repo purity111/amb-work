@@ -190,8 +190,8 @@ export default function ApplicantMngPage() {
   }
 
   return (
-    <div className="flex flex-col p-5">
-      <h1 className="text-2xl font-bold mb-6">会員全体管理ページ</h1>
+    <div className="flex flex-col p-8">
+      <h1 className="text-[24px] md:text-[32px] font-bold text-center mb-6">会員全体管理ページ</h1>
       <div className="flex flex-col md:flex-row">
         <div className="flex justify-between md:justify-start flex-row items-center mx-auto my-2 space-x-2 w-full sm:w-[80%] md:w-full">
           <CButton

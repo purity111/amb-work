@@ -187,14 +187,14 @@ export default function FavouritesPage() {
             return (
               <FavoriteCard
                 key={bookmark.id}
-                companyName={job.employer.clinic_name}
+                companyName={job.employer?.clinic_name}
                 jobTitle={job.job_title}
-                storeName={job.employer.clinic_name}
+                storeName={job.employer?.clinic_name}
                 applicationDate={bookmark.created}
                 salary={job.pay}
                 zip=""
-                prefecture={job.employer.prefectures?.toString?.() ?? ""}
-                city={job.employer.city}
+                prefecture={job.employer?.prefectures?.toString?.() ?? ""}
+                city={job.employer?.city}
                 tel=""
                 templateId={job.job_detail_page_template_id}
                 jobId={job.id}

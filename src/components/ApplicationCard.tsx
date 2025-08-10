@@ -43,7 +43,7 @@ const ApplicationCard: React.FC<ApplicationCardProps> = ({
       <div className={`${headerBgClass} text-white p-3 flex justify-between items-center rounded-t-lg gap-1`}>
         <div>
           <h2 className="text-sm md:text-base text-black font-semibold">{data.jobInfo.employer.clinic_name}</h2>
-          <h3 className="text-base md:text-lg font-bold mt-1">{data.jobInfo.job_title} ({data.jobInfo.employer.city})</h3>
+          <h3 className="text-base md:text-lg font-bold mt-1">{data.jobInfo.job_title}</h3>
         </div>
         <span className="bg-gray-600 text-white min-w-[76px] md:min-w-[86px] text-xs md:text-sm px-2 py-1 rounded">状態未設定</span>
       </div>

@@ -112,10 +112,96 @@ export default function ProfilePage() {
     const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
     const [avatarFile, setAvatarFile] = useState<File | null>(null);
     const [emailChangeLoading, setEmailChangeLoading] = useState(false);
-    const [newEmail, setNewEmail] = useState("");
-    const [emailChangeSuccess, setEmailChangeSuccess] = useState(false);
-    const currentEmail = currentUserData?.data?.email || "";
-    const [emailError, setEmailError] = useState<string | undefined>(undefined);
+                      const [newEmail, setNewEmail] = useState("");
+                  const [emailChangeSuccess, setEmailChangeSuccess] = useState(false);
+                  const currentEmail = currentUserData?.data?.email || "";
+                  const [emailError, setEmailError] = useState<string | undefined>(undefined);
+
+    // Profile update mutation
+    const profileUpdateMutation = useMutation({
+        mutationFn: async (data: FormValues) => {
+            if (!currentUserData?.data?.id) {
+                throw new Error('ユーザーIDが見つかりません');
+            }
+
+            const userId = currentUserData.data.id;
+            const userRole = currentUserData.data.role; // Use actual user role from API
+
+            console.log('Form data:', data);
+
+            if (userRole === 'jobseeker') {
+                // Update JobSeeker profile with FormData (including avatar if selected)
+                const formData = new FormData();
+                formData.append('id', userId);
+                formData.append('name', data.name);
+                formData.append('name_kana', data.name_kana);
+                formData.append('birthdate', data.birthdate);
+                formData.append('sex', data.sex);
+                formData.append('zip', data.zip);
+                formData.append('prefectures', data.prefectures);
+                formData.append('tel', data.tel);
+                if (avatarFile) {
+                    formData.append('avatar', avatarFile);
+                }
+
+                console.log('Updating JobSeeker with data:', Object.fromEntries(formData.entries()));
+                const response = await updateJobSeekerProfile(formData);
+                console.log('JobSeeker update API response:', response);
+
+                if (response.success) {
+                    await refetch();
+                    hasPreloaded.current = false;
+                    setAvatarFile(null);
+                    setAvatarPreview(null);
+                    return response;
+                } else {
+                    throw new Error(response.message || 'プロフィールの更新に失敗しました');
+                }
+            } else if (userRole === 'employer') {
+                // Update Employer profile with FormData (including avatar if selected)
+                const formData = new FormData();
+                formData.append('id', userId);
+                formData.append('clinic_name', data.clinic_name || '');
+                formData.append('clinic_name_kana', data.clinic_name_kana || '');
+                formData.append('zip', data.zip);
+                formData.append('prefectures', data.prefectures);
+                formData.append('city', data.address || '');
+                formData.append('tel', data.tel);
+                formData.append('employee_number', data.employee_number?.toString() || '');
+                formData.append('establishment_year', data.establishment_year || '');
+                formData.append('business', data.business || '');
+                formData.append('home_page_url', data.home_page_url || '');
+                formData.append('capital_stock', data.capital_stock || '');
+                if (avatarFile) {
+                    formData.append('avatar', avatarFile);
+                }
+
+                console.log('Updating Employer with data:', Object.fromEntries(formData.entries()));
+                const response = await updateEmployerProfile(formData);
+                console.log('Employer update API response:', response);
+
+                if (response.success) {
+                    await refetch();
+                    hasPreloaded.current = false;
+                    setAvatarFile(null);
+                    setAvatarPreview(null);
+                    return response;
+                } else {
+                    throw new Error(response.message || 'プロフィールの更新に失敗しました');
+                }
+            } else {
+                throw new Error(`サポートされていないユーザータイプです: ${userRole}`);
+            }
+        },
+        onSuccess: (data) => {
+            console.log('Profile update success: ', data);
+            toast.success('プロフィールが更新されました');
+        },
+        onError: (error: any) => {
+            console.error('Error updating profile:', error);
+            toast.error(error.message || 'プロフィールの更新に失敗しました');
+        },
+    });
 
     // Change password mutation
     const changePasswordMutation = useMutation({
@@ -222,86 +308,8 @@ export default function ProfilePage() {
         }
     }, [emailChangeSuccess]);
 
-    const onSubmit = async (data: FormValues) => {
-        try {
-            if (!currentUserData?.data?.id) {
-                toast.error('ユーザーIDが見つかりません');
-                return;
-            }
-
-            const userId = currentUserData.data.id;
-            const userRole = currentUserData.data.role; // Use actual user role from API
-
-            console.log('Form data:', data);
-
-            if (userRole === 'jobseeker') {
-                // Update JobSeeker profile with FormData (including avatar if selected)
-                const formData = new FormData();
-                formData.append('id', userId);
-                formData.append('name', data.name);
-                formData.append('name_kana', data.name_kana);
-                formData.append('birthdate', data.birthdate);
-                formData.append('sex', data.sex);
-                formData.append('zip', data.zip);
-                formData.append('prefectures', data.prefectures);
-                formData.append('tel', data.tel);
-                if (avatarFile) {
-                    formData.append('avatar', avatarFile);
-                }
-
-                console.log('Updating JobSeeker with data:', Object.fromEntries(formData.entries()));
-                const response = await updateJobSeekerProfile(formData);
-                console.log('JobSeeker update API response:', response);
-
-                if (response.success) {
-                    toast.success('プロフィールが更新されました');
-                    await refetch();
-                    hasPreloaded.current = false;
-                    setAvatarFile(null);
-                    setAvatarPreview(null);
-                } else {
-                    toast.error(response.message || 'プロフィールの更新に失敗しました');
-                }
-            } else if (userRole === 'employer') {
-                // Update Employer profile with FormData (including avatar if selected)
-                const formData = new FormData();
-                formData.append('id', userId);
-                formData.append('clinic_name', data.clinic_name || '');
-                formData.append('clinic_name_kana', data.clinic_name_kana || '');
-                formData.append('zip', data.zip);
-                formData.append('prefectures', data.prefectures);
-                formData.append('city', data.address || '');
-                formData.append('tel', data.tel);
-                formData.append('employee_number', data.employee_number?.toString() || '');
-                formData.append('establishment_year', data.establishment_year || '');
-                formData.append('business', data.business || '');
-                formData.append('home_page_url', data.home_page_url || '');
-                formData.append('capital_stock', data.capital_stock || '');
-                if (avatarFile) {
-                    formData.append('avatar', avatarFile);
-                }
-
-                console.log('Updating Employer with data:', Object.fromEntries(formData.entries()));
-                const response = await updateEmployerProfile(formData);
-                console.log('Employer update API response:', response);
-
-                if (response.success) {
-                    toast.success('プロフィールが更新されました');
-                    await refetch();
-                    hasPreloaded.current = false;
-                    setAvatarFile(null);
-                    setAvatarPreview(null);
-                } else {
-                    toast.error(response.message || 'プロフィールの更新に失敗しました');
-                }
-            } else {
-                console.error('Unsupported user role:', userRole);
-                toast.error(`サポートされていないユーザータイプです: ${userRole}`);
-            }
-        } catch (error) {
-            console.error('Error updating profile:', error);
-            toast.error('プロフィールの更新に失敗しました');
-        }
+    const onSubmit = (data: FormValues) => {
+        profileUpdateMutation.mutate(data);
     };
 
     // Avatar image change handler
@@ -316,29 +324,40 @@ export default function ProfilePage() {
     };
 
     // Email change handler
-    const handleEmailChangeRequest = async () => {
-        if (!newEmail || newEmail === currentEmail) {
-            toast.error("新しいメールアドレスを入力してください");
-            return;
-        }
-        setEmailChangeLoading(true);
-        setEmailChangeSuccess(false);
-        try {
-            const res = await requestChangeEmail(newEmail);
-            if (res.success) {
-                toast.success("確認メールを送信しました。メールをご確認ください。");
-                setEmailChangeSuccess(true);
-            } else {
-                toast.error(res.message || "メールアドレスの変更リクエストに失敗しました");
-            }
-        } catch (err) {
-            toast.error("メールアドレスの変更リクエストに失敗しました");
-            console.log(err);
-
-        } finally {
-            setEmailChangeLoading(false);
-        }
-    };
+                    const handleEmailChangeRequest = async () => {
+                    if (!newEmail || newEmail === currentEmail) {
+                        toast.error("新しいメールアドレスを入力してください");
+                        return;
+                    }
+                    setEmailChangeLoading(true);
+                    setEmailChangeSuccess(false);
+                    try {
+                        const res = await requestChangeEmail(newEmail);
+                        if (res.success) {
+                            toast.success("確認メールを送信しました。メールをご確認ください。");
+                            setEmailChangeSuccess(true);
+                        } else {
+                            // Show backend error message if available
+                            if (res.message) {
+                                toast.error(res.message);
+                            } else {
+                                toast.error("メールアドレスの変更リクエストに失敗しました");
+                            }
+                        }
+                    } catch (err: any) {
+                        // Handle axios error responses with backend messages
+                        let errorMessage = "メールアドレスの変更リクエストに失敗しました";
+                        if (err?.response?.data?.message) {
+                            errorMessage = err.response.data.message;
+                        } else if (err?.response?.data?.error) {
+                            errorMessage = err.response.data.error;
+                        }
+                        toast.error(errorMessage);
+                        console.log(err);
+                    } finally {
+                        setEmailChangeLoading(false);
+                    }
+                };
 
     function validateEmail(email: string) {
         return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -837,10 +856,15 @@ export default function ProfilePage() {
                         {/* Submit Button */}
                         <div className="flex justify-end w-full mt-5">
                             <CButton
-                                text="更新"
+                                text={profileUpdateMutation.isPending ? (
+                                    <div className="flex items-center justify-center">
+                                        <Spinner size={4} />
+                                        <span className="ml-2">更新中...</span>
+                                    </div>
+                                ) : "更新"}
                                 type="submit"
                                 className="bg-blue-500 text-white px-[60px] py-2"
-                                disabled={!isDirty}
+                                disabled={!isDirty || profileUpdateMutation.isPending}
                             />
                         </div>
                     </div>
@@ -855,23 +879,23 @@ export default function ProfilePage() {
                         <label className="block text-sm font-medium">メールアドレス</label>
                     </div>
                     <div className="flex-1 flex flex-col md:flex-row gap-2 justify-end">
-                        <CInput
-                            type="email"
-                            value={newEmail}
-                            onChange={e => {
-                                setNewEmail(e.target.value);
-                                if (!validateEmail(e.target.value)) {
-                                    setEmailError("有効なメールアドレスを入力してください");
-                                } else {
-                                    setEmailError(undefined);
-                                }
-                            }}
-                            placeholder="新しいメールアドレス"
-                            className="w-full lg:w-80"
-                            disabled={emailChangeLoading}
-                            isError={!!emailError}
-                            errorText={emailError}
-                        />
+                                                            <CInput
+                                        type="email"
+                                        value={newEmail}
+                                        onChange={e => {
+                                            setNewEmail(e.target.value);
+                                            if (!validateEmail(e.target.value)) {
+                                                setEmailError("有効なメールアドレスを入力してください");
+                                            } else {
+                                                setEmailError(undefined);
+                                            }
+                                        }}
+                                        placeholder="新しいメールアドレス"
+                                        className="w-full lg:w-80"
+                                        disabled={emailChangeLoading}
+                                        isError={!!emailError}
+                                        errorText={emailError}
+                                    />
                         <CButton
                             type="button"
                             text={emailChangeLoading ? "送信中..." : "メールアドレス変更"}
@@ -881,9 +905,9 @@ export default function ProfilePage() {
                         />
                     </div>
                 </div>
-                {emailChangeSuccess && (
-                    <div className="text-green-600 text-sm mt-2">確認メールを送信しました。メールをご確認ください。</div>
-                )}
+                                                {emailChangeSuccess && (
+                                    <div className="text-green-600 text-sm mt-2">確認メールを送信しました。メールをご確認ください。</div>
+                                )}
             </div>
 
             {/* Change Password Section */}
