@@ -2,6 +2,7 @@ export const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:30
 export const UPLOADS_BASE_URL = `${process.env.NEXT_PUBLIC_UPLOADS_BASE_URL}/recruit` || 'http://localhost:3003';
 export const CHAT_UPLOADS_BASE_URL = `${process.env.NEXT_PUBLIC_UPLOADS_BASE_URL}/chat` || 'http://localhost:3003';
 
+
 export const getFullUrl = (path: string) => {
     return `${BASE_URL}${path}`;
 }; 
