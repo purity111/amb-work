@@ -36,7 +36,7 @@ export default function ColumnCard({ column }: ColumnCardProps) {
 
     return (
         <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
-            <Link href={`/columns/${column.id}`}>
+            <Link href={`/column/column-${column.id}`}>
                 <div className="relative h-48 sm:h-56">
                     {column.thumbnail ? (
                         <Image

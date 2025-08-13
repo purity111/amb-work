@@ -14,7 +14,27 @@ import Breadcrumb from '@/components/Breadcrumb';
 
 export default function ColumnDetailPage() {
     const params = useParams();
-    const id = Number(params.id);
+    const router = useRouter();
+    
+    // Extract the ID from the params array
+    const paramsArray = params.params as string[];
+    
+    // If no params or empty params, redirect to column list
+    if (!paramsArray || paramsArray.length === 0) {
+        router.push('/column');
+        return null; // Return null while redirecting
+    }
+    
+    let id: number | null = null;
+    
+    if (paramsArray && paramsArray.length > 0) {
+        const firstParam = paramsArray[0];
+        if (firstParam.startsWith('column-')) {
+            const idString = firstParam.replace('column-', '');
+            id = Number(idString);
+        }
+    }
+    
     const [column, setColumn] = useState<Column | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const categories = [
@@ -31,19 +51,22 @@ export default function ColumnDetailPage() {
         '鑑定士',
     ];
     const [selectedCategory, setSelectedCategory] = useState('');
-    const router = useRouter();
     const { profile } = useAuth();
     const isAdmin = profile?.role === 'admin' || profile?.role === 'subadmin';
     const [isEditModalOpen, setEditModalOpen] = useState(false);
 
     useEffect(() => {
-        if (!id) return;
+        if (!id || isNaN(id)) {
+            router.push('/404');
+            return;
+        }
+        
         setIsLoading(true);
         getColumn(id)
             .then((data) => setColumn(data))
             .catch(() => setColumn(null))
             .finally(() => setIsLoading(false));
-    }, [id]);
+    }, [id, router]);
 
     // Log column data to browser console
     useEffect(() => {
@@ -84,11 +107,13 @@ export default function ColumnDetailPage() {
     const handleEditModalClose = () => {
         setEditModalOpen(false);
         // Refresh column after edit
-        setIsLoading(true);
-        getColumn(id)
-            .then((data) => setColumn(data))
-            .catch(() => setColumn(null))
-            .finally(() => setIsLoading(false));
+        if (id) {
+            setIsLoading(true);
+            getColumn(id)
+                .then((data) => setColumn(data))
+                .catch(() => setColumn(null))
+                .finally(() => setIsLoading(false));
+        }
     };
 
     if (isLoading) {
