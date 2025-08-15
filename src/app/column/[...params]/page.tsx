@@ -14,9 +14,15 @@ import Breadcrumb from '@/components/Breadcrumb';
 
 export default function ColumnDetailPage() {
     const params = useParams();
-    const id = Number(params.id);
+    const router = useRouter();
+    const { profile } = useAuth();
+    
+    // All hooks must be called at the top level
     const [column, setColumn] = useState<Column | null>(null);
     const [isLoading, setIsLoading] = useState(true);
+    const [selectedCategory, setSelectedCategory] = useState('');
+    const [isEditModalOpen, setEditModalOpen] = useState(false);
+    
     const categories = [
         'すべて',
         'コラム',
@@ -30,20 +36,44 @@ export default function ColumnDetailPage() {
         '転職活動ノウハウ',
         '鑑定士',
     ];
-    const [selectedCategory, setSelectedCategory] = useState('');
-    const router = useRouter();
-    const { profile } = useAuth();
+    
     const isAdmin = profile?.role === 'admin' || profile?.role === 'subadmin';
-    const [isEditModalOpen, setEditModalOpen] = useState(false);
+    
+    // Extract the ID from the params array
+    const paramsArray = params.params as string[];
+    
+    let id: number | null = null;
+    
+    if (paramsArray && paramsArray.length > 0) {
+        const firstParam = paramsArray[0];
+        if (firstParam.startsWith('column-')) {
+            const idString = firstParam.replace('column-', '');
+            id = Number(idString);
+        }
+    }
 
     useEffect(() => {
-        if (!id) return;
-        setIsLoading(true);
-        getColumn(id)
-            .then((data) => setColumn(data))
-            .catch(() => setColumn(null))
-            .finally(() => setIsLoading(false));
-    }, [id]);
+        // Check if params exist and are valid
+        if (!paramsArray || paramsArray.length === 0) {
+            router.push('/column');
+            return;
+        }
+        
+        // If no valid ID found, redirect to column list
+        if (!id || isNaN(id)) {
+            router.push('/column');
+            return;
+        }
+        
+        // Only fetch data if we have a valid ID
+        if (id) {
+            setIsLoading(true);
+            getColumn(id)
+                .then((data) => setColumn(data))
+                .catch(() => setColumn(null))
+                .finally(() => setIsLoading(false));
+        }
+    }, [id, paramsArray, router]);
 
     // Log column data to browser console
     useEffect(() => {
@@ -54,11 +84,11 @@ export default function ColumnDetailPage() {
 
     const handleCategoryClick = (cat: string) => {
         setSelectedCategory(cat === 'すべて' ? '' : cat);
-        // Optionally, navigate to the columns list page with the selected category as a query param
+        // Optionally, navigate to the column list page with the selected category as a query param
         if (cat && cat !== 'すべて') {
-            router.push(`/columns?category=${encodeURIComponent(cat)}`);
+            router.push(`/column?category=${encodeURIComponent(cat)}`);
         } else {
-            router.push('/columns');
+            router.push('/column');
         }
     };
 
@@ -68,7 +98,7 @@ export default function ColumnDetailPage() {
             try {
                 await deleteColumn(column.id);
                 toast.success('コラムが削除されました');
-                router.push('/columns');
+                router.push('/column');
             } catch (error) {
                 toast.error('エラーが発生しました');
                 console.log(error);
@@ -84,14 +114,25 @@ export default function ColumnDetailPage() {
     const handleEditModalClose = () => {
         setEditModalOpen(false);
         // Refresh column after edit
-        setIsLoading(true);
-        getColumn(id)
-            .then((data) => setColumn(data))
-            .catch(() => setColumn(null))
-            .finally(() => setIsLoading(false));
+        if (id) {
+            setIsLoading(true);
+            getColumn(id)
+                .then((data) => setColumn(data))
+                .catch(() => setColumn(null))
+                .finally(() => setIsLoading(false));
+        }
     };
 
     if (isLoading) {
+        return (
+            <div className="flex flex-row justify-center pt-10">
+                <Spinner />
+            </div>
+        );
+    }
+
+    // If no valid ID, show loading (will redirect in useEffect)
+    if (!id || isNaN(id)) {
         return (
             <div className="flex flex-row justify-center pt-10">
                 <Spinner />

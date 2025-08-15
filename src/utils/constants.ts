@@ -94,7 +94,7 @@ export const HeaderButtonList: HeaderButton[] = [
     {
         title: 'コラム一覧',
         type: 'link',
-        to: '/columns'
+        to: '/column'
     },
     {
         title: '採用担当者の方へ',
@@ -194,7 +194,7 @@ export const FooterButtonList = [
     },
     {
         title: 'コラム一覧',
-        to: '/columns'
+        to: '/column'
     },
     {
         title: 'セミナー情報',

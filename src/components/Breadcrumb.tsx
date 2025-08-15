@@ -14,7 +14,7 @@ const pathToName: { [key: string]: string } = {
     '/simplified-test': '真贋スキル簡易テスト',
     '/qualifications': '資格一覧',
     '/career-counseling': '転職支援サービス',
-    '/columns': 'コラム一覧',
+    '/column': 'コラム一覧',
     '/about': 'リユース転職について',
     '/contact': 'お問い合わせ',
     '/interview': 'インタビュー',
