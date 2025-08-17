@@ -1,6 +1,6 @@
 "use client";
 
-import JobList from "@/components/pages/jobs/JobOpenings";
+import dynamic from 'next/dynamic';
 import React, { Suspense } from "react";
 import { useState } from "react";
 import { useAuthContext } from "@/app/layout";
@@ -8,6 +8,12 @@ import { useParams } from 'next/navigation';
 import AuthModal from "@/components/modal/Auth";
 import PageTitle from '@/components/PageTitle';
 import { getPageTitle } from '@/utils/titles';
+
+// Dynamically import JobList to avoid SSR issues with React Query
+const JobList = dynamic(() => import("@/components/pages/jobs/JobOpenings"), {
+    ssr: false,
+    loading: () => <div className="flex justify-center py-10"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue"></div></div>
+});
 
 export default function JobOpeningsPage() {
     const [authModalState, setAuthModalState] = useState(0); // 1: Login, 2: Register

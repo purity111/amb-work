@@ -4,6 +4,7 @@ import Spinner from "@/components/common/Spinner";
 import JobFilterModal from "@/components/modal/JobFilterModal";
 import { useGetBookmarkedJobs } from "@/hooks/useGetBookmarkedJobs";
 import { useGetJobs } from "@/hooks/useGetJobs";
+import { useGetRecommendedJobs } from "@/hooks/useGetRecommendedJobs";
 import { bookmarkJob, createApplication, getApplicationsByRole } from "@/lib/api";
 import { getFeatureParam, getFilterJobUrl, getFirstFullImage } from "@/utils/helper";
 import { BookmarkJob, FeatureItem, FeatureParams, JobDetail, PickOption } from "@/utils/types";
@@ -36,6 +37,12 @@ export default function JobList({
     conditions?: string,
     employmentTypes?: string
 } = {}) {
+    const [isClient, setIsClient] = useState(false);
+
+    useEffect(() => {
+        setIsClient(true);
+    }, []);
+
     const [limit] = useState(10);
     const [currentPage, setCurrentPage] = useState(1);
     const [searchTerm, setSearchTerm] = useState('');
@@ -71,6 +78,7 @@ export default function JobList({
         prefectures,
         features: getFeatureParam(features).map(String)
     })
+    const { data: recommendedJobsData, isLoading: isRecommendedLoading } = useGetRecommendedJobs();
 
     const { profile } = useAuthContext();
     const { data: bookmarkedList, refetch } = useGetBookmarkedJobs({ page: 1, limit: 10, searchTerm: '' });
@@ -92,13 +100,21 @@ export default function JobList({
     useEffect(() => {
         if (isLoading) return;
         if (data?.success && data.data) {
-            const { jobs, pagination, recommended } = data.data;
-            setRecommendJobData(recommended || [])
+            const { jobs, pagination } = data.data;
             setJobData(jobs || []);
             setTotalJobCount(pagination?.total || 0)
             setTotalPageCount(pagination?.totalPages || 0)
         }
     }, [data, isLoading])
+
+    // Set recommended jobs from the separate API
+    useEffect(() => {
+        if (isClient && recommendedJobsData?.success && recommendedJobsData.data) {
+            setRecommendJobData(recommendedJobsData.data.recommendedJobs || []);
+        }
+        // Log the recommended jobs data for debugging
+
+    }, [recommendedJobsData, isClient])
 
     const hasLoaded = useRef(false);
 
@@ -316,6 +332,17 @@ export default function JobList({
         setApplyModalShown(false);
     };
 
+    if (!isClient) {
+        return (
+            <div className="pb-10 md:pb-30">
+                <div className="text-center py-8">
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue mx-auto"></div>
+                    <p className="mt-2 text-gray-600">読み込み中...</p>
+                </div>
+            </div>
+        );
+    }
+
     return (
         <div className="pb-10 md:pb-30">
             <div className="py-2 sticky top-20 md:top-25 bg-white z-10 border-b-2 border-gray-700">
@@ -360,11 +387,19 @@ export default function JobList({
             {!jobData?.length && <p className="text-gray-600 mt-4">結果なし</p>}
             {renderPagination()}
 
+            {/* Recommended Jobs Section */}
+            {isRecommendedLoading && (
+                <div className="text-center py-8">
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue mx-auto"></div>
+                    <p className="mt-2 text-gray-600">おすすめの求人を読み込み中...</p>
+                </div>
+            )}
+            
             {recommendJobData.length > 0 && (
                 <div>
                     <h3 className="text-[22px] md:text-[26px] text-bold text-[#007eff]">おすすめの求人</h3>
                     <div className="mt-8 flex flex-col md:flex-row gap-4">
-                        {recommendJobData.map((job) => (
+                        {recommendJobData.map((job: JobDetail) => (
                             <Link key={job.id} href={`/jobs/recruit/${job.id}`} className="block w-full mb-5 md:w-1/3">
                                 <div className="relative aspect-[4/3] w-full rounded overflow-hidden shadow hover:shadow-lg transition-shadow bg-white">
                                     <Image
