@@ -160,6 +160,11 @@ export const getJobById = async (id: number) => {
     return response.data;
 };
 
+export const getRecommendedJobs = async () => {
+    const response = await api.get('/jobs/recommended');
+    return response.data;
+};
+
 export const getJobSeekers = async (param: JobSeekerFilterParam) => {
     const { page, limit, sortBy, sortOrder = 'ASC', prefectures, searchTerm } = param;
     const params = new URLSearchParams();
