@@ -17,6 +17,7 @@ export interface PickOption {
 interface AddColumnModalProps {
     isOpen: boolean;
     onClose: () => void;
+    onSuccess?: () => void; // Callback when column is successfully added
 }
 
 const categories = [
@@ -35,7 +36,7 @@ const categories = [
     ].map(cat => ({ value: cat, option: cat }))
 ];
 
-export default function AddColumnModal({ isOpen, onClose }: AddColumnModalProps) {
+export default function AddColumnModal({ isOpen, onClose, onSuccess }: AddColumnModalProps) {
     const {
         handleSubmit,
         control,
@@ -95,6 +96,10 @@ export default function AddColumnModal({ isOpen, onClose }: AddColumnModalProps)
             setStep(1);
             setHtmlContent('');
             onClose();
+            // Call the success callback to refresh the parent component
+            if (onSuccess) {
+                onSuccess();
+            }
         } catch (error) {
             toast.error('エラーが発生しました');
             console.log(error);
