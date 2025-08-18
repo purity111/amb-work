@@ -9,14 +9,64 @@ import CategorySidebar from '@/components/pages/columns/CategorySidebar';
 import ColumnCard from '@/components/pages/columns/ColumnCard';
 import Image from 'next/image';
 import Breadcrumb from '@/components/Breadcrumb';
+import { useAuth } from '@/hooks/useAuth';
+import Pagination from '@/components/common/Pagination';
+import AddColumnModal from '@/components/modal/AddColumnModal';
 
 function ColumnListContent() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const category = searchParams.get('category');
+    const initialPage = Number(searchParams.get('page')) || 1;
+    const initialLimit = 12;
+    const initialSearchTerm = searchParams.get('searchTerm') || '';
     
     const [columns, setColumns] = useState<Column[]>([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [searchTerm, setSearchTerm] = useState(initialSearchTerm);
+    const [tempSearch, setTempSearch] = useState(initialSearchTerm);
+    const [currentPage, setCurrentPage] = useState(initialPage);
+    const [totalPage, setTotalPage] = useState(1);
+    const [limit] = useState(initialLimit);
+    const [isAddModalOpen, setAddModalOpen] = useState(false);
+    
+    const { isAdmin } = useAuth();
+
+    // Function to fetch and filter columns data
+    const fetchColumns = () => {
+        setIsLoading(true);
+        getColumns()
+            .then((data) => {
+                // Extract the ColumnItems array from the response
+                const columnItems = data?.ColumnItems || [];
+                let filteredColumns = columnItems;
+                
+                // Filter by category
+                if (category && category !== 'すべて') {
+                    filteredColumns = columnItems.filter(col => col.category === category);
+                }
+                
+                // Filter by search term
+                if (searchTerm) {
+                    filteredColumns = filteredColumns.filter(col => 
+                        col.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                        col.content?.toLowerCase().includes(searchTerm.toLowerCase())
+                    );
+                }
+                
+                setColumns(filteredColumns);
+                setTotalPage(Math.ceil(filteredColumns.length / limit));
+                setCurrentPage(1);
+            })
+            .catch((error) => {
+                console.error('Error fetching columns:', error);
+                setColumns([]);
+            })
+            .finally(() => setIsLoading(false));
+    };
+
+    // Function to refetch columns data (alias for fetchColumns)
+    const refetchColumns = fetchColumns;
     
     const categories = [
         'すべて',
@@ -34,23 +84,8 @@ function ColumnListContent() {
     const [selectedCategory, setSelectedCategory] = useState(category || '');
 
     useEffect(() => {
-        setIsLoading(true);
-        getColumns()
-            .then((data) => {
-                // Extract the ColumnItems array from the response
-                const columnItems = data?.ColumnItems || [];
-                let filteredColumns = columnItems;
-                if (category && category !== 'すべて') {
-                    filteredColumns = columnItems.filter(col => col.category === category);
-                }
-                setColumns(filteredColumns);
-            })
-            .catch((error) => {
-                console.error('Error fetching columns:', error);
-                setColumns([]);
-            })
-            .finally(() => setIsLoading(false));
-    }, [category]);
+        fetchColumns();
+    }, [category, searchTerm, limit]);
 
     const handleCategoryClick = (cat: string) => {
         setSelectedCategory(cat === 'すべて' ? '' : cat);
@@ -60,6 +95,31 @@ function ColumnListContent() {
             router.push('/column');
         }
     };
+
+    const paginatedColumns = columns.slice((currentPage - 1) * limit, currentPage * limit);
+
+    const onPageChange = (page: number) => {
+        setCurrentPage(page);
+    };
+
+    const onChangeSearchTerm = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setTempSearch(e.target.value);
+    };
+
+    const onConfirmSearchTerm = () => {
+        setSearchTerm(tempSearch);
+    };
+
+    // Update URL when page or search changes
+    useEffect(() => {
+        const params = new URLSearchParams();
+        if (currentPage > 1) params.set('page', currentPage.toString());
+        if (searchTerm) params.set('searchTerm', searchTerm);
+        if (category) params.set('category', category);
+        
+        const newUrl = `/column${params.toString() ? `?${params.toString()}` : ''}`;
+        router.push(newUrl);
+    }, [currentPage, searchTerm, category, router]);
 
     if (isLoading) {
         return (
@@ -96,19 +156,63 @@ function ColumnListContent() {
             {/* Breadcrumb */}
             <Breadcrumb />
 
+            <div className="max-w-[1200px] mx-auto px-4 lg:px-0 mb-6">
+                <div className="flex flex-col-reverse md:flex-row gap-5 mb-6 justify-end">
+                    <div className="flex justify-center gap-5">
+                        <input
+                            type="text"
+                            placeholder="検索"
+                            value={tempSearch}
+                            onChange={onChangeSearchTerm}
+                            className="cursor-pointer lg:w-[300px] p-[10px] border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                        />
+                        <button
+                            onClick={onConfirmSearchTerm}
+                            className="cursor-pointer bg-blue-400 hover:bg-blue-600 text-white px-6 py-3 rounded-lg font-medium transition-colors duration-200 whitespace-nowrap"
+                        >
+                            検索
+                        </button>
+                    </div>
+                    {isAdmin && (
+                        <button
+                            className="m-auto md:m-0 max-w-[110px] cursor-pointer bg-blue-500 hover:bg-blue-600 flex items-center text-white px-6 py-3 rounded-lg font-medium transition-colors duration-200 whitespace-nowrap"
+                            onClick={() => setAddModalOpen(true)}
+                        >
+                            <span className="mr-2 flex items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 md:h-6 md:w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+                                </svg>
+                            </span>
+                            追加
+                        </button>
+                    )}
+                </div>
+            </div>
+
             <main className="max-w-[1200px] mx-auto px-4 lg:px-0 mb-8 flex flex-col md:flex-row gap-20 w-full sm:w-[80%] md:w-full">
                 <div className="flex-1 relative md:max-w-[72%]">
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {Array.isArray(columns) && columns.map((column) => (
+                        {Array.isArray(paginatedColumns) && paginatedColumns.map((column) => (
                             <ColumnCard
                                 key={column.id}
                                 column={column}
                             />
                         ))}
                     </div>
-                    {(!columns || columns.length === 0) && (
+                    {(!paginatedColumns || paginatedColumns.length === 0) && (
                         <div className="text-center py-10 text-gray-500">
                             コラムが見つかりませんでした。
+                        </div>
+                    )}
+                    
+                    {/* Pagination */}
+                    {totalPage > 1 && (
+                        <div className="flex justify-center mt-8">
+                            <Pagination
+                                page={currentPage}
+                                totalPages={totalPage}
+                                onPageChange={onPageChange}
+                            />
                         </div>
                     )}
                 </div>
@@ -118,6 +222,14 @@ function ColumnListContent() {
                     onCategoryClick={handleCategoryClick}
                 />
             </main>
+            
+            {/* Add Column Modal */}
+            <AddColumnModal 
+                isOpen={isAddModalOpen} 
+                onClose={() => setAddModalOpen(false)} 
+                onSuccess={refetchColumns}
+            />
+            
             <Footer />
         </>
     );
