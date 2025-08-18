@@ -74,7 +74,7 @@ export default function HomePage() {
         keywords={pageInfo.keywords}
       />
       <div className='bg-[#414141] h-[140px] md:h-[160px] w-full'></div>
-      <h1 className="sr-only">AMB - 転職支援サービス | あなたの次のキャリアチャンスを見つけましょう</h1>
+      <h1 className="sr-only">リユース転職｜買取・バイヤーの求人・転職はリユース業界専門サイト</h1>
       <Swiper
         spaceBetween={30}
         speed={2000}

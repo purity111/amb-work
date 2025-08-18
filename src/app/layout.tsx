@@ -67,7 +67,7 @@ export default function HomeLayout({
         <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚀</text></svg>" />
         
         {/* Page Title and SEO */}
-        <title>AMB - 転職支援サービス | あなたの次のキャリアチャンスを見つけましょう</title>
+        <title>リユース転職｜買取・バイヤーの求人・転職はリユース業界専門サイト</title>
         <meta name="description" content="AMB転職支援サービス - あなたの次のキャリアチャンスを見つけましょう。豊富な求人情報とキャリアコンサルティングで、理想の転職をサポートします。" />
         <meta name="keywords" content="転職, 求人, キャリア, 就職, 仕事, 転職支援, キャリアコンサルティング, 求人情報" />
         <meta name="author" content="AMB" />
@@ -77,7 +77,7 @@ export default function HomeLayout({
         {/* Open Graph / Facebook */}
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://amb.com/" />
-        <meta property="og:title" content="AMB - 転職支援サービス | あなたの次のキャリアチャンスを見つけましょう" />
+        <meta property="og:title" content="リユース転職｜買取・バイヤーの求人・転職はリユース業界専門サイト" />
         <meta property="og:description" content="AMB転職支援サービス - あなたの次のキャリアチャンスを見つけましょう。豊富な求人情報とキャリアコンサルティングで、理想の転職をサポートします。" />
         <meta property="og:image" content="/images/logo.png" />
         <meta property="og:site_name" content="AMB" />
