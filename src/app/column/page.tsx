@@ -206,7 +206,7 @@ function ColumnListContent() {
                     )}
                     
                     {/* Pagination */}
-                    {totalPage > 1 && (
+                    {totalPage > 0 && (
                         <div className="flex justify-center mt-8">
                             <Pagination
                                 page={currentPage}

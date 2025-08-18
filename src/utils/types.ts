@@ -94,6 +94,7 @@ export interface JobFetchParam {
     employer_id?: number;
     public_status?: number;
     sortBy?: string;
+    recommend?: number;
 }
 
 export interface JobParam {
