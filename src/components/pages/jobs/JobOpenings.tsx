@@ -4,7 +4,7 @@ import Spinner from "@/components/common/Spinner";
 import JobFilterModal from "@/components/modal/JobFilterModal";
 import { useGetBookmarkedJobs } from "@/hooks/useGetBookmarkedJobs";
 import { useGetJobs } from "@/hooks/useGetJobs";
-import { useGetRecommendedJobs } from "@/hooks/useGetRecommendedJobs";
+
 import { bookmarkJob, createApplication, getApplicationsByRole } from "@/lib/api";
 import { getFeatureParam, getFilterJobUrl, getFirstFullImage } from "@/utils/helper";
 import { BookmarkJob, FeatureItem, FeatureParams, JobDetail, PickOption } from "@/utils/types";
@@ -76,9 +76,9 @@ export default function JobList({
         searchTerm,
         isAdmin: '0',
         prefectures,
-        features: getFeatureParam(features).map(String)
+        features: getFeatureParam(features).map(String),
+        recommend: 1
     })
-    const { data: recommendedJobsData, isLoading: isRecommendedLoading } = useGetRecommendedJobs();
 
     const { profile } = useAuthContext();
     const { data: bookmarkedList, refetch } = useGetBookmarkedJobs({ page: 1, limit: 10, searchTerm: '' });
@@ -107,14 +107,12 @@ export default function JobList({
         }
     }, [data, isLoading])
 
-    // Set recommended jobs from the separate API
+    // Set recommended jobs from the single API call with recommend=1
     useEffect(() => {
-        if (isClient && recommendedJobsData?.success && recommendedJobsData.data) {
-            setRecommendJobData(recommendedJobsData.data.recommendedJobs || []);
+        if (isClient && data?.success && data.data) {
+            setRecommendJobData(data.data.recommendedJobs || []);
         }
-        // Log the recommended jobs data for debugging
-
-    }, [recommendedJobsData, isClient])
+    }, [data, isClient])
 
     const hasLoaded = useRef(false);
 
@@ -388,7 +386,7 @@ export default function JobList({
             {renderPagination()}
 
             {/* Recommended Jobs Section */}
-            {isRecommendedLoading && (
+            {isLoading && (
                 <div className="text-center py-8">
                     <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue mx-auto"></div>
                     <p className="mt-2 text-gray-600">おすすめの求人を読み込み中...</p>

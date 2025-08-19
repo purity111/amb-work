@@ -130,6 +130,7 @@ export const getJobs = async (
     prefectures?: string[],
     public_status?: number,
     sortBy?: string,
+    recommend?: number,
 ) => {
     const param: Record<string, any> = { page, limit, searchTerm, jobType, isAdmin };
     if (companyID && companyID > 0) {
@@ -150,8 +151,12 @@ export const getJobs = async (
     if (sortBy !== undefined) {
         param.sortBy = sortBy;
     }
+    if (recommend) {
+        param.recommend = 1;
+    }
     const queryString = toQueryString(param);
     const response = await api.get(`/jobs?${queryString}`);
+    console.log(response.data);
     return response.data;
 };
 
@@ -160,10 +165,7 @@ export const getJobById = async (id: number) => {
     return response.data;
 };
 
-export const getRecommendedJobs = async () => {
-    const response = await api.get('/jobs/recommended');
-    return response.data;
-};
+
 
 export const getJobSeekers = async (param: JobSeekerFilterParam) => {
     const { page, limit, sortBy, sortOrder = 'ASC', prefectures, searchTerm } = param;

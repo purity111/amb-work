@@ -81,7 +81,7 @@ const schema = Yup.object().shape({
             return false;
         }
     ),
-    features: Yup.array().of(Yup.string().required()).min(1, 'At least one feature must be selected'), // e.g. ['1-34', '2-24', '4-89']
+    features: Yup.array().of(Yup.string().required()).min(1, '検索条件を入力してください。'), // e.g. ['1-34', '2-24', '4-89']
     introduction: Yup.string().required('求人紹介文は必須項目です。'),
     other_websites: Yup.string()
         .notRequired()
