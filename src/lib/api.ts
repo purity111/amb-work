@@ -329,6 +329,12 @@ export const deleteColumn = async (id: number): Promise<void> => {
     return response.data;
 };
 
+// Fetch recommended columns
+export const getRecommendedColumns = async () => {
+    const response = await api.get('/columns/recommended');
+
+    return response.data.recommended;
+};
 
 // Interview related
 export const getInterviews = async (param: InterviewFetchParam = {}): Promise<InterviewResponse> => {
