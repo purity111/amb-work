@@ -322,7 +322,7 @@ export default function CreateNewJobComponent({ preLoad }: CreateNewJobProps) {
         onSuccess: (data) => {
             // Optionally invalidate or refetch queries here
             console.log('Create new job: ', data)
-            toast.success('新しい求人を作成しました。')
+            toast.success('求人情報を更新しました。')
             router.push('/mypage/job_mng');
             router.refresh();
         },
