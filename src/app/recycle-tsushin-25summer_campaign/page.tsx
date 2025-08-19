@@ -1,34 +1,30 @@
 "use client";
 
-import { useState } from 'react';
-import Image from 'next/image';
-
 export default function SummerCampaignPage() {
-    const [openFaq, setOpenFaq] = useState<number | null>(null);
-    const [formData, setFormData] = useState({
-        company: '',
-        name: '',
-        email: '',
-        phone: '',
-        inquiry: ''
-    });
+    // const [formData, setFormData] = useState({
+    //     company: '',
+    //     name: '',
+    //     email: '',
+    //     phone: '',
+    //     inquiry: ''
+    // });
 
-    const toggleFaq = (index: number) => {
-        setOpenFaq(openFaq === index ? null : index);
-    };
+    // const toggleFaq = (index: number) => {
+    //     setOpenFaq(openFaq === index ? null : index);
+    // };
 
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        setFormData({
-            ...formData,
-            [e.target.name]: e.target.value
-        });
-    };
+    // const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    //     setFormData({
+    //         ...formData,
+    //         [e.target.name]: e.target.value
+    //     });
+    // };
 
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        // Handle form submission
-        console.log('Form submitted:', formData);
-    };
+    // const handleSubmit = (e: React.FormEvent) => {
+    //     e.preventDefault();
+    //     // Handle form submission
+    //     console.log('Form submitted:', formData);
+    // };
 
     return (
         <div className="min-h-screen bg-white">
