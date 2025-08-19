@@ -130,7 +130,7 @@ export const getJobs = async (
     prefectures?: string[],
     public_status?: number,
     sortBy?: string,
-    recommend?: number,
+    // recommend?: number,
 ) => {
     const param: Record<string, any> = { page, limit, searchTerm, jobType, isAdmin };
     if (companyID && companyID > 0) {
@@ -151,9 +151,9 @@ export const getJobs = async (
     if (sortBy !== undefined) {
         param.sortBy = sortBy;
     }
-    if (recommend) {
-        param.recommend = 1;
-    }
+    // if (recommend) {
+    //     param.recommend = 1;
+    // }
     const queryString = toQueryString(param);
     const response = await api.get(`/jobs?${queryString}`);
     console.log(response.data);
@@ -329,12 +329,6 @@ export const deleteColumn = async (id: number): Promise<void> => {
     return response.data;
 };
 
-// Fetch recommended columns
-export const getRecommendedColumns = async () => {
-    const response = await api.get('/columns/recommended');
-
-    return response.data.recommended;
-};
 
 // Interview related
 export const getInterviews = async (param: InterviewFetchParam = {}): Promise<InterviewResponse> => {
