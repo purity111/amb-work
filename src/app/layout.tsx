@@ -42,6 +42,9 @@ export default function HomeLayout({
   // Hide FixedBottomBar on /job-openings/recruit/[id] page
   const hideFixedBottomBar =
     ["/job-openings/recruit/", "/mypage"].some(prefix => pathname?.startsWith(prefix));
+  
+  // Hide Header on campaign page
+  const hideHeader = pathname?.startsWith("/recycle-tsushin-25summer_campaign");
 
   return (
     <html lang="ja">
@@ -102,7 +105,7 @@ export default function HomeLayout({
         <LayoutWrapper>
           <QueryClientProvider client={queryClient}>
             <AuthProvider>
-              <Header />
+              {!hideHeader && <Header />}
               {children}
               {!hideFixedBottomBar && <FixedBottomBar />}
               <ToastContainer hideProgressBar={true} />

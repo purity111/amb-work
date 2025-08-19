@@ -20,7 +20,7 @@ export default function CRadioGroup({
     ...props
 }: RadioGroup & InputHTMLAttributes<HTMLInputElement>) {
     return (
-        <div className={`flex ${direction === 'row' ? 'flex-row flex-wrap' : 'flex-col'} gap-2`}>
+        <div key={value} className={`flex ${direction === 'row' ? 'flex-row flex-wrap' : 'flex-col'} gap-2`}>
             {options.map((option) => (
                 <label
                     key={option.value}
