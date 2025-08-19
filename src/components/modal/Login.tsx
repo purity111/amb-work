@@ -131,7 +131,7 @@ export default function LoginModal({ onSuccess, onClose, onNavigateRegister }: L
                         >
                             {forgotMutation.isPending ?
                                 <div className="w-full h-full items-center flex justify-center"><Spinner size={4} /></div>
-                                : '提出する'}
+                                : '送信する'}
                         </button>
                         <button
                             className={`

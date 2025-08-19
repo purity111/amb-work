@@ -183,7 +183,7 @@ export default function JobPreviewDetails() {
                                 <p className="font-bold text-gray-300">{criteria.name}</p>
                             </div>
                             <div className="flex-3 p-3">
-                                <p className="font-normal" dangerouslySetInnerHTML={{ __html: criteria.JobInfosRecruitingCriteria.body.replace(/\r?\n/g, '<br />') }} />
+                                <p className="font-normal" dangerouslySetInnerHTML={{ __html: criteria.JobInfosRecruitingCriteria.body?.replace(/\r?\n/g, '<br />') || '' }} />
                             </div>
                         </div>
                     )
