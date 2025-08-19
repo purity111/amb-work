@@ -257,7 +257,7 @@ export const generateJobCSVData = (data: JobDetail[], baseURL: string) => {
         '設定タグ': item.features.map(i => i.name).join(', '),
         '掲載開始日': format(parse(item.clinic_public_date_start, 'yyyymmdd', new Date()), 'yyyy年MM月dd日'),
         '掲載終了日': item.clinic_public_date_end ? format(parse(item.clinic_public_date_end, 'yyyymmdd', new Date()), 'yyyy年MM月dd日') : '無制限',
-        '求人のリンク': `${baseURL}/jobs/recruit/${item.id}`,
+        '求人のリンク': `${baseURL}/job-openings/recruit/${item.id}`,
         '求人閲覧数': item.recruits_count,
         'お気に入り数': item.favourite_count,
         '応募総数': item.application_count,

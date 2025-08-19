@@ -445,4 +445,3 @@ export default function JobPreviewDetails() {
         </div >
     );
 }
-
