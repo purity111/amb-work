@@ -39,9 +39,9 @@ export default function HomeLayout({
 }>) {
   const [queryClient] = useState(() => new QueryClient());
   const pathname = usePathname();
-  // Hide FixedBottomBar on /jobs/recruit/[id] page
+  // Hide FixedBottomBar on /job-openings/recruit/[id] page
   const hideFixedBottomBar =
-    ["/jobs/recruit/", "/mypage"].some(prefix => pathname?.startsWith(prefix));
+    ["/job-openings/recruit/", "/mypage"].some(prefix => pathname?.startsWith(prefix));
 
   return (
     <html lang="ja">
