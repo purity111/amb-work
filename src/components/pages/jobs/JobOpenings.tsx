@@ -49,7 +49,7 @@ export default function JobList({
     const [totalJobCount, setTotalJobCount] = useState(0);
     const [totalPageCount, setTotalPageCount] = useState(0);
     const [jobData, setJobData] = useState<JobDetail[]>([]);
-    const [recommendJobData, setRecommendJobData] = useState<JobDetail[]>([]);
+    // const [recommendJobData, setRecommendJobData] = useState<JobDetail[]>([]);
     const [filterModalShown, setFilterModalShown] = useState(false);
     const [prefectures, setPrefectures] = useState<string[]>([]);
     const [features, setFeatures] = useState<FeatureParams | null>(null);
@@ -77,7 +77,7 @@ export default function JobList({
         isAdmin: '0',
         prefectures,
         features: getFeatureParam(features).map(String),
-        recommend: 1
+        // recommend: 1
     })
 
     const { profile } = useAuthContext();
@@ -108,11 +108,11 @@ export default function JobList({
     }, [data, isLoading])
 
     // Set recommended jobs from the single API call with recommend=1
-    useEffect(() => {
-        if (isClient && data?.success && data.data) {
-            setRecommendJobData(data.data.recommendedJobs || []);
-        }
-    }, [data, isClient])
+    // useEffect(() => {
+    //     if (isClient && data?.success && data.data) {
+    //         setRecommendJobData(data.data.recommendedJobs || []);
+    //     }
+    // }, [data, isClient])
 
     const hasLoaded = useRef(false);
 
@@ -393,7 +393,7 @@ export default function JobList({
                 </div>
             )}
             
-            {recommendJobData.length > 0 && (
+            {/* {recommendJobData.length > 0 && (
                 <div>
                     <h3 className="text-[22px] md:text-[26px] text-bold text-[#007eff]">おすすめの求人</h3>
                     <div className="mt-8 flex flex-col md:flex-row gap-4">
@@ -416,7 +416,7 @@ export default function JobList({
                     </div>
                     <hr className="w-full h-[1px] border-gray-700 my-10" />
                 </div>
-            )}
+            )} */}
 
             {jobData.map((job: JobDetail) => {
                 const alreadyApplied = jobseekerApplications.includes(job.id);
