@@ -406,7 +406,7 @@ export default function CreateNewJobComponent({ preLoad }: CreateNewJobProps) {
                 clinic_public_date_end: format(parse(formData.publicDateEnd || '', 'mm/dd/yyyy', new Date()), 'yyyymmdd'),
                 clinic_public_form_url: formData.supportUrl || '',
                 job_detail_page_template_id: Number(formData.applyType),
-                public_status: isDraft ? 2 : 1 // private (draft)
+                public_status: isDraft ? 2 : Number(formData.status) // private (draft)
             },
             thumbnail: getImageFile(thumbnail),
             companyImages: formData.companyImages?.map(i => getImageFile(i.image)) || [],
