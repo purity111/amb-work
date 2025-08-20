@@ -25,7 +25,8 @@ const pathToName: { [key: string]: string } = {
     '/register/thanks': 'ありがとう',
     '/register': '登録',
     '/contact/finish': 'ありがとう',
-    '/recruiter/finish': 'ありがとう'
+    '/recruiter/finish': 'ありがとう',
+    '/contact_corp_finish': 'お申込み完了'
     // Add more paths and their corresponding names as needed
 }
 
