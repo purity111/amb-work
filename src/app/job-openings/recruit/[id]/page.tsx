@@ -345,7 +345,7 @@ export default function JobPreviewDetails() {
                                                 <ImageWithLoader className="object-cover" src={getFirstFullImage(staff.images) || '/images/default-avatar.jpg'} alt={staff.first_name} fill />
                                             </div>
                                             <div className="p-4 sm:p-8">
-                                                {(staff.first_name || staff.last_name) && <p>{staff.first_name} {staff.last_name}</p>}
+                                                {(staff.last_name || staff.first_name) && <p>{staff.last_name} {staff.first_name}</p>}
                                                 {staff.post && <p>{staff.post}</p>}
                                                 {staff.career && <p>{staff.career}</p>}
                                                 {staff.introduction_text && <p className="font-normal">{staff.introduction_text}</p>}
