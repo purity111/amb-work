@@ -99,6 +99,11 @@ export default function HomeLayout({
         <meta name="msapplication-TileColor" content="#ffffff" />
         <meta name="theme-color" content="#ffffff" />
         <link rel="canonical" href="https://amb.com/" />
+        
+        {/* External CSS for forms */}
+        <link rel="stylesheet" type="text/css" href="https://my183p.com/p/format_css?item_id=gw7V0Ihn&format=div&form_align=&label_align=&radio_float=&checkbox_float=&label_width=0&input_width=0&theme_name=1_1&ver=3" />
+        <link rel="stylesheet" type="text/css" href="https://my183p.com/p/mobile_css?item_id=gw7V0Ihn&format=div&form_align=&label_align=&radio_float=&checkbox_float=&label_width=0&input_width=0&theme_name=1_1&ver=3" />
+        <link rel="stylesheet" type="text/css" href="https://my183p.com/css/form/myasp-ui-form.css?d=20250810224710" />
       </Head>
       {/* 👇 Apply the custom font class to <body> */}
       <body className={inter.className}>
