@@ -185,7 +185,7 @@ export default function JobMngPage() {
   }
 
   const onCopyJobLink = async (id: number) => {
-            const jobLink = `${window.location.origin}/job-openings/recruit/${id}`;
+    const jobLink = `${window.location.origin}/job-openings/recruit/${id}`;
     try {
       await navigator.clipboard.writeText(jobLink);
       toast.info('求人リンクをコピーしました。')
@@ -422,7 +422,7 @@ export default function JobMngPage() {
                       <p className="p-2 bg-gray-800 text-sm border-r-1 border-gray-700">応募者総数</p>
                     </div>
                     <div className="flex-2 lg:flex-5 overflow-hidden whitespace-nowrap">
-                      <p className="p-2 truncate text-sm">{Number(job.application_count)}</p>
+                      <p className="p-2 truncate text-sm">{Number(job.application_count || 0)}</p>
                     </div>
                   </div>
 
