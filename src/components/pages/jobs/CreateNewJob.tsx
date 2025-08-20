@@ -372,11 +372,11 @@ export default function CreateNewJobComponent({ preLoad }: CreateNewJobProps) {
     }
 
     const onClickSaveDraft = () => {
-        const formData = getValues();
-        submitJob(formData as FormValues, true)
+        submitJob(2)
     }
 
-    const submitJob = (formData: FormValues, isDraft: boolean) => {
+    const submitJob = (publicStatus: number) => {
+        const formData = getValues() as FormValues;
         const features = formData.features?.map(i => Number(i.split('-')[1])) as number[] || [];
         const rcData = formData.recruitingCriterias?.map((item) => {
             const find = criterias.find((j: RecruitingCriteria) => j.id === item.id)
@@ -406,7 +406,7 @@ export default function CreateNewJobComponent({ preLoad }: CreateNewJobProps) {
                 clinic_public_date_end: format(parse(formData.publicDateEnd || '', 'mm/dd/yyyy', new Date()), 'yyyymmdd'),
                 clinic_public_form_url: formData.supportUrl || '',
                 job_detail_page_template_id: Number(formData.applyType),
-                public_status: isDraft ? 2 : Number(formData.status) // private (draft)
+                public_status: publicStatus || Number(formData.status)
             },
             thumbnail: getImageFile(thumbnail),
             companyImages: formData.companyImages?.map(i => getImageFile(i.image)) || [],
@@ -422,10 +422,8 @@ export default function CreateNewJobComponent({ preLoad }: CreateNewJobProps) {
         }
     }
 
-    const onSubmit = async (data: any) => {
-        // console.log('Form Data:', data);
-        const formData = data as FormValues;
-        submitJob(formData, false)
+    const onSubmit = () => {
+        submitJob(1)
     };
 
     const renderSaveButtons = () => {
@@ -936,7 +934,7 @@ export default function CreateNewJobComponent({ preLoad }: CreateNewJobProps) {
                     <CButton
                         text="更新する"
                         className='mt-4 bg-blue mx-auto text-white w-full'
-                        onClick={handleSubmit(onSubmit)}
+                        onClick={() => submitJob(0)}
                     />
                     <CButton
                         text="この求人を削除"
