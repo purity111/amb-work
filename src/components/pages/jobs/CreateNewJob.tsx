@@ -715,7 +715,7 @@ export default function CreateNewJobComponent({ preLoad }: CreateNewJobProps) {
                                 )
                             })}
                             <CButton
-                                text="社内風景画像追加+"
+                                text="スタッフ追加+"
                                 size='small'
                                 className='bg-blue text-white cursor-pointer'
                                 onClick={() => appendStaffImage({
