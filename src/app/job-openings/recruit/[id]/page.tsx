@@ -167,15 +167,6 @@ export default function JobPreviewDetails() {
 
         return (
             <>
-                <div className="flex flex-row border-t-1 border-gray-700">
-                    <div className="flex-1 border-r-1 border-gray-700 p-3 bg-gray-800">
-                        <p className="font-bold text-gray-300">勤務地</p>
-                    </div>
-                    <div className="flex-3 p-3">
-                        {zipData && <p className="font-normal">〒{zipData.JobInfosRecruitingCriteria.body}</p>}<br />
-                        {cityData && <p className="font-normal">{cityData.JobInfosRecruitingCriteria.body}</p>}
-                    </div>
-                </div>
                 {cloned.map((criteria: RecruitingCriteria) => {
                     return (
                         <div key={criteria.name} className="flex flex-row border-t-1 border-gray-700">
