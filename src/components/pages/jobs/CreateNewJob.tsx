@@ -127,9 +127,9 @@ const schema = Yup.object().shape({
                     }
                     return false;
                 }),
-            firstName: Yup.string().required('姓は必須項目です。'),
-            lastName: Yup.string().required('名は必須項目です。'),
-            position: Yup.string().required('ポジションは必須項目です。'),
+            firstName: Yup.string(),
+            lastName: Yup.string(),
+            position: Yup.string(),
             career: Yup.string(),
             introduction: Yup.string(),
         })
