@@ -214,7 +214,6 @@ export default function JobPreviewDetails() {
             const res = await createApplication({ job_info_id: selectedJobId, job_seeker_id: Number(jobSeekerId) });
             if (res.success) {
                 toast.success('応募が完了しました。');
-                console.log(jobseekerApplications);
                 setJobseekerApplications(prev => [...prev, selectedJobId]);
             } else {
                 toast.error(res.message || '応募に失敗しました。');

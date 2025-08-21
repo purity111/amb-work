@@ -42,10 +42,6 @@ export default function CareerInquiryList() {
     setCurrentPage(page);
   };
 
-  useEffect(() => {
-    console.log(inquiries);
-    
-  }, [inquiries]);
   const onChangeSearchTerm = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTempSearch(e.target.value);
   };

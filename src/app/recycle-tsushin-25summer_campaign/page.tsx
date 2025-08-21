@@ -22,8 +22,6 @@ export default function SummerCampaignPage() {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        // Handle form submission
-        console.log('Form submitted:', formData);
         
         // Submit the form to the external URL
         const form = e.target as HTMLFormElement;

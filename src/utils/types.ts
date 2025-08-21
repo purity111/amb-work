@@ -122,6 +122,7 @@ export interface JobParam {
     job_detail_page_template_id: number;
     clinic_public_form_url?: string;
     public_status: number;
+    closest_station?: string;
 }
 
 export interface Employer {
@@ -225,7 +226,8 @@ export interface JobDetail {
             "entity_path": string,
             "image_name": string
         }
-    ]
+    ],
+    "closest_station"?: string
 }
 
 export interface JobDetailExtra {

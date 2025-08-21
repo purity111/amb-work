@@ -21,7 +21,7 @@ type FormValues = {
 
 export default function SimpleUserProfileForm() {
     const hasPreloaded = useRef(false);
-    
+
     // Use the getCurrentUser hook to fetch user data
     const { data: currentUserData, isLoading, isError, refetch } = useGetCurrentUser({
         refetchOnWindowFocus: false,
@@ -51,7 +51,7 @@ export default function SimpleUserProfileForm() {
     useEffect(() => {
         if (!hasPreloaded.current && currentUserData?.success && currentUserData?.data) {
             const userData = currentUserData.data;
-            
+
             // Reset form with current user data
             reset({
                 name: userData.name || '',
@@ -61,7 +61,7 @@ export default function SimpleUserProfileForm() {
                 prefectures: userData.prefectures?.toString() || '',
                 role: userData.role || '',
             });
-            
+
             hasPreloaded.current = true;
         }
     }, [currentUserData, reset]);
@@ -70,11 +70,8 @@ export default function SimpleUserProfileForm() {
         try {
             console.log('Form submitted with data:', data);
             toast.success('プロフィールが更新されました');
-            
-            // Refresh current user data from API
+
             await refetch();
-            
-            // Reset the preloaded flag to allow re-population with fresh data
             hasPreloaded.current = false;
         } catch (error) {
             console.error('Error updating profile:', error);
@@ -101,16 +98,16 @@ export default function SimpleUserProfileForm() {
     return (
         <div className="max-w-2xl mx-auto p-6">
             <h2 className="text-2xl font-bold mb-6">シンプルプロフィール編集 (getCurrentUser API使用)</h2>
-            
+
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
                 {/* Role Display */}
                 <div className="bg-gray-100 p-4 rounded-lg">
                     <p className="text-sm text-gray-600">
                         ユーザータイプ: <span className="font-semibold">
-                            {watchedRole === 'JobSeeker' ? '求職者' : 
-                             watchedRole === 'Employer' ? '採用企業' : 
-                             watchedRole === 'admin' ? '管理者' : 
-                             watchedRole === 'subadmin' ? 'サブ管理者' : ''}
+                            {watchedRole === 'JobSeeker' ? '求職者' :
+                                watchedRole === 'Employer' ? '採用企業' :
+                                    watchedRole === 'admin' ? '管理者' :
+                                        watchedRole === 'subadmin' ? 'サブ管理者' : ''}
                         </span>
                     </p>
                 </div>
@@ -145,7 +142,7 @@ export default function SimpleUserProfileForm() {
                     <Controller
                         name="email"
                         control={control}
-                        rules={{ 
+                        rules={{
                             required: 'メールアドレスは必須です',
                             pattern: {
                                 value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
@@ -194,7 +191,7 @@ export default function SimpleUserProfileForm() {
                     <Controller
                         name="zip"
                         control={control}
-                        rules={{ 
+                        rules={{
                             required: '郵便番号は必須です',
                             pattern: {
                                 value: /^\d{7}$/,

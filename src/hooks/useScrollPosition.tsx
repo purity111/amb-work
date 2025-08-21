@@ -8,7 +8,6 @@ export function useScrollPosition(
     useEffect(() => {
         const element = elementRef.current
         if (!element) return
-        console.log(element)
         const handler = () => {
             effect(element.scrollTop)
         }

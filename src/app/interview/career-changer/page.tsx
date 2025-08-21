@@ -54,9 +54,6 @@ function CareerChangerInterviewPageInner() {
 
     const paginatedInterviews = interviews.slice((currentPage - 1) * limit, currentPage * limit);
 
-    useEffect(() => {
-        console.log('Paginated Interviews:', paginatedInterviews);
-    }, [paginatedInterviews]);
 
     const isFirstRender = useRef(true);
     useEffect(() => {

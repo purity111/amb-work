@@ -56,7 +56,6 @@ export function useAuth() {
 
         setToken(savedToken);
         if (!savedToken && pathname.includes('/mypage')) {
-            console.log({ pathname })
             router.push(`/?auth=login&redirectTo=${pathname}`)
         }
 

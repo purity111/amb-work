@@ -78,10 +78,6 @@ function ApplicationMngContent() {
   }, [response, limit]);
 
   useEffect(() => {
-    console.log(response?.data);
-  }, []);
-
-  useEffect(() => {
     if (!hasLoaded.current) return;
     const params = new URLSearchParams();
     params.set('page', currentPage.toString());

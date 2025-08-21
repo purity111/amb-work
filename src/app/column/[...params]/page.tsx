@@ -75,13 +75,6 @@ export default function ColumnDetailPage() {
         }
     }, [id, paramsArray, router]);
 
-    // Log column data to browser console
-    useEffect(() => {
-        if (column) {
-            console.log('Column detail:', column);
-        }
-    }, [column]);
-
     const handleCategoryClick = (cat: string) => {
         setSelectedCategory(cat === 'すべて' ? '' : cat);
         // Optionally, navigate to the column list page with the selected category as a query param

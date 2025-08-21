@@ -54,9 +54,6 @@ export default function ContactInquiryList() {
     }
   }, [response]);
 
-  useEffect(() => {
-    console.log('inquiries', inquiries);
-  }, [inquiries])
   const handleDelete = async (id: number | undefined) => {
     if (!id) return toast.error('IDが取得できません');
     if (!window.confirm("本当に削除しますか？")) return;

@@ -49,8 +49,6 @@ export default function ResetPasswordPage() {
             setIsSuccess(true);
         },
         onError: (error: any) => {
-            console.log('reset password error: ', error)
-            console.log(error?.response.data)
             toast.error(error?.response?.data?.message || '予期しないエラー');
         },
     });
