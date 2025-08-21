@@ -39,7 +39,6 @@ export default function CSearchSelect({ value, options, width = 'w-full', classN
 
     const handleInputClick = (e: React.MouseEvent) => {
         e.stopPropagation(); // Prevents click from reaching parent
-        console.log('Input clicked');
     };
 
     return (

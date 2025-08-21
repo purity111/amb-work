@@ -98,7 +98,8 @@ export default function RegisterForJobSeeker({ onSuccess }: FormProps) {
     const dobYear = useWatch({ control, name: 'dob_year' });
     const dobMonth = useWatch({ control, name: 'dob_month' });
     const sc = useWatch({ control, name: 'serviceContent' });
-    console.log({ sc })
+    console.log(sc);
+    
     const mutation = useMutation({
         mutationFn: registerAsJobSeeker,
         onSuccess: (data) => {

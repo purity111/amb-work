@@ -104,14 +104,12 @@ export default function FeatureMngPage() {
   // Effect for parent features dropdown
   useEffect(() => {
     if (allFeaturesResponse) {
-      console.log('allFeaturesResponse:', allFeaturesResponse);
       const parents = allFeaturesResponse.data
         .filter((f: FeatureItem) => f.type === 1 || f.type === 2)
         .map((f: FeatureItem) => ({
           value: f.id.toString(),
           option: f.name
         }));
-      console.log('Filtered parents:', parents);
       setParentFeatures([{ value: '', option: '選択してください' }, ...parents]);
     }
   }, [allFeaturesResponse]);

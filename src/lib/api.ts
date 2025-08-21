@@ -107,8 +107,6 @@ export const deleteRecruitingCriteria = async (id: number) => {
 export const getBookmarkedJobs = async (param: BookmarkedJobsFetchParams) => {
     const queryString = toQueryString(param);
     const response = await api.get(`/jobs/favourites?${queryString}`);
-    console.log(response.data);
-
     return response.data;
 };
 
@@ -156,7 +154,6 @@ export const getJobs = async (
     }
     const queryString = toQueryString(param);
     const response = await api.get(`/jobs?${queryString}`);
-    console.log(response.data);
     return response.data;
 };
 
@@ -293,7 +290,6 @@ export const requestChangeEmail = async (newEmail: string) => {
 export const getColumns = async (param: ColumnFetchParam = {}): Promise<ColumnResponse> => {
     const queryString = toQueryString(param);
     const response = await api.get(`/columns?${queryString}`);
-    console.log(response.data.data);
     return response.data.data;
 };
 

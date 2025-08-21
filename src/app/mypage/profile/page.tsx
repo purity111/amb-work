@@ -127,8 +127,6 @@ export default function ProfilePage() {
             const userId = currentUserData.data.id;
             const userRole = currentUserData.data.role; // Use actual user role from API
 
-            console.log('Form data:', data);
-
             if (userRole === 'jobseeker') {
                 // Update JobSeeker profile with FormData (including avatar if selected)
                 const formData = new FormData();
@@ -144,10 +142,7 @@ export default function ProfilePage() {
                     formData.append('avatar', avatarFile);
                 }
 
-                console.log('Updating JobSeeker with data:', Object.fromEntries(formData.entries()));
                 const response = await updateJobSeekerProfile(formData);
-                console.log('JobSeeker update API response:', response);
-
                 if (response.success) {
                     await refetch();
                     hasPreloaded.current = false;
@@ -175,10 +170,7 @@ export default function ProfilePage() {
                 if (avatarFile) {
                     formData.append('avatar', avatarFile);
                 }
-
-                console.log('Updating Employer with data:', Object.fromEntries(formData.entries()));
                 const response = await updateEmployerProfile(formData);
-                console.log('Employer update API response:', response);
 
                 if (response.success) {
                     await refetch();
@@ -234,8 +226,6 @@ export default function ProfilePage() {
     useEffect(() => {
         if (!hasPreloaded.current && currentUserData?.success && currentUserData?.data) {
             const userData = currentUserData.data;
-            console.log('main-data', userData);
-
             reset({
                 name: userData.name || userData.clinic_name || '',
                 name_kana: userData.name_kana || userData.clinic_name_kana || '',
@@ -257,7 +247,6 @@ export default function ProfilePage() {
                 address: userData.city || '',
                 capital_stock: userData.capital_stock || '',
             });
-            console.log('Form reset with capital:', userData.capital_stock);
             hasPreloaded.current = true;
         }
     }, [currentUserData, reset]);
@@ -266,7 +255,6 @@ export default function ProfilePage() {
     useEffect(() => {
         if (currentUserData?.success && currentUserData?.data && hasPreloaded.current) {
             const userData = currentUserData.data;
-            console.log('Refreshing form data after update:', userData);
 
             reset({
                 name: userData.name || userData.clinic_name || '',

@@ -76,7 +76,6 @@ export default function AddInterviewModal({ isOpen, onClose, defaultTag = '' }: 
             formData.append('category', values.category);
             formData.append('content', htmlContent);
             formData.append('type', 'career-changer'); // If needed for your backend
-            console.log('formData', selectedTag);
             
             if (values.thumbnail) {
                 formData.append('thumbnail', values.thumbnail);
