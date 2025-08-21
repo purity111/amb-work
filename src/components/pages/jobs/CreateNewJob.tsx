@@ -127,9 +127,9 @@ const schema = Yup.object().shape({
                     }
                     return false;
                 }),
-            firstName: Yup.string().required('姓は必須項目です。'),
-            lastName: Yup.string().required('名は必須項目です。'),
-            position: Yup.string().required('ポジションは必須項目です。'),
+            firstName: Yup.string(),
+            lastName: Yup.string(),
+            position: Yup.string(),
             career: Yup.string(),
             introduction: Yup.string(),
         })
@@ -754,7 +754,7 @@ export default function CreateNewJobComponent({ preLoad }: CreateNewJobProps) {
                                         errorText={errors.salary?.message}
                                         className="rounded-sm placeholder-gray-700"
                                         onChange={(e) => field.onChange(e)}
-                                        maxLength={30}
+                                        maxLength={500}
                                         height="h-[100px]"
                                         placeholder="入力してください"
                                     />
@@ -897,7 +897,7 @@ export default function CreateNewJobComponent({ preLoad }: CreateNewJobProps) {
                                                 errorText={errors.supportUrl?.message}
                                                 className="rounded-sm placeholder-gray-700"
                                                 onChange={(e) => field.onChange(e)}
-                                                maxLength={30}
+                                                maxLength={500}
                                                 height="h-[40px]"
                                             />
                                         )}
