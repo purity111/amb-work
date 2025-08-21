@@ -154,28 +154,19 @@ export default function JobPreviewDetails() {
     const renderCriteriaInfo = (job: JobDetailExtra) => {
         const sorted: RecruitingCriteria[] = job.recruitingCriterias.sort((a: RecruitingCriteria, b: RecruitingCriteria) => a.display_order - b.display_order);
         const cloned = [...sorted];
-        const zipIndex = cloned.findIndex(i => i.calling_name === 'zip');
-        let zipData: RecruitingCriteria | null = null;
-        if (zipIndex > -1) {
-            zipData = cloned.splice(zipIndex, 1)[0];
-        }
-        let cityData: RecruitingCriteria | null = null;
-        const cityIndex = cloned.findIndex(i => i.calling_name === 'city');
-        if (cityIndex > -1) {
-            cityData = cloned.splice(cityIndex, 1)[0];
-        }
+        // const zipIndex = cloned.findIndex(i => i.calling_name === 'zip');
+        // let zipData: RecruitingCriteria | null = null;
+        // if (zipIndex > -1) {
+        //     zipData = cloned.splice(zipIndex, 1)[0];
+        // }
+        // let cityData: RecruitingCriteria | null = null;
+        // const cityIndex = cloned.findIndex(i => i.calling_name === 'city');
+        // if (cityIndex > -1) {
+        //     cityData = cloned.splice(cityIndex, 1)[0];
+        // }
 
         return (
             <>
-                <div className="flex flex-row border-t-1 border-gray-700">
-                    <div className="flex-1 border-r-1 border-gray-700 p-3 bg-gray-800">
-                        <p className="font-bold text-gray-300">勤務地</p>
-                    </div>
-                    <div className="flex-3 p-3">
-                        {zipData && <p className="font-normal">〒{zipData.JobInfosRecruitingCriteria.body}</p>}<br />
-                        {cityData && <p className="font-normal">{cityData.JobInfosRecruitingCriteria.body}</p>}
-                    </div>
-                </div>
                 {cloned.map((criteria: RecruitingCriteria) => {
                     return (
                         <div key={criteria.name} className="flex flex-row border-t-1 border-gray-700">
