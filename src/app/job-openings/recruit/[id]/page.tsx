@@ -154,16 +154,16 @@ export default function JobPreviewDetails() {
     const renderCriteriaInfo = (job: JobDetailExtra) => {
         const sorted: RecruitingCriteria[] = job.recruitingCriterias.sort((a: RecruitingCriteria, b: RecruitingCriteria) => a.display_order - b.display_order);
         const cloned = [...sorted];
-        const zipIndex = cloned.findIndex(i => i.calling_name === 'zip');
-        let zipData: RecruitingCriteria | null = null;
-        if (zipIndex > -1) {
-            zipData = cloned.splice(zipIndex, 1)[0];
-        }
-        let cityData: RecruitingCriteria | null = null;
-        const cityIndex = cloned.findIndex(i => i.calling_name === 'city');
-        if (cityIndex > -1) {
-            cityData = cloned.splice(cityIndex, 1)[0];
-        }
+        // const zipIndex = cloned.findIndex(i => i.calling_name === 'zip');
+        // let zipData: RecruitingCriteria | null = null;
+        // if (zipIndex > -1) {
+        //     zipData = cloned.splice(zipIndex, 1)[0];
+        // }
+        // let cityData: RecruitingCriteria | null = null;
+        // const cityIndex = cloned.findIndex(i => i.calling_name === 'city');
+        // if (cityIndex > -1) {
+        //     cityData = cloned.splice(cityIndex, 1)[0];
+        // }
 
         return (
             <>
