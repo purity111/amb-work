@@ -754,7 +754,7 @@ export default function CreateNewJobComponent({ preLoad }: CreateNewJobProps) {
                                         errorText={errors.salary?.message}
                                         className="rounded-sm placeholder-gray-700"
                                         onChange={(e) => field.onChange(e)}
-                                        maxLength={30}
+                                        maxLength={500}
                                         height="h-[100px]"
                                         placeholder="入力してください"
                                     />
@@ -897,7 +897,7 @@ export default function CreateNewJobComponent({ preLoad }: CreateNewJobProps) {
                                                 errorText={errors.supportUrl?.message}
                                                 className="rounded-sm placeholder-gray-700"
                                                 onChange={(e) => field.onChange(e)}
-                                                maxLength={30}
+                                                maxLength={500}
                                                 height="h-[40px]"
                                             />
                                         )}
