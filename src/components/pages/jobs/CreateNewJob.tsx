@@ -84,16 +84,16 @@ const schema = Yup.object().shape({
     features: Yup.array().of(Yup.string().required()).min(1, '検索条件を入力してください。'), // e.g. ['1-34', '2-24', '4-89']
     introduction: Yup.string().required('求人紹介文は必須項目です。'),
     other_websites: Yup.string()
-        .notRequired()
-        .test(
-            'format-per-line',
-            '※1行毎に「項目名: URL」の形式で入力してください。',
-            (value) => {
-                if (!value) return true;
-                const lines = value.trim().split('\n');
-                return lines.every((line) => /^.+?:\s*https?:\/\/[^\s]+$/.test(line.trim()));
-            }
-        ),
+        .notRequired(),
+        // .test(
+        //     'format-per-line',
+        //     '※1行毎に「項目名: URL」の形式で入力してください。',
+        //     (value) => {
+        //         if (!value) return true;
+        //         const lines = value.trim().split('\n');
+        //         return lines.every((line) => /^.+?:\s*https?:\/\/[^\s]+$/.test(line.trim()));
+        //     }
+        // ),
     companyImages: Yup.array().of(
         Yup.object({
             image: Yup.mixed()
