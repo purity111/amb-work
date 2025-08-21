@@ -5,7 +5,7 @@ import Link from 'next/link';
 export default function RegisterThanksPage() {
   return (
     <>
-      {/* Google Tag Manager (noscript) */}
+      {/* Google Tag Manager (noscript) - Body fallback at top */}
       <noscript>
         <iframe
           src="https://www.googletagmanager.com/ns.html?id=GTM-587ZVL5"
@@ -15,6 +15,7 @@ export default function RegisterThanksPage() {
         />
       </noscript>
       {/* End Google Tag Manager (noscript) */}
+      
       <main className="bg-white">
 
 
