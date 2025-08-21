@@ -5,9 +5,20 @@ import Link from 'next/link';
 export default function RegisterThanksPage() {
   return (
     <>
+      {/* Google Tag Manager (noscript) */}
+      <noscript>
+        <iframe
+          src="https://www.googletagmanager.com/ns.html?id=GTM-587ZVL5"
+          height="0"
+          width="0"
+          style={{ display: 'none', visibility: 'hidden' }}
+        />
+      </noscript>
+      {/* End Google Tag Manager (noscript) */}
       <main className="bg-white">
+
+
         <div className="h-20 sm:h-30 md:h-75 bg-[#414141]"></div>
-        
         {/* Text Content (Left Side - Dark Grey Background) */}
         <div className="w-full max-w-[1200px] m-auto text-white px-4 lg:px-0 md:mb-25">
           <div className="md:text-left md:mr-8 xl:mr-20">
@@ -19,7 +30,7 @@ export default function RegisterThanksPage() {
 
         {/* Breadcrumb */}
         <Breadcrumb />
-        
+
         <div className="container mx-auto px-4 pb-8 md:pb-16">
           <div className="max-w-2xl mx-auto text-center">
             <div className="mb-8">
@@ -50,7 +61,7 @@ export default function RegisterThanksPage() {
             </div>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link 
+              <Link
                 href="/"
                 className="bg-blue-500 hover:bg-blue-600 text-white px-8 py-3 rounded-lg transition-colors duration-300"
               >
