@@ -43,6 +43,11 @@ export default function JobFeatures({ selectedList, onUpdate }: JobFeaturesProps
                 setPrefecture(prefectures)
             }
         })
+        // Set default values if no selection
+        if (selectedList.length === 0) {
+            setRegion('')
+            setPrefecture('')
+        }
     }, [selectedList])
 
     if (isLoading) {
@@ -63,20 +68,52 @@ export default function JobFeatures({ selectedList, onUpdate }: JobFeaturesProps
             option: j.name
         }));
 
+        // Add "選択" option to regions dropdown
+        const regionsWithSelect = [
+            { value: '', option: '選択' },
+            ...regions
+        ];
+
+        // Add "選択" option to prefectures dropdown
+        const prefecturesWithSelect = [
+            { value: '', option: '選択' },
+            ...prefectures
+        ];
+
+        // If no regions available, show message
+        if (regions.length === 0) {
+            return (
+                <div className='flex flex-row gap-4'>
+                    <p className="text-sm text-gray-500">地域が設定されていません</p>
+                </div>
+            );
+        }
+
         return (
             <div className='flex flex-row gap-4'>
                 <CSelect
-                    options={regions}
+                    options={regionsWithSelect}
                     className="h-[40px] rounded-sm placeholder-gray-700"
-                    onChange={(e) => setRegion(e.target.value)}
+                    onChange={(e) => {
+                        setRegion(e.target.value)
+                        // Reset prefecture when region changes
+                        if (e.target.value === '') {
+                            setPrefecture('')
+                            // Remove any existing prefecture selection from the list
+                            const section_num = Object.keys(sectionObj).length;
+                            const rest = selectedList.filter(i => Number(i.split('-')[0]) < section_num)
+                            onUpdate(rest);
+                        }
+                    }}
                     value={region}
                 />
                 <CSelect
-                    options={prefectures}
+                    options={prefecturesWithSelect}
                     width="w-[100px]"
                     className="h-[40px] rounded-sm placeholder-gray-700"
                     onChange={(e) => onChangeSubSectionItems(e)}
                     value={prefecture}
+                    disabled={!region || region === ''}
                 />
             </div>
         )
@@ -85,6 +122,14 @@ export default function JobFeatures({ selectedList, onUpdate }: JobFeaturesProps
     const onChangeSubSectionItems = (e: ChangeEvent<HTMLSelectElement>) => {
         const section_num = Object.keys(sectionObj).length;
         const rest = selectedList.filter(i => Number(i.split('-')[0]) < section_num)
+        
+        // Handle empty value (when "選択" is selected)
+        if (e.target.value === '') {
+            setPrefecture('')
+            onUpdate(rest);
+            return;
+        }
+        
         onUpdate([...rest, `${region}-${e.target.value}`]);
     }
 
