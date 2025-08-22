@@ -326,7 +326,7 @@ export default function JobMngPage() {
                     {getFirstFullImage(job.jobThumbnails) ? (
                       <Image
                         src={getFirstFullImage(job.jobThumbnails) as string}
-                        alt={`Job thumbnail for ${job.job_title}`}
+                        alt={`${job.job_title}のサムネイル`}
                         fill
                         className="object-cover"
                         sizes="(min-width: 768px) 20vw, 100vw"
