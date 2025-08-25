@@ -1,0 +1,22 @@
+# *
+User-agent: *
+Allow: /
+Disallow: /api/*
+Disallow: /admin/*
+Disallow: /mypage/*
+Disallow: /_next/*
+Disallow: /confirm-email
+Disallow: /email-change-success
+Disallow: /reset-password
+Disallow: /register/thanks
+Disallow: /contact/finish
+Disallow: /contact_corp_finish
+Disallow: /recruiter/finish
+
+# Host
+Host: https://reuse-tenshoku.com/
+
+# Sitemaps
+Sitemap: https://reuse-tenshoku.com/sitemap.xml
+Sitemap: https://reuse-tenshoku.com/jobs-sitemap.xml
+Sitemap: https://reuse-tenshoku.com/columns-sitemap.xml
