@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 
 export async function GET() {
   try {
-    const baseUrl = process.env.SITE_URL || 'https://app.reuse-tenshoku.com';
+    const baseUrl = process.env.SITE_URL || 'https://reuse-tenshoku.com';
     const currentDate = new Date().toISOString();
 
     // Define static pages with their priorities and change frequencies

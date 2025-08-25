@@ -1,6 +1,6 @@
 /** @type {import('next-sitemap').IConfig} */
 module.exports = {
-  siteUrl: process.env.SITE_URL || 'https://app.reuse-tenshoku.com/',
+  siteUrl: process.env.SITE_URL || 'https://reuse-tenshoku.com/',
   generateRobotsTxt: true,
   generateIndexSitemap: false,
   outDir: 'public',
@@ -40,9 +40,9 @@ module.exports = {
       }
     ],
     additionalSitemaps: [
-      'https://app.reuse-tenshoku.com/sitemap.xml',
-      'https://app.reuse-tenshoku.com/jobs-sitemap.xml',
-      'https://app.reuse-tenshoku.com/columns-sitemap.xml'
+      'https://reuse-tenshoku.com/sitemap.xml',
+      'https://reuse-tenshoku.com/jobs-sitemap.xml',
+      'https://reuse-tenshoku.com/columns-sitemap.xml'
     ]
   },
   transform: async (config, path) => {

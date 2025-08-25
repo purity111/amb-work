@@ -24,7 +24,7 @@ export async function GET() {
     }
 
     const jobs = jobsResponse.data.jobs;
-    const baseUrl = process.env.SITE_URL || 'https://app.reuse-tenshoku.com';
+    const baseUrl = process.env.SITE_URL || 'https://reuse-tenshoku.com';
 
     // Generate XML sitemap
     const xml = `<?xml version="1.0" encoding="UTF-8"?>
