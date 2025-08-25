@@ -43,7 +43,7 @@ export default function JobList({
         setIsClient(true);
     }, []);
 
-    const [limit] = useState(10);
+    const [limit] = useState(20);
     const [currentPage, setCurrentPage] = useState(1);
     const [searchTerm, setSearchTerm] = useState('');
     const [totalJobCount, setTotalJobCount] = useState(0);
