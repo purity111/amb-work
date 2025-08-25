@@ -12,7 +12,7 @@ import { useMutation } from "@tanstack/react-query";
 import { differenceInDays } from "date-fns";
 import Image from "next/image";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
-import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "react-toastify";
 import { JobFilterFormValue } from "./JobFilterForm";
 import { useAuthContext } from "@/app/layout";
@@ -137,8 +137,6 @@ export default function JobList({
         router.push(`?${params.toString()}`);
     }, [currentPage, limit, searchTerm])
 
-
-
     useEffect(() => {
         let bookmarks: BookmarkJob[] = [];
         if (bookmarkedList?.data?.jobs) {
@@ -169,17 +167,17 @@ export default function JobList({
         const cArray = cString ? cString.split('-') : [];
         const eArray = eString ? eString.split('-') : [];
         const parsedFeatures = {
-            jobTypes: featuresData.data.filter((i: FeatureItem) => !!jArray.includes(i.name)).map((k: FeatureItem) => k.id),
-            items: featuresData.data.filter((i: FeatureItem) => !!iArray.includes(i.name)).map((k: FeatureItem) => k.id),
-            conditions: featuresData.data.filter((i: FeatureItem) => !!cArray.includes(i.name)).map((k: FeatureItem) => k.id),
-            employmentTypes: featuresData.data.filter((i: FeatureItem) => !!eArray.includes(i.name)).map((k: FeatureItem) => k.id),
+            jobTypes: featuresData.data.filter((i: FeatureItem) => !!jArray.includes(encodeURIComponent(i.name))).map((k: FeatureItem) => k.id),
+            items: featuresData.data.filter((i: FeatureItem) => !!iArray.includes(encodeURIComponent(i.name))).map((k: FeatureItem) => k.id),
+            conditions: featuresData.data.filter((i: FeatureItem) => !!cArray.includes(encodeURIComponent(i.name))).map((k: FeatureItem) => k.id),
+            employmentTypes: featuresData.data.filter((i: FeatureItem) => !!eArray.includes(encodeURIComponent(i.name))).map((k: FeatureItem) => k.id),
         };
         setFeatures(parsedFeatures);
         // set prefecture data from url
         const pTemp: string[] = [];
         const pArray = pString ? pString.split('-') : [];
         pArray.forEach(p => {
-            const find = cityAll.find((i) => i.text === p);
+            const find = cityAll.find((i) => encodeURIComponent(i.text) === p);
             if (find) pTemp.push(find.id.toString())
         })
         setPrefectures(pTemp);
@@ -187,23 +185,23 @@ export default function JobList({
         const tagList = [
             ...pTemp.map((item: string, index: number) => ({
                 value: item,
-                option: pArray[index]
+                option: decodeURIComponent(pArray[index])
             })),
             ...parsedFeatures.jobTypes.map((item: number, index: number) => ({
                 value: item,
-                option: jArray[index]
+                option: decodeURIComponent(jArray[index])
             })),
             ...parsedFeatures.items.map((item: number, index: number) => ({
                 value: item,
-                option: iArray[index]
+                option: decodeURIComponent(iArray[index])
             })),
             ...parsedFeatures.conditions.map((item: number, index: number) => ({
                 value: item,
-                option: cArray[index]
+                option: decodeURIComponent(cArray[index])
             })),
             ...parsedFeatures.employmentTypes.map((item: number, index: number) => ({
                 value: item,
-                option: eArray[index]
+                option: decodeURIComponent(eArray[index])
             })),
         ]
         setSearchTags(tagList);
@@ -242,59 +240,6 @@ export default function JobList({
 
     const onSubmitFilterForm = (value: JobFilterFormValue, searchText: string) => {
         setFilterModalShown(false);
-        
-        // Update local features state immediately with the new filter values
-        const newFeatures: FeatureParams = {
-            jobTypes: value.jobTypes || [],
-            items: value.items || [],
-            conditions: value.conditions || [],
-            employmentTypes: value.employmentTypes || []
-        };
-        setFeatures(newFeatures);
-        
-        // Update prefectures state
-        setPrefectures((value.prefectures || []).map(String));
-        
-        // Update search tags
-        const tagList = [
-            ...(value.prefectures || []).map((item: number) => {
-                const city = cityAll.find(c => c.id === item);
-                return {
-                    value: item.toString(),
-                    option: city?.text || item.toString()
-                };
-            }),
-            ...(value.jobTypes || []).map((item: number) => {
-                const feature = featuresData.data.find((f: FeatureItem) => f.id === item);
-                return {
-                    value: item.toString(),
-                    option: feature?.name || item.toString()
-                };
-            }),
-            ...(value.items || []).map((item: number) => {
-                const feature = featuresData.data.find((f: FeatureItem) => f.id === item);
-                return {
-                    value: item.toString(),
-                    option: feature?.name || item.toString()
-                };
-            }),
-            ...(value.conditions || []).map((item: number) => {
-                const feature = featuresData.data.find((f: FeatureItem) => f.id === item);
-                return {
-                    value: item.toString(),
-                    option: feature?.name || item.toString()
-                };
-            }),
-            ...(value.employmentTypes || []).map((item: number) => {
-                const feature = featuresData.data.find((f: FeatureItem) => f.id === item);
-                return {
-                    value: item.toString(),
-                    option: feature?.name || item.toString()
-                };
-            }),
-        ];
-        setSearchTags(tagList);
-        
         const url = getFilterJobUrl(value, featuresData.data);
         const params = new URLSearchParams();
         params.set('page', currentPage.toString());
