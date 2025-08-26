@@ -155,8 +155,14 @@ export default function JobMngPage() {
     setCurrentPage(page)
   }
 
-  const onClickAddNewJob = () => {
-    router.push('/mypage/job_mng/post-new')
+  const onClickAddNewJob = (event?: React.MouseEvent) => {
+    // If Ctrl+click (or Cmd+click on Mac), open in new tab
+    if (event && (event.ctrlKey || event.metaKey)) {
+      window.open('/mypage/job_mng/post-new', '_blank');
+    } else {
+      // Normal click - navigate in same tab
+      router.push('/mypage/job_mng/post-new');
+    }
   }
 
   const onChangeSearchTerm = (e: ChangeEvent<HTMLInputElement>) => {
@@ -167,12 +173,24 @@ export default function JobMngPage() {
     setSearchTerm(tempSearch);
   }
 
-  const onClickEdit = (id: number) => {
-    router.push(`/mypage/job_mng/edit/${id}`)
+  const onClickEdit = (id: number, event?: React.MouseEvent) => {
+    // If Ctrl+click (or Cmd+click on Mac), open in new tab
+    if (event && (event.ctrlKey || event.metaKey)) {
+      window.open(`/mypage/job_mng/edit/${id}`, '_blank');
+    } else {
+      // Normal click - navigate in same tab
+      router.push(`/mypage/job_mng/edit/${id}`);
+    }
   }
 
-  const onClickClone = (id: number) => {
-    router.push(`/mypage/job_mng/post-new?source=${id}`)
+  const onClickClone = (id: number, event?: React.MouseEvent) => {
+    // If Ctrl+click (or Cmd+click on Mac), open in new tab
+    if (event && (event.ctrlKey || event.metaKey)) {
+      window.open(`/mypage/job_mng/post-new?source=${id}`, '_blank');
+    } else {
+      // Normal click - navigate in same tab
+      router.push(`/mypage/job_mng/post-new?source=${id}`);
+    }
   }
 
   const onClickDelete = (id: number) => {
@@ -217,7 +235,7 @@ export default function JobMngPage() {
                 className='bg-blue text-white text-sm h-[40px]'
                 size="small"
                 leftIcon={<span className="mr-1 flex items-center"><svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 md:h-6 md:w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" /></svg></span>}
-                onClick={onClickAddNewJob}
+                onClick={(e) => onClickAddNewJob(e)}
               />
             </div>
             <div className="flex flex-row items-center space-x-2">
@@ -488,7 +506,7 @@ export default function JobMngPage() {
                       <CButton
                         text="ページ修正"
                         className="bg-orange h-[40px] rounded-none text-white text-sm w-full"
-                        onClick={() => onClickEdit(job.id)}
+                        onClick={(e) => onClickEdit(job.id, e)}
                       />
                     </div>
 
@@ -496,7 +514,7 @@ export default function JobMngPage() {
                       <CButton
                         text="複製"
                         className="bg-blue h-[40px] rounded-none text-white text-sm w-full"
-                        onClick={() => onClickClone(job.id)}
+                        onClick={(e) => onClickClone(job.id, e)}
                       />
                     </div>
 
