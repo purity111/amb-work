@@ -1,6 +1,6 @@
 "use client";
 
-import { useAuthContext } from '@/app/layout';
+import { useAuthContext } from '@/hooks/useAuthContext';
 import LinkButton from "@/components/LinkButton";
 import { useMemo } from 'react';
 import { menuItemsByRole, MenuItem } from '@/components/Sidebar';

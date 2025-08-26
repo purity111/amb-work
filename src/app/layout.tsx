@@ -1,11 +1,3 @@
-'use client';
-
-import { ToastContainer } from "react-toastify";
-import { createContext, useContext, useState } from "react";
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import Header from "@/components/Header";
-import FixedBottomBar from "@/components/FixedBottomBar";
-import { useAuth } from "@/hooks/useAuth";
 import LayoutWrapper from "./layoutWrapper";
 import "./globals.css";
 import 'swiper/css';
@@ -13,42 +5,35 @@ import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import "react-datepicker/dist/react-datepicker.css";
 import { Inter } from "next/font/google";
-import { usePathname } from "next/navigation";
-import Head from "next/head";
-
-const AuthContext = createContext<ReturnType<typeof useAuth> | null>(null);
-
+import Script from "next/script";
+import ClientLayout from "@/components/ClientLayout";
 // 👇 Load Google Font
 const inter = Inter({ subsets: ['latin'], display: 'swap' });
-
-export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const auth = useAuth();
-  return <AuthContext.Provider value={auth}>{children}</AuthContext.Provider>;
-};
-
-export const useAuthContext = () => {
-  const context = useContext(AuthContext);
-  if (!context) throw new Error('useAuthContext must be used within AuthProvider');
-  return context;
-};
 
 export default function HomeLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const [queryClient] = useState(() => new QueryClient());
-  const pathname = usePathname();
-  // Hide FixedBottomBar on /job-openings/recruit/[id] page
-  const hideFixedBottomBar =
-    ["/job-openings/recruit/", "/mypage"].some(prefix => pathname?.startsWith(prefix));
-  
-  // Hide Header on campaign page
-  const hideHeader = pathname?.startsWith("/recycle-tsushin-25summer_campaign");
-
   return (
     <html lang="ja">
-      <Head>
+      <head>
+        {/* Google Tag Manager - Script in head */}
+        <Script
+          id="gtm-script"
+          strategy="beforeInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-587ZVL5');`,
+          }}
+        />
+        {/* End Google Tag Manager */}
+
+
+
         {/* Comprehensive favicon configuration to prevent flashing */}
         <link rel="icon" type="image/x-icon" href="/favicon.ico" />
         <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
@@ -67,7 +52,7 @@ export default function HomeLayout({
         <link rel="preload" href="/favicon.ico" as="image" type="image/x-icon" />
         <link rel="preload" href="/favicon-32x32.png" as="image" type="image/png" />
         {/* Inline favicon as immediate fallback */}
-        <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚀</text></svg>" />
+        {/* <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚀</text></svg>" /> */}
         
         {/* Page Title and SEO */}
         <title>リユース転職｜買取・バイヤーの求人・転職はリユース業界専門サイト</title>
@@ -88,7 +73,7 @@ export default function HomeLayout({
         
         {/* Twitter */}
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:url" content="https://amb.com/" />
+        <meta name="twitter:url" content="https://x.com/Reusetenshoku/" />
         <meta name="twitter:title" content="AMB - 転職支援サービス | あなたの次のキャリアチャンスを見つけましょう" />
         <meta name="twitter:description" content="AMB転職支援サービス - あなたの次のキャリアチャンスを見つけましょう。豊富な求人情報とキャリアコンサルティングで、理想の転職をサポートします。" />
         <meta name="twitter:image" content="/images/logo.png" />
@@ -104,19 +89,41 @@ export default function HomeLayout({
         <link rel="stylesheet" type="text/css" href="https://my183p.com/p/format_css?item_id=gw7V0Ihn&format=div&form_align=&label_align=&radio_float=&checkbox_float=&label_width=0&input_width=0&theme_name=1_1&ver=3" />
         <link rel="stylesheet" type="text/css" href="https://my183p.com/p/mobile_css?item_id=gw7V0Ihn&format=div&form_align=&label_align=&radio_float=&checkbox_float=&label_width=0&input_width=0&theme_name=1_1&ver=3" />
         <link rel="stylesheet" type="text/css" href="https://my183p.com/css/form/myasp-ui-form.css?d=20250810224710" />
-      </Head>
+      </head>
       {/* 👇 Apply the custom font class to <body> */}
       <body className={inter.className}>
+        {/* Google Tag Manager (noscript) */}
+        <noscript>
+          <iframe 
+            src="https://www.googletagmanager.com/ns.html?id=GTM-587ZVL5"
+            height="0" 
+            width="0" 
+            style={{ display: 'none', visibility: 'hidden' }}
+          />
+        </noscript>
         <LayoutWrapper>
-          <QueryClientProvider client={queryClient}>
-            <AuthProvider>
-              {!hideHeader && <Header />}
-              {children}
-              {!hideFixedBottomBar && <FixedBottomBar />}
-              <ToastContainer hideProgressBar={true} />
-            </AuthProvider>
-          </QueryClientProvider>
+          <ClientLayout>
+            {children}
+          </ClientLayout>
         </LayoutWrapper>
+        
+        {/* Google tag (gtag.js) - Script at bottom of body */}
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-X2DZ02E2HE"
+          strategy="afterInteractive"
+        />
+        <Script
+          id="ga4-script"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'G-X2DZ02E2HE');
+            `,
+          }}
+        />
       </body>
     </html>
   );

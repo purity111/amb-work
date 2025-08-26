@@ -1,4 +1,4 @@
-import { useAuthContext } from '@/app/layout';
+import { useAuthContext } from '@/hooks/useAuthContext';
 import { getBookmarkedJobs } from '@/lib/api'
 import { BookmarkedJobsFetchParams } from '@/utils/types'
 import { useQuery } from '@tanstack/react-query'

@@ -15,7 +15,7 @@ import { toast } from 'react-toastify';
 import * as Yup from 'yup';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useAuthContext } from "@/app/layout";
+import { useAuthContext } from "@/hooks/useAuthContext";
 
 const schema = Yup.object().shape({
   calling_name: Yup.string().required('呼出用名称は必須です'),

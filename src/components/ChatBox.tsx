@@ -3,7 +3,7 @@ import { io, Socket } from 'socket.io-client';
 import CInput from "./common/Input";
 import CButton from "./common/Button";
 import { ChatItem, Message } from "@/utils/types";
-import { useAuthContext } from "@/app/layout";
+import { useAuthContext } from "@/hooks/useAuthContext";
 import { useGetChatById } from "@/hooks/useGetChatById";
 import Image from "next/image";
 import { formatMessageDate, getImageFile, linkify } from "@/utils/helper";

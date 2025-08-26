@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { useAuthContext } from '@/app/layout';
+import { useAuthContext } from '@/hooks/useAuthContext';
 import { useGetBookmarkedJobs } from '@/hooks/useGetBookmarkedJobs';
 import FavoriteCard from '@/components/FavoriteCard';
 import Pagination from '@/components/common/Pagination';

@@ -3,6 +3,7 @@ import { useForm, Controller, useWatch } from 'react-hook-form';
 import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import CInput from "../common/Input";
+import PasswordInput from "../common/PasswordInput";
 import RequiredLabel from "../common/RequiredLabel";
 import BirthDateSelect from "../common/BirthDateSelect";
 import { GenderOptions, MonthOptions, PrefectureOptions, ServiceContentOptions } from "@/utils/constants";
@@ -448,11 +449,10 @@ export default function RegisterForJobSeeker({ onSuccess }: FormProps) {
                             name="password"
                             control={control}
                             render={({ field }) => (
-                                <CInput
+                                <PasswordInput
                                     {...field}
                                     isError={!!errors.password}
                                     errorText={errors.password?.message}
-                                    type="password"
                                     height="h-[40px]"
                                     className="rounded-sm placeholder-gray-700"
                                     onChange={(e) => field.onChange(e)}
@@ -472,12 +472,11 @@ export default function RegisterForJobSeeker({ onSuccess }: FormProps) {
                             name="confirmPassword"
                             control={control}
                             render={({ field }) => (
-                                <CInput
+                                <PasswordInput
                                     {...field}
                                     isError={!!errors.confirmPassword}
                                     errorText={errors.confirmPassword?.message}
                                     height="h-[40px]"
-                                    type="password"
                                     className="rounded-sm placeholder-gray-700"
                                     onChange={(e) => field.onChange(e)}
                                 />

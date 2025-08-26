@@ -1,7 +1,7 @@
 "use client";
 
 import { io, Socket } from 'socket.io-client';
-import { useAuthContext } from "@/app/layout";
+import { useAuthContext } from "@/hooks/useAuthContext";
 import CInput from "@/components/common/Input";
 import { useGetChats } from "@/hooks/useGetChats";
 import { useGetJobs } from "@/hooks/useGetJobs";

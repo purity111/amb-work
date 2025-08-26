@@ -15,7 +15,7 @@ import { useParams, useRouter, useSearchParams } from "next/navigation";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "react-toastify";
 import { JobFilterFormValue } from "./JobFilterForm";
-import { useAuthContext } from "@/app/layout";
+import { useAuthContext } from "@/hooks/useAuthContext";
 import { useGetFeatures } from "@/hooks/useGetFeatures";
 import { MapData } from "@/utils/constants";
 import Dialog from '@/components/Dialog';

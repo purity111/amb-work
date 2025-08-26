@@ -3,7 +3,7 @@
 import dynamic from 'next/dynamic';
 import React, { Suspense } from "react";
 import { useState } from "react";
-import { useAuthContext } from "@/app/layout";
+import { useAuthContext } from "@/hooks/useAuthContext";
 import { useParams } from 'next/navigation';
 import AuthModal from "@/components/modal/Auth";
 import PageTitle from '@/components/PageTitle';

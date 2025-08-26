@@ -2,10 +2,11 @@
 
 import React, { useState } from "react";
 import CInput from "../common/Input";
+import PasswordInput from "../common/PasswordInput";
 import { useMutation } from "@tanstack/react-query";
 import { forgotPassword, login } from "@/lib/api";
 import { toast } from "react-toastify";
-import { useAuthContext } from "@/app/layout";
+import { useAuthContext } from "@/hooks/useAuthContext";
 import Spinner from "../common/Spinner";
 import { isValidEmail } from "@/utils/helper";
 import { Profile } from "@/hooks/useAuth";
@@ -175,8 +176,7 @@ export default function LoginModal({ onSuccess, onClose, onNavigateRegister }: L
                             <p className="text-sm text-gray-400 py-2">パスワード</p>
                         </div>
                         <div className="flex-3">
-                            <CInput
-                                type="password"
+                            <PasswordInput
                                 height="h-[40px]"
                                 className="rounded-sm placeholder-gray-700"
                                 onChange={handlePasswordChange}

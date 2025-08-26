@@ -1,6 +1,6 @@
 "use client";
 
-import { useAuthContext } from "@/app/layout";
+import { useAuthContext } from "@/hooks/useAuthContext";
 import CButton from "@/components/common/Button";
 import CInput from "@/components/common/Input";
 import CSelect from "@/components/common/Select";

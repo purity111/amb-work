@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 import CollapsibleItem from "./CollapsableItem";
 import HeaderAvatar from "./HeaderAvatar";
 import { useRouter } from "next/navigation";
-import { useAuthContext } from "@/app/layout";
+import { useAuthContext } from "@/hooks/useAuthContext";
 import api from "@/lib/axios";
 import AuthModal from "./modal/Auth";
 

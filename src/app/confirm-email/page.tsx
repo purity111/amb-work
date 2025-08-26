@@ -5,7 +5,7 @@ import { useMutation } from '@tanstack/react-query';
 import { confirmEmail } from '@/lib/api';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Spinner from '@/components/common/Spinner';
-import { useAuthContext } from '../layout';
+import { useAuthContext } from '@/hooks/useAuthContext';
 
 export default function ConfirmEmailPage() {
     const [errorText, setErrorText] = useState('')

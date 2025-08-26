@@ -1,4 +1,4 @@
-import { useAuthContext } from "@/app/layout";
+import { useAuthContext } from "@/hooks/useAuthContext";
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import useGetCurrentUser from "@/hooks/useGetCurrentUser";

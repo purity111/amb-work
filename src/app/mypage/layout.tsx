@@ -3,7 +3,7 @@
 import { useState, useEffect, Suspense } from "react";
 import Sidebar from '@/components/Sidebar';
 import useWindowSize from "@/hooks/useWindowSize";
-import { AuthProvider } from "@/app/layout";
+import { AuthProvider } from "@/hooks/useAuthContext";
 import FaviconEnforcer from "@/components/FaviconEnforcer";
 
 

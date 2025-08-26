@@ -6,7 +6,7 @@ import { SubmitHandler } from 'react-hook-form';
 import { useMutation } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/navigation';
-import { useAuthContext } from "@/app/layout";
+import { useAuthContext } from "@/hooks/useAuthContext";
 
 import { FeatureItem, PickOption } from '@/utils/types';
 import { createFeatures, updateFeatures, deleteFeatures } from '@/lib/api';

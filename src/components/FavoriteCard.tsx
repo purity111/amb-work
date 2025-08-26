@@ -3,7 +3,7 @@ import Button from './common/Button';
 import CButton from './common/Button';
 import Spinner from './common/Spinner';
 import Image from 'next/image';
-import { useAuthContext } from '@/app/layout';
+import { useAuthContext } from '@/hooks/useAuthContext';
 import { bookmarkJob } from '@/lib/api';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
