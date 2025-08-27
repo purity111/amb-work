@@ -16,7 +16,7 @@ import Image from 'next/image';
 import { CSVLink } from "react-csv";
 import { format } from 'date-fns';
 import { useGetApplicants } from '@/hooks/useGetApplicants';
-import { useAuthContext } from '@/app/layout';
+import { useAuthContext } from '@/hooks/useAuthContext';
 
 function ApplicationMngContent() {
   const [currentPage, setCurrentPage] = useState(1);

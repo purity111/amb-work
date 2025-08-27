@@ -5,7 +5,7 @@ import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Controller, useForm } from 'react-hook-form';
 import RequiredLabel from '@/components/common/RequiredLabel';
-import CInput from '@/components/common/Input';
+import PasswordInput from '@/components/common/PasswordInput';
 import { useMutation } from '@tanstack/react-query';
 import { resetPassword } from '@/lib/api';
 import { toast } from 'react-toastify';
@@ -100,11 +100,10 @@ export default function ResetPasswordPage() {
                                     name="password"
                                     control={control}
                                     render={({ field }) => (
-                                        <CInput
+                                        <PasswordInput
                                             {...field}
                                             isError={!!errors.password}
                                             errorText={errors.password?.message}
-                                            type="password"
                                             height="h-[40px]"
                                             className="rounded-sm placeholder-gray-700"
                                             onChange={(e) => field.onChange(e)}
@@ -124,12 +123,11 @@ export default function ResetPasswordPage() {
                                     name="confirmPassword"
                                     control={control}
                                     render={({ field }) => (
-                                        <CInput
+                                        <PasswordInput
                                             {...field}
                                             isError={!!errors.confirmPassword}
                                             errorText={errors.confirmPassword?.message}
                                             height="h-[40px]"
-                                            type="password"
                                             className="rounded-sm placeholder-gray-700"
                                             onChange={(e) => field.onChange(e)}
                                         />

@@ -3,7 +3,7 @@
 import { FooterButtonList, SocialButtonList } from "@/utils/constants";
 import Image from "next/image";
 import Link from "next/link";
-import { useAuthContext } from "@/app/layout";
+import { useAuthContext } from "@/hooks/useAuthContext";
 import { useState, useEffect } from "react";
 import AuthModal from "./modal/Auth";
 

@@ -6,7 +6,7 @@ import { addDays, format, parse } from 'date-fns';
 import { useGetAllEmployerInfos } from "@/hooks/useGetAllEmployerInfos";
 import { yupResolver } from "@hookform/resolvers/yup";
 import RequiredLabel from "@/components/common/RequiredLabel";
-import { useAuthContext } from "@/app/layout";
+import { useAuthContext } from "@/hooks/useAuthContext";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
 import CSelect from "@/components/common/Select";
 import CInput from "@/components/common/Input";

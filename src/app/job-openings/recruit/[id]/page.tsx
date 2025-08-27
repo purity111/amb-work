@@ -13,7 +13,7 @@ import { useMemo, useRef, useState, useEffect } from "react";
 import { Navigation, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import CButton from '@/components/common/Button';
-import { useAuthContext } from "@/app/layout";
+import { useAuthContext } from "@/hooks/useAuthContext";
 import { useMutation } from '@tanstack/react-query';
 import { bookmarkJob, createApplication, getApplicationsByRole } from '@/lib/api';
 import { toast } from 'react-toastify';

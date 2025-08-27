@@ -4,6 +4,7 @@ import { JobSeekerDetail } from "@/utils/types";
 import RequiredLabel from "../common/RequiredLabel";
 import { Controller, useForm, useWatch } from "react-hook-form";
 import CInput from "../common/Input";
+import PasswordInput from "../common/PasswordInput";
 import { yupResolver } from "@hookform/resolvers/yup";
 import CSelect from "../common/Select";
 import { getEstablishmentDateOptions, getEstablishmentYearOptions } from "@/utils/helper";
@@ -324,11 +325,10 @@ export default function AddJobSeekerModal({ onSubmit, preLoad, onClose }: Regist
                                     name="password"
                                     control={control}
                                     render={({ field }) => (
-                                        <CInput
+                                        <PasswordInput
                                             {...field}
                                             isError={!!errors.password}
                                             errorText={errors.password?.message}
-                                            type="password"
                                             disabled={!!preLoad}
                                             height="h-[40px]"
                                             className="rounded-sm placeholder-gray-700"

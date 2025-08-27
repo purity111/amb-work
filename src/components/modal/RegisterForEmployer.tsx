@@ -3,6 +3,7 @@ import { useForm, Controller, useWatch } from 'react-hook-form';
 import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import CInput from "../common/Input";
+import PasswordInput from "../common/PasswordInput";
 import RequiredLabel from "../common/RequiredLabel";
 import CSelect from "../common/Select";
 import { MonthOptions, PrefectureOptions } from "@/utils/constants";
@@ -482,11 +483,10 @@ export default function RegisterForEmployer({ onSuccess }: FormProps) {
                             name="password"
                             control={control}
                             render={({ field }) => (
-                                <CInput
+                                <PasswordInput
                                     {...field}
                                     isError={!!errors.password}
                                     errorText={errors.password?.message}
-                                    type="password"
                                     height="h-[40px]"
                                     className="rounded-sm placeholder-gray-700"
                                     onChange={(e) => field.onChange(e)}
@@ -506,12 +506,11 @@ export default function RegisterForEmployer({ onSuccess }: FormProps) {
                             name="confirm"
                             control={control}
                             render={({ field }) => (
-                                <CInput
+                                <PasswordInput
                                     {...field}
                                     isError={!!errors.confirm}
                                     errorText={errors.confirm?.message}
                                     height="h-[40px]"
-                                    type="password"
                                     className="rounded-sm placeholder-gray-700"
                                     onChange={(e) => field.onChange(e)}
                                 />

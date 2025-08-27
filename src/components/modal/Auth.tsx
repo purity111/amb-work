@@ -25,7 +25,21 @@ export default function AuthModal({ initialStep, onClose }: RegisterModalProps) 
         if (typeof window !== 'undefined') {
             const params = new URLSearchParams(window.location.search);
             const redirectTo = params.get('redirectTo');
+            const currentPath = window.location.pathname || '';
+            const isOnJobOpenings = currentPath.startsWith('/job-openings');
             onClose()
+            // Special handling for job-openings and its child pages
+            if (isOnJobOpenings && profile.role === 'JobSeeker') {
+                if (profile?.service_content) {
+                    // service_content = 1 → stay on the current job-openings page
+                    return;
+                } else {
+                    // service_content = null → redirect to career counseling
+                    router.push('/career-counseling');
+                    return;
+                }
+            }
+
             if (redirectTo) {
                 router.push(redirectTo);
             } else if (profile.role !== 'JobSeeker') {

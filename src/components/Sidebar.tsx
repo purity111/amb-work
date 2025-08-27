@@ -1,4 +1,4 @@
-import { useAuthContext } from '@/app/layout';
+import { useAuthContext } from '@/hooks/useAuthContext';
 import { useUnsavedChangesPrompt } from '@/hooks/useUnsavedChangesWarning';
 import { usePathname } from 'next/navigation';
 import { useMemo, useState, useEffect } from 'react';
