@@ -20,9 +20,9 @@ export async function GET() {
     "Disallow: /contact_corp_finish",
     "Disallow: /recruiter/finish",
     "",
-    "Sitemap: https://reuse-tenshoku.com/sitemap.xml",
-    "Sitemap: https://reuse-tenshoku.com/jobs-sitemap.xml",
-    "Sitemap: https://reuse-tenshoku.com/columns-sitemap.xml",
+    "Sitemap: https://reuse-tenshoku.com/api/sitemap",
+    "Sitemap: https://reuse-tenshoku.com/api/sitemap/jobs",
+    "Sitemap: https://reuse-tenshoku.com/api/sitemap/columns",
   ].join("\n");
 
   const stagingRobots = [
