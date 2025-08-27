@@ -1,7 +1,7 @@
 /** @type {import('next-sitemap').IConfig} */
 module.exports = {
   siteUrl: process.env.SITE_URL || 'https://reuse-tenshoku.com/',
-  generateRobotsTxt: true,
+  generateRobotsTxt: false, // Disable since we have dynamic robots.txt
   generateIndexSitemap: false,
   outDir: 'public',
   exclude: [
@@ -38,11 +38,6 @@ module.exports = {
           '/recruiter/finish'
         ]
       }
-    ],
-    additionalSitemaps: [
-      'https://reuse-tenshoku.com/sitemap.xml',
-      'https://reuse-tenshoku.com/jobs-sitemap.xml',
-      'https://reuse-tenshoku.com/columns-sitemap.xml'
     ]
   },
   transform: async (config, path) => {
