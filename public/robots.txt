@@ -13,10 +13,6 @@ Disallow: /contact/finish
 Disallow: /contact_corp_finish
 Disallow: /recruiter/finish
 
-# Disallow entire app subdomain
-User-agent: *
-Disallow: /
-
 # Host
 Host: https://reuse-tenshoku.com/
 
