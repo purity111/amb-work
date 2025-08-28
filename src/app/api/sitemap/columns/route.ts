@@ -1,8 +1,23 @@
 import { getColumns } from '@/lib/api';
 import { NextResponse } from 'next/server';
+import { headers } from 'next/headers';
 
 export async function GET() {
   try {
+    // Check if this is the staging domain
+    const headersList = await headers();
+    const host = headersList.get("host") || "";
+    const isStaging = host.startsWith("app.");
+    
+    // Block sitemap access for staging domain
+    if (isStaging) {
+      return new NextResponse('Sitemap not available for staging environment', {
+        status: 404,
+        headers: {
+          'Content-Type': 'text/plain',
+        }
+      });
+    }
     // Get all columns for sitemap
     const columnsResponse = await getColumns({
       page: 1,

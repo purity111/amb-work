@@ -489,7 +489,8 @@ export default function JobMngPage() {
                       {job.public_status === 2 ? (
                         <CButton
                           text="プレビュー"
-                          className="bg-green h-[40px] rounded-none text-white text-sm w-full !cursor-not-allowed"
+                          className="bg-green h-[40px] rounded-none text-white text-sm w-full"
+                          onClick={() => window.open(`/mypage/job_mng/preview/${job.id}`, '_blank')}
                         />
                       ) : (
                         <a href={`/job-openings/recruit/${job.id}`} className="flex-1" target="_blank">

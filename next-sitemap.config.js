@@ -1,8 +1,8 @@
 /** @type {import('next-sitemap').IConfig} */
 module.exports = {
   siteUrl: process.env.SITE_URL || 'https://reuse-tenshoku.com/',
-  generateRobotsTxt: true,
-  generateIndexSitemap: false,
+  generateRobotsTxt: false, // Disable since we have dynamic robots.txt
+  generateIndexSitemap: false, // Disable since we have dynamic sitemaps
   outDir: 'public',
   exclude: [
     '/api/*',
@@ -38,60 +38,6 @@ module.exports = {
           '/recruiter/finish'
         ]
       }
-    ],
-    additionalSitemaps: [
-      'https://reuse-tenshoku.com/sitemap.xml',
-      'https://reuse-tenshoku.com/jobs-sitemap.xml',
-      'https://reuse-tenshoku.com/columns-sitemap.xml'
     ]
-  },
-  transform: async (config, path) => {
-    // Custom transform function for dynamic paths
-    if (path === '/') {
-      return {
-        loc: path,
-        changefreq: 'daily',
-        priority: 1.0,
-        lastmod: new Date().toISOString()
-      }
-    }
-    
-    // Job-related pages
-    if (path.startsWith('/job-openings')) {
-      return {
-        loc: path,
-        changefreq: 'daily',
-        priority: 0.8,
-        lastmod: new Date().toISOString()
-      }
-    }
-    
-    // Column pages
-    if (path.startsWith('/column')) {
-      return {
-        loc: path,
-        changefreq: 'weekly',
-        priority: 0.7,
-        lastmod: new Date().toISOString()
-      }
-    }
-    
-    // Static pages
-    if (['/about', '/business', '/business-new', '/career-counseling', '/company', '/contact', '/experience', '/inexperience', '/interview', '/mid-high', '/qualifications', '/recruiter', '/works'].includes(path)) {
-      return {
-        loc: path,
-        changefreq: 'monthly',
-        priority: 0.6,
-        lastmod: new Date().toISOString()
-      }
-    }
-    
-    // Default values
-    return {
-      loc: path,
-      changefreq: 'weekly',
-      priority: 0.5,
-      lastmod: new Date().toISOString()
-    }
   }
 }
