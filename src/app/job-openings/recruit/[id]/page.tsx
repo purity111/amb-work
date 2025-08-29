@@ -393,7 +393,7 @@ export default function JobPreviewDetails() {
                         { label: '設立年月日', value: job.employer?.establishment_year },
                         { label: '資本金', value: job.employer?.capital_stock },
                         { label: '事業内容', value: job.employer?.business },
-                        { label: 'ウェブサイト', value: job.employer?.home_page_url },
+                        { label: 'ウェブサイト', value: job.employer?.home_page_url ? (<a href={job.employer.home_page_url} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline break-words">{job.employer.home_page_url}</a>) : '' },
                         { label: '掲載期間', value: `${parsePublicDate(job.clinic_public_date_start)} ~ ${parsePublicDate(job.clinic_public_date_end)}` },
                     ].map((row) => (
                         <div key={row.label} className={`flex flex-col sm:flex-row border-b-1 last:border-b-0 border-gray-700`}>
