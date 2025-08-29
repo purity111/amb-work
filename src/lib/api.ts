@@ -293,9 +293,22 @@ export const getColumns = async (param: ColumnFetchParam = {}): Promise<ColumnRe
     return response.data.data;
 };
 
+// Get columns for admin with publish status filter
+export const getColumnsAdmin = async (param: ColumnFetchParam = {}): Promise<ColumnResponse> => {
+    const queryString = toQueryString(param);
+    const response = await api.get(`/columns/admin?${queryString}`);
+    return response.data.data;
+};
+
 // Fetch a single column by id
 export const getColumn = async (id: number): Promise<Column> => {
     const response = await api.get(`/columns/${id}`);
+    return response.data.data;
+};
+
+// Fetch a single column by id for admin (includes draft status)
+export const getColumnAdmin = async (id: number): Promise<Column> => {
+    const response = await api.get(`/columns/admin/${id}`);
     return response.data.data;
 };
 

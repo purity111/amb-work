@@ -545,6 +545,7 @@ export interface Column {
     view_cnt?: number;
     search_cnt?: number;
     favourite_cnt?: number;
+    is_published?: boolean;
     thumbnail?: {
         entity_path: string;
     }
@@ -558,6 +559,7 @@ export interface ColumnFetchParam {
     limit?: number;
     searchTerm?: string;
     category?: string;
+    is_published?: boolean;
 }
 
 export interface ColumnResponse {

@@ -49,6 +49,7 @@ export default function AddColumnModal({ isOpen, onClose, onSuccess }: AddColumn
             title: '',
             category: '', // Ensure default is empty string
             thumbnail: null as File | null,
+            is_published: true, // Default to published
         }
     });
     const [isLoading, setIsLoading] = useState(false);
@@ -87,6 +88,15 @@ export default function AddColumnModal({ isOpen, onClose, onSuccess }: AddColumn
             formData.append('title', values.title);
             formData.append('category', values.category);
             formData.append('content', htmlContent);
+            
+            console.log('AddColumn - values.is_published:', values.is_published);
+            console.log('AddColumn - values.is_published type:', typeof values.is_published);
+            
+            // Ensure is_published is set
+            const isPublishedValue = values.is_published !== undefined ? values.is_published.toString() : 'true';
+            formData.append('is_published', isPublishedValue);
+            console.log('AddColumn - Setting is_published to:', isPublishedValue);
+            
             if (values.thumbnail) {
                 formData.append('thumbnail', values.thumbnail);
             }
@@ -208,6 +218,46 @@ export default function AddColumnModal({ isOpen, onClose, onSuccess }: AddColumn
                                     />
                                 </div>
                             )}
+                        </div>
+                        <div>
+                            <div className="flex items-center gap-1 mb-1">
+                                <label className="block text-sm font-medium">公開状態</label>
+                                <RequiredLabel />
+                            </div>
+                            <Controller
+                                name="is_published"
+                                control={control}
+                                rules={{ 
+                                    validate: (value) => value !== undefined && value !== null || '公開状態を選択してください'
+                                }}
+                                render={({ field }) => (
+                                    <div className="flex gap-4">
+                                        <label className="flex items-center cursor-pointer">
+                                            <input
+                                                type="radio"
+                                                name="is_published"
+                                                value="true"
+                                                checked={field.value === true}
+                                                onChange={() => field.onChange(true)}
+                                                className="mr-2"
+                                            />
+                                            公開
+                                        </label>
+                                        <label className="flex items-center cursor-pointer">
+                                            <input
+                                                type="radio"
+                                                name="is_published"
+                                                value="false"
+                                                checked={field.value === false}
+                                                onChange={() => field.onChange(false)}
+                                                className="mr-2"
+                                            />
+                                            下書き
+                                        </label>
+                                    </div>
+                                )}
+                            />
+                            {errors.is_published && <p className="text-red-500 text-xs mt-1">{errors.is_published.message as string}</p>}
                         </div>
                         <div className="flex gap-3 pt-4">
                             <button

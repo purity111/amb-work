@@ -59,9 +59,17 @@ export default function ColumnCard({ column }: ColumnCardProps) {
                     <h3 className="text-lg font-semibold mb-2 line-clamp-2">
                         {column?.title}
                     </h3>
-                    <div className="">
+                    <div className="flex items-center justify-between">
                         <span>閲覧数: {column?.view_cnt || 0}　　</span>
                         {/* <span>検索: {column?.search_cnt || 0}　　</span> */}
+                        {/* Publish status badge */}
+                        <span className={`ml-2 px-2 py-1 rounded-md text-xs font-medium ${
+                            column.is_published === false 
+                                ? 'bg-red-100 text-red-800 border border-red-200' 
+                                : 'bg-green-100 text-green-800 border border-green-200'
+                        }`}>
+                            {column.is_published === false ? '下書き' : '公開'}
+                        </span>
                         {/* <span>お気に入り: {column?.favourite_cnt || 0}</span> */}
                     </div>
                 </div>
