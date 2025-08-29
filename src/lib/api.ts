@@ -312,6 +312,18 @@ export const getColumnAdmin = async (id: number): Promise<Column> => {
     return response.data.data;
 };
 
+// Fetch a single column by custom_id
+export const getColumnByCustomId = async (customId: number): Promise<Column> => {
+    const response = await api.get(`/columns/${customId}`);
+    return response.data.data;
+};
+
+// Fetch a single column by custom_id for admin (includes draft status)
+export const getColumnByCustomIdAdmin = async (customId: number): Promise<Column> => {
+    const response = await api.get(`/columns/admin/${customId}`);
+    return response.data.data;
+};
+
 // Create a new column
 export const createColumn = async (formData: FormData): Promise<Column> => {
     const response = await api.post('/columns', formData, {

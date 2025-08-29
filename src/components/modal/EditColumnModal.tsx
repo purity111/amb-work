@@ -39,6 +39,7 @@ export default function EditColumnModal({ isOpen, onClose, column }: EditColumnM
         defaultValues: {
             title: '',
             category: '', // Ensure default is empty string
+            custom_id: '' as any,
             thumbnail: null as File | null,
             is_published: true, // Default to published
         }
@@ -48,6 +49,7 @@ export default function EditColumnModal({ isOpen, onClose, column }: EditColumnM
         if (column) {
             setValue('title', column.title);
             setValue('category', column.category);
+            setValue('custom_id', column.custom_id ? column.custom_id.toString() : '' as any);
             setValue('is_published', column.is_published ?? true);
             setHtmlContent(column.content);
             if (column.thumbnail) {
@@ -92,6 +94,7 @@ export default function EditColumnModal({ isOpen, onClose, column }: EditColumnM
             const formData = new FormData();
             formData.append('title', values.title);
             formData.append('category', values.category);
+            formData.append('custom_id', String(values.custom_id || ''));
             formData.append('content', htmlContent);
             
             console.log('EditColumn - values.is_published:', values.is_published);
@@ -178,6 +181,29 @@ export default function EditColumnModal({ isOpen, onClose, column }: EditColumnM
                                             errorText={errors.category?.message}
                                         />
                                     )}
+                                />
+                            </div>
+                            <div>
+                                <div className="flex items-center gap-1 mb-1">
+                                    <label style={{ color: '#333', fontWeight: 'bold' }}>カスタムID</label>
+                                    <RequiredLabel />
+                                </div>
+                                <Input
+                                    type="number"
+                                    {...register('custom_id', { 
+                                        required: 'カスタムIDは必須です',
+                                        validate: (value) => {
+                                            if (!value) return true; // Required validation handles empty values
+                                            const numericValue = Number(value);
+                                            if (isNaN(numericValue) || !Number.isInteger(numericValue) || numericValue <= 0) {
+                                                return 'カスタムIDは正の整数である必要があります';
+                                            }
+                                            return true;
+                                        }
+                                    })}
+                                    placeholder="例: 1001, 2024"
+                                    isError={!!errors.custom_id?.message}
+                                    errorText={errors.custom_id?.message as string}
                                 />
                             </div>
                             <div>
@@ -297,8 +323,11 @@ export default function EditColumnModal({ isOpen, onClose, column }: EditColumnM
                                     remove_linebreaks: false,
                                     entity_encoding: 'raw',
                                     verify_html: false,
-                                    cleanup: true,
-                                    cleanup_on_startup: true,
+                                    cleanup: false,
+                                    cleanup_on_startup: false,
+                                    valid_elements: '*[*]',
+                                    valid_styles: '*[*]',
+                                    extended_valid_elements: '*[*]',
                                     formats: {
                                         p: { block: 'p', title: '段落' },
                                         h1: { block: 'h1', title: '見出し1' },

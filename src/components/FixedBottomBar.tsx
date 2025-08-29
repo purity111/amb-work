@@ -4,7 +4,11 @@ import { useEffect, useState } from 'react';
 import LinkButton from './LinkButton';
 import { getFullUrl } from '@/utils/config';
 
-const FixedBottomBar = () => {
+interface FixedBottomBarProps {
+  hideInMobile?: boolean;
+}
+
+const FixedBottomBar = ({ hideInMobile = false }: FixedBottomBarProps) => {
   const [isVisible, setIsVisible] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
 
@@ -35,6 +39,11 @@ const FixedBottomBar = () => {
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
+
+  // Don't render if hideInMobile is true and we're on mobile
+  if (hideInMobile && isMobile) {
+    return null;
+  }
 
   return (
     <div

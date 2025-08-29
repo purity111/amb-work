@@ -344,22 +344,24 @@ export default function JobList({
     return (
         <div className="pb-10 md:pb-30">
             <div className="py-2 sticky top-20 md:top-25 bg-white z-10 border-b-2 border-gray-700">
-                <div className="flex flex-row items-center">
+                <div className="flex flex-col md:flex-row items-center">
                     <p className="text-lg flex-1">
                         {`検索結果：${totalJobCount}件`}
                     </p>
-                    <Link href='/job-openings'>
+                    <div className="flex flex-row items-center">
+                        <Link href='/job-openings'>
+                            <CButton
+                                text="フィルターをクリア"
+                                className="bg-red text-white rounded-sm mr-2"
+                            />
+                        </Link>
                         <CButton
-                            text="フィルターをクリア"
-                            className="bg-red text-white rounded-sm mr-2"
+                            text="さらに条件を追加する"
+                            leftIcon={<span>+</span>}
+                            className="bg-green text-white rounded-sm"
+                            onClick={() => setFilterModalShown(true)}
                         />
-                    </Link>
-                    <CButton
-                        text="さらに条件を追加する"
-                        leftIcon={<span>+</span>}
-                        className="bg-green text-white rounded-sm"
-                        onClick={() => setFilterModalShown(true)}
-                    />
+                    </div>
                 </div>
                 <div className="my-2 flex flex-row flex-wrap space-x-2 pt-2">
                     {searchTags.map((tag: PickOption) => {
@@ -392,11 +394,11 @@ export default function JobList({
                     <p className="mt-2 text-gray-600">おすすめの求人を読み込み中...</p>
                 </div>
             )}
-            
+
             {recommendJobData.length > 0 && (
                 <div>
                     <h3 className="text-[22px] md:text-[26px] text-bold text-[#007eff]">おすすめの求人</h3>
-                    <div className="mt-8 flex flex-col md:flex-row gap-4">
+                    <div className="mt-8 flex flex-col md:flex-row gap-4 px-3 md:px-0">
                         {recommendJobData.map((job: JobDetail) => (
                             <Link key={job.id} href={`/job-openings/recruit/${job.id}`} className="block w-full mb-5 md:w-1/3">
                                 <div className="relative aspect-[4/3] w-full rounded overflow-hidden shadow hover:shadow-lg transition-shadow bg-white">

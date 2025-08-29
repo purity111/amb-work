@@ -27,41 +27,43 @@ export default function JobOpeningsPage() {
 
     return (
         <>
-            <PageTitle 
+            <PageTitle
                 title={pageInfo.title}
                 description={pageInfo.description}
                 keywords={pageInfo.keywords}
             />
             <Suspense>
                 <div className="narrow-container pt-10 md:pt-20">
-                    <h1 className="job-openings-title text-3xl font-bold text-gray-300 relative mb-10">求人検索結果</h1>
-                    <p className="text-gray-300 text-lg">
+                    <h1 className="job-openings text-3xl font-bold text-center text-gray-300 relative mb-10">求人検索結果</h1>
+                    <p className="text-gray-300 text-lg hidden md:block">
                         リユース・リサイクル・買取業界の求人情報を探すならリユース転職！リユース・リサイクル・買取の最新の求人情報をお届けします。
                     </p>
-                    企業への直接応募をする場合は、
-                    {!isAuthenticated ? (
-                        <>
-                            <span
-                                className="text-blue-600 underline cursor-pointer"
-                                onClick={() => setAuthModalState(2)}
-                            >
-                                会員登録
-                            </span>
-                            ・
-                            <span
-                                className="text-blue-600 underline cursor-pointer"
-                                onClick={() => setAuthModalState(1)}
-                            >
-                                ログイン
-                            </span>
-                        </>
-                    ) : (
-                        <>
-                            <span className="text-gray-400">会員登録</span>・<span className="text-gray-400">ログイン</span>
-                        </>
-                    )}
-                    が必要です。
-                    <p className="text-orange text-lg">
+                    <p className="hidden md:block">
+                        企業への直接応募をする場合は、
+                        {!isAuthenticated ? (
+                            <>
+                                <span
+                                    className="text-blue-600 underline cursor-pointer"
+                                    onClick={() => setAuthModalState(2)}
+                                >
+                                    会員登録
+                                </span>
+                                ・
+                                <span
+                                    className="text-blue-600 underline cursor-pointer"
+                                    onClick={() => setAuthModalState(1)}
+                                >
+                                    ログイン
+                                </span>
+                            </>
+                        ) : (
+                            <>
+                                <span className="text-gray-400">会員登録</span>・<span className="text-gray-400">ログイン</span>
+                            </>
+                        )}
+                        が必要です。
+                    </p>
+                    <p className="text-orange text-lg hidden md:block">
                         専任のキャリアアドバイザーによる転職支援サービス（無料）を受けられる場合は、
                         <a
                             href="/career-counseling"

@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Spinner from '@/components/common/Spinner';
-import { getColumn, getColumnAdmin, deleteColumn } from '@/lib/api';
+import { getColumn, getColumnAdmin, getColumnByCustomId, getColumnByCustomIdAdmin, deleteColumn } from '@/lib/api';
 import type { Column } from '@/utils/types';
 import Footer from '@/components/Footer';
 import CategorySidebar from '@/components/pages/columns/CategorySidebar';
@@ -39,16 +39,24 @@ export default function ColumnDetailPage() {
     
     const isAdmin = profile?.role === 'admin' || profile?.role === 'subadmin';
     
-    // Extract the ID from the params array
+    // Extract the ID or custom_id from the params array
     const paramsArray = params.params as string[];
     
     let id: number | null = null;
+    let customId: number | null = null;
     
     if (paramsArray && paramsArray.length > 0) {
         const firstParam = paramsArray[0];
         if (firstParam.startsWith('column-')) {
+            // Legacy format: column-123
             const idString = firstParam.replace('column-', '');
             id = Number(idString);
+        } else {
+            // New format: direct custom_id number
+            const customIdNumber = Number(firstParam);
+            if (!isNaN(customIdNumber) && Number.isInteger(customIdNumber)) {
+                customId = customIdNumber;
+            }
         }
     }
 
@@ -59,23 +67,33 @@ export default function ColumnDetailPage() {
             return;
         }
         
-        // If no valid ID found, redirect to column list
-        if (!id || isNaN(id)) {
+        // If no valid ID or custom_id found, redirect to column list
+        if (!id && !customId) {
             router.push('/column');
             return;
         }
         
-        // Only fetch data if we have a valid ID
-        if (id) {
-            setIsLoading(true);
-            // Use admin API for admin users to see draft status
-            const apiCall = isAdmin ? getColumnAdmin(id) : getColumn(id);
-            apiCall
-                .then((data) => setColumn(data))
-                .catch(() => setColumn(null))
-                .finally(() => setIsLoading(false));
+        // Fetch data based on what we have
+        setIsLoading(true);
+        let apiCall: Promise<Column>;
+        
+        if (customId) {
+            // Use custom_id API
+            apiCall = isAdmin ? getColumnByCustomIdAdmin(customId) : getColumnByCustomId(customId);
+        } else if (id) {
+            // Use regular ID API
+            apiCall = isAdmin ? getColumnAdmin(id) : getColumn(id);
+        } else {
+            router.push('/column');
+            return;
         }
-    }, [id, paramsArray, router, isAdmin]);
+        
+        apiCall
+            .then((data) => setColumn(data))
+            .catch(() => setColumn(null))
+            .finally(() => setIsLoading(false));
+            
+    }, [id, customId, paramsArray, router, isAdmin]);
 
     const handleCategoryClick = (cat: string) => {
         setSelectedCategory(cat === 'すべて' ? '' : cat);
@@ -109,10 +127,20 @@ export default function ColumnDetailPage() {
     const handleEditModalClose = () => {
         setEditModalOpen(false);
         // Refresh column after edit
-        if (id) {
+        if (id || customId) {
             setIsLoading(true);
-            // Use admin API for admin users to see draft status
-            const apiCall = isAdmin ? getColumnAdmin(id) : getColumn(id);
+            let apiCall: Promise<Column>;
+            
+            if (customId) {
+                // Use custom_id API
+                apiCall = isAdmin ? getColumnByCustomIdAdmin(customId) : getColumnByCustomId(customId);
+            } else if (id) {
+                // Use regular ID API
+                apiCall = isAdmin ? getColumnAdmin(id) : getColumn(id);
+            } else {
+                return;
+            }
+            
             apiCall
                 .then((data) => setColumn(data))
                 .catch(() => setColumn(null))
@@ -128,8 +156,8 @@ export default function ColumnDetailPage() {
         );
     }
 
-    // If no valid ID, show loading (will redirect in useEffect)
-    if (!id || isNaN(id)) {
+    // If no valid ID or custom_id, show loading (will redirect in useEffect)
+    if (!id && !customId) {
         return (
             <div className="flex flex-row justify-center pt-10">
                 <Spinner />
@@ -177,7 +205,7 @@ export default function ColumnDetailPage() {
             </div>
 
             {/* Breadcrumb */}
-            <Breadcrumb />
+            <Breadcrumb lastItemName={column?.title} />
 
             <main className="max-w-[1200px] mx-auto px-4 lg:px-0 mb-8 flex flex-col md:flex-row gap-20 w-full sm:w-[80%] md:w-full">
                 <div className="flex-1 relative md:max-w-[72%]" >
@@ -230,9 +258,108 @@ export default function ColumnDetailPage() {
                         />
                     </div>
                     <div
-                        className="prose w-full m-auto mt-10"
+                        className="column-content w-full m-auto mt-10"
                         dangerouslySetInnerHTML={{ __html: column.content }}
                     />
+
+                    <style jsx global>{`
+                        .column-content {
+                            color: #333 !important;
+                            line-height: 1.6 !important;
+                        }
+                        .column-content h1,
+                        .column-content h2,
+                        .column-content h3,
+                        .column-content h4,
+                        .column-content h5,
+                        .column-content h6 {
+                            font-weight: 600 !important;
+                            color: #111827 !important;
+                            display: block !important;
+                            margin: 0 !important;
+                            padding: 0 !important;
+                        }
+                        .column-content h1 {
+                            font-size: 32px !important;
+                            font-weight: 700 !important;
+                            line-height: 1.2 !important;
+                            margin-top: 32px !important;
+                            margin-bottom: 16px !important;
+                        }
+                        .column-content h2 {
+                            font-size: 28px !important;
+                            font-weight: 600 !important;
+                            line-height: 1.3 !important;
+                            margin-top: 24px !important;
+                            margin-bottom: 12px !important;
+                        }
+                        .column-content h3 {
+                            font-size: 24px !important;
+                            font-weight: 600 !important;
+                            line-height: 1.4 !important;
+                            margin-top: 20px !important;
+                            margin-bottom: 8px !important;
+                        }
+                        .column-content h4 {
+                            font-size: 20px !important;
+                            font-weight: 600 !important;
+                            line-height: 1.4 !important;
+                            margin-top: 16px !important;
+                            margin-bottom: 8px !important;
+                        }
+                        .column-content h5 {
+                            font-size: 18px !important;
+                            font-weight: 600 !important;
+                            line-height: 1.4 !important;
+                            margin-top: 12px !important;
+                            margin-bottom: 4px !important;
+                        }
+                        .column-content h6 {
+                            font-size: 16px !important;
+                            font-weight: 600 !important;
+                            line-height: 1.4 !important;
+                            margin-top: 12px !important;
+                            margin-bottom: 4px !important;
+                        }
+                        .column-content ul,
+                        .column-content ol {
+                            margin: 16px 0 !important;
+                            padding-left: 24px !important;
+                        }
+                        .column-content ul {
+                            list-style-type: disc !important;
+                        }
+                        .column-content ol {
+                            list-style-type: decimal !important;
+                        }
+                        .column-content li {
+                            margin-bottom: 4px !important;
+                            display: list-item !important;
+                            list-style-position: outside !important;
+                        }
+                        .column-content p {
+                            margin-bottom: 16px !important;
+                            line-height: 1.6 !important;
+                        }
+                        .column-content strong {
+                            font-weight: 700 !important;
+                        }
+                        .column-content em {
+                            font-style: italic !important;
+                        }
+                        .column-content a {
+                            color: #3598C4 !important;
+                            text-decoration: underline !important;
+                            transition: color 0.3s ease !important;
+                        }
+                        .column-content a:hover {
+                            color: #2a7da3 !important;
+                            text-decoration: underline !important;
+                        }
+                        .column-content a:visited {
+                            color: #65B729 !important;
+                        }
+                    `}</style>
                 </div>
                 <CategorySidebar
                     categories={categories}
