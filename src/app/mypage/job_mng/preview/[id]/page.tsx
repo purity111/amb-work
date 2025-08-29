@@ -37,13 +37,17 @@ export default function JobPreviewPage() {
 
     // Check if user has access to preview this job
     useEffect(() => {
-        if (profile && !(profile.role === 'Employer' || profile.role === 'admin')) {
+        // Only run access control after profile is loaded
+        if (!profile) return;
+        
+        // Check if user role is allowed to access preview
+        if (!(profile.role === 'Employer' || profile.role === 'admin')) {
             router.replace("/mypage");
             return;
         }
 
-        // If user is Employer, check if they own this job
-        if (profile?.role === 'Employer' && data?.data?.employer_id !== profile.id) {
+        // If user is Employer, check if they own this job (only after data is loaded)
+        if (profile?.role === 'Employer' && data?.data && data?.data?.employer_id !== profile.id) {
             router.replace("/mypage");
             return;
         }
