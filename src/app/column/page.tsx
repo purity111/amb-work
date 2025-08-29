@@ -20,7 +20,7 @@ function ColumnListContent() {
     const initialPage = Number(searchParams.get('page')) || 1;
     const initialLimit = 12;
     const initialSearchTerm = searchParams.get('searchTerm') || '';
-    
+
     const [columns, setColumns] = useState<Column[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState(initialSearchTerm);
@@ -30,13 +30,13 @@ function ColumnListContent() {
     const [limit] = useState(initialLimit);
     const [isAddModalOpen, setAddModalOpen] = useState(false);
     const [publishFilter, setPublishFilter] = useState<string>('all'); // 'all', 'published', 'draft'
-    
+
     const { isAdmin } = useAuth();
 
     // Function to fetch and filter columns data
     const fetchColumns = () => {
         setIsLoading(true);
-        
+
         // Prepare API parameters
         const apiParams: any = {};
         if (category && category !== 'すべて') {
@@ -45,7 +45,7 @@ function ColumnListContent() {
         if (searchTerm) {
             apiParams.searchTerm = searchTerm;
         }
-        
+
         // Always use admin API to show all columns (published and draft) with status badges
         // Apply publish filter only for admin users through dropdown
         if (isAdmin && publishFilter !== 'all') {
@@ -55,10 +55,10 @@ function ColumnListContent() {
                 apiParams.is_published = false;
             }
         }
-        
+
         // Always use admin API to get all columns including draft status
         const apiCall = getColumnsAdmin(apiParams);
-        
+
         apiCall
             .then((data: any) => {
                 // Always using admin API now, which returns 'articles'
@@ -79,7 +79,7 @@ function ColumnListContent() {
 
     // Function to refetch columns data (alias for fetchColumns)
     const refetchColumns = fetchColumns;
-    
+
     const categories = [
         'すべて',
         'コラム',
@@ -128,11 +128,11 @@ function ColumnListContent() {
         if (currentPage > 1) params.set('page', currentPage.toString());
         if (searchTerm) params.set('searchTerm', searchTerm);
         if (category) params.set('category', category);
-        
+
         const newUrl = `/column${params.toString() ? `?${params.toString()}` : ''}`;
         router.push(newUrl);
     }, [currentPage, searchTerm, category, router]);
-    
+
     if (isLoading) {
         return (
             <div className="flex flex-row justify-center pt-10">
@@ -170,6 +170,19 @@ function ColumnListContent() {
 
             <div className="max-w-[1200px] mx-auto px-4 lg:px-0 mb-6">
                 <div className="flex flex-col-reverse md:flex-row gap-5 mb-6 justify-end">
+                    {
+                        isAdmin && (
+                            <select
+                                value={publishFilter}
+                                onChange={(e) => setPublishFilter(e.target.value)}
+                                className="cursor-pointer px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                            >
+                                <option value="all">すべて</option>
+                                <option value="published">公開</option>
+                                <option value="draft">下書き</option>
+                            </select>
+                        )
+                    }
                     <div className="flex justify-center gap-5">
                         <input
                             type="text"
@@ -187,15 +200,6 @@ function ColumnListContent() {
                     </div>
                     {isAdmin && (
                         <div className="flex gap-3 items-center">
-                            <select
-                                value={publishFilter}
-                                onChange={(e) => setPublishFilter(e.target.value)}
-                                className="cursor-pointer px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                            >
-                                <option value="all">すべて</option>
-                                <option value="published">公開</option>
-                                <option value="draft">下書き</option>
-                            </select>
                             <button
                                 className="cursor-pointer bg-blue-500 hover:bg-blue-600 flex items-center text-white px-6 py-3 rounded-lg font-medium transition-colors duration-200 whitespace-nowrap"
                                 onClick={() => setAddModalOpen(true)}
@@ -227,7 +231,7 @@ function ColumnListContent() {
                             コラムが見つかりませんでした。
                         </div>
                     )}
-                    
+
                     {/* Pagination */}
                     {totalPage > 0 && (
                         <div className="flex justify-center mt-8">
@@ -245,14 +249,14 @@ function ColumnListContent() {
                     onCategoryClick={handleCategoryClick}
                 />
             </main>
-            
+
             {/* Add Column Modal */}
-            <AddColumnModal 
-                isOpen={isAddModalOpen} 
-                onClose={() => setAddModalOpen(false)} 
+            <AddColumnModal
+                isOpen={isAddModalOpen}
+                onClose={() => setAddModalOpen(false)}
                 onSuccess={refetchColumns}
             />
-            
+
             <Footer />
         </>
     );
