@@ -40,6 +40,7 @@ export default function EditColumnModal({ isOpen, onClose, column }: EditColumnM
             title: '',
             category: '', // Ensure default is empty string
             thumbnail: null as File | null,
+            is_published: true, // Default to published
         }
     });
 
@@ -47,6 +48,7 @@ export default function EditColumnModal({ isOpen, onClose, column }: EditColumnM
         if (column) {
             setValue('title', column.title);
             setValue('category', column.category);
+            setValue('is_published', column.is_published ?? true);
             setHtmlContent(column.content);
             if (column.thumbnail) {
                 setPreviewImage(column.thumbnail.entity_path);
@@ -91,6 +93,15 @@ export default function EditColumnModal({ isOpen, onClose, column }: EditColumnM
             formData.append('title', values.title);
             formData.append('category', values.category);
             formData.append('content', htmlContent);
+            
+            console.log('EditColumn - values.is_published:', values.is_published);
+            console.log('EditColumn - values.is_published type:', typeof values.is_published);
+            
+            // Ensure is_published is set
+            const isPublishedValue = values.is_published !== undefined ? values.is_published.toString() : 'true';
+            formData.append('is_published', isPublishedValue);
+            console.log('EditColumn - Setting is_published to:', isPublishedValue);
+            
             if (values.thumbnail instanceof File) {
                 formData.append('thumbnail', values.thumbnail);
             }
@@ -198,6 +209,46 @@ export default function EditColumnModal({ isOpen, onClose, column }: EditColumnM
                                     </div>
                                 )}
                             </div>
+                            <div>
+                                <div className="flex items-center gap-1 mb-1">
+                                    <label style={{ color: '#333', fontWeight: 'bold' }}>公開状態</label>
+                                    <RequiredLabel />
+                                </div>
+                                <Controller
+                                    name="is_published"
+                                    control={control}
+                                    rules={{ 
+                                        validate: (value) => value !== undefined && value !== null || '公開状態を選択してください'
+                                    }}
+                                    render={({ field }) => (
+                                        <div className="flex gap-4">
+                                            <label className="flex items-center cursor-pointer">
+                                                <input
+                                                    type="radio"
+                                                    name="is_published"
+                                                    value="true"
+                                                    checked={field.value === true}
+                                                    onChange={() => field.onChange(true)}
+                                                    className="mr-2"
+                                                />
+                                                公開
+                                            </label>
+                                            <label className="flex items-center cursor-pointer">
+                                                <input
+                                                    type="radio"
+                                                    name="is_published"
+                                                    value="false"
+                                                    checked={field.value === false}
+                                                    onChange={() => field.onChange(false)}
+                                                    className="mr-2"
+                                                />
+                                                下書き
+                                            </label>
+                                        </div>
+                                    )}
+                                />
+                                {errors.is_published && <p className="text-red-500 text-xs mt-1">{errors.is_published.message as string}</p>}
+                            </div>
                             <div className="flex gap-3 pt-4">
                                 <button
                                     type="button"
@@ -280,8 +331,10 @@ export default function EditColumnModal({ isOpen, onClose, column }: EditColumnM
                             </button>
                             <button
                                 type="button"
-                                onClick={handleUpdate}
-                                disabled={isLoading || !htmlContent}
+                                onClick={() => {
+                                    handleUpdate();
+                                }}
+                                disabled={isLoading}
                                 className="flex-1 cursor-pointer px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
                             >
                                 更新

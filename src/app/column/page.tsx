@@ -2,7 +2,7 @@
 import { useEffect, useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Spinner from '@/components/common/Spinner';
-import { getColumns } from '@/lib/api';
+import { getColumnsAdmin } from '@/lib/api';
 import type { Column } from '@/utils/types';
 import Footer from '@/components/Footer';
 import CategorySidebar from '@/components/pages/columns/CategorySidebar';
@@ -20,7 +20,7 @@ function ColumnListContent() {
     const initialPage = Number(searchParams.get('page')) || 1;
     const initialLimit = 12;
     const initialSearchTerm = searchParams.get('searchTerm') || '';
-    
+
     const [columns, setColumns] = useState<Column[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState(initialSearchTerm);
@@ -29,45 +29,57 @@ function ColumnListContent() {
     const [totalPage, setTotalPage] = useState(1);
     const [limit] = useState(initialLimit);
     const [isAddModalOpen, setAddModalOpen] = useState(false);
-    
+    const [publishFilter, setPublishFilter] = useState<string>('all'); // 'all', 'published', 'draft'
+
     const { isAdmin } = useAuth();
 
     // Function to fetch and filter columns data
     const fetchColumns = () => {
         setIsLoading(true);
-        getColumns()
-            .then((data) => {
-                // Extract the ColumnItems array from the response
-                const columnItems = data?.ColumnItems || [];
-                let filteredColumns = columnItems;
-                
-                // Filter by category
-                if (category && category !== 'すべて') {
-                    filteredColumns = columnItems.filter(col => col.category === category);
-                }
-                
-                // Filter by search term
-                if (searchTerm) {
-                    filteredColumns = filteredColumns.filter(col => 
-                        col.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                        col.content?.toLowerCase().includes(searchTerm.toLowerCase())
-                    );
-                }
-                
-                setColumns(filteredColumns);
-                setTotalPage(Math.ceil(filteredColumns.length / limit));
+
+        // Prepare API parameters
+        const apiParams: any = {};
+        if (category && category !== 'すべて') {
+            apiParams.category = category;
+        }
+        if (searchTerm) {
+            apiParams.searchTerm = searchTerm;
+        }
+
+        // Always use admin API to show all columns (published and draft) with status badges
+        // Apply publish filter only for admin users through dropdown
+        if (isAdmin && publishFilter !== 'all') {
+            if (publishFilter === 'published') {
+                apiParams.is_published = true;
+            } else if (publishFilter === 'draft') {
+                apiParams.is_published = false;
+            }
+        }
+
+        // Always use admin API to get all columns including draft status
+        const apiCall = getColumnsAdmin(apiParams);
+
+        apiCall
+            .then((data: any) => {
+                // Always using admin API now, which returns 'articles'
+                const columnItems = data?.articles || [];
+                setColumns(columnItems);
+                setTotalPage(Math.ceil(columnItems.length / limit));
                 setCurrentPage(1);
             })
-            .catch((error) => {
+            .catch((error: any) => {
                 console.error('Error fetching columns:', error);
                 setColumns([]);
             })
-            .finally(() => setIsLoading(false));
+            .finally(() => {
+                console.log('Setting isLoading to false');
+                setIsLoading(false);
+            });
     };
 
     // Function to refetch columns data (alias for fetchColumns)
     const refetchColumns = fetchColumns;
-    
+
     const categories = [
         'すべて',
         'コラム',
@@ -85,7 +97,7 @@ function ColumnListContent() {
 
     useEffect(() => {
         fetchColumns();
-    }, [category, searchTerm, limit]);
+    }, [category, searchTerm, limit, publishFilter, isAdmin]);
 
     const handleCategoryClick = (cat: string) => {
         setSelectedCategory(cat === 'すべて' ? '' : cat);
@@ -116,7 +128,7 @@ function ColumnListContent() {
         if (currentPage > 1) params.set('page', currentPage.toString());
         if (searchTerm) params.set('searchTerm', searchTerm);
         if (category) params.set('category', category);
-        
+
         const newUrl = `/column${params.toString() ? `?${params.toString()}` : ''}`;
         router.push(newUrl);
     }, [currentPage, searchTerm, category, router]);
@@ -158,6 +170,19 @@ function ColumnListContent() {
 
             <div className="max-w-[1200px] mx-auto px-4 lg:px-0 mb-6">
                 <div className="flex flex-col-reverse md:flex-row gap-5 mb-6 justify-end">
+                    {
+                        isAdmin && (
+                            <select
+                                value={publishFilter}
+                                onChange={(e) => setPublishFilter(e.target.value)}
+                                className="cursor-pointer px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                            >
+                                <option value="all">すべて</option>
+                                <option value="published">公開</option>
+                                <option value="draft">下書き</option>
+                            </select>
+                        )
+                    }
                     <div className="flex justify-center gap-5">
                         <input
                             type="text"
@@ -174,17 +199,19 @@ function ColumnListContent() {
                         </button>
                     </div>
                     {isAdmin && (
-                        <button
-                            className="m-auto md:m-0 max-w-[110px] cursor-pointer bg-blue-500 hover:bg-blue-600 flex items-center text-white px-6 py-3 rounded-lg font-medium transition-colors duration-200 whitespace-nowrap"
-                            onClick={() => setAddModalOpen(true)}
-                        >
-                            <span className="mr-2 flex items-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 md:h-6 md:w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
-                                </svg>
-                            </span>
-                            追加
-                        </button>
+                        <div className="flex gap-3 items-center">
+                            <button
+                                className="cursor-pointer bg-blue-500 hover:bg-blue-600 flex items-center text-white px-6 py-3 rounded-lg font-medium transition-colors duration-200 whitespace-nowrap"
+                                onClick={() => setAddModalOpen(true)}
+                            >
+                                <span className="mr-2 flex items-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 md:h-6 md:w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+                                    </svg>
+                                </span>
+                                追加
+                            </button>
+                        </div>
                     )}
                 </div>
             </div>
@@ -204,7 +231,7 @@ function ColumnListContent() {
                             コラムが見つかりませんでした。
                         </div>
                     )}
-                    
+
                     {/* Pagination */}
                     {totalPage > 0 && (
                         <div className="flex justify-center mt-8">
@@ -222,14 +249,14 @@ function ColumnListContent() {
                     onCategoryClick={handleCategoryClick}
                 />
             </main>
-            
+
             {/* Add Column Modal */}
-            <AddColumnModal 
-                isOpen={isAddModalOpen} 
-                onClose={() => setAddModalOpen(false)} 
+            <AddColumnModal
+                isOpen={isAddModalOpen}
+                onClose={() => setAddModalOpen(false)}
                 onSuccess={refetchColumns}
             />
-            
+
             <Footer />
         </>
     );

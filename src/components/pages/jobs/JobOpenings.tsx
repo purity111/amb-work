@@ -440,6 +440,7 @@ export default function JobList({
                                     {renderEmploymentTypeTags(job.features)}
                                 </div>
                                 <p className="px-4 pt-3 text-xl font-bold text-gray-300">{job.job_title}</p>
+                                <h5 className="px-4 pt-3 text-sm md:text-base text-gray-300">{job?.employer?.clinic_name}</h5>
                                 <div className="flex flex-col md:flex-row py-8 px-4">
                                     <div className="w-full md:max-w-75 aspect-3/2 relative">
                                         <Image

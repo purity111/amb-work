@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { getRecommendedColumns } from '@/lib/api';
+import type { Column } from '@/utils/types';
 import Image from 'next/image';
 
 interface CategorySidebarProps {
@@ -9,12 +10,19 @@ interface CategorySidebarProps {
 }
 
 const CategorySidebar: React.FC<CategorySidebarProps> = ({ categories, selectedCategory, onCategoryClick }) => {
-    const [recommended, setRecommended] = useState<any[]>([]);
+    const [recommended, setRecommended] = useState<Column[]>([]);
 
     useEffect(() => {
-        getRecommendedColumns().then(setRecommended);
+        getRecommendedColumns().then((columns: Column[]) => {
+            // Filter to only show published columns (is_published = true)
+            const publishedColumns = columns.filter((col: Column) => col.is_published !== false);
+            setRecommended(publishedColumns);
+        });
     }, []);
 
+    useEffect(() => {
+        console.log(recommended);
+    }, [recommended]);
     return (
         <aside className="w-full md:w-64 min-w-[144px]">
             {/* Recommended Columns */}

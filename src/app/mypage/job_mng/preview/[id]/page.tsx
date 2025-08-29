@@ -37,13 +37,17 @@ export default function JobPreviewPage() {
 
     // Check if user has access to preview this job
     useEffect(() => {
-        if (profile && !(profile.role === 'Employer' || profile.role === 'admin')) {
+        // Only run access control after profile is loaded
+        if (!profile) return;
+        
+        // Check if user role is allowed to access preview
+        if (!(profile.role === 'Employer' || profile.role === 'admin')) {
             router.replace("/mypage");
             return;
         }
 
-        // If user is Employer, check if they own this job
-        if (profile?.role === 'Employer' && data?.data?.employer_id !== profile.id) {
+        // If user is Employer, check if they own this job (only after data is loaded)
+        if (profile?.role === 'Employer' && data?.data && data?.data?.employer_id !== profile.id) {
             router.replace("/mypage");
             return;
         }
@@ -264,7 +268,7 @@ export default function JobPreviewPage() {
                         { label: '設立年月日', value: job.employer?.establishment_year || '' },
                         { label: '資本金', value: job.employer?.capital_stock || '' },
                         { label: '事業内容', value: job.employer?.business || '' },
-                        { label: 'ウェブサイト', value: job.employer?.home_page_url || '' },
+                        { label: 'ウェブサイト', value: job.employer?.home_page_url ? (<a href={job.employer.home_page_url} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline break-words">{job.employer.home_page_url}</a>) : '' },
                         { label: '掲載期間', value: `${parsePublicDate(job.clinic_public_date_start)} ~ ${parsePublicDate(job.clinic_public_date_end)}` },
                     ].map((row) => (
                         <div key={row.label} className={`flex flex-col sm:flex-row border-b-1 last:border-b-0 border-gray-700`}>

@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Spinner from '@/components/common/Spinner';
-import { getColumn, deleteColumn } from '@/lib/api';
+import { getColumn, getColumnAdmin, deleteColumn } from '@/lib/api';
 import type { Column } from '@/utils/types';
 import Footer from '@/components/Footer';
 import CategorySidebar from '@/components/pages/columns/CategorySidebar';
@@ -68,12 +68,14 @@ export default function ColumnDetailPage() {
         // Only fetch data if we have a valid ID
         if (id) {
             setIsLoading(true);
-            getColumn(id)
+            // Use admin API for admin users to see draft status
+            const apiCall = isAdmin ? getColumnAdmin(id) : getColumn(id);
+            apiCall
                 .then((data) => setColumn(data))
                 .catch(() => setColumn(null))
                 .finally(() => setIsLoading(false));
         }
-    }, [id, paramsArray, router]);
+    }, [id, paramsArray, router, isAdmin]);
 
     const handleCategoryClick = (cat: string) => {
         setSelectedCategory(cat === 'すべて' ? '' : cat);
@@ -109,7 +111,9 @@ export default function ColumnDetailPage() {
         // Refresh column after edit
         if (id) {
             setIsLoading(true);
-            getColumn(id)
+            // Use admin API for admin users to see draft status
+            const apiCall = isAdmin ? getColumnAdmin(id) : getColumn(id);
+            apiCall
                 .then((data) => setColumn(data))
                 .catch(() => setColumn(null))
                 .finally(() => setIsLoading(false));
@@ -204,7 +208,19 @@ export default function ColumnDetailPage() {
                             {column.title}
                         </h1>
                     </div>
-                    <p className='mb-6 text-sm md:text-md'>{formatDate(column.created)}</p>
+                    <div className="flex items-center gap-4 mb-6">
+                        <p className='text-sm md:text-md'>{formatDate(column.created)}</p>
+                        {/* Show publish status badge only for admin users */}
+                        {isAdmin && (
+                            <span className={`px-3 py-1 rounded-md text-sm font-medium ${
+                                column.is_published === false 
+                                    ? 'bg-red-100 text-red-800 border border-red-200' 
+                                    : 'bg-green-100 text-green-800 border border-green-200'
+                            }`}>
+                                {column.is_published === false ? '下書き' : '公開'}
+                            </span>
+                        )}
+                    </div>
                     <div className="relative md:w-[80%] m-auto aspect-[3/2] mb-4 rounded rounded-[20px] object-contain">
                         <Image
                             src={column.thumbnail?.entity_path || ''}
