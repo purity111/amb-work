@@ -48,6 +48,7 @@ export default function AddColumnModal({ isOpen, onClose, onSuccess }: AddColumn
         defaultValues: {
             title: '',
             category: '', // Ensure default is empty string
+            custom_id: '',
             thumbnail: null as File | null,
             is_published: true, // Default to published
         }
@@ -87,6 +88,9 @@ export default function AddColumnModal({ isOpen, onClose, onSuccess }: AddColumn
             const formData = new FormData();
             formData.append('title', values.title);
             formData.append('category', values.category);
+            if (values.custom_id) {
+                formData.append('custom_id', values.custom_id.toString());
+            }
             formData.append('content', htmlContent);
             
             console.log('AddColumn - values.is_published:', values.is_published);
@@ -174,6 +178,34 @@ export default function AddColumnModal({ isOpen, onClose, onSuccess }: AddColumn
                                         placeholder="カテゴリーを選択"
                                         isError={!!errors.category?.message}
                                         errorText={errors.category?.message}
+                                    />
+                                )}
+                            />
+                        </div>
+                        <div>
+                            <div className="flex items-center gap-1 mb-1">
+                                <label className="block text-sm font-medium">カスタムID</label>
+                            </div>
+                            <Controller
+                                name="custom_id"
+                                control={control}
+                                rules={{ 
+                                    validate: (value) => {
+                                        if (!value) return true; // Optional field
+                                        const numericValue = Number(value);
+                                        if (isNaN(numericValue) || !Number.isInteger(numericValue) || numericValue <= 0) {
+                                            return 'カスタムIDは正の整数である必要があります';
+                                        }
+                                        return true;
+                                    }
+                                }}
+                                render={({ field }) => (
+                                    <Input
+                                        type="number"
+                                        {...field}
+                                        placeholder="例: 1001, 2024 (空白の場合は自動生成)"
+                                        isError={!!errors.custom_id}
+                                        errorText={errors.custom_id?.message as string}
                                     />
                                 )}
                             />

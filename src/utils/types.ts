@@ -542,6 +542,7 @@ export interface Column {
     title: string;
     category: string;
     content: string;
+    custom_id?: number;
     view_cnt?: number;
     search_cnt?: number;
     favourite_cnt?: number;

@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Spinner from '@/components/common/Spinner';
-import { getColumn, getColumnAdmin, deleteColumn } from '@/lib/api';
+import { getColumn, getColumnAdmin, getColumnByCustomId, getColumnByCustomIdAdmin, deleteColumn } from '@/lib/api';
 import type { Column } from '@/utils/types';
 import Footer from '@/components/Footer';
 import CategorySidebar from '@/components/pages/columns/CategorySidebar';
@@ -39,16 +39,24 @@ export default function ColumnDetailPage() {
     
     const isAdmin = profile?.role === 'admin' || profile?.role === 'subadmin';
     
-    // Extract the ID from the params array
+    // Extract the ID or custom_id from the params array
     const paramsArray = params.params as string[];
     
     let id: number | null = null;
+    let customId: number | null = null;
     
     if (paramsArray && paramsArray.length > 0) {
         const firstParam = paramsArray[0];
         if (firstParam.startsWith('column-')) {
+            // Legacy format: column-123
             const idString = firstParam.replace('column-', '');
             id = Number(idString);
+        } else {
+            // New format: direct custom_id number
+            const customIdNumber = Number(firstParam);
+            if (!isNaN(customIdNumber) && Number.isInteger(customIdNumber)) {
+                customId = customIdNumber;
+            }
         }
     }
 
@@ -59,23 +67,33 @@ export default function ColumnDetailPage() {
             return;
         }
         
-        // If no valid ID found, redirect to column list
-        if (!id || isNaN(id)) {
+        // If no valid ID or custom_id found, redirect to column list
+        if (!id && !customId) {
             router.push('/column');
             return;
         }
         
-        // Only fetch data if we have a valid ID
-        if (id) {
-            setIsLoading(true);
-            // Use admin API for admin users to see draft status
-            const apiCall = isAdmin ? getColumnAdmin(id) : getColumn(id);
-            apiCall
-                .then((data) => setColumn(data))
-                .catch(() => setColumn(null))
-                .finally(() => setIsLoading(false));
+        // Fetch data based on what we have
+        setIsLoading(true);
+        let apiCall: Promise<Column>;
+        
+        if (customId) {
+            // Use custom_id API
+            apiCall = isAdmin ? getColumnByCustomIdAdmin(customId) : getColumnByCustomId(customId);
+        } else if (id) {
+            // Use regular ID API
+            apiCall = isAdmin ? getColumnAdmin(id) : getColumn(id);
+        } else {
+            router.push('/column');
+            return;
         }
-    }, [id, paramsArray, router, isAdmin]);
+        
+        apiCall
+            .then((data) => setColumn(data))
+            .catch(() => setColumn(null))
+            .finally(() => setIsLoading(false));
+            
+    }, [id, customId, paramsArray, router, isAdmin]);
 
     const handleCategoryClick = (cat: string) => {
         setSelectedCategory(cat === 'すべて' ? '' : cat);
@@ -109,10 +127,20 @@ export default function ColumnDetailPage() {
     const handleEditModalClose = () => {
         setEditModalOpen(false);
         // Refresh column after edit
-        if (id) {
+        if (id || customId) {
             setIsLoading(true);
-            // Use admin API for admin users to see draft status
-            const apiCall = isAdmin ? getColumnAdmin(id) : getColumn(id);
+            let apiCall: Promise<Column>;
+            
+            if (customId) {
+                // Use custom_id API
+                apiCall = isAdmin ? getColumnByCustomIdAdmin(customId) : getColumnByCustomId(customId);
+            } else if (id) {
+                // Use regular ID API
+                apiCall = isAdmin ? getColumnAdmin(id) : getColumn(id);
+            } else {
+                return;
+            }
+            
             apiCall
                 .then((data) => setColumn(data))
                 .catch(() => setColumn(null))
@@ -128,8 +156,8 @@ export default function ColumnDetailPage() {
         );
     }
 
-    // If no valid ID, show loading (will redirect in useEffect)
-    if (!id || isNaN(id)) {
+    // If no valid ID or custom_id, show loading (will redirect in useEffect)
+    if (!id && !customId) {
         return (
             <div className="flex flex-row justify-center pt-10">
                 <Spinner />

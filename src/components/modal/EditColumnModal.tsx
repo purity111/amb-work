@@ -39,6 +39,7 @@ export default function EditColumnModal({ isOpen, onClose, column }: EditColumnM
         defaultValues: {
             title: '',
             category: '', // Ensure default is empty string
+            custom_id: '',
             thumbnail: null as File | null,
             is_published: true, // Default to published
         }
@@ -48,6 +49,7 @@ export default function EditColumnModal({ isOpen, onClose, column }: EditColumnM
         if (column) {
             setValue('title', column.title);
             setValue('category', column.category);
+            setValue('custom_id', column.custom_id ? column.custom_id.toString() : '');
             setValue('is_published', column.is_published ?? true);
             setHtmlContent(column.content);
             if (column.thumbnail) {
@@ -92,6 +94,9 @@ export default function EditColumnModal({ isOpen, onClose, column }: EditColumnM
             const formData = new FormData();
             formData.append('title', values.title);
             formData.append('category', values.category);
+            if (values.custom_id) {
+                formData.append('custom_id', values.custom_id.toString());
+            }
             formData.append('content', htmlContent);
             
             console.log('EditColumn - values.is_published:', values.is_published);
@@ -178,6 +183,27 @@ export default function EditColumnModal({ isOpen, onClose, column }: EditColumnM
                                             errorText={errors.category?.message}
                                         />
                                     )}
+                                />
+                            </div>
+                            <div>
+                                <div className="flex items-center gap-1 mb-1">
+                                    <label style={{ color: '#333', fontWeight: 'bold' }}>カスタムID</label>
+                                </div>
+                                <Input
+                                    type="number"
+                                    {...register('custom_id', { 
+                                        validate: (value) => {
+                                            if (!value) return true; // Optional field
+                                            const numericValue = Number(value);
+                                            if (isNaN(numericValue) || !Number.isInteger(numericValue) || numericValue <= 0) {
+                                                return 'カスタムIDは正の整数である必要があります';
+                                            }
+                                            return true;
+                                        }
+                                    })}
+                                    placeholder="例: 1001, 2024 (空白の場合は自動生成)"
+                                    isError={!!errors.custom_id?.message}
+                                    errorText={errors.custom_id?.message as string}
                                 />
                             </div>
                             <div>
