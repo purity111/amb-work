@@ -205,7 +205,7 @@ export default function ColumnDetailPage() {
             </div>
 
             {/* Breadcrumb */}
-            <Breadcrumb />
+            <Breadcrumb lastItemName={column?.title} />
 
             <main className="max-w-[1200px] mx-auto px-4 lg:px-0 mb-8 flex flex-col md:flex-row gap-20 w-full sm:w-[80%] md:w-full">
                 <div className="flex-1 relative md:max-w-[72%]" >
@@ -258,9 +258,108 @@ export default function ColumnDetailPage() {
                         />
                     </div>
                     <div
-                        className="prose w-full m-auto mt-10"
+                        className="column-content w-full m-auto mt-10"
                         dangerouslySetInnerHTML={{ __html: column.content }}
                     />
+
+                    <style jsx global>{`
+                        .column-content {
+                            color: #333 !important;
+                            line-height: 1.6 !important;
+                        }
+                        .column-content h1,
+                        .column-content h2,
+                        .column-content h3,
+                        .column-content h4,
+                        .column-content h5,
+                        .column-content h6 {
+                            font-weight: 600 !important;
+                            color: #111827 !important;
+                            display: block !important;
+                            margin: 0 !important;
+                            padding: 0 !important;
+                        }
+                        .column-content h1 {
+                            font-size: 32px !important;
+                            font-weight: 700 !important;
+                            line-height: 1.2 !important;
+                            margin-top: 32px !important;
+                            margin-bottom: 16px !important;
+                        }
+                        .column-content h2 {
+                            font-size: 28px !important;
+                            font-weight: 600 !important;
+                            line-height: 1.3 !important;
+                            margin-top: 24px !important;
+                            margin-bottom: 12px !important;
+                        }
+                        .column-content h3 {
+                            font-size: 24px !important;
+                            font-weight: 600 !important;
+                            line-height: 1.4 !important;
+                            margin-top: 20px !important;
+                            margin-bottom: 8px !important;
+                        }
+                        .column-content h4 {
+                            font-size: 20px !important;
+                            font-weight: 600 !important;
+                            line-height: 1.4 !important;
+                            margin-top: 16px !important;
+                            margin-bottom: 8px !important;
+                        }
+                        .column-content h5 {
+                            font-size: 18px !important;
+                            font-weight: 600 !important;
+                            line-height: 1.4 !important;
+                            margin-top: 12px !important;
+                            margin-bottom: 4px !important;
+                        }
+                        .column-content h6 {
+                            font-size: 16px !important;
+                            font-weight: 600 !important;
+                            line-height: 1.4 !important;
+                            margin-top: 12px !important;
+                            margin-bottom: 4px !important;
+                        }
+                        .column-content ul,
+                        .column-content ol {
+                            margin: 16px 0 !important;
+                            padding-left: 24px !important;
+                        }
+                        .column-content ul {
+                            list-style-type: disc !important;
+                        }
+                        .column-content ol {
+                            list-style-type: decimal !important;
+                        }
+                        .column-content li {
+                            margin-bottom: 4px !important;
+                            display: list-item !important;
+                            list-style-position: outside !important;
+                        }
+                        .column-content p {
+                            margin-bottom: 16px !important;
+                            line-height: 1.6 !important;
+                        }
+                        .column-content strong {
+                            font-weight: 700 !important;
+                        }
+                        .column-content em {
+                            font-style: italic !important;
+                        }
+                        .column-content a {
+                            color: #3598C4 !important;
+                            text-decoration: underline !important;
+                            transition: color 0.3s ease !important;
+                        }
+                        .column-content a:hover {
+                            color: #2a7da3 !important;
+                            text-decoration: underline !important;
+                        }
+                        .column-content a:visited {
+                            color: #65B729 !important;
+                        }
+                    `}</style>
                 </div>
                 <CategorySidebar
                     categories={categories}

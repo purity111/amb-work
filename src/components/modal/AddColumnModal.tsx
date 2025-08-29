@@ -48,7 +48,7 @@ export default function AddColumnModal({ isOpen, onClose, onSuccess }: AddColumn
         defaultValues: {
             title: '',
             category: '', // Ensure default is empty string
-            custom_id: '',
+            custom_id: '' as any,
             thumbnail: null as File | null,
             is_published: true, // Default to published
         }
@@ -88,9 +88,7 @@ export default function AddColumnModal({ isOpen, onClose, onSuccess }: AddColumn
             const formData = new FormData();
             formData.append('title', values.title);
             formData.append('category', values.category);
-            if (values.custom_id) {
-                formData.append('custom_id', values.custom_id.toString());
-            }
+            formData.append('custom_id', String(values.custom_id || ''));
             formData.append('content', htmlContent);
             
             console.log('AddColumn - values.is_published:', values.is_published);
@@ -185,13 +183,15 @@ export default function AddColumnModal({ isOpen, onClose, onSuccess }: AddColumn
                         <div>
                             <div className="flex items-center gap-1 mb-1">
                                 <label className="block text-sm font-medium">カスタムID</label>
+                                <RequiredLabel />
                             </div>
                             <Controller
                                 name="custom_id"
                                 control={control}
                                 rules={{ 
+                                    required: 'カスタムIDは必須です',
                                     validate: (value) => {
-                                        if (!value) return true; // Optional field
+                                        if (!value) return true; // Required validation handles empty values
                                         const numericValue = Number(value);
                                         if (isNaN(numericValue) || !Number.isInteger(numericValue) || numericValue <= 0) {
                                             return 'カスタムIDは正の整数である必要があります';
@@ -203,7 +203,7 @@ export default function AddColumnModal({ isOpen, onClose, onSuccess }: AddColumn
                                     <Input
                                         type="number"
                                         {...field}
-                                        placeholder="例: 1001, 2024 (空白の場合は自動生成)"
+                                        placeholder="例: 1001, 2024"
                                         isError={!!errors.custom_id}
                                         errorText={errors.custom_id?.message as string}
                                     />
@@ -338,8 +338,11 @@ export default function AddColumnModal({ isOpen, onClose, onSuccess }: AddColumn
                                     remove_linebreaks: false,
                                     entity_encoding: 'raw',
                                     verify_html: false,
-                                    cleanup: true,
-                                    cleanup_on_startup: true,
+                                    cleanup: false,
+                                    cleanup_on_startup: false,
+                                    valid_elements: '*[*]',
+                                    valid_styles: '*[*]',
+                                    extended_valid_elements: '*[*]',
                                     formats: {
                                         p: { block: 'p', title: '段落' },
                                         h1: { block: 'h1', title: '見出し1' },
