@@ -112,9 +112,26 @@ export default function AddColumnModal({ isOpen, onClose, onSuccess }: AddColumn
             if (onSuccess) {
                 onSuccess();
             }
-        } catch (error) {
-            toast.error('エラーが発生しました');
-            console.log(error);
+        } catch (error: any) {
+            console.log('AddColumn error:', error);
+            
+            // Check if the error is related to custom_id conflict
+            if (error?.response?.status === 400 || error?.response?.status === 422) {
+                const errorMessage = error?.response?.data?.message || error?.message || '';
+                
+                // Check for custom_id related errors
+                if (errorMessage.toLowerCase().includes('custom_id') || 
+                    errorMessage.toLowerCase().includes('custom id') ||
+                    errorMessage.toLowerCase().includes('duplicate') ||
+                    errorMessage.toLowerCase().includes('already exists') ||
+                    errorMessage.toLowerCase().includes('既に存在')) {
+                    toast.error('このカスタムIDは既に使用されています。別のIDを入力してください。');
+                } else {
+                    toast.error(errorMessage || 'エラーが発生しました');
+                }
+            } else {
+                toast.error('エラーが発生しました');
+            }
             
         } finally {
             setIsLoading(false);
@@ -180,36 +197,7 @@ export default function AddColumnModal({ isOpen, onClose, onSuccess }: AddColumn
                                 )}
                             />
                         </div>
-                        <div>
-                            <div className="flex items-center gap-1 mb-1">
-                                <label className="block text-sm font-medium">カスタムID</label>
-                                <RequiredLabel />
-                            </div>
-                            <Controller
-                                name="custom_id"
-                                control={control}
-                                rules={{ 
-                                    required: 'カスタムIDは必須です',
-                                    validate: (value) => {
-                                        if (!value) return true; // Required validation handles empty values
-                                        const numericValue = Number(value);
-                                        if (isNaN(numericValue) || !Number.isInteger(numericValue) || numericValue <= 0) {
-                                            return 'カスタムIDは正の整数である必要があります';
-                                        }
-                                        return true;
-                                    }
-                                }}
-                                render={({ field }) => (
-                                    <Input
-                                        type="number"
-                                        {...field}
-                                        placeholder="例: 1001, 2024"
-                                        isError={!!errors.custom_id}
-                                        errorText={errors.custom_id?.message as string}
-                                    />
-                                )}
-                            />
-                        </div>
+
                         <div>
                             <div className="flex items-center gap-1 mb-1">
                                 <label className="block text-sm font-medium">サムネイル画像</label>
@@ -310,6 +298,36 @@ export default function AddColumnModal({ isOpen, onClose, onSuccess }: AddColumn
                     </form>
                 ) : (
                     <div className="flex flex-col h-full">
+                        <div className="mb-4">
+                            <div className="flex items-center gap-1 mb-1">
+                                <label className="block text-sm font-medium">カスタムID</label>
+                                <RequiredLabel />
+                            </div>
+                            <Controller
+                                name="custom_id"
+                                control={control}
+                                rules={{ 
+                                    required: 'カスタムIDは必須です',
+                                    validate: (value) => {
+                                        if (!value) return true; // Required validation handles empty values
+                                        const numericValue = Number(value);
+                                        if (isNaN(numericValue) || !Number.isInteger(numericValue) || numericValue <= 0) {
+                                            return 'カスタムIDは正の整数である必要があります';
+                                        }
+                                        return true;
+                                    }
+                                }}
+                                render={({ field }) => (
+                                    <Input
+                                        type="number"
+                                        {...field}
+                                        placeholder="例: 1001, 2024"
+                                        isError={!!errors.custom_id}
+                                        errorText={errors.custom_id?.message as string}
+                                    />
+                                )}
+                            />
+                        </div>
                         <div className="flex-1 mb-4">
                             <Editor
                                 apiKey={process.env.NEXT_PUBLIC_TINYMCE_API_KEY}

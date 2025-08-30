@@ -345,20 +345,20 @@ export default function JobList({
         <div className="pb-10 md:pb-30">
             <div className="py-2 sticky top-20 md:top-25 bg-white z-10 border-b-2 border-gray-700">
                 <div className="flex flex-col md:flex-row items-center">
-                    <p className="text-lg flex-1">
+                    <p className="text-lg flex-1 pb-2">
                         {`検索結果：${totalJobCount}件`}
                     </p>
                     <div className="flex flex-row items-center">
                         <Link href='/job-openings'>
                             <CButton
                                 text="フィルターをクリア"
-                                className="bg-red text-white rounded-sm mr-2"
+                                className="bg-red text-white rounded-sm mr-2 text-xs md:text-base"
                             />
                         </Link>
                         <CButton
                             text="さらに条件を追加する"
-                            leftIcon={<span>+</span>}
-                            className="bg-green text-white rounded-sm"
+                            leftIcon={<span className="text-base pr-2">+</span>}
+                            className="bg-green text-white rounded-sm text-xs md:text-base tracking-[0.18em]"
                             onClick={() => setFilterModalShown(true)}
                         />
                     </div>
@@ -368,7 +368,7 @@ export default function JobList({
                         return (
                             <CButton
                                 key={tag.value}
-                                className="bg-orange mb-2"
+                                className="bg-orange mb-2 text-xs"
                                 size="small"
                                 text={tag.option}
                             />
@@ -398,7 +398,7 @@ export default function JobList({
             {recommendJobData.length > 0 && (
                 <div>
                     <h3 className="text-[22px] md:text-[26px] text-bold text-[#007eff]">おすすめの求人</h3>
-                    <div className="mt-8 flex flex-col md:flex-row gap-4 px-3 md:px-0">
+                    <div className="mt-2 mt-8 flex flex-col md:flex-row gap-4 px-3 md:px-0">
                         {recommendJobData.map((job: JobDetail) => (
                             <Link key={job.id} href={`/job-openings/recruit/${job.id}`} className="block w-full mb-5 md:w-1/3">
                                 <div className="relative aspect-[4/3] w-full rounded overflow-hidden shadow hover:shadow-lg transition-shadow bg-white">
@@ -441,9 +441,9 @@ export default function JobList({
                                     )}
                                     {renderEmploymentTypeTags(job.features)}
                                 </div>
-                                <p className="px-4 pt-3 text-xl font-bold text-gray-300">{job.job_title}</p>
-                                <h5 className="px-4 pt-3 text-sm md:text-base text-gray-300">{job?.employer?.clinic_name}</h5>
-                                <div className="flex flex-col md:flex-row py-8 px-4">
+                                <p className="px-4 pt-3 text-base md:text-xl font-bold text-gray-300">{job.job_title}</p>
+                                <h5 className="px-4 pt-3 text-xs md:text-sm text-gray-300">{job?.employer?.clinic_name}</h5>
+                                <div className="flex flex-col md:flex-row py-4 md:py-8 px-4">
                                     <div className="w-full md:max-w-75 aspect-3/2 relative">
                                         <Image
                                             className="object-cover rounded-tr-[30px]"
@@ -454,8 +454,8 @@ export default function JobList({
                                         />
                                     </div>
                                     <div className="flex-1 mt-6 md:mt-0 md:pl-6">
-                                        <p className="pb-4 border-b-1 border-gray-700">{job.job_lead_statement || 'No description'}</p>
-                                        <div className="flex flex-row py-4 border-b-1 border-gray-700">
+                                        <p className="pb-4 border-b-1 text-xs md:text-base border-gray-700">{job.job_lead_statement || 'No description'}</p>
+                                        <div className="flex flex-row py-4 border-b-1 border-gray-700 text-xs md:text-base">
                                             <div className="flex-1">
                                                 <p>勤務地</p>
                                             </div>
@@ -463,7 +463,7 @@ export default function JobList({
                                                 <p>{getPrefecture(job.features)}</p>
                                             </div>
                                         </div>
-                                        <div className="flex flex-row py-4 border-b-1 border-gray-700">
+                                        <div className="flex flex-row py-4 border-b-1 border-gray-700 text-xs md:text-base">
                                             <div className="flex-1">
                                                 <p>最寄り駅</p>
                                             </div>
@@ -471,7 +471,7 @@ export default function JobList({
                                                 <p>{job.closest_station || ''}</p>
                                             </div>
                                         </div>
-                                        <div className="flex flex-row py-4 border-b-1 border-gray-700">
+                                        <div className="flex flex-row py-4 border-b-1 border-gray-700 text-xs md:text-base">
                                             <div className="flex-1">
                                                 <p>給与</p>
                                             </div>
