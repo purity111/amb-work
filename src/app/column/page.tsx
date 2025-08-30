@@ -2,7 +2,7 @@
 import { useEffect, useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Spinner from '@/components/common/Spinner';
-import { getColumnsAdmin } from '@/lib/api';
+import { getColumns, getColumnsAdmin } from '@/lib/api';
 import type { Column } from '@/utils/types';
 import Footer from '@/components/Footer';
 import CategorySidebar from '@/components/pages/columns/CategorySidebar';
@@ -46,23 +46,30 @@ function ColumnListContent() {
             apiParams.searchTerm = searchTerm;
         }
 
-        // Always use admin API to show all columns (published and draft) with status badges
-        // Apply publish filter only for admin users through dropdown
-        if (isAdmin && publishFilter !== 'all') {
-            if (publishFilter === 'published') {
-                apiParams.is_published = true;
-            } else if (publishFilter === 'draft') {
-                apiParams.is_published = false;
+        // For admin users: use admin API and apply publish filter
+        // For non-admin users: use regular API (only shows published columns)
+        let apiCall;
+        
+        if (isAdmin) {
+            // Apply publish filter only for admin users through dropdown
+            if (publishFilter !== 'all') {
+                if (publishFilter === 'published') {
+                    apiParams.is_published = true;
+                } else if (publishFilter === 'draft') {
+                    apiParams.is_published = false;
+                }
             }
+            // Use admin API to get all columns including draft status
+            apiCall = getColumnsAdmin(apiParams);
+        } else {
+            // Use regular API for non-admin users (only returns published columns)
+            apiCall = getColumns(apiParams);
         }
-
-        // Always use admin API to get all columns including draft status
-        const apiCall = getColumnsAdmin(apiParams);
 
         apiCall
             .then((data: any) => {
-                // Always using admin API now, which returns 'articles'
-                const columnItems = data?.articles || [];
+                // Admin API returns 'articles', regular API returns 'ColumnItems'
+                const columnItems = isAdmin ? (data?.articles || []) : (data?.ColumnItems || []);
                 setColumns(columnItems);
                 setTotalPage(Math.ceil(columnItems.length / limit));
                 setCurrentPage(1);
