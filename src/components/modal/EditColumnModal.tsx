@@ -115,9 +115,26 @@ export default function EditColumnModal({ isOpen, onClose, column }: EditColumnM
             setHtmlContent('');
             setPreviewImage(null);
             onClose();
-        } catch (error) {
-            toast.error('エラーが発生しました');
-            console.log(error);
+        } catch (error: any) {
+            console.log('EditColumn error:', error);
+            
+            // Check if the error is related to custom_id conflict
+            if (error?.response?.status === 400 || error?.response?.status === 422) {
+                const errorMessage = error?.response?.data?.message || error?.message || '';
+                
+                // Check for custom_id related errors
+                if (errorMessage.toLowerCase().includes('custom_id') || 
+                    errorMessage.toLowerCase().includes('custom id') ||
+                    errorMessage.toLowerCase().includes('duplicate') ||
+                    errorMessage.toLowerCase().includes('already exists') ||
+                    errorMessage.toLowerCase().includes('既に存在')) {
+                    toast.error('このカスタムIDは既に使用されています。別のIDを入力してください。');
+                } else {
+                    toast.error(errorMessage || 'エラーが発生しました');
+                }
+            } else {
+                toast.error('エラーが発生しました');
+            }
             
         } finally {
             setIsLoading(false);
@@ -183,29 +200,7 @@ export default function EditColumnModal({ isOpen, onClose, column }: EditColumnM
                                     )}
                                 />
                             </div>
-                            <div>
-                                <div className="flex items-center gap-1 mb-1">
-                                    <label style={{ color: '#333', fontWeight: 'bold' }}>カスタムID</label>
-                                    <RequiredLabel />
-                                </div>
-                                <Input
-                                    type="number"
-                                    {...register('custom_id', { 
-                                        required: 'カスタムIDは必須です',
-                                        validate: (value) => {
-                                            if (!value) return true; // Required validation handles empty values
-                                            const numericValue = Number(value);
-                                            if (isNaN(numericValue) || !Number.isInteger(numericValue) || numericValue <= 0) {
-                                                return 'カスタムIDは正の整数である必要があります';
-                                            }
-                                            return true;
-                                        }
-                                    })}
-                                    placeholder="例: 1001, 2024"
-                                    isError={!!errors.custom_id?.message}
-                                    errorText={errors.custom_id?.message as string}
-                                />
-                            </div>
+
                             <div>
                                 <div className="flex items-center gap-1 mb-1">
                                     <label style={{ color: '#333', fontWeight: 'bold' }}>サムネイル</label>
@@ -295,6 +290,29 @@ export default function EditColumnModal({ isOpen, onClose, column }: EditColumnM
                 ) : (
                     <div className="flex flex-col h-full">
                         {/* Heading only in step 2 */}
+                        <div className="mb-4">
+                            <div className="flex items-center gap-1 mb-1">
+                                <label style={{ color: '#333', fontWeight: 'bold' }}>カスタムID</label>
+                                <RequiredLabel />
+                            </div>
+                            <Input
+                                type="number"
+                                {...register('custom_id', { 
+                                    required: 'カスタムIDは必須です',
+                                    validate: (value) => {
+                                        if (!value) return true; // Required validation handles empty values
+                                        const numericValue = Number(value);
+                                        if (isNaN(numericValue) || !Number.isInteger(numericValue) || numericValue <= 0) {
+                                            return 'カスタムIDは正の整数である必要があります';
+                                        }
+                                        return true;
+                                    }
+                                })}
+                                placeholder="例: 1001, 2024"
+                                isError={!!errors.custom_id?.message}
+                                errorText={errors.custom_id?.message as string}
+                            />
+                        </div>
                         <div className="flex-1 mb-4">
                         <Editor
                                 apiKey={process.env.NEXT_PUBLIC_TINYMCE_API_KEY}
