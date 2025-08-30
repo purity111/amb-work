@@ -18,10 +18,11 @@ export interface PickOption {
 interface EditColumnModalProps {
     isOpen: boolean;
     onClose: () => void;
+    onSuccess?: (updatedColumn: Column) => void;
     column: Column | null;
 }
 
-export default function EditColumnModal({ isOpen, onClose, column }: EditColumnModalProps) {
+export default function EditColumnModal({ isOpen, onClose, onSuccess, column }: EditColumnModalProps) {
     const [step, setStep] = useState(1);
     const [isLoading, setIsLoading] = useState(false);
     const [htmlContent, setHtmlContent] = useState('');
@@ -110,11 +111,27 @@ export default function EditColumnModal({ isOpen, onClose, column }: EditColumnM
             }
             await updateColumn(column.id, formData);
             toast.success('コラムが更新されました');
+            
+            // Create updated column data for potential redirection
+            const updatedColumn: Column = {
+                ...column,
+                title: values.title,
+                category: values.category,
+                custom_id: values.custom_id,
+                content: htmlContent,
+                is_published: values.is_published
+            };
+            
             reset();
             setStep(1);
             setHtmlContent('');
             setPreviewImage(null);
             onClose();
+            
+            // Call onSuccess callback with updated column data
+            if (onSuccess) {
+                onSuccess(updatedColumn);
+            }
         } catch (error: any) {
             console.log('EditColumn error:', error);
             

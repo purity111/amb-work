@@ -148,6 +148,18 @@ export default function ColumnDetailPage() {
         }
     };
 
+    const handleEditSuccess = (updatedColumn: Column) => {
+        // Always redirect to the column-[id] format regardless of custom_id
+        if (updatedColumn.custom_id) {
+            // If column has custom_id, use column-custom_id format
+            router.push(`/column/column-${updatedColumn.custom_id}`);
+        } else {
+            // If no custom_id, use legacy id-based URL format
+            router.push(`/column/column-${updatedColumn.id}`);
+        }
+        // Note: setColumn and other state updates will happen automatically on the new page
+    };
+
     if (isLoading) {
         return (
             <div className="flex flex-row justify-center pt-10">
@@ -368,7 +380,12 @@ export default function ColumnDetailPage() {
                 />
             </main>
             <Footer />
-            <EditColumnModal isOpen={isEditModalOpen} onClose={handleEditModalClose} column={column} />
+            <EditColumnModal 
+                isOpen={isEditModalOpen} 
+                onClose={handleEditModalClose} 
+                onSuccess={handleEditSuccess}
+                column={column} 
+            />
         </>
     );
 }
