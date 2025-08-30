@@ -78,10 +78,10 @@ export default function ColumnDetailPage() {
         let apiCall: Promise<Column>;
         
         if (customId) {
-            // Use custom_id API
+            // For custom_id: admin users use admin API, others use regular API
             apiCall = isAdmin ? getColumnByCustomIdAdmin(customId) : getColumnByCustomId(customId);
         } else if (id) {
-            // Use regular ID API
+            // For regular id: admin users use admin API, others use regular API
             apiCall = isAdmin ? getColumnAdmin(id) : getColumn(id);
         } else {
             router.push('/column');
@@ -132,10 +132,10 @@ export default function ColumnDetailPage() {
             let apiCall: Promise<Column>;
             
             if (customId) {
-                // Use custom_id API
+                // For custom_id: admin users use admin API, others use regular API
                 apiCall = isAdmin ? getColumnByCustomIdAdmin(customId) : getColumnByCustomId(customId);
             } else if (id) {
-                // Use regular ID API
+                // For regular id: admin users use admin API, others use regular API
                 apiCall = isAdmin ? getColumnAdmin(id) : getColumn(id);
             } else {
                 return;
