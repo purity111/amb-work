@@ -11,6 +11,8 @@ import { useGetCareerConsultations } from "@/hooks/useGetCareerConsultations";
 import { PrefectureOptions } from '@/utils/constants';
 import { toast } from 'react-toastify';
 import { deleteCareerConsultation } from '@/lib/api';
+import { CSVLink } from "react-csv";
+import { generateCareerConsultationCSVData } from "@/utils/helper";
 
 export default function CareerInquiryList() {
   const [currentPage, setCurrentPage] = useState(1);
@@ -24,6 +26,13 @@ export default function CareerInquiryList() {
   const { data: response, isLoading } = useGetCareerConsultations({
     page: currentPage,
     limit,
+    searchTerm,
+  });
+
+  // Fetch all consultations for CSV export
+  const { data: allConsultationsResponse } = useGetCareerConsultations({
+    page: 1,
+    limit: 999999,
     searchTerm,
   });
 
@@ -97,7 +106,7 @@ export default function CareerInquiryList() {
     } catch (error) {
       toast.error('削除に失敗しました');
       console.log(error);
-      
+
     }
   };
 
@@ -119,21 +128,43 @@ export default function CareerInquiryList() {
       ) : (
         <div className="overflow-x-auto">
           <h2 className="text-center mb-6 text-[24px] md:text-[32px] font-bold">キャリア相談一覧</h2>
-          {/* Search Bar */}
-          <div className="flex justify-between md:justify-end flex-row items-center mx-auto my-2 space-x-2 w-full sm:w-[80%] md:w-full">
-            <CInput
-              placeholder="検索"
-              height="h-10"
-              className="flex-1 max-w-[180px] sm:max-w-full"
-              onChange={onChangeSearchTerm}
-              value={tempSearch}
-            />
-            <CButton
-              text="検索"
-              className="bg-blue text-white h-[40px]"
-              size="small"
-              onClick={onConfirmSearchTerm}
-            />
+
+          <div className="flex justify-between mb-4">
+            {/* Search Bar */}
+            <div className="flex justify-start items-center gap-2">
+              <CInput
+                placeholder="検索"
+                height="h-10"
+                className="flex-1 max-w-[180px] sm:max-w-full"
+                onChange={onChangeSearchTerm}
+                value={tempSearch}
+              />
+              <CButton
+                text="検索"
+                className="bg-blue text-white h-[40px]"
+                size="small"
+                onClick={onConfirmSearchTerm}
+              />
+            </div>
+            {/* CSV Export Button */}
+            <div className="flex justify-center md:justify-end">
+              {allConsultationsResponse?.data?.careerConsultations?.length > 0 && (
+                <CSVLink
+                  data={generateCareerConsultationCSVData(
+                    allConsultationsResponse.data.careerConsultations ||
+                    allConsultationsResponse.careerConsultations ||
+                    []
+                  )}
+                  filename={`キャリア相談一覧-${format(new Date(), 'yyyy年MM月dd日-HHmm')}.csv`}
+                >
+                  <CButton
+                    text="CSV出力"
+                    className="bg-green text-white h-[40px]"
+                    size="small"
+                  />
+                </CSVLink>
+              )}
+            </div>
           </div>
 
           {inquiries.length === 0 ? (
@@ -298,12 +329,12 @@ export default function CareerInquiryList() {
                               className="bg-green-600 hover:bg-green-700 text-white font-bold py-1 px-2 text-xs flex items-center"
                               text="詳細"
                             />
-                          <CButton
-                            onClick={() => handleDelete(inq.id || index)}
+                            <CButton
+                              onClick={() => handleDelete(inq.id || index)}
                               className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 text-xs flex items-center"
-                            text="削除"
-                            leftIcon={(<svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2"><path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>)}
-                          />
+                              text="削除"
+                              leftIcon={(<svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2"><path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>)}
+                            />
                           </div>
                         </td>
                       </tr>

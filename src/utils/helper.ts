@@ -305,3 +305,36 @@ export const generateApplicationCSVData = (data: ApplicationItem[]) => {
         'Job Public To': item.jobInfo?.clinic_public_date_end,
     }))
 }
+
+export const generateCareerConsultationCSVData = (data: any[]) => {
+    // Helper functions for data formatting
+    const experienceLabel = (val: any) => val === 0 || val === '0' ? 'ある' : 'なし';
+    
+    const inquiryLabels: Record<string, string> = {
+        0: '転職相談をしたい',
+        1: 'キャリアカウンセリングを受けたい', 
+        2: '業界情報について話を聞きたい',
+        3: '研修・セミナー内容について知りたい',
+        4: 'その他',
+    };
+
+    // Helper to get prefecture name from value
+    const getPrefectureName = (val: any) => {
+        const found = PrefectureOptions.find(opt => opt.value === String(val));
+        return found ? found.option : '';
+    };
+
+    return data.map(item => ({
+        'ID': item.id || '',
+        'お名前': item.name || '',
+        'メールアドレス': item.email || '',
+        '電話番号': item.telephone || '',
+        '生年月日': item.birthday || '',
+        '都道府県': getPrefectureName(item.prefectures),
+        '経験': experienceLabel(item.experience),
+        'お問い合わせ内容': inquiryLabels[item.inquiry] || item.inquiry || '',
+        '希望職種': item.desired_job_type || '',
+        'ご要望': item.request || '',
+        '作成日時': item.created || '',
+    }));
+}
