@@ -129,7 +129,7 @@ export default function CareerInquiryList() {
         <div className="overflow-x-auto">
           <h2 className="text-center mb-6 text-[24px] md:text-[32px] font-bold">キャリア相談一覧</h2>
 
-          <div className="flex justify-between mb-4">
+          <div className="flex justify-end gap-5 mb-4">
             {/* Search Bar */}
             <div className="flex justify-start items-center gap-2">
               <CInput
