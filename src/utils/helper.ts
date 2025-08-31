@@ -244,9 +244,27 @@ export const getFilterJobUrl = (value: JobFilterFormValue, featureList: FeatureI
         ? featureList.filter((i: FeatureItem) => employmentTypes.includes(i.id)).map((i: FeatureItem) => i.name).join('-')
         : '';
 
-    // Build segments array, only including non-empty segments, in order
-    const segments = [pString, jString, iString, cString, eString].filter(Boolean);
-    return `/job-openings/${segments.join('/')}`;
+    // Build segments array in fixed order: [prefectures, jobTypes, items, conditions, employmentTypes]
+    // Use placeholder for empty segments to maintain proper position mapping
+    const segments = [pString, jString, iString, cString, eString];
+    
+    // Find the last non-empty segment to avoid unnecessary trailing empty segments
+    let lastNonEmptyIndex = -1;
+    for (let i = segments.length - 1; i >= 0; i--) {
+        if (segments[i]) {
+            lastNonEmptyIndex = i;
+            break;
+        }
+    }
+    
+    // If no segments have values, return the base URL
+    if (lastNonEmptyIndex === -1) {
+        return '/job-openings';
+    }
+    
+    // Only include segments up to the last non-empty one, using '-' as placeholder for empty segments
+    const finalSegments = segments.slice(0, lastNonEmptyIndex + 1).map(segment => segment || '-');
+    return `/job-openings/${finalSegments.join('/')}`;
 }
 
 export const generateJobCSVData = (data: JobDetail[], baseURL: string) => {
@@ -255,8 +273,8 @@ export const generateJobCSVData = (data: JobDetail[], baseURL: string) => {
         '会社名': item.employer.clinic_name,
         '求人名': item.job_title,
         '設定タグ': item.features.map(i => i.name).join(', '),
-        '掲載開始日': format(parse(item.clinic_public_date_start, 'yyyymmdd', new Date()), 'yyyy年MM月dd日'),
-        '掲載終了日': item.clinic_public_date_end ? format(parse(item.clinic_public_date_end, 'yyyymmdd', new Date()), 'yyyy年MM月dd日') : '無制限',
+        '掲載開始日': item.clinic_public_date_start,
+        '掲載終了日': item.clinic_public_date_end || '無制限',
         '求人のリンク': `${baseURL}/job-openings/recruit/${item.id}`,
         '求人閲覧数': item.recruits_count,
         'お気に入り数': item.favourite_count,
@@ -286,4 +304,37 @@ export const generateApplicationCSVData = (data: ApplicationItem[]) => {
         'Job Public From': item.jobInfo?.clinic_public_date_start,
         'Job Public To': item.jobInfo?.clinic_public_date_end,
     }))
+}
+
+export const generateCareerConsultationCSVData = (data: any[]) => {
+    // Helper functions for data formatting
+    const experienceLabel = (val: any) => val === 0 || val === '0' ? 'ある' : 'なし';
+    
+    const inquiryLabels: Record<string, string> = {
+        0: '転職相談をしたい',
+        1: 'キャリアカウンセリングを受けたい', 
+        2: '業界情報について話を聞きたい',
+        3: '研修・セミナー内容について知りたい',
+        4: 'その他',
+    };
+
+    // Helper to get prefecture name from value
+    const getPrefectureName = (val: any) => {
+        const found = PrefectureOptions.find(opt => opt.value === String(val));
+        return found ? found.option : '';
+    };
+
+    return data.map(item => ({
+        'ID': item.id || '',
+        'お名前': item.name || '',
+        'メールアドレス': item.email || '',
+        '電話番号': item.telephone || '',
+        '生年月日': item.birthday || '',
+        '都道府県': getPrefectureName(item.prefectures),
+        '経験': experienceLabel(item.experience),
+        'お問い合わせ内容': inquiryLabels[item.inquiry] || item.inquiry || '',
+        '希望職種': item.desired_job_type || '',
+        'ご要望': item.request || '',
+        '作成日時': item.created || '',
+    }));
 }

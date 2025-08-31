@@ -162,10 +162,11 @@ export default function JobList({
     }, [MapData])
 
     const parseFeaturesAndPrefecturesParam = () => {
-        const jArray = jString ? jString.split('-') : [];
-        const iArray = iString ? iString.split('-') : [];
-        const cArray = cString ? cString.split('-') : [];
-        const eArray = eString ? eString.split('-') : [];
+        // Handle placeholder values ('-') by treating them as empty strings
+        const jArray = jString && jString !== '-' ? jString.split('-') : [];
+        const iArray = iString && iString !== '-' ? iString.split('-') : [];
+        const cArray = cString && cString !== '-' ? cString.split('-') : [];
+        const eArray = eString && eString !== '-' ? eString.split('-') : [];
         const parsedFeatures = {
             jobTypes: featuresData.data.filter((i: FeatureItem) => !!jArray.includes(encodeURIComponent(i.name))).map((k: FeatureItem) => k.id),
             items: featuresData.data.filter((i: FeatureItem) => !!iArray.includes(encodeURIComponent(i.name))).map((k: FeatureItem) => k.id),
@@ -175,7 +176,7 @@ export default function JobList({
         setFeatures(parsedFeatures);
         // set prefecture data from url
         const pTemp: string[] = [];
-        const pArray = pString ? pString.split('-') : [];
+        const pArray = pString && pString !== '-' ? pString.split('-') : [];
         pArray.forEach(p => {
             const find = cityAll.find((i) => encodeURIComponent(i.text) === p);
             if (find) pTemp.push(find.id.toString())
