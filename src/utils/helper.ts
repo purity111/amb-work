@@ -244,9 +244,27 @@ export const getFilterJobUrl = (value: JobFilterFormValue, featureList: FeatureI
         ? featureList.filter((i: FeatureItem) => employmentTypes.includes(i.id)).map((i: FeatureItem) => i.name).join('-')
         : '';
 
-    // Build segments array, only including non-empty segments, in order
-    const segments = [pString, jString, iString, cString, eString].filter(Boolean);
-    return `/job-openings/${segments.join('/')}`;
+    // Build segments array in fixed order: [prefectures, jobTypes, items, conditions, employmentTypes]
+    // Use placeholder for empty segments to maintain proper position mapping
+    const segments = [pString, jString, iString, cString, eString];
+    
+    // Find the last non-empty segment to avoid unnecessary trailing empty segments
+    let lastNonEmptyIndex = -1;
+    for (let i = segments.length - 1; i >= 0; i--) {
+        if (segments[i]) {
+            lastNonEmptyIndex = i;
+            break;
+        }
+    }
+    
+    // If no segments have values, return the base URL
+    if (lastNonEmptyIndex === -1) {
+        return '/job-openings';
+    }
+    
+    // Only include segments up to the last non-empty one, using '-' as placeholder for empty segments
+    const finalSegments = segments.slice(0, lastNonEmptyIndex + 1).map(segment => segment || '-');
+    return `/job-openings/${finalSegments.join('/')}`;
 }
 
 export const generateJobCSVData = (data: JobDetail[], baseURL: string) => {
@@ -255,8 +273,8 @@ export const generateJobCSVData = (data: JobDetail[], baseURL: string) => {
         '会社名': item.employer.clinic_name,
         '求人名': item.job_title,
         '設定タグ': item.features.map(i => i.name).join(', '),
-        '掲載開始日': format(parse(item.clinic_public_date_start, 'yyyymmdd', new Date()), 'yyyy年MM月dd日'),
-        '掲載終了日': item.clinic_public_date_end ? format(parse(item.clinic_public_date_end, 'yyyymmdd', new Date()), 'yyyy年MM月dd日') : '無制限',
+        '掲載開始日': item.clinic_public_date_start,
+        '掲載終了日': item.clinic_public_date_end || '無制限',
         '求人のリンク': `${baseURL}/job-openings/recruit/${item.id}`,
         '求人閲覧数': item.recruits_count,
         'お気に入り数': item.favourite_count,
