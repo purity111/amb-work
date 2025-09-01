@@ -364,7 +364,7 @@ export default function JobList({
                         />
                     </div>
                 </div>
-                <div className="my-2 flex flex-row flex-wrap space-x-2 pt-2">
+                <div className="flex flex-row flex-wrap space-x-2 pt-2">
                     {searchTags.map((tag: PickOption) => {
                         return (
                             <CButton
@@ -456,7 +456,7 @@ export default function JobList({
                                     </div>
                                     <div className="flex-1 mt-6 md:mt-0 md:pl-6">
                                         <p className="pb-4 border-b-1 text-xs md:text-base border-gray-700">{job.job_lead_statement || 'No description'}</p>
-                                        <div className="flex flex-row py-4 border-b-1 border-gray-700 text-xs md:text-base">
+                                        <div className="flex flex-row py-3 md:py-4 border-b-1 border-gray-700 text-xs md:text-base">
                                             <div className="flex-1">
                                                 <p>勤務地</p>
                                             </div>
@@ -464,7 +464,7 @@ export default function JobList({
                                                 <p>{getPrefecture(job.features)}</p>
                                             </div>
                                         </div>
-                                        <div className="flex flex-row py-4 border-b-1 border-gray-700 text-xs md:text-base">
+                                        <div className="flex flex-row py-3 md:py-4 border-b-1 border-gray-700 text-xs md:text-base">
                                             <div className="flex-1">
                                                 <p>最寄り駅</p>
                                             </div>
@@ -472,7 +472,7 @@ export default function JobList({
                                                 <p>{job.closest_station || ''}</p>
                                             </div>
                                         </div>
-                                        <div className="flex flex-row py-4 border-b-1 border-gray-700 text-xs md:text-base">
+                                        <div className="flex flex-row py-3 md:py-4 border-b-1 border-gray-700 text-xs md:text-base">
                                             <div className="flex-1">
                                                 <p>給与</p>
                                             </div>

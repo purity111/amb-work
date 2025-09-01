@@ -33,7 +33,7 @@ export default function JobOpeningsPage() {
                 keywords={pageInfo.keywords}
             />
             <Suspense>
-                <div className="narrow-container pt-10 md:pt-20">
+                <div className="narrow-container md:pt-20">
                     <h1 className="job-openings text-3xl font-bold text-center text-gray-300 relative mb-10">求人検索結果</h1>
                     <p className="text-gray-300 text-lg hidden md:block">
                         リユース・リサイクル・買取業界の求人情報を探すならリユース転職！リユース・リサイクル・買取の最新の求人情報をお届けします。
