@@ -1,13 +1,12 @@
 "use client";
 
 import dynamic from 'next/dynamic';
-import React, { Suspense } from "react";
-import { useState } from "react";
+import React, { Suspense, useState } from "react";
 import { useAuthContext } from "@/hooks/useAuthContext";
 import { useParams } from 'next/navigation';
 import AuthModal from "@/components/modal/Auth";
 import PageTitle from '@/components/PageTitle';
-import { getPageTitle } from '@/utils/titles';
+import { getDynamicJobPageInfo } from '@/utils/titles';
 
 // Dynamically import JobList to avoid SSR issues with React Query
 const JobList = dynamic(() => import("@/components/pages/jobs/JobOpenings"), {
@@ -17,13 +16,17 @@ const JobList = dynamic(() => import("@/components/pages/jobs/JobOpenings"), {
 
 export default function JobOpeningsPage() {
     const [authModalState, setAuthModalState] = useState(0); // 1: Login, 2: Register
+    const [jobCount, setJobCount] = useState(0);
     const { isAuthenticated } = useAuthContext();
     const params = useParams();
     // params.params is an array of segments, may be undefined
     const segments = Array.isArray(params?.params) ? params.params : [];
     // Map segments to filters in order: [prefectures, jobTypes, items, conditions, employmentTypes]
     const [prefectures, jobTypes, items, conditions, employmentTypes] = segments;
-    const pageInfo = getPageTitle('jobOpenings');
+    
+    // Get dynamic page info based on filters
+    // Use jobCount if available, otherwise use a placeholder
+    const pageInfo = getDynamicJobPageInfo(segments, jobCount || 0);
 
     return (
         <>
@@ -69,7 +72,7 @@ export default function JobOpeningsPage() {
                             href="/career-counseling"
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="underline text-blue-600 hover:text-orange-800 mx-1"
+                            className="underline text-blue-600 hover:text-orange-800 mx-1" 
                         >
                             転職支援サービス申込みフォーム
                         </a>
@@ -82,6 +85,7 @@ export default function JobOpeningsPage() {
                         items={items}
                         conditions={conditions}
                         employmentTypes={employmentTypes}
+                        onJobCountChange={setJobCount}
                     />
                 </div>
             </Suspense>

@@ -143,7 +143,7 @@ export default function JobPreviewDetails() {
                         </p>
                         <button 
                             onClick={() => router.push('/job-openings')}
-                            className="bg-blue text-white px-6 py-2 rounded hover:bg-blue-600 transition-colors"
+                            className="bg-blue text-white px-6 py-2 rounded cursor-pointer hover:bg-blue-600 transition-colors"
                         >
                             求人検索に戻る
                         </button>
@@ -180,7 +180,7 @@ export default function JobPreviewDetails() {
                     </p>
                     <button 
                         onClick={() => router.push('/job-openings')}
-                        className="bg-blue text-white px-6 py-2 rounded hover:bg-blue-600 transition-colors"
+                        className="bg-blue text-white px-6 py-2 rounded cursor-pointer hover:bg-blue-600 transition-colors"
                     >
                         求人検索に戻る
                     </button>
