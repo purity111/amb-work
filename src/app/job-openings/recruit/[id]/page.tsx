@@ -31,7 +31,7 @@ export default function JobPreviewDetails() {
     const informationSectionRef = useRef<HTMLDivElement | null>(null);
 
     const [authModalState, setAuthModalState] = useState(0); // 1: Login, 2: Register
-    const { data, isLoading } = useGetJobById(Number(id));
+    const { data, isLoading, isError, error } = useGetJobById(Number(id));
     const [width] = useWindowSize();
     const { profile } = useAuthContext();
     const isLoggedIn = !!profile?.role;
@@ -124,9 +124,68 @@ export default function JobPreviewDetails() {
         )
     }
 
+    // Handle error cases more specifically
+    if (isError) {
+        // Check if it's a 404 error (job not found/unpublished/expired)
+        const is404Error = (error as any)?.response?.status === 404 || 
+                          (error as any)?.status === 404 || 
+                          error?.message?.includes('404') ||
+                          error?.message?.includes('not found');
+        
+        if (is404Error) {
+            return (
+                <div className="flex flex-col items-center justify-center min-h-[600px] px-4">
+                    <div className="text-center bg-gray-50 p-8 rounded-lg border border-gray-200 max-w-md">
+                        <h2 className="text-xl font-bold mb-4">求人が見つかりません</h2>
+                        <p className="text-gray-600 mb-6">
+                            この求人は期限切れか、非公開になっている可能性があります。<br />
+                            再度ご確認ください。
+                        </p>
+                        <button 
+                            onClick={() => router.push('/job-openings')}
+                            className="bg-blue text-white px-6 py-2 rounded cursor-pointer hover:bg-blue-600 transition-colors"
+                        >
+                            求人検索に戻る
+                        </button>
+                    </div>
+                </div>
+            )
+        }
+        
+        // For other errors, show generic error message
+        return (
+            <div className="flex flex-col items-center justify-center min-h-[400px] px-4">
+                <div className="text-center bg-gray-50 p-8 rounded-lg border border-gray-200 max-w-md">
+                    <h2 className="text-xl font-bold mb-4">エラーが発生しました</h2>
+                    <p className="text-gray-600 mb-6">求人の詳細を取得できませんでした。</p>
+                    <button 
+                        onClick={() => router.push('/job-openings')}
+                        className="bg-blue text-white px-6 py-2 rounded hover:bg-blue-600 transition-colors"
+                    >
+                        求人検索に戻る
+                    </button>
+                </div>
+            </div>
+        )
+    }
+
     if (!job) {
         return (
-            <p>求人の詳細を取得できませんでした。</p>
+            <div className="flex flex-col items-center justify-center min-h-[400px] px-4">
+                <div className="text-center bg-gray-50 p-8 rounded-lg border border-gray-200 max-w-md">
+                    <h2 className="text-xl font-bold mb-4">求人が見つかりません</h2>
+                    <p className="text-gray-600 mb-6">
+                        この求人は期限切れか、非公開になっている可能性があります。<br />
+                        再度ご確認ください。
+                    </p>
+                    <button 
+                        onClick={() => router.push('/job-openings')}
+                        className="bg-blue text-white px-6 py-2 rounded cursor-pointer hover:bg-blue-600 transition-colors"
+                    >
+                        求人検索に戻る
+                    </button>
+                </div>
+            </div>
         )
     }
 

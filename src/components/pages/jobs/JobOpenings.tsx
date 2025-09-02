@@ -29,13 +29,15 @@ export default function JobList({
     jobTypes: propJobTypes,
     items: propItems,
     conditions: propConditions,
-    employmentTypes: propEmploymentTypes
+    employmentTypes: propEmploymentTypes,
+    onJobCountChange
 }: {
     prefectures?: string,
     jobTypes?: string,
     items?: string,
     conditions?: string,
-    employmentTypes?: string
+    employmentTypes?: string,
+    onJobCountChange?: (count: number) => void
 } = {}) {
     const [isClient, setIsClient] = useState(false);
 
@@ -102,10 +104,15 @@ export default function JobList({
         if (data?.success && data.data) {
             const { jobs, pagination } = data.data;
             setJobData(jobs || []);
-            setTotalJobCount(pagination?.total || 0)
+            const newJobCount = pagination?.total || 0;
+            setTotalJobCount(newJobCount)
             setTotalPageCount(pagination?.totalPages || 0)
+            // Call the callback to update parent component
+            if (onJobCountChange) {
+                onJobCountChange(newJobCount);
+            }
         }
-    }, [data, isLoading])
+    }, [data, isLoading, onJobCountChange])
 
     // Set recommended jobs from the single API call with recommend=1
     useEffect(() => {
@@ -364,7 +371,7 @@ export default function JobList({
                         />
                     </div>
                 </div>
-                <div className="my-2 flex flex-row flex-wrap space-x-2 pt-2">
+                <div className="flex flex-row flex-wrap space-x-2 pt-2">
                     {searchTags.map((tag: PickOption) => {
                         return (
                             <CButton
@@ -433,7 +440,7 @@ export default function JobList({
                     ? 'w-full text-white rounded-sm bg-gray-400 cursor-not-allowed'
                     : `w-full text-white rounded-sm ${isTemplate2 ? 'bg-orange' : 'bg-blue'}`;
                 return (
-                    <div className="mb-10 " key={job.id}>
+                    <div className="mb-4 md:mb-10" key={job.id}>
                         <a href={`/job-openings/recruit/${job.id}`}>
                             <div className="hover:bg-gray-800 rounded-br-none rounded-bl-none rounded-md cursor-pointer">
                                 <div className="flex flex-row space-x-4 pt-3 px-4">
@@ -444,7 +451,7 @@ export default function JobList({
                                 </div>
                                 <p className="px-4 pt-3 text-base md:text-xl font-bold text-gray-300">{job.job_title}</p>
                                 <h5 className="px-4 pt-3 text-xs md:text-sm text-gray-300">{job?.employer?.clinic_name}</h5>
-                                <div className="flex flex-col md:flex-row py-4 md:py-8 px-4">
+                                <div className="flex flex-col md:flex-row py-2 md:py-8 px-4">
                                     <div className="w-full md:max-w-75 aspect-3/2 relative">
                                         <Image
                                             className="object-cover rounded-tr-[30px]"
@@ -456,7 +463,7 @@ export default function JobList({
                                     </div>
                                     <div className="flex-1 mt-6 md:mt-0 md:pl-6">
                                         <p className="pb-4 border-b-1 text-xs md:text-base border-gray-700">{job.job_lead_statement || 'No description'}</p>
-                                        <div className="flex flex-row py-4 border-b-1 border-gray-700 text-xs md:text-base">
+                                        <div className="flex flex-row py-3 md:py-4 border-b-1 border-gray-700 text-xs md:text-base">
                                             <div className="flex-1">
                                                 <p>勤務地</p>
                                             </div>
@@ -464,7 +471,7 @@ export default function JobList({
                                                 <p>{getPrefecture(job.features)}</p>
                                             </div>
                                         </div>
-                                        <div className="flex flex-row py-4 border-b-1 border-gray-700 text-xs md:text-base">
+                                        <div className="flex flex-row py-3 md:py-4 border-b-1 border-gray-700 text-xs md:text-base">
                                             <div className="flex-1">
                                                 <p>最寄り駅</p>
                                             </div>
@@ -472,7 +479,7 @@ export default function JobList({
                                                 <p>{job.closest_station || ''}</p>
                                             </div>
                                         </div>
-                                        <div className="flex flex-row py-4 border-b-1 border-gray-700 text-xs md:text-base">
+                                        <div className="flex flex-row py-3 md:py-4 border-b-1 border-gray-700 text-xs md:text-base">
                                             <div className="flex-1">
                                                 <p>給与</p>
                                             </div>

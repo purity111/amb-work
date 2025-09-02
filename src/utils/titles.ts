@@ -20,8 +20,8 @@ export const PAGE_TITLES = {
     keywords: '求人情報, 転職, 求人検索, 職種, 業界'
   },
   jobOpenings: {
-    title: '求人一覧 | リユース転職',
-    description: '最新の求人情報一覧です。条件に合わせて求人を検索し、理想の転職先を見つけましょう。',
+    title: 'リユース・リサイクル・買取業界専門の求人・転職サービス リユース転職',
+    description: '公開求人数{求人数}件。ブランド品・時計・アパレルなど未経験歓迎求人も多数！リユース業界でのキャリアを徹底サポート。',
     keywords: '求人一覧, 求人検索, 転職, 職種別求人'
   },
   
@@ -135,4 +135,103 @@ export const PAGE_TITLES = {
 
 export const getPageTitle = (page: keyof typeof PAGE_TITLES) => {
   return PAGE_TITLES[page] || PAGE_TITLES.home;
+};
+
+// Import necessary constants for filter parsing
+import { MapData } from "./constants";
+import { OccupationOptions, JobItemOptions, JobConditionOptions } from "./constants";
+
+// Function to get filter display names
+const getFilterDisplayNames = (segments: string[]) => {
+  const [prefectures, jobTypes, items, conditions, employmentTypes] = segments;
+  const filterNames: string[] = [];
+
+  // Parse prefectures
+  if (prefectures && prefectures !== '-') {
+    const pArray = prefectures.split('-');
+    pArray.forEach(p => {
+      const find = MapData.flatMap(region => region.city).find((city) => encodeURIComponent(city.text) === p);
+      if (find) filterNames.push(find.text);
+    });
+  }
+
+  // Parse job types (occupations)
+  if (jobTypes && jobTypes !== '-') {
+    const jArray = jobTypes.split('-');
+    jArray.forEach(j => {
+      const find = OccupationOptions.find(option => encodeURIComponent(option.option) === j);
+      if (find) filterNames.push(find.option);
+    });
+  }
+
+  // Parse items
+  if (items && items !== '-') {
+    const iArray = items.split('-');
+    iArray.forEach(i => {
+      const find = JobItemOptions.find(option => encodeURIComponent(option.option) === i);
+      if (find) filterNames.push(find.option);
+    });
+  }
+
+  // Parse conditions
+  if (conditions && conditions !== '-') {
+    const cArray = conditions.split('-');
+    cArray.forEach(c => {
+      const find = JobConditionOptions.find(option => encodeURIComponent(option.option) === c);
+      if (find) filterNames.push(find.option);
+    });
+  }
+
+  // Parse employment types
+  if (employmentTypes && employmentTypes !== '-') {
+    const eArray = employmentTypes.split('-');
+    eArray.forEach(e => {
+      const find = JobConditionOptions.find(option => encodeURIComponent(option.option) === e);
+      if (find) filterNames.push(find.option);
+    });
+  }
+
+  return filterNames;
+};
+
+// Function to generate dynamic title and description based on filters
+export const getDynamicJobPageInfo = (segments: string[], jobCount: number = 0) => {
+  const filterNames = getFilterDisplayNames(segments);
+  
+  // If no filters applied, return default
+  if (filterNames.length === 0) {
+    const countText = jobCount > 0 ? `${jobCount}件` : '多数';
+    return {
+      title: 'リユース・リサイクル・買取業界専門の求人・転職サービス リユース転職',
+      description: `公開求人数${countText}。ブランド品・時計・アパレルなど未経験歓迎求人も多数！リユース業界でのキャリアを徹底サポート。`,
+      keywords: '求人一覧, 求人検索, 転職, 職種別求人, リユース業界, 買取業界'
+    };
+  }
+
+  // Take up to 3 filters for display
+  const displayFilters = filterNames.slice(0, 3);
+  const filterString = displayFilters.join('・');
+  
+  // Generate title
+  let title: string;
+  if (displayFilters.length === 1) {
+    // Single filter: "東京のバイヤー求人・転職情報｜リユース・リサイクル業界専門の転職サービス リユース転職"
+    title = `${filterString}の求人・転職情報｜リユース・リサイクル業界専門の転職サービス リユース転職`;
+  } else {
+    // Multiple filters: "{検索条件}の転職・求人情報｜リユース・リサイクル・買取業界専門の転職サービス リユース転職"
+    title = `${filterString}の転職・求人情報｜リユース・リサイクル・買取業界専門の転職サービス リユース転職`;
+  }
+
+  // Generate description
+  const countText = jobCount > 0 ? `${jobCount}件` : '多数';
+  const description = `${filterString}の求人検索結果：公開求人数${countText}。「年間休日120日以上」「リモートOK」など、条件に合った検索ができます。ブランド品・時計・アパレルなど未経験歓迎求人も多数！リユース・リサイクル・買取業界専門の転職サービス リユース転職があなたのキャリアを徹底サポートします。`;
+
+  // Generate keywords
+  const keywords = `${filterString}, 求人検索, 転職, リユース業界, 買取業界, ${displayFilters.join(', ')}`;
+
+  return {
+    title,
+    description,
+    keywords
+  };
 };
