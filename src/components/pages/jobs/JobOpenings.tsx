@@ -61,6 +61,7 @@ export default function JobList({
     const [jobseekerApplications, setJobseekerApplications] = useState<number[]>([]);
     const [optimisticBookmarkedSet, setOptimisticBookmarkedSet] = useState<Set<number>>(new Set());
     const [authModalState, setAuthModalState] = useState(0); // 1: Login, 2: Register
+    const [selectedJobIdForAuth, setSelectedJobIdForAuth] = useState<number | null>(null);
 
     const router = useRouter()
     const urlIndexingParam = useParams();
@@ -499,6 +500,7 @@ export default function JobList({
                                     className={`flex-1 border-2 border-yellow text-yellow rounded-sm ${!isLoggedIn ? 'cursor-pointer' : bookmarkShouldBeDisabled ? '!cursor-not-allowed opacity-60' : 'cursor-pointer'}`}
                                     onClick={() => {
                                         if (!isLoggedIn) {
+                                            setSelectedJobIdForAuth(job.id);
                                             setAuthModalState(1);
                                             return;
                                         }
@@ -528,8 +530,10 @@ export default function JobList({
                                     text={applyButtonText}
                                     hasNavIcon
                                     onClick={() => {
-                                        if (!isLoggedIn) setAuthModalState(1);
-                                        else if (profile?.role === 'JobSeeker' && !alreadyApplied) handleApply(job.id);
+                                        if (!isLoggedIn) {
+                                            setSelectedJobIdForAuth(job.id);
+                                            setAuthModalState(1);
+                                        } else if (profile?.role === 'JobSeeker' && !alreadyApplied) handleApply(job.id);
                                         else if (alreadyApplied) router.push('/mypage/application_mng');
                                     }}
                                     className={applyButtonClass}
@@ -551,7 +555,14 @@ export default function JobList({
                 />
             )}
             {authModalState > 0 && (
-                <AuthModal initialStep={authModalState === 1 ? 'Login' : 'Register'} onClose={() => setAuthModalState(0)} />
+                <AuthModal 
+                    initialStep={authModalState === 1 ? 'Login' : 'Register'} 
+                    onClose={() => {
+                        setAuthModalState(0);
+                        setSelectedJobIdForAuth(null);
+                    }}
+                    jobId={selectedJobIdForAuth}
+                />
             )}
             {applyModalShown && (
                 <Dialog
