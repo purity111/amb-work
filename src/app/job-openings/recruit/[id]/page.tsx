@@ -489,7 +489,11 @@ export default function JobPreviewDetails() {
                 />
             )}
             {authModalState > 0 && (
-                <AuthModal initialStep={authModalState === 1 ? 'Login' : 'Register'} onClose={() => setAuthModalState(0)} />
+                <AuthModal 
+                    initialStep={authModalState === 1 ? 'Login' : 'Register'} 
+                    onClose={() => setAuthModalState(0)}
+                    jobId={Number(id)}
+                />
             )}
         </div >
     );

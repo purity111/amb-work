@@ -7,9 +7,10 @@ import { Profile } from "@/hooks/useAuth";
 interface RegisterModalProps {
     initialStep: 'Login' | 'Register';
     onClose: () => void;
+    jobId?: number | null;
 }
 
-export default function AuthModal({ initialStep, onClose }: RegisterModalProps) {
+export default function AuthModal({ initialStep, onClose, jobId }: RegisterModalProps) {
     const [step, setStep] = useState<'Login' | 'Register'>(initialStep);
     const router = useRouter();
 
@@ -28,6 +29,13 @@ export default function AuthModal({ initialStep, onClose }: RegisterModalProps) 
             const currentPath = window.location.pathname || '';
             const isOnJobOpenings = currentPath.startsWith('/job-openings');
             onClose()
+            
+            // If jobId is provided and user is a JobSeeker, redirect to the specific job detail page
+            if (jobId && profile.role === 'JobSeeker') {
+                router.push(`/job-openings/recruit/${jobId}`);
+                return;
+            }
+            
             // Special handling for job-openings and its child pages
             if (isOnJobOpenings && profile.role === 'JobSeeker') {
                 if (profile?.service_content) {
