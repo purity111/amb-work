@@ -78,7 +78,7 @@ export default function SummerCampaignPage() {
                         「ヒトの力」で事業を加速させたい企業様を<br className='md:hidden' />私たちが全力でサポートします！
                     </p>
                     <p className="pt-[30px] md:pt-[50px] text-white text-[22px] md:text-[32px] font-bold">
-                        \ 申込締切：８月３１日まで /
+                        \ 申込締切：９月２６日まで /
                     </p>
                 </div>
 
@@ -148,7 +148,7 @@ export default function SummerCampaignPage() {
                         「ヒトの力」で事業を加速させたい企業様を<br className='md:hidden' />私たちが全力でサポートします！
                     </p>
                     <p className="pt-[30px] md:pt-[50px] text-white text-[22px] md:text-[32px] font-bold">
-                        \ 申込締切：８月３１日まで /
+                        \ 申込締切：９月２６日まで /
                     </p>
                 </div>
 
