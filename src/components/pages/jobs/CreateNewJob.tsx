@@ -80,6 +80,15 @@ const schema = Yup.object().shape({
             if (typeof value === 'string' && value.trim() !== '') return true;
             return false;
         }
+    ).test(
+        'file-size',
+        'ファイルサイズは3MB以下にしてください。',
+        function (value) {
+            if (value instanceof File) {
+                return value.size <= 3 * 1024 * 1024; // 3MB in bytes
+            }
+            return true; // Allow existing URLs
+        }
     ),
     features: Yup.array().of(Yup.string().required()).min(1, '検索条件を入力してください。'), // e.g. ['1-34', '2-24', '4-89']
     introduction: Yup.string().required('求人紹介文は必須項目です。'),
@@ -108,6 +117,12 @@ const schema = Yup.object().shape({
                         return /^https?:\/\/.+\.(jpg|jpeg|png|webp)$/i.test(value);
                     }
                     return false;
+                })
+                .test('file-size', 'ファイルサイズは3MB以下にしてください。', (value) => {
+                    if (value instanceof File) {
+                        return value.size <= 3 * 1024 * 1024; // 3MB in bytes
+                    }
+                    return true; // Allow existing URLs
                 }),
             description: Yup.string().required('説明は必須項目です。'),
         })
@@ -126,6 +141,12 @@ const schema = Yup.object().shape({
                         return /^https?:\/\/.+\.(jpg|jpeg|png|webp)$/i.test(value);
                     }
                     return false;
+                })
+                .test('file-size', 'ファイルサイズは3MB以下にしてください。', (value) => {
+                    if (value instanceof File) {
+                        return value.size <= 3 * 1024 * 1024; // 3MB in bytes
+                    }
+                    return true; // Allow existing URLs
                 }),
             firstName: Yup.string(),
             lastName: Yup.string(),
@@ -561,7 +582,7 @@ export default function CreateNewJobComponent({ preLoad }: CreateNewJobProps) {
                                 <br />
                                 ※推奨横300px×縦220px
                                 <br />
-                                ※最大ファイルサイズは10MBです
+                                ※最大ファイルサイズは3MBです
                             </p>
                         </div>
                     </div>

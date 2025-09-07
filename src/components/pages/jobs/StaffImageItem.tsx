@@ -23,6 +23,12 @@ export default function StaffImageItem({ index, control, errors, setValue, onRem
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
+      // Check file size (3MB limit)
+      if (file.size > 3 * 1024 * 1024) {
+        alert('ファイルサイズは3MB以下にしてください。');
+        return;
+      }
+      
       setFile(file)
       const reader = new FileReader();
       reader.onloadend = () => {
@@ -119,7 +125,7 @@ export default function StaffImageItem({ index, control, errors, setValue, onRem
               )}
               <p className="text-sm text-gray-600">
                 ※拡張子はjpg/png/gifのいずれかです<br />
-                ※最大ファイルサイズは10MBです<br />
+                ※最大ファイルサイズは3MBです<br />
                 ※4:1の比率サイズの画像を載せてください。<br />
                 ※推奨サイズは350×260です。<br />
               </p>

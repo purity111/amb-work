@@ -194,6 +194,11 @@ export default function ChatBox({ data, hasHideButton = false, isHidden, onToggl
     const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file) {
+            // Check file size (3MB limit)
+            if (file.size > 3 * 1024 * 1024) {
+                toast.error('ファイルサイズは3MB以下にしてください。');
+                return;
+            }
             setAttached(file);
         }
     };
