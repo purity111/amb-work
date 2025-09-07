@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import * as Yup from 'yup';
 import { JobSeekerDetail } from "@/utils/types";
 import RequiredLabel from "../common/RequiredLabel";
@@ -8,7 +8,7 @@ import PasswordInput from "../common/PasswordInput";
 import { yupResolver } from "@hookform/resolvers/yup";
 import CSelect from "../common/Select";
 import { getEstablishmentDateOptions, getEstablishmentYearOptions } from "@/utils/helper";
-import { GenderOptions, MonthOptions, PrefectureOptions } from "@/utils/constants";
+import { GenderOptions, MonthOptions, PrefectureOptions, ServiceContentOptions } from "@/utils/constants";
 import CRadioGroup from "../common/RadioGroup";
 
 export type JobSeekerFormValues = {
@@ -22,15 +22,16 @@ export type JobSeekerFormValues = {
     prefecture: string;
     phonenumber: string;
     email: string;
-    password: string;
+    password?: string;
+    service_content: string;
 };
 
-const schema = Yup.object().shape({
+const createSchema = (isEdit: boolean) => Yup.object().shape({
     name: Yup.string()
-        .matches(/^[\u4E00-\u9FAF\u30A0–\u30FF]+$/, '全角の日本語文字のみを入力してください') // Matches common Kanji + Katakana range
+        // .matches(/^[\u4E00-\u9FAF\u30A0–\u30FF]+$/, '全角の日本語文字のみを入力してください') // Matches common Kanji + Katakana range
         .required('必須項目です。'),
     name_kana: Yup.string()
-        .matches(/^[ァ-ヶー　]+$/, '漢字のみを入力してください') // Matches common Kanji range
+        // .matches(/^[ァ-ヶー　]+$/, '漢字のみを入力してください') // Matches common Kanji range
         .required('必須項目です。'),
     dob_year: Yup.number().required(),
     dob_month: Yup.number().required(),
@@ -46,11 +47,14 @@ const schema = Yup.object().shape({
     email: Yup.string()
         .email('無効なメールアドレスです。')
         .required('必須項目です。'),
-    password: Yup.string()
-        .required('必須項目です。')
-        .min(8, '8文字以上である必要があります')
-        .matches(/[0-9]/, '数字を含めてください。')
-        .matches(/[@$!%*?&#]/, '特殊記号を含めてください。'),
+    password: isEdit 
+        ? Yup.string() // Optional for edit mode
+        : Yup.string()
+            .required('必須項目です。')
+            .min(8, '8文字以上である必要があります')
+            .matches(/[0-9]/, '数字を含めてください。')
+            .matches(/[@$!%*?&#]/, '特殊記号を含めてください。'),
+    service_content: Yup.string().required('必須項目です。'),
 });
 
 interface RegisterModalProps {
@@ -60,9 +64,13 @@ interface RegisterModalProps {
 }
 
 export default function AddJobSeekerModal({ onSubmit, preLoad, onClose }: RegisterModalProps) {
+    const isEdit = !!preLoad;
+    const schema = createSchema(isEdit);
+    
     const {
         handleSubmit,
         control,
+        reset,
         formState: { errors, isDirty },
     } = useForm({
         resolver: yupResolver(schema),
@@ -78,9 +86,30 @@ export default function AddJobSeekerModal({ onSubmit, preLoad, onClose }: Regist
             prefecture: preLoad?.prefectures?.toString() || '',
             phonenumber: preLoad?.tel || '',
             email: preLoad?.email || '',
-            password: preLoad ? 'Test1234!' : ''
+            password: preLoad ? 'Test1234!' : '',
+            service_content: preLoad?.service_content?.toString() || '0'
         },
     });
+
+    // Reset form when preLoad data changes
+    useEffect(() => {
+        if (preLoad) {
+            reset({
+                name: preLoad.name || '',
+                name_kana: preLoad.name_kana || '',
+                sex: preLoad.sex?.toString() || '1',
+                dob_year: Number(preLoad.birthdate?.split('-')?.[0]) || 2000,
+                dob_month: Number(preLoad.birthdate?.split('-')?.[1]) || 1,
+                dob_date: Number(preLoad.birthdate?.split('-')?.[2]) || 1,
+                postCode: preLoad.zip || '',
+                prefecture: preLoad.prefectures?.toString() || '',
+                phonenumber: preLoad.tel || '',
+                email: preLoad.email || '',
+                password: 'Test1234!',
+                service_content: preLoad.service_content?.toString() || '0'
+            });
+        }
+    }, [preLoad, reset]);
 
     const dobYear = useWatch({ control, name: 'dob_year' });
     const dobMonth = useWatch({ control, name: 'dob_month' });
@@ -90,7 +119,7 @@ export default function AddJobSeekerModal({ onSubmit, preLoad, onClose }: Regist
             className="fixed inset-0 z-50 flex  justify-center bg-gray-300/80"
         >
             <div className="relative flex flex-col bg-white rounded-lg border-none shadow-xl my-auto w-full max-h-3/4 max-w-3xl pt-6 pb-16 relative border-1 border-gray-700 overflow-hidden">
-                <p className="text-center text-blue text-2xl">{preLoad ? 'Edit a JobSeeker' : 'Create new JobSeeker'}</p>
+                <p className="text-center text-blue text-2xl">{preLoad ? '求職者編集' : 'Create new JobSeeker'}</p>
                 <div className="flex-1 flex flex-col overflow-y-auto px-6">
                     <form onSubmit={handleSubmit(onSubmit)} className="mt-6 space-y-4">
                         <div className="flex flex-col items-start md:flex-row  py-2">
@@ -317,28 +346,51 @@ export default function AddJobSeekerModal({ onSubmit, preLoad, onClose }: Regist
                         </div>
                         <div className="flex flex-col items-start md:flex-row  py-2">
                             <div className="flex-2 flex flex-row items-center">
-                                <p className="text-sm text-gray-400 py-2">パスワード</p>
+                                <p className="text-sm text-gray-400 py-2">転職サポート希望</p>
                                 <RequiredLabel />
                             </div>
                             <div className="flex-3">
                                 <Controller
-                                    name="password"
+                                    name="service_content"
                                     control={control}
                                     render={({ field }) => (
-                                        <PasswordInput
+                                        <CRadioGroup
                                             {...field}
-                                            isError={!!errors.password}
-                                            errorText={errors.password?.message}
-                                            disabled={!!preLoad}
-                                            height="h-[40px]"
-                                            className="rounded-sm placeholder-gray-700"
+                                            options={ServiceContentOptions}
+                                            name="service_content"
+                                            value={field.value}
                                             onChange={(e) => field.onChange(e)}
                                         />
                                     )}
                                 />
-                                <p className="text-[11px] text-gray-600 h-0">8文字以上かつ、半角英数字および特殊記号（!, %, # など）を含めてください。</p>
                             </div>
                         </div>
+                        {!preLoad && (
+                            <div className="flex flex-col items-start md:flex-row  py-2">
+                                <div className="flex-2 flex flex-row items-center">
+                                    <p className="text-sm text-gray-400 py-2">パスワード</p>
+                                    <RequiredLabel />
+                                </div>
+                                <div className="flex-3">
+                                    <Controller
+                                        name="password"
+                                        control={control}
+                                        render={({ field }) => (
+                                            <PasswordInput
+                                                {...field}
+                                                isError={!!errors.password}
+                                                errorText={errors.password?.message}
+                                                disabled={!!preLoad}
+                                                height="h-[40px]"
+                                                className="rounded-sm placeholder-gray-700"
+                                                onChange={(e) => field.onChange(e)}
+                                            />
+                                        )}
+                                    />
+                                    <p className="text-[11px] text-gray-600 h-0">8文字以上かつ、半角英数字および特殊記号（!, %, # など）を含めてください。</p>
+                                </div>
+                            </div>
+                        )}
                         <button
                             type="submit"
                             className="absolute left-0 bottom-0 right-0 bg-blue h-12 flex items-center justify-center cursor-pointer disabled:opacity-60"

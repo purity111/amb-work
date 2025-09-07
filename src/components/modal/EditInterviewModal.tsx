@@ -69,6 +69,11 @@ export default function EditInterviewModal({ isOpen, onClose, interview }: EditI
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file) {
+            // Check file size (1MB limit)
+            if (file.size > 1 * 1024 * 1024) {
+                toast.error('ファイルサイズは1MB以下にしてください。');
+                return;
+            }
             setValue('thumbnail', file);
             const reader = new FileReader();
             reader.onloadend = () => {

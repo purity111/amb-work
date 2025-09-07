@@ -283,7 +283,7 @@ export default function JobList({
     const renderEmploymentTypeTags = (features: FeatureItem[]) => {
         const filtered = features.filter(i => i.parent_id === 4);
         return filtered.map(i => (
-            <span key={i.id} className="border-1 border-red py-[2px] px-2 text-red text-sm rounded-xs">{i.name}</span>
+            <span key={i.id} className="border-1 border-red py-[2px] px-2 text-red text-[11px] rounded-xs">{i.name}</span>
         ))
     }
 
@@ -352,7 +352,7 @@ export default function JobList({
 
     return (
         <div className="pb-10 md:pb-30">
-            <div className="py-2 sticky top-20 md:top-25 bg-white z-10 border-b-2 border-gray-700">
+            <div className="py-2 top-20 md:top-25 bg-white z-10 border-b-2 border-gray-700">
                 <div className="flex flex-col md:flex-row items-center">
                     <p className="text-lg flex-1 pb-2">
                         {`検索結果：${totalJobCount}件`}
@@ -437,6 +437,12 @@ export default function JobList({
                     : isTemplate2
                         ? "転職支援サービスに応募する"
                         : "企業に直接応募する";
+                const applyButtonTextSP = alreadyApplied
+                    ? "応募済み"
+                    : isTemplate2
+                        ? "転職支援応募"
+                        : "企業応募";
+                const bookmarkButtonTextSP = "お気に入り";
                 const applyButtonClass = alreadyApplied
                     ? 'w-full text-white rounded-sm bg-gray-400 cursor-not-allowed'
                     : `w-full text-white rounded-sm ${isTemplate2 ? 'bg-orange' : 'bg-blue'}`;
@@ -494,7 +500,47 @@ export default function JobList({
                             </div>
                         </a>
                         <div className="flex flex-col md:flex-row p-2 sm:p-4 md:p-8 bg-gray-800 rounded-tr-none rounded-tl-none rounded-md">
-                            <div className="flex-1 md:flex-4 flex flex-row space-x-4 md:space-x-8">
+                            {/* SP mode: flex layout for bookmark and apply buttons */}
+                            <div className="flex md:hidden flex-row space-x-4">
+                                <CButton
+                                    text={bookmarkButtonTextSP}
+                                    className={`flex-1 border-2 border-yellow text-yellow rounded-sm ${!isLoggedIn ? 'cursor-pointer' : bookmarkShouldBeDisabled ? '!cursor-not-allowed opacity-60' : 'cursor-pointer'}`}
+                                    onClick={() => {
+                                        if (!isLoggedIn) {
+                                            setSelectedJobIdForAuth(job.id);
+                                            setAuthModalState(1);
+                                            return;
+                                        }
+                                        if (profile?.role === 'JobSeeker') {
+                                            onToggleBookmark(job.id);
+                                        }
+                                        // Do nothing for other roles
+                                    }}
+                                    disabled={bookmark.isPending || (isLoggedIn && profile?.role !== 'JobSeeker')}
+                                    aria-label={bookmarkShouldBeDisabled ? '求職者のみお気に入り登録できます' : undefined}
+                                    rightIcon={
+                                        bookmark.isPending ?
+                                            <Spinner size={4} color="orange" />
+                                            : <Image src={`/images/icons/${isBookmarked(job.id) ? 'favorite' : 'off_favorite'}.png`} alt="favorite-icon" width={20} height={20} />
+                                    }
+                                />
+                                <CButton
+                                    text={applyButtonTextSP}
+                                    hasNavIcon
+                                    onClick={() => {
+                                        if (!isLoggedIn) {
+                                            setSelectedJobIdForAuth(job.id);
+                                            setAuthModalState(1);
+                                        } else if (profile?.role === 'JobSeeker' && !alreadyApplied) handleApply(job.id);
+                                        else if (alreadyApplied) router.push('/mypage/application_mng');
+                                    }}
+                                    className={`flex-1 ${applyButtonClass}`}
+                                    disabled={bookmark.isPending}
+                                />
+                            </div>
+                            
+                            {/* Desktop mode: original layout */}
+                            <div className="hidden md:flex flex-1 md:flex-4 flex-row space-x-4 md:space-x-8">
                                 <CButton
                                     text={isBookmarked(job.id) ? "お気に入り解除" : "お気に入り登録"}
                                     className={`flex-1 border-2 border-yellow text-yellow rounded-sm ${!isLoggedIn ? 'cursor-pointer' : bookmarkShouldBeDisabled ? '!cursor-not-allowed opacity-60' : 'cursor-pointer'}`}
@@ -525,7 +571,7 @@ export default function JobList({
                                     />
                                 </a>
                             </div>
-                            <div className="flex-1 md:flex-3 flex flex-row pt-4 md:pt-0 md:pl-8">
+                            <div className="hidden md:flex flex-1 md:flex-3 flex-row pt-4 md:pt-0 md:pl-8">
                                 <CButton
                                     text={applyButtonText}
                                     hasNavIcon

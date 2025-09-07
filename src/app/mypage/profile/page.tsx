@@ -304,6 +304,11 @@ export default function ProfilePage() {
     const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file) {
+            // Check file size (3MB limit)
+            if (file.size > 3 * 1024 * 1024) {
+                toast.error('ファイルサイズは3MB以下にしてください。');
+                return;
+            }
             const previewUrl = URL.createObjectURL(file);
             setAvatarPreview(previewUrl);
             setAvatarFile(file);
