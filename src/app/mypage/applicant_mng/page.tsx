@@ -127,7 +127,9 @@ export default function ApplicantMngPage() {
   };
 
   const handleEdit = (jobSeeker: JobSeekerDetail) => {
-    setSelectedJobSeeker(jobSeeker);
+    // Find the fresh data from the current response
+    const freshJobSeeker = response?.data?.jobseekers?.find((js: JobSeekerDetail) => js.id === jobSeeker.id) || jobSeeker;
+    setSelectedJobSeeker(freshJobSeeker);
     setModalShown(true);
   };
 
@@ -166,9 +168,10 @@ export default function ApplicantMngPage() {
       zip: formData.postCode,
       prefectures: formData.prefecture,
       tel: formData.phonenumber,
-      email: formData.email
+      email: formData.email,
+      service_content: formData.service_content
     }
-    if (!selectedJobSeeker) {
+    if (!selectedJobSeeker && formData.password) {
       param.password = formData.password
     }
     if (selectedJobSeeker) {
