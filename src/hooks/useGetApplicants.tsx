@@ -9,13 +9,14 @@ const useGetApplicants = (param: any) => {
         page,
         searchTerm
     }
-    if (jobType) {
-        params.jobType = jobType;
-    }
+    
     if (profile?.role === 'JobSeeker') {
         params.job_seeker_id = profile.id;
+        // Don't add jobType for JobSeeker role
     } else if (profile?.role === 'Employer') {
         params.employer_id = profile.id;
+        // For employer, always set jobType=1 for direct jobs
+        params.jobType = 1;
     } else {
         //admin
         params.jobType = 2;
