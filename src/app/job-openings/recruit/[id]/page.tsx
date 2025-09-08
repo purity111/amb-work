@@ -33,8 +33,22 @@ export default function JobPreviewDetails() {
     const [authModalState, setAuthModalState] = useState(0); // 1: Login, 2: Register
     const { data, isLoading, isError, error } = useGetJobById(Number(id));
     const [width] = useWindowSize();
-    const { profile } = useAuthContext();
+    const { profile, isAuthenticated } = useAuthContext();
     const isLoggedIn = !!profile?.role;
+    const [isMounted, setIsMounted] = useState(false);
+
+    // Check authentication and redirect if not logged in
+    useEffect(() => {
+        setIsMounted(true);
+    }, []);
+
+    useEffect(() => {
+        if (isMounted && !isAuthenticated) {
+            // Redirect to home page with login modal
+            const currentUrl = `/job-openings/recruit/${id}`;
+            router.push(`/?auth=login&redirectTo=${encodeURIComponent(currentUrl)}`);
+        }
+    }, [isMounted, isAuthenticated, router, id]);
     const [applyModalShown, setApplyModalShown] = useState(false);
     const [selectedJobId, setSelectedJobId] = useState<number | null>(null);
     const [jobseekerApplications, setJobseekerApplications] = useState<number[]>([]);
@@ -276,6 +290,16 @@ export default function JobPreviewDetails() {
     };
 
     const alreadyApplied = jobseekerApplications.includes(job.id);
+
+    // Don't render anything until mounted to avoid hydration issues
+    if (!isMounted) {
+        return null;
+    }
+
+    // If not authenticated, don't render the page content (redirect will happen)
+    if (!isAuthenticated) {
+        return null;
+    }
 
     return (
         <div className="flex flex-col pt-5">
