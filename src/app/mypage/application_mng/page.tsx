@@ -46,11 +46,18 @@ function ApplicationMngContent() {
     const params = new URLSearchParams(searchParams.toString());
     const jobTypeParam = params.get('jobType');
     const searchText = params.get('searchTerm');
-    setJobType(jobTypeParam || '0');
+    
+    // For employers, always set jobType to '1'
+    if (profile?.role === 'Employer') {
+      setJobType('1');
+    } else {
+      setJobType(jobTypeParam || '0');
+    }
+    
     setSearchTerm(searchText || '');
     setTempSearch(searchText || '');
     hasLoaded.current = true;
-  }, [searchParams]);
+  }, [searchParams, profile?.role]);
 
   const { data: response, isLoading } = useGetApplicants({
     limit,
@@ -83,13 +90,17 @@ function ApplicationMngContent() {
     params.set('page', currentPage.toString());
     params.set('limit', limit.toString());
     params.set('searchTerm', searchTerm);
-    if (jobType === '1' || jobType === '2') {
+    
+    // For employers, always set jobType=1 in URL
+    if (profile?.role === 'Employer') {
+      params.set('jobType', '1');
+    } else if (jobType === '1' || jobType === '2') {
       params.set('jobType', jobType);
     } else {
       params.delete('jobType');
     }
     router.push(`?${params.toString()}`);
-  }, [currentPage, limit, searchTerm, jobType, router]);
+  }, [currentPage, limit, searchTerm, jobType, router, profile?.role]);
 
   const getSelectedApplications = useMemo(() => {
     const filtered = Object.values(selectedApplications).filter((app: ApplicationItem | null) => !!app);
