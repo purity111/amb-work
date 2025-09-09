@@ -70,6 +70,31 @@ export default function JobPreviewDetails() {
         return data.data;
     }, [data, isLoading])
 
+    // Update meta tags when job data is loaded
+    useEffect(() => {
+        if (job && typeof window !== 'undefined') {
+            const companyName = job.employer?.clinic_name || '';
+            const jobTitle = job.job_title || '';
+            const prefecture = getPrefectureName(job.employer?.prefectures) || '';
+            
+            const description = `${companyName} | ${jobTitle} | 勤務地：${prefecture}の求人情報 ｜リユース・リサイクル・買取業界専門の転職サービス リユース転職`;
+            
+            // Update meta description
+            const metaDescription = document.querySelector('meta[name="description"]');
+            if (metaDescription) {
+                metaDescription.setAttribute('content', description);
+            } else {
+                const meta = document.createElement('meta');
+                meta.name = 'description';
+                meta.content = description;
+                document.head.appendChild(meta);
+            }
+            
+            // Update page title
+            document.title = description;
+        }
+    }, [job]);
+
     const themeColor = useMemo(() => {
         if (!job) return null;
         return job.job_detail_page_template_id === 1 ? 'blue' : 'orange';
