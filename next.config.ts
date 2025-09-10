@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import { columnRedirectMap } from "./src/utils/redirectMap";
 
 const nextConfig: NextConfig = {
   /* config options here */
@@ -20,15 +21,16 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-  // async redirects() {
-  //   return [
-  //     {
-  //       source: '/jobs',
-  //       destination: '/job-openings/na/na/na/na/na',
-  //       permanent: true, // use false for temporary redirect (307)
-  //     },
-  //   ];
-  // },
+  async redirects() {
+    // Generate redirects from the mapping
+    const redirects = Object.entries(columnRedirectMap).map(([slug, columnId]) => ({
+      source: `/column/${slug}`,
+      destination: `/column/column-${columnId}`,
+      permanent: true, // 301 redirect for SEO
+    }));
+
+    return redirects;
+  },
 };
 
 export default nextConfig;

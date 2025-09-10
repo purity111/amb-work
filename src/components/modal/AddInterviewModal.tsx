@@ -209,8 +209,8 @@ export default function AddInterviewModal({ isOpen, onClose, defaultTag = '' }: 
                                                 const file = e.target.files?.[0] || null;
                                                 if (file) {
                                                     // Check file size (1MB limit)
-                                                    if (file.size > 1 * 1024 * 1024) {
-                                                        toast.error('ファイルサイズは1MB以下にしてください。');
+                                                    if (file.size > 3 * 1024 * 1024) {
+                                                        toast.error('ファイルサイズは3MB以下にしてください。');
                                                         return;
                                                     }
                                                 }
