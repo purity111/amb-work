@@ -18,8 +18,10 @@ const useGetApplicants = (param: any) => {
         // For employer, always set jobType=1 for direct jobs
         params.jobType = 1;
     } else {
-        //admin
-        params.jobType = 2;
+        //admin - use the jobType parameter if provided, otherwise don't include it
+        if (jobType !== undefined) {
+            params.jobType = jobType;
+        }
     }
     return useQuery({
         queryKey: ['getApplicants', limit, page, profile, searchTerm, jobType],

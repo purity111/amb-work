@@ -1030,6 +1030,21 @@ export const JobTypeOptions = [
     },
 ]
 
+export const ApplicationTypeOptions = [
+    {
+        value: '0',
+        option: 'すべて'
+    },
+    {
+        value: '1',
+        option: '直接応募のみ'
+    },
+    {
+        value: '2',
+        option: '転職⽀援サービス'
+    },
+]
+
 export const JobPageLimitOptions = [
     {
         value: '10',

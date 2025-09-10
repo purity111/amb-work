@@ -8,7 +8,7 @@ import CButton from "@/components/common/Button";
 import CInput from '@/components/common/Input';
 import CSelect from '@/components/common/Select';
 import Pagination from '@/components/common/Pagination';
-import { JobTypeOptions } from '@/utils/constants';
+import { ApplicationTypeOptions } from '@/utils/constants';
 import Modal from '@/components/common/Modal';
 import { formatLongDateTime, generateApplicationCSVData } from '@/utils/helper';
 import ChatBox from '@/components/ChatBox';
@@ -64,7 +64,7 @@ function ApplicationMngContent() {
     page: currentPage,
     profile,
     searchTerm,
-    jobType: Number(jobType)
+    jobType: jobType === '0' ? undefined : Number(jobType)
   })
 
   const { data: allApplications, isLoading: aLoading } = useGetApplicants({
@@ -72,7 +72,7 @@ function ApplicationMngContent() {
     page: currentPage,
     profile,
     searchTerm,
-    jobType: Number(jobType)
+    jobType: jobType === '0' ? undefined : Number(jobType)
   })
 
   const [applications, setApplications] = useState<ApplicationItem[]>([]);
@@ -177,7 +177,7 @@ function ApplicationMngContent() {
           {(profile?.role === 'JobSeeker' || isAdmin) && (
             <div className="flex flex-row space-x-3">
               <CSelect
-                options={JobTypeOptions}
+                options={ApplicationTypeOptions}
                 value={jobType}
                 onChange={onSelectJobType}
                 width="w-30"
