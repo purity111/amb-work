@@ -4,17 +4,14 @@ import { useGetJobById } from "@/hooks/useGetJobById";
 import { useParams } from "next/navigation";
 import { JobDetailExtra } from "@/utils/types";
 import CreateNewJobComponent from "@/components/pages/jobs/CreateNewJob";
-import { useEffect } from "react";
 
 export default function JobEditPage() {
     const params = useParams();
     const id = params.id;
 
-    const { data, isLoading, isError, isRefetching, refetch } = useGetJobById(Number(id));
-
-    useEffect(() => {
-        refetch();
-    }, [])
+    const { data, isLoading, isError, isRefetching } = useGetJobById(Number(id), { 
+        refetchOnWindowFocus: false // Prevent refetch when switching tabs
+    });
 
     if (isLoading || isRefetching) return (
         <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto"></div>
