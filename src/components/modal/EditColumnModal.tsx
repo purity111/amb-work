@@ -63,8 +63,8 @@ export default function EditColumnModal({ isOpen, onClose, onSuccess, column }: 
         const file = e.target.files?.[0];
         if (file) {
             // Check file size (1MB limit)
-            if (file.size > 1 * 1024 * 1024) {
-                toast.error('ファイルサイズは1MB以下にしてください。');
+            if (file.size > 3 * 1024 * 1024) {
+                toast.error('ファイルサイズは3MB以下にしてください。');
                 return;
             }
             setValue('thumbnail', file);

@@ -29,6 +29,7 @@ import Image from "next/image";
 import FullPageSpinner from "@/components/common/FullPageSpinner";
 import { useGetJobById } from "@/hooks/useGetJobById";
 import CustomCropper from "@/components/Cropper";
+import { useFormPersistence } from "@/hooks/useFormPersistence";
 
 type CreateNewJobProps = {
     preLoad?: JobDetailExtra;
@@ -193,15 +194,7 @@ export default function CreateNewJobComponent({ preLoad }: CreateNewJobProps) {
     const searchParams = useSearchParams();
     const cloneJobId = searchParams.get('source');
 
-    const {
-        handleSubmit,
-        control,
-        formState: { errors, isDirty },
-        setValue,
-        trigger,
-        reset,
-        getValues
-    } = useForm({
+    const form = useForm({
         resolver: yupResolver(schema),
         mode: 'onChange',
         defaultValues: {
@@ -214,7 +207,38 @@ export default function CreateNewJobComponent({ preLoad }: CreateNewJobProps) {
         },
     });
 
+    const {
+        handleSubmit,
+        control,
+        formState: { errors, isDirty },
+        setValue,
+        trigger,
+        reset,
+        getValues,
+    } = form;
+
     const { saveFormStatus } = useAuthContext();
+    
+    // Form persistence to prevent data loss when switching tabs
+    const { clearSavedData } = useFormPersistence(form, {
+        key: preLoad ? `job-edit-form-${preLoad.id}` : 'job-creation-form',
+        debounceMs: 2000, // Save every 2 seconds
+        excludeFields: ['thumbnail', 'companyImages', 'staffImages'] // Exclude file fields
+    });
+
+    // Handle visibility change to prevent unnecessary reloads
+    useEffect(() => {
+        const handleVisibilityChange = () => {
+            if (document.visibilityState === 'visible') {
+                // Page became visible again - no need to reload data
+                console.log('Page became visible - form data should be preserved');
+            }
+        };
+
+        document.addEventListener('visibilitychange', handleVisibilityChange);
+        return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
+    }, []);
+    
     const company = useWatch({ control, name: 'company' });
     const thumbnail = useWatch({ control, name: 'thumbnail' }) as File | string;
     const features = useWatch({ control, name: 'features' });
@@ -329,6 +353,7 @@ export default function CreateNewJobComponent({ preLoad }: CreateNewJobProps) {
             // Optionally invalidate or refetch queries here
             console.log('Create new job: ', data)
             toast.success('求人作成が完了されました。')
+            clearSavedData(); // Clear saved form data on successful submission
             router.push('/mypage/job_mng');
             router.refresh();
         },
@@ -344,6 +369,7 @@ export default function CreateNewJobComponent({ preLoad }: CreateNewJobProps) {
             // Optionally invalidate or refetch queries here
             console.log('Create new job: ', data)
             toast.success('求人情報を更新しました。')
+            clearSavedData(); // Clear saved form data on successful submission
             router.push('/mypage/job_mng');
             router.refresh();
         },
