@@ -5,7 +5,7 @@ import JobFilterModal from "@/components/modal/JobFilterModal";
 import { useGetBookmarkedJobs } from "@/hooks/useGetBookmarkedJobs";
 import { useGetJobs } from "@/hooks/useGetJobs";
 
-import { bookmarkJob, createApplication, getApplicationsByRole } from "@/lib/api";
+import { bookmarkJob, createApplication, getApplicationsByRole, sendScheduleAdjustmentEmail } from "@/lib/api";
 import { getFeatureParam, getFilterJobUrl, getFirstFullImage } from "@/utils/helper";
 import { BookmarkJob, FeatureItem, FeatureParams, JobDetail, PickOption } from "@/utils/types";
 import { useMutation } from "@tanstack/react-query";
@@ -312,10 +312,14 @@ export default function JobList({
         try {
             const profileStr = localStorage.getItem('profile');
             let jobSeekerId = null;
+            let jobSeekerEmail = null;
+            let jobSeekerName = null;
             if (profileStr) {
                 try {
                     const parsed = JSON.parse(profileStr);
                     jobSeekerId = parsed?.id;
+                    jobSeekerEmail = parsed?.email;
+                    jobSeekerName = parsed?.name;
                 } catch (e) {
                     console.log(e);
                 }
@@ -329,6 +333,23 @@ export default function JobList({
             if (res.success) {
                 toast.success('応募が完了しました。');
                 setJobseekerApplications(prev => [...prev, selectedJobId]);
+                
+                // Send schedule adjustment email for career counseling service jobs
+                const selectedJob = jobData.find(job => job.id === selectedJobId);
+                if (selectedJob && selectedJob.job_detail_page_template_id === 2 && jobSeekerEmail && jobSeekerName) {
+                    try {
+                        await sendScheduleAdjustmentEmail({
+                            jobSeekerId: Number(jobSeekerId),
+                            jobId: selectedJobId,
+                            jobSeekerEmail: jobSeekerEmail,
+                            jobSeekerName: jobSeekerName
+                        });
+                        console.log('Schedule adjustment email sent successfully');
+                    } catch (emailError) {
+                        console.error('Failed to send schedule adjustment email:', emailError);
+                        // Don't show error to user as the application was successful
+                    }
+                }
             } else {
                 toast.error(res.message || '応募に失敗しました。');
             }

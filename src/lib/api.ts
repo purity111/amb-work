@@ -463,7 +463,7 @@ export const getCareerConsultations = async (param: AdminCriteriaFetchParam) => 
     return response.data;
 };
 
-export const deleteCareerConsultation = async (id: number) => {
-    const response = await api.delete(`/career-consultations/${id}`);
+export const sendScheduleAdjustmentEmail = async (param: { jobSeekerId: number, jobId: number, jobSeekerEmail: string, jobSeekerName: string }) => {
+    const response = await api.post('/send-schedule-adjustment-email', param);
     return response.data;
 };
