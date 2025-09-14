@@ -866,7 +866,6 @@ export default function CreateNewJobComponent({ preLoad }: CreateNewJobProps) {
                                                     // {...field}
                                                     selected={dateValue}
                                                     dateFormat={PublicDateFormat}
-                                                    minDate={new Date()}
                                                     isError={!!errors.publicDateStart}
                                                     errorText={errors.publicDateStart?.message}
                                                     onChange={(date: Date | null) =>
