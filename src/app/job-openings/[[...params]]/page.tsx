@@ -4,6 +4,9 @@ import dynamic from 'next/dynamic';
 import React, { Suspense, useState } from "react";
 import { useAuthContext } from "@/hooks/useAuthContext";
 import { useParams } from 'next/navigation';
+import { useGetFeatures } from '@/hooks/useGetFeatures';
+import { FeatureItem } from '@/utils/types';
+import { MapData } from '@/utils/constants';
 import AuthModal from "@/components/modal/Auth";
 import PageTitle from '@/components/PageTitle';
 import { getDynamicJobPageInfo } from '@/utils/titles';
@@ -21,8 +24,50 @@ export default function JobOpeningsPage() {
     const params = useParams();
     // params.params is an array of segments, may be undefined
     const segments = Array.isArray(params?.params) ? params.params : [];
-    // Map segments to filters in order: [prefectures, jobTypes, items, conditions, employmentTypes]
-    const [prefectures, jobTypes, items, conditions, employmentTypes] = segments;
+
+    // Build lookup helpers
+    let cityList: Array<{ id: number, text: string }> = [];
+    MapData.forEach(item => { cityList = cityList.concat(item.city) })
+    const { data: featuresData } = useGetFeatures();
+    const allFeatures: FeatureItem[] = featuresData?.data || [];
+
+    // Infer classes by name
+    let prefectures = '';
+    let jobTypes = '';
+    let items = '';
+    let conditions = '';
+    let employmentTypes = '';
+
+    const normalizePref = (s: string) => s.replace(/[都道府県]$/u, '');
+
+    segments.forEach((seg: string) => {
+        if (!seg || seg === '-') return;
+        const decoded = decodeURIComponent(seg);
+        // prefecture (city) match single or multiple (joined by '-')
+        const prefNames = decoded.split('-');
+        const isAllPref = prefNames.every(n => cityList.some(c => normalizePref(c.text) === normalizePref(n)));
+        if (isAllPref) {
+            prefectures = seg;
+            return;
+        }
+        // features match
+        const names = decoded.split('-');
+        const matched = allFeatures.filter((f: FeatureItem) => names.includes(f.name));
+        if (matched.length) {
+            // choose class by majority parent_id
+            const pid = matched.reduce((acc: Record<number, number>, f: FeatureItem) => {
+                const k = Number(f.parent_id || 0);
+                acc[k] = (acc[k] || 0) + 1; return acc;
+            }, {} as Record<number, number>);
+            const top = Object.entries(pid).sort((a,b)=>b[1]-a[1])[0]?.[0];
+            switch (Number(top)) {
+                case 1: jobTypes = seg; break;
+                case 2: items = seg; break;
+                case 3: conditions = seg; break;
+                case 4: employmentTypes = seg; break;
+            }
+        }
+    });
     
     // Get dynamic page info based on filters
     // Use jobCount if available, otherwise use a placeholder
@@ -78,7 +123,7 @@ export default function JobOpeningsPage() {
                         </a>
                         からお申込ください。
                     </p>
-                    {/* Pass parsed filters to JobList as needed */}
+                    {/* Pass parsed filters to JobList */}
                     <JobList
                         prefectures={prefectures}
                         jobTypes={jobTypes}

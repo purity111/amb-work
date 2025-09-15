@@ -142,8 +142,22 @@ export default function JobList({
         params.set('page', currentPage.toString());
         params.set('limit', limit.toString());
         params.set('searchTerm', searchTerm)
-        router.push(`?${params.toString()}`);
-    }, [currentPage, limit, searchTerm])
+
+        // Build current filter snapshot to keep clean path
+        const currentFilterValue = {
+            prefectures: (prefectures || []).map(p => parseInt(p)),
+            jobTypes: features?.jobTypes || [],
+            items: features?.items || [],
+            conditions: features?.conditions || [],
+            employmentTypes: features?.employmentTypes || []
+        };
+        if (featuresData?.data) {
+            const url = getFilterJobUrl(currentFilterValue, featuresData.data);
+            router.push(`${url}?${params.toString()}`);
+        } else {
+            router.push(`?${params.toString()}`);
+        }
+    }, [currentPage, limit, searchTerm, prefectures, features, featuresData])
 
     useEffect(() => {
         let bookmarks: BookmarkJob[] = [];
@@ -185,8 +199,9 @@ export default function JobList({
         // set prefecture data from url
         const pTemp: string[] = [];
         const pArray = pString && pString !== '-' ? pString.split('-') : [];
+        const normalizePref = (s: string) => decodeURIComponent(s).replace(/[都道府県]$/u, '');
         pArray.forEach(p => {
-            const find = cityAll.find((i) => encodeURIComponent(i.text) === p);
+            const find = cityAll.find((i) => normalizePref(i.text) === normalizePref(p));
             if (find) pTemp.push(find.id.toString())
         })
         setPrefectures(pTemp);
