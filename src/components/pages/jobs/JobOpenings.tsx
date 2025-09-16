@@ -5,7 +5,7 @@ import JobFilterModal from "@/components/modal/JobFilterModal";
 import { useGetBookmarkedJobs } from "@/hooks/useGetBookmarkedJobs";
 import { useGetJobs } from "@/hooks/useGetJobs";
 
-import { bookmarkJob, createApplication, getApplicationsByRole } from "@/lib/api";
+import { bookmarkJob, createApplication, getApplicationsByRole, sendScheduleAdjustmentEmail } from "@/lib/api";
 import { getFeatureParam, getFilterJobUrl, getFirstFullImage } from "@/utils/helper";
 import { BookmarkJob, FeatureItem, FeatureParams, JobDetail, PickOption } from "@/utils/types";
 import { useMutation } from "@tanstack/react-query";
@@ -142,8 +142,22 @@ export default function JobList({
         params.set('page', currentPage.toString());
         params.set('limit', limit.toString());
         params.set('searchTerm', searchTerm)
-        router.push(`?${params.toString()}`);
-    }, [currentPage, limit, searchTerm])
+
+        // Build current filter snapshot to keep clean path
+        const currentFilterValue = {
+            prefectures: (prefectures || []).map(p => parseInt(p)),
+            jobTypes: features?.jobTypes || [],
+            items: features?.items || [],
+            conditions: features?.conditions || [],
+            employmentTypes: features?.employmentTypes || []
+        };
+        if (featuresData?.data) {
+            const url = getFilterJobUrl(currentFilterValue, featuresData.data);
+            router.push(`${url}?${params.toString()}`);
+        } else {
+            router.push(`?${params.toString()}`);
+        }
+    }, [currentPage, limit, searchTerm, prefectures, features, featuresData])
 
     useEffect(() => {
         let bookmarks: BookmarkJob[] = [];
@@ -185,8 +199,9 @@ export default function JobList({
         // set prefecture data from url
         const pTemp: string[] = [];
         const pArray = pString && pString !== '-' ? pString.split('-') : [];
+        const normalizePref = (s: string) => decodeURIComponent(s).replace(/[都道府県]$/u, '');
         pArray.forEach(p => {
-            const find = cityAll.find((i) => encodeURIComponent(i.text) === p);
+            const find = cityAll.find((i) => normalizePref(i.text) === normalizePref(p));
             if (find) pTemp.push(find.id.toString())
         })
         setPrefectures(pTemp);
@@ -312,10 +327,14 @@ export default function JobList({
         try {
             const profileStr = localStorage.getItem('profile');
             let jobSeekerId = null;
+            let jobSeekerEmail = null;
+            let jobSeekerName = null;
             if (profileStr) {
                 try {
                     const parsed = JSON.parse(profileStr);
                     jobSeekerId = parsed?.id;
+                    jobSeekerEmail = parsed?.email;
+                    jobSeekerName = parsed?.name;
                 } catch (e) {
                     console.log(e);
                 }
@@ -329,6 +348,23 @@ export default function JobList({
             if (res.success) {
                 toast.success('応募が完了しました。');
                 setJobseekerApplications(prev => [...prev, selectedJobId]);
+                
+                // Send schedule adjustment email for career counseling service jobs
+                const selectedJob = jobData.find(job => job.id === selectedJobId);
+                if (selectedJob && selectedJob.job_detail_page_template_id === 2 && jobSeekerEmail && jobSeekerName) {
+                    try {
+                        await sendScheduleAdjustmentEmail({
+                            jobSeekerId: Number(jobSeekerId),
+                            jobId: selectedJobId,
+                            jobSeekerEmail: jobSeekerEmail,
+                            jobSeekerName: jobSeekerName
+                        });
+                        console.log('Schedule adjustment email sent successfully');
+                    } catch (emailError) {
+                        console.error('Failed to send schedule adjustment email:', emailError);
+                        // Don't show error to user as the application was successful
+                    }
+                }
             } else {
                 toast.error(res.message || '応募に失敗しました。');
             }

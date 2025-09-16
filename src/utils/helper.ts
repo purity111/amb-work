@@ -228,7 +228,10 @@ export const getFilterJobUrl = (value: JobFilterFormValue, featureList: FeatureI
     })
 
     const pString = value.prefectures?.length
-        ? cityList.filter(i => value.prefectures?.includes(i.id)).map(i => i.text).join('-')
+        ? cityList
+            .filter(i => value.prefectures?.includes(i.id))
+            .map(i => i.text)
+            .join('-')
         : '';
     const { conditions = [], employmentTypes = [], items = [], jobTypes = [] } = value;
     const jString = jobTypes?.length
@@ -245,26 +248,17 @@ export const getFilterJobUrl = (value: JobFilterFormValue, featureList: FeatureI
         : '';
 
     // Build segments array in fixed order: [prefectures, jobTypes, items, conditions, employmentTypes]
-    // Use placeholder for empty segments to maintain proper position mapping
     const segments = [pString, jString, iString, cString, eString];
-    
-    // Find the last non-empty segment to avoid unnecessary trailing empty segments
-    let lastNonEmptyIndex = -1;
-    for (let i = segments.length - 1; i >= 0; i--) {
-        if (segments[i]) {
-            lastNonEmptyIndex = i;
-            break;
-        }
-    }
-    
+
+    // Filter out empty segments to create clean URLs without placeholders
+    const nonEmptySegments = segments.filter(Boolean);
+
     // If no segments have values, return the base URL
-    if (lastNonEmptyIndex === -1) {
+    if (nonEmptySegments.length === 0) {
         return '/job-openings';
     }
-    
-    // Only include segments up to the last non-empty one, using '-' as placeholder for empty segments
-    const finalSegments = segments.slice(0, lastNonEmptyIndex + 1).map(segment => segment || '-');
-    return `/job-openings/${finalSegments.join('/')}`;
+
+    return `/job-openings/${nonEmptySegments.join('/')}`;
 }
 
 export const generateJobCSVData = (data: JobDetail[], baseURL: string) => {

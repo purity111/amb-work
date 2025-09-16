@@ -4,7 +4,6 @@ import Breadcrumb from '@/components/Breadcrumb';
 import CareerCounselingForm from '@/components/common/CareerCounselingForm';
 import Footer from '@/components/Footer';
 import Image from 'next/image';
-import ProtectedRoute from '@/components/ProtectedRoute';
 import PageTitle from '@/components/PageTitle';
 import { getPageTitle } from '@/utils/titles';
 
@@ -12,7 +11,7 @@ export default function CareerCounselingPage() {
     const pageInfo = getPageTitle('careerCounseling');
 
     return (
-        <ProtectedRoute>
+        <>
             <PageTitle
                 title={pageInfo.title}
                 description={pageInfo.description}
@@ -53,6 +52,6 @@ export default function CareerCounselingPage() {
                 <CareerCounselingForm />
             </main>
             <Footer />
-        </ProtectedRoute>
+        </>
     );
 }

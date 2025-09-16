@@ -8,7 +8,6 @@ import SuccessCaseCard from "@/components/pages/experience/SuccessCaseCard";
 import ReasonCardGrid from "@/components/pages/experience/ReasonCardGrid";
 import { EXPERIENCE_SUPPORT_ITEMS, EXPERIENCE_NAYAMI_ITEMS, EXPERIENCE_SUCCESS_CASES, EXPERIENCE_REASON_ITEMS } from "@/utils/constants";
 import CareerCounselingForm from "@/components/common/CareerCounselingForm";
-import ProtectedRoute from "@/components/ProtectedRoute";
 import PageTitle from '@/components/PageTitle';
 import { getPageTitle } from '@/utils/titles';
 
@@ -16,7 +15,7 @@ export default function CompanyPage() {
     const pageInfo = getPageTitle('experience');
 
     return (
-        <ProtectedRoute>
+        <>
             <PageTitle
                 title={pageInfo.title}
                 description={pageInfo.description}
@@ -169,6 +168,6 @@ export default function CompanyPage() {
                 </div>
             </main>
             <Footer />
-        </ProtectedRoute>
+        </>
     );
 }
