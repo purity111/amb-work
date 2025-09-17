@@ -32,7 +32,15 @@ export async function GET() {
     <lastmod>${currentDate}</lastmod>
   </sitemap>
   <sitemap>
+    <loc>${baseUrl}/api/sitemap/categories</loc>
+    <lastmod>${currentDate}</lastmod>
+  </sitemap>
+  <sitemap>
     <loc>${baseUrl}/api/sitemap/columns</loc>
+    <lastmod>${currentDate}</lastmod>
+  </sitemap>
+  <sitemap>
+    <loc>${baseUrl}/api/sitemap/interviews</loc>
     <lastmod>${currentDate}</lastmod>
   </sitemap>
 </sitemapindex>`;

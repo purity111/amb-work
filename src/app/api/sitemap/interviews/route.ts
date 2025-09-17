@@ -1,4 +1,4 @@
-import { getColumns } from '@/lib/api';
+import { getInterviews } from '@/lib/api';
 import { NextResponse } from 'next/server';
 import { headers } from 'next/headers';
 
@@ -18,32 +18,34 @@ export async function GET() {
         }
       });
     }
-    // Get all published columns for sitemap
-    const columnsResponse = await getColumns({
+
+    // Get all interviews for sitemap
+    const interviewsResponse = await getInterviews({
       page: 1,
-      limit: 1000, // Get all columns for sitemap
-      searchTerm: '',
-      category: '',
-      is_published: true // Only include published columns
+      limit: 1000, // Get all interviews for sitemap
     });
 
-    if (!columnsResponse.ColumnItems) {
-      return new NextResponse('Failed to fetch columns', { status: 500 });
+    if (!interviewsResponse.InterviewItems) {
+      return new NextResponse('Failed to fetch interviews', { status: 500 });
     }
 
-    const columns = columnsResponse.ColumnItems;
+    const interviews = interviewsResponse.InterviewItems;
     const baseUrl = process.env.SITE_URL || 'https://reuse-tenshoku.com';
 
-    // Generate XML sitemap
+    // Generate XML sitemap for individual interview pages
     const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  ${columns.map((column: any) => `
+  ${interviews.map((interview: any) => {
+    // Determine the interview type path based on tag
+    const interviewTypePath = interview.tag === 1 ? 'career-changer' : 'business';
+    return `
   <url>
-    <loc>${baseUrl}/column/column-${column.id}</loc>
-    <lastmod>${new Date(column.created || column.modified || Date.now()).toISOString()}</lastmod>
+    <loc>${baseUrl}/interview/${interviewTypePath}/${interview.id}</loc>
+    <lastmod>${new Date(interview.created || interview.modified || Date.now()).toISOString()}</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>`).join('')}
+    <priority>0.6</priority>
+  </url>`;
+  }).join('')}
 </urlset>`;
 
     return new NextResponse(xml, {
@@ -54,7 +56,7 @@ export async function GET() {
       }
     });
   } catch (error) {
-    console.error('Error generating columns sitemap:', error);
+    console.error('Error generating interviews sitemap:', error);
     return new NextResponse('Internal Server Error', { status: 500 });
   }
 }
