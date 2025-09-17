@@ -348,13 +348,18 @@ export default function ApplicantMngPage() {
           </tbody>
         </table>
       </div>
-      <div className="flex flex-row justify-center mt-4">
-        <Pagination
-          page={currentPage}
-          totalPages={totalPage}
-          onPageChange={onPageChange}
-        />
-      </div>
+
+      {
+        totalPage > 0 && (
+          <div className="flex flex-row justify-center mt-4">
+            <Pagination
+              page={currentPage}
+              totalPages={totalPage}
+              onPageChange={onPageChange}
+            />
+          </div>
+        )
+      }
       {modalShown && (
         <AddJobSeekerModal
           preLoad={selectedJobSeeker}

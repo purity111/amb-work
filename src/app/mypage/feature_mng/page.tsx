@@ -303,13 +303,17 @@ export default function FeatureMngPage() {
           </div>
 
           {/* Bottom pagination */}
-          <div className='flex justify-center mt-4'>
-            <Pagination
-              page={currentPage}
-              totalPages={totalPage}
-              onPageChange={onPageChange}
-            />
-          </div>
+          {
+            totalPage > 0 && (
+              <div className='flex justify-center mt-4'>
+                <Pagination
+                  page={currentPage}
+                  totalPages={totalPage}
+                  onPageChange={onPageChange}
+                />
+              </div>
+            )
+          }
 
           {/* Replace the modal code with the new component */}
           <AddEditFeature
