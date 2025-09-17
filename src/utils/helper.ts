@@ -284,19 +284,20 @@ export const generateJobCSVData = (data: JobDetail[], baseURL: string) => {
 
 export const generateApplicationCSVData = (data: ApplicationItem[]) => {
     return data.map(item => ({
-        'Job ID': item.job_info_id,
-        'Company': item.jobInfo?.employer?.clinic_name,
-        'Job Title': item.job_title,
-        'Job Created': item.created,
-        'Application ID': item.job_seeker_id,
-        'Application Name': item.jobSeeker?.name,
-        'Application DOB': item.jobSeeker?.birthdate,
-        'Application Sex': item.jobSeeker?.sex === 1 ? '男' : '女',
-        'Application PhoneNumber': item.jobSeeker?.tel,
-        'Application Email': item.jobSeeker?.email,
-        'Job Details': item.jobInfo?.job_lead_statement,
-        'Job Public From': item.jobInfo?.clinic_public_date_start,
-        'Job Public To': item.jobInfo?.clinic_public_date_end,
+        '求人ID': item.job_info_id,
+        '企業名': item.jobInfo?.employer?.clinic_name,
+        '求人タイトル': item.job_title,
+        '求人作成日': item.created,
+        '応募者ID': item.job_seeker_id,
+        '応募者名': item.jobSeeker?.name,
+        '生年月日': item.jobSeeker?.birthdate,
+        '性別': item.jobSeeker?.sex === 1 ? '男性' : item.jobSeeker?.sex === 2 ? '女性' : 'その他',
+        '電話番号': item.jobSeeker?.tel,
+        'メールアドレス': item.jobSeeker?.email,
+        '求人詳細': item.jobInfo?.job_lead_statement,
+        '公開開始日': item.jobInfo?.clinic_public_date_start,
+        '公開終了日': item.jobInfo?.clinic_public_date_end,
+        '応募種別': item.jobInfo?.job_detail_page_template_id === 1 ? '直接応募' : '転職支援',
     }))
 }
 

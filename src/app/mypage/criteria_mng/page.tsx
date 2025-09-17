@@ -280,13 +280,17 @@ export default function CriteriaMngPage() {
             </table>
           </div>
 
-          <div className="flex flex-row justify-center mt-4">
-            <Pagination
-              page={currentPage}
-              totalPages={totalPage}
-              onPageChange={onPageChange}
-            />
-          </div>
+          {
+            totalPage > 0 && (
+              <div className="flex flex-row justify-center mt-4">
+                <Pagination
+                  page={currentPage}
+                  totalPages={totalPage}
+                  onPageChange={onPageChange}
+                />
+              </div>
+            )
+          }
         </div>
       )}
 

@@ -110,6 +110,9 @@ export default function EditInterviewModal({ isOpen, onClose, interview }: EditI
             formData.append('tag', selectedTag);
             formData.append('category', values.category);
             formData.append('content', htmlContent);
+            // Maintain existing is_published status or default to published
+            const isPublished = interview?.is_published !== undefined ? interview.is_published : true;
+            formData.append('is_published', isPublished ? '1' : '0');
             if (values.thumbnail instanceof File) {
                 formData.append('thumbnail', values.thumbnail);
             }

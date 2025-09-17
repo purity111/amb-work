@@ -155,13 +155,17 @@ function BusinessInterviewPageInner() {
                             ))
                         )}
                     </div>
-                    <div className="flex justify-center mt-8">
-                        <Pagination
-                            page={currentPage}
-                            totalPages={totalPage}
-                            onPageChange={onPageChange}
-                        />
-                    </div>
+                    {
+                        totalPage > 0 && (
+                            <div className="flex justify-center mt-8">
+                                <Pagination
+                                    page={currentPage}
+                                    totalPages={totalPage}
+                                    onPageChange={onPageChange}
+                                />
+                            </div>
+                        )
+                    }
                 </div>
                 <AddInterviewModal isOpen={isAddModalOpen} onClose={() => setAddModalOpen(false)} defaultTag="0" />
                 <EditInterviewModal isOpen={isEditModalOpen} onClose={() => setEditModalOpen(false)} interview={null} />

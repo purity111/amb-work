@@ -348,7 +348,7 @@ export default function JobList({
             if (res.success) {
                 toast.success('応募が完了しました。');
                 setJobseekerApplications(prev => [...prev, selectedJobId]);
-                
+
                 // Send schedule adjustment email for career counseling service jobs
                 const selectedJob = jobData.find(job => job.id === selectedJobId);
                 if (selectedJob && selectedJob.job_detail_page_template_id === 2 && jobSeekerEmail && jobSeekerName) {
@@ -574,7 +574,7 @@ export default function JobList({
                                     disabled={bookmark.isPending}
                                 />
                             </div>
-                            
+
                             {/* Desktop mode: original layout */}
                             <div className="hidden md:flex flex-1 md:flex-4 flex-row space-x-4 md:space-x-8">
                                 <CButton
@@ -637,8 +637,8 @@ export default function JobList({
                 />
             )}
             {authModalState > 0 && (
-                <AuthModal 
-                    initialStep={authModalState === 1 ? 'Login' : 'Register'} 
+                <AuthModal
+                    initialStep={authModalState === 1 ? 'Login' : 'Register'}
                     onClose={() => {
                         setAuthModalState(0);
                         setSelectedJobIdForAuth(null);
