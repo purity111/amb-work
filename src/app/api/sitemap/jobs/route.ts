@@ -18,7 +18,7 @@ export async function GET() {
         }
       });
     }
-    // Get all jobs for sitemap
+    // Get all published jobs for sitemap
     const jobsResponse = await getJobs(
       1, // page
       1000, // limit
@@ -29,7 +29,7 @@ export async function GET() {
       undefined, // employer_id
       [], // features
       [], // prefectures
-      undefined, // public_status
+      1, // public_status: only published jobs
       undefined, // sortBy
       0 // recommend
     );
