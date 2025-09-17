@@ -125,11 +125,14 @@ const ApplicationCard: React.FC<ApplicationCardProps> = ({
             className="bg-green-600 text-white"
             onClick={onDetailsClick}
           />
-          <Button
-            text="チャットで連絡を取る"
-            className="bg-blue-600 text-white"
-            onClick={onChatClick}
-          />
+          {/* Hide chat button for direct applications (template_id === 1) */}
+          {data.jobInfo.job_detail_page_template_id !== 1 && (
+            <Button
+              text="チャットで連絡を取る"
+              className="bg-blue-600 text-white"
+              onClick={onChatClick}
+            />
+          )}
         </div>
       </div>
     </div>
