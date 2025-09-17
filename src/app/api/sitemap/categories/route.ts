@@ -48,14 +48,14 @@ export async function GET() {
       '京都'
     ];
 
-    // Generate category URLs
+    // Generate category URLs - these are static category pages, not job detail pages
     const categoryUrls = jobCategories.map(category => ({
       path: `/job-openings/${encodeURIComponent(category)}`,
       priority: '0.7',
       changefreq: 'daily'
     }));
 
-    // Generate location URLs  
+    // Generate location URLs - these are static location pages, not job detail pages
     const locationUrls = majorLocations.map(location => ({
       path: `/job-openings/${encodeURIComponent(location)}`,
       priority: '0.7', 
@@ -63,6 +63,12 @@ export async function GET() {
     }));
 
     const allCategoryPages = [...categoryUrls, ...locationUrls];
+
+    // Debug logging
+    console.log('Generated category URLs:', categoryUrls.length);
+    console.log('Generated location URLs:', locationUrls.length);
+    console.log('Total category pages:', allCategoryPages.length);
+    console.log('Sample URLs:', allCategoryPages.slice(0, 3).map(p => p.path));
 
     // Generate XML sitemap
     const xml = `<?xml version="1.0" encoding="UTF-8"?>
