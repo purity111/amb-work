@@ -656,6 +656,7 @@ export interface Interview {
     view_cnt?: number;
     search_cnt?: number;
     favourite_cnt?: number;
+    is_published?: boolean;
     created: string;
     deleted?: string;
     modified: string;

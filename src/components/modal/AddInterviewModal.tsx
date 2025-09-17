@@ -76,6 +76,7 @@ export default function AddInterviewModal({ isOpen, onClose, defaultTag = '' }: 
             formData.append('category', values.category);
             formData.append('content', htmlContent);
             formData.append('type', 'career-changer'); // If needed for your backend
+            formData.append('is_published', '1'); // Set default is_published to 1
             
             if (values.thumbnail) {
                 formData.append('thumbnail', values.thumbnail);
