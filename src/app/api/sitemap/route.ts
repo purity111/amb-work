@@ -2,11 +2,10 @@ import { NextResponse } from 'next/server';
 
 export async function GET() {
   try {
-    // Check environment instead of using headers
-    const isStaging = process.env.NODE_ENV !== 'production' || process.env.VERCEL_ENV === 'preview';
+    // Only block for explicit staging domains, allow local development
+    const isExplicitStaging = process.env.VERCEL_ENV === 'preview';
     
-    // Block sitemap access for staging/development environment
-    if (isStaging) {
+    if (isExplicitStaging) {
       return new NextResponse('Sitemap not available for staging environment', {
         status: 404,
         headers: {
