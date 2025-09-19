@@ -20,7 +20,7 @@ Disallow: /contact_corp_finish
 Disallow: /recruiter/finish
 
 # Sitemaps
-Sitemap: ${baseUrl}/api/sitemap/index
+Sitemap: ${baseUrl}/sitemap.xml
 `;
 
   return new NextResponse(robotsTxt, {

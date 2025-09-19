@@ -2,25 +2,43 @@ import { NextResponse } from 'next/server';
 
 export async function GET() {
   try {
-    // Check environment instead of using headers
-    const isStaging = process.env.NODE_ENV !== 'production' || process.env.VERCEL_ENV === 'preview';
-    
-    // Block sitemap access for staging/development environment
-    if (isStaging) {
-      return new NextResponse('Sitemap not available for staging environment', {
-        status: 404,
-        headers: {
-          'Content-Type': 'text/plain',
-        }
-      });
-    }
-    
-    // For production, redirect to the API route
     const baseUrl = process.env.SITE_URL || 'https://reuse-tenshoku.com';
-    return NextResponse.redirect(`${baseUrl}/api/sitemap`);
-    
+    const currentDate = new Date().toISOString();
+
+    // Generate sitemap index XML that references all our dynamic sitemaps
+    const xml = `<?xml version="1.0" encoding="UTF-8"?>
+<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <sitemap>
+    <loc>${baseUrl}/api/sitemap</loc>
+    <lastmod>${currentDate}</lastmod>
+  </sitemap>
+  <sitemap>
+    <loc>${baseUrl}/api/sitemap/jobs</loc>
+    <lastmod>${currentDate}</lastmod>
+  </sitemap>
+  <sitemap>
+    <loc>${baseUrl}/api/sitemap/categories</loc>
+    <lastmod>${currentDate}</lastmod>
+  </sitemap>
+  <sitemap>
+    <loc>${baseUrl}/api/sitemap/columns</loc>
+    <lastmod>${currentDate}</lastmod>
+  </sitemap>
+  <sitemap>
+    <loc>${baseUrl}/api/sitemap/interviews</loc>
+    <lastmod>${currentDate}</lastmod>
+  </sitemap>
+</sitemapindex>`;
+
+    return new NextResponse(xml, {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/xml',
+        'Cache-Control': 'public, max-age=3600, s-maxage=3600'
+      }
+    });
   } catch (error) {
-    console.error('Error in sitemap.xml route:', error);
+    console.error('Error generating sitemap index:', error);
     return new NextResponse('Internal Server Error', { status: 500 });
   }
 }
