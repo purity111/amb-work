@@ -70,14 +70,6 @@ export default function CareerInquiryList() {
     }
   };
 
-  const truncateText = (text: any, maxLength: number = 12) => {
-    if (!text) return "";
-    const str = String(text);
-    if (str.length <= maxLength) {
-      return str;
-    }
-    return `${str.substring(0, maxLength)}...`;
-  };
 
   // Experience and inquiry label mapping
   const experienceLabel = (val: any) => val === 0 || val === '0' ? 'ある' : 'なし';
@@ -188,14 +180,14 @@ export default function CareerInquiryList() {
                     </div>
                     <div className="mb-2 flex items-center">
                       <span className="font-semibold">メール: </span>
-                      <span className="ml-1 truncate">{truncateText(inq.email)}</span>
+                      <span className="ml-1 break-all">{inq.email}</span>
                       <a href={`mailto:${inq.email}`} className="ml-2">
                         <Image src="/images/icons/email.png" alt="email" width={18} height={18} />
                       </a>
                     </div>
                     <div className="mb-2 flex items-center">
                       <span className="font-semibold">電話: </span>
-                      <span className="ml-1">{truncateText(inq.telephone)}</span>
+                      <span className="ml-1">{inq.telephone}</span>
                       <a href={`tel:${inq.telephone}`} className="ml-2">
                         <Image src="/images/icons/phone.png" alt="phone" width={18} height={18} />
                       </a>
@@ -214,15 +206,15 @@ export default function CareerInquiryList() {
                     </div>
                     <div className="mb-2">
                       <span className="font-semibold">お問い合わせ内容: </span>
-                      <span>{inquiryLabels[inq.inquiry] ?? truncateText(inq.inquiry || '')}</span>
+                      <span>{inquiryLabels[inq.inquiry] ?? (inq.inquiry || '')}</span>
                     </div>
                     <div className="mb-2">
                       <span className="font-semibold">希望職種: </span>
-                      <span>{truncateText(inq.desired_job_type || '')}</span>
+                      <span>{inq.desired_job_type || ''}</span>
                     </div>
                     <div className="mb-2">
                       <span className="font-semibold">ご要望: </span>
-                      <span>{truncateText(inq.request || '')}</span>
+                      <span className="break-words">{inq.request || ''}</span>
                     </div>
                     <div className="flex justify-end space-x-2 mt-4">
                       <CButton
@@ -241,99 +233,109 @@ export default function CareerInquiryList() {
               </div>
 
               {/* Table layout for desktop */}
-              <div className="hidden md:block">
-                <table className="rwd-table">
-                  <thead>
+              <div className="hidden md:block overflow-x-auto">
+                <table className="min-w-full whitespace-nowrap border-collapse border border-gray-200">
+                  <thead className="bg-gray-50">
                     <tr>
-                      <th scope="col" className="text-center">No.</th>
-                      <th scope="col" className="text-center">お名前</th>
-                      <th scope="col" className="text-center">メールアドレス</th>
-                      <th scope="col" className="text-center">電話番号</th>
-                      <th scope="col" className="text-center">生年月日</th>
-                      <th scope="col" className="text-center">都道府県</th>
-                      <th scope="col" className="text-center">経験</th>
-                      <th scope="col" className="text-center">お問い合わせ内容</th>
-                      <th scope="col" className="text-center">希望職種</th>
-                      <th scope="col" className="text-center">ご要望</th>
-                      <th scope="col" className="text-center">作成日時</th>
-                      <th scope="col" className="text-center">操作</th>
+                      <th scope='col' className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">No.</th>
+                      <th scope='col' className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">お名前</th>
+                      <th scope='col' className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">メールアドレス</th>
+                      <th scope='col' className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">電話番号</th>
+                      <th scope='col' className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">生年月日</th>
+                      <th scope='col' className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">都道府県</th>
+                      <th scope='col' className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">経験</th>
+                      <th scope='col' className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">お問い合わせ内容</th>
+                      <th scope='col' className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">希望職種</th>
+                      <th scope='col' className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">ご要望</th>
+                      <th scope='col' className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">作成日時</th>
+                      <th scope='col' className="py-3 px-4 text-center text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">操作</th>
                     </tr>
                   </thead>
                   <tbody>
                     {inquiries.map((inq, index) => (
                       <tr key={inq.id || index} className={index % 2 === 0 ? "bg-gray-50" : "bg-white"}>
-                        <td data-label="No." className="py-2 px-4 border-b border-gray-200 text-center">
+                        <td data-label="No." className="py-2 px-4 border-b border-gray-200">
                           {((currentPage - 1) * limit) + index + 1}
                         </td>
-                        <td data-label="お名前" className="py-2 px-4 border-b border-gray-200 text-center">
-                          {truncateText(inq.name)}
+                        <td data-label="お名前" className="py-2 px-4 border-b border-gray-200">
+                          {inq.name}
                         </td>
-                        <td data-label="メールアドレス" className="py-2 px-4 border-b border-gray-200 text-center">
-                          <div className="flex justify-between items-center w-full max-w-[180px] mx-auto">
-                            <span className="truncate text-left">{truncateText(inq.email)}</span>
+                        <td data-label="メールアドレス" className="py-2 px-4 border-b border-gray-200">
+                          <div className="flex items-center gap-2">
+                            <span className="text-left">{inq.email}</span>
                             <a
                               href={`mailto:${inq.email}`}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="flex-shrink-0 ml-2"
+                              className="flex-shrink-0"
                             >
                               <Image
                                 src="/images/icons/email.png"
                                 alt="email"
-                                width={20}
-                                height={20}
-                                className="cursor-pointer"
+                                width={18}
+                                height={18}
+                                className="cursor-pointer hover:opacity-70"
                               />
                             </a>
                           </div>
                         </td>
-                        <td data-label="電話番号" className="py-2 px-4 border-b border-gray-200 text-center">
-                          <div className="flex justify-between items-center w-full max-w-[140px] mx-auto">
-                            <span className="text-left">{truncateText(inq.telephone)}</span>
-                            <a href={`tel:${inq.telephone}`} className="flex-shrink-0 ml-2">
+                        <td data-label="電話番号" className="py-2 px-4 border-b border-gray-200">
+                          <div className="flex items-center gap-2">
+                            <span className="text-left">{inq.telephone}</span>
+                            <a href={`tel:${inq.telephone}`} className="flex-shrink-0">
                               <Image
                                 src="/images/icons/phone.png"
                                 alt="phone"
-                                width={20}
-                                height={20}
-                                className="cursor-pointer"
+                                width={18}
+                                height={18}
+                                className="cursor-pointer hover:opacity-70"
                               />
                             </a>
                           </div>
                         </td>
-                        <td data-label="生年月日" className="py-2 px-4 border-b border-gray-200 text-center">
+                        <td data-label="生年月日" className="py-2 px-4 border-b border-gray-200">
                           {inq.birthday ? formatDateTime(inq.birthday, false) : ''}
                         </td>
-                        <td data-label="都道府県" className="py-2 px-4 border-b border-gray-200 text-center">
+                        <td data-label="都道府県" className="py-2 px-4 border-b border-gray-200">
                           {getPrefectureName(inq.prefectures)}
                         </td>
-                        <td data-label="経験" className="py-2 px-4 border-b border-gray-200 text-center">
+                        <td data-label="経験" className="py-2 px-4 border-b border-gray-200">
                           {experienceLabel(inq.experience)}
                         </td>
-                        <td data-label="お問い合わせ内容" className="py-2 px-4 border-b border-gray-200 text-center">
-                          {inquiryLabels[inq.inquiry] ?? truncateText(inq.inquiry || '')}
+                        <td data-label="お問い合わせ内容" className="py-2 px-4 border-b border-gray-200">
+                          {inquiryLabels[inq.inquiry] ?? (inq.inquiry || '')}
                         </td>
-                        <td data-label="希望職種" className="py-2 px-4 border-b border-gray-200 text-center">
-                          {truncateText(inq.desired_job_type || '')}
+                        <td data-label="希望職種" className="py-2 px-4 border-b border-gray-200">
+                          {inq.desired_job_type || ''}
                         </td>
-                        <td data-label="ご要望" className="py-2 px-4 border-b border-gray-200 text-center">
-                          {truncateText(inq.request || '')}
+                        <td data-label="ご要望" className="py-2 px-4 border-b border-gray-200">
+                          {inq.request || ''}
                         </td>
-                        <td data-label="作成日時" className="py-2 px-4 border-b border-gray-200 text-center">
+                        <td data-label="作成日時" className="py-2 px-4 border-b border-gray-200">
                           {inq.created ? formatDateTime(inq.created) : ''}
                         </td>
-                        <td data-label="操作" className="!p-2 border-b border-gray-200 text-center">
-                          <div className="flex justify-center space-x-2">
+                        <td data-label="操作" className="!p-2 border-b border-gray-200">
+                          <div className="flex gap-1 sm:gap-2 sm:space-x-2 justify-center items-center">
                             <CButton
                               onClick={() => handleDetailsClick(inq)}
                               className="bg-green-600 hover:bg-green-700 text-white font-bold py-1 px-2 text-xs flex items-center"
                               text="詳細"
+                              leftIcon={(
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                                  <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                  <path strokeLinecap="round" strokeLinejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                </svg>
+                              )}
                             />
                             <CButton
                               onClick={() => handleDelete(inq.id || index)}
                               className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 text-xs flex items-center"
                               text="削除"
-                              leftIcon={(<svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2"><path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>)}
+                              leftIcon={(
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                                  <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                </svg>
+                              )}
                             />
                           </div>
                         </td>
