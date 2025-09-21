@@ -76,17 +76,24 @@ export default function ApplicantMngPage() {
 
   useEffect(() => {
     const params = new URLSearchParams(searchParams.toString());
-    const page = params.get('page');
-    const pSortBy = params.get('sortBy');
+    const page = Number(params.get('page') || 1);
+    const pSortBy = params.get('sortBy') || '';
     const pSortOrder = params.get('sortOrder');
-    const prefecture = params.get('prefectures');
-    const searchTerm = params.get('searchTerm');
-    setCurrentPage(Number(page || 1));
-    setSearchTerm(searchTerm || '')
-    setTempSearch(searchTerm || '')
-    setPrefectures(Number(prefecture))
-    setSortBy(pSortBy || '')
-    setSortOrder(pSortOrder === 'ASC' ? 'ASC' : pSortOrder === 'DESC' ? 'DESC' : 'ASC')
+    const prefecture = Number(params.get('prefectures') || 0);
+    const searchTermParam = params.get('searchTerm') || '';
+    
+    // Only update state if values have actually changed
+    if (currentPage !== page) setCurrentPage(page);
+    if (searchTerm !== searchTermParam) {
+      setSearchTerm(searchTermParam);
+      setTempSearch(searchTermParam);
+    }
+    if (prefectures !== prefecture) setPrefectures(prefecture);
+    if (sortBy !== pSortBy) setSortBy(pSortBy);
+    
+    const newSortOrder = pSortOrder === 'ASC' ? 'ASC' : pSortOrder === 'DESC' ? 'DESC' : 'ASC';
+    if (sortOrder !== newSortOrder) setSortOrder(newSortOrder);
+    
     hasLoaded.current = true;
   }, [searchParams])
 
@@ -95,7 +102,7 @@ export default function ApplicantMngPage() {
     const params = new URLSearchParams();
     params.set('page', currentPage.toString());
     params.set('limit', limit.toString());
-    params.set('searchTerm', searchTerm);
+    if (searchTerm.trim()) params.set('searchTerm', searchTerm.trim());
     if (prefectures) params.set('prefectures', prefectures.toString());
     if (sortBy) {
       params.set('sortBy', sortBy);
@@ -108,18 +115,20 @@ export default function ApplicantMngPage() {
     if (response?.data) {
       setTotalPage(response.data.pagination.totalPages);
     }
-  }, [response, limit]);
+  }, [response]);
 
   const onChangeSearchTerm = (e: ChangeEvent<HTMLInputElement>) => {
     setTempSearch(e.target.value);
   }
 
   const onChangePrefectures = (e: ChangeEvent<HTMLSelectElement>) => {
-    setPrefectures(Number(e.target.value))
+    setPrefectures(Number(e.target.value));
+    setCurrentPage(1); // Reset to first page when filtering by prefecture
   }
 
   const onConfirmSearchTerm = () => {
     setSearchTerm(tempSearch);
+    setCurrentPage(1); // Reset to first page when searching
   }
 
   const onPageChange = (page: number) => {
@@ -193,7 +202,7 @@ export default function ApplicantMngPage() {
   }
 
   return (
-    <div className="flex flex-col p-8">
+    <div className="flex flex-col p-3 md:p-8">
       <h1 className="text-[24px] md:text-[32px] font-bold text-center mb-6">会員全体管理ページ</h1>
       <div className="flex flex-col md:flex-row">
         <div className="flex justify-between md:justify-start flex-row items-center mx-auto my-2 space-x-2 w-full sm:w-[80%] md:w-full">
@@ -211,7 +220,7 @@ export default function ApplicantMngPage() {
             onClick={onClickAddNew}
           />
           <CSelect
-            value={prefectures}
+            value={prefectures.toString()}
             options={PrefectureOptions}
             placeholder="都道府県を選択"
             onChange={onChangePrefectures}
@@ -259,22 +268,22 @@ export default function ApplicantMngPage() {
           </div>
         ))}
       </div>
-      <div className="hidden md:block">
-        <table className="rwd-table">
-          <thead>
+      <div className="hidden md:block overflow-x-auto">
+        <table className="min-w-full whitespace-nowrap border-collapse border border-gray-200">
+          <thead className="bg-gray-50">
             <tr>
-              <th scope='col'>No.</th>
-              <th scope='col'>{renderSortableheader('name', '氏名')}</th>
-              <th scope='col'>{renderSortableheader('name_kana', '氏名（カナ）')}</th>
-              <th scope='col'>{renderSortableheader('birthdate', '生年月日')}</th>
-              <th scope='col'>{renderSortableheader('sex', '性別')}</th>
-              <th scope='col'>{renderSortableheader('zip', '郵便番号')}</th>
-              <th scope='col'>都道府県</th>
-              <th scope='col'>{renderSortableheader('tel', '電話番号')}</th>
-              <th scope='col'>メールアドレス</th>
-              <th scope='col'>{renderSortableheader('service_content', '転職サポート希望')}</th>
-              <th scope='col'>{renderSortableheader('created', '登録日')}</th>
-              <th scope='col'>操作</th>
+              <th scope='col' className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">No.</th>
+              <th scope='col' className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">{renderSortableheader('name', '氏名')}</th>
+              <th scope='col' className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">{renderSortableheader('name_kana', '氏名（カナ）')}</th>
+              <th scope='col' className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">{renderSortableheader('birthdate', '生年月日')}</th>
+              <th scope='col' className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">{renderSortableheader('sex', '性別')}</th>
+              <th scope='col' className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">{renderSortableheader('zip', '郵便番号')}</th>
+              <th scope='col' className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">都道府県</th>
+              <th scope='col' className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">{renderSortableheader('tel', '電話番号')}</th>
+              <th scope='col' className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">メールアドレス</th>
+              <th scope='col' className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">{renderSortableheader('service_content', '転職サポート希望')}</th>
+              <th scope='col' className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">{renderSortableheader('created', '登録日')}</th>
+              <th scope='col' className="py-3 px-4 text-center text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">操作</th>
             </tr>
           </thead>
           <tbody>
@@ -295,28 +304,28 @@ export default function ApplicantMngPage() {
                 <td data-label="Name(kana)" className="py-2 px-4 border-b border-gray-200">
                   {jobseeker.name_kana}
                 </td>
-                <td data-label="DOB" className="py-2 px-4 border-b border-gray-200 hidden sm:table-cell">
+                <td data-label="DOB" className="py-2 px-4 border-b border-gray-200">
                   {format(new Date(jobseeker.birthdate), 'yyyy年MM月dd日')}
                 </td>
-                <td data-label="Sex" className="py-2 px-4 border-b border-gray-200 hidden md:table-cell">
+                <td data-label="Sex" className="py-2 px-4 border-b border-gray-200">
                   {jobseeker.sex === 1 ? 'M' : 'F'}
                 </td>
-                <td data-label="ZipCode" className="py-2 px-4 border-b border-gray-200 hidden md:table-cell">
+                <td data-label="ZipCode" className="py-2 px-4 border-b border-gray-200">
                   {jobseeker.zip}
                 </td>
-                <td data-label="Prefectures" className="py-2 px-4 border-b border-gray-200 hidden md:table-cell">
-                  {PrefectureOptions[jobseeker.prefectures].option || '?'}
+                <td data-label="Prefectures" className="py-2 px-4 border-b border-gray-200">
+                  {PrefectureOptions.find(p => p.value === jobseeker.prefectures.toString())?.option || '?'}
                 </td>
-                <td data-label="PhoneNumber" className="py-2 px-4 border-b border-gray-200 hidden md:table-cell">
+                <td data-label="PhoneNumber" className="py-2 px-4 border-b border-gray-200">
                   {jobseeker.tel}
                 </td>
-                <td data-label="Email" className="py-2 px-4 border-b border-gray-200 hidden md:table-cell">
+                <td data-label="Email" className="py-2 px-4 border-b border-gray-200">
                   {jobseeker.email}
                 </td>
-                <td data-label="ServiceContent" className="py-2 px-4 border-b border-gray-200 hidden md:table-cell">
+                <td data-label="ServiceContent" className="py-2 px-4 border-b border-gray-200">
                   {jobseeker.service_content ? '有' : '無'}
                 </td>
-                <td data-label="CreatedAt" className="py-2 px-4 border-b border-gray-200 hidden md:table-cell">
+                <td data-label="CreatedAt" className="py-2 px-4 border-b border-gray-200">
                   {format(new Date(jobseeker.created), 'yyyy年MM月dd日HH:mm:ss')}
                 </td>
                 <td data-label="Actions" className="!p-2 border-b border-gray-200">
@@ -350,7 +359,7 @@ export default function ApplicantMngPage() {
       </div>
 
       {
-        totalPage > 0 && (
+        totalPage > 1 && (
           <div className="flex flex-row justify-center mt-4">
             <Pagination
               page={currentPage}

@@ -1,4 +1,4 @@
-import { RegisterEmployerParam, RegisterJobSeekerParam, LoginParam, JobParam, RecruitingCriteria, AdminCriteriaFetchParam, BookmarkJobParam, CreateUpdateCriteriaFetchParam, ApplicationFetchParam, BookmarkedJobsFetchParams, ColumnFetchParam, Column, ColumnResponse, InterviewFetchParam, InterviewResponse, Interview, CompanyApplicationParam, CompanyApplicationResponse, ContactInquiryParam, ContactFetchParam, CareerConsultationParam } from "@/utils/types";
+import { RegisterEmployerParam, RegisterJobSeekerParam, LoginParam, JobParam, RecruitingCriteria, AdminCriteriaFetchParam, BookmarkJobParam, CreateUpdateCriteriaFetchParam, ApplicationFetchParam, BookmarkedJobsFetchParams, ColumnFetchParam, Column, ColumnResponse, InterviewFetchParam, InterviewResponse, Interview, CompanyApplicationParam, CompanyApplicationResponse, ContactInquiryParam, ContactFetchParam, CareerConsultationParam, EmployerFilterParam, Employer } from "@/utils/types";
 import api from './axios';
 import { toQueryString } from "@/utils/helper";
 import type { ConfirmEmailParam, ForgotPasswordParam, JobSeekerFilterParam, ResetPasswordParam, ChangePasswordParam } from '@/utils/types';
@@ -41,6 +41,40 @@ export const confirmEmail = async (param: ConfirmEmailParam) => {
 
 export const getAllEmployerInfos = async () => {
     const response = await api.get('/employers/infos');
+    return response.data;
+};
+
+export const getEmployers = async (param: EmployerFilterParam) => {
+    const { page, limit, searchTerm, prefectures, sortBy, sortOrder } = param;
+    const params = new URLSearchParams();
+    params.set('page', page.toString());
+    params.set('limit', limit.toString());
+    if (searchTerm) {
+        params.set('searchTerm', searchTerm);
+    }
+    if (prefectures) {
+        params.set('prefectures', prefectures.toString());
+    }
+    if (sortBy) {
+        params.set('sortBy', sortBy);
+        params.set('sortOrder', sortOrder || 'ASC');
+    }
+    const response = await api.get(`/employers?${params.toString()}`);
+    return response.data;
+};
+
+export const deleteEmployerById = async (id: number) => {
+    const response = await api.delete(`/employers/${id}`);
+    return response.data;
+};
+
+export const updateEmployerById = async (id: number, data: Partial<Employer>) => {
+    const response = await api.put(`/employers/${id}`, data);
+    return response.data;
+};
+
+export const createEmployer = async (data: Omit<Employer, 'id'>) => {
+    const response = await api.post('/employers', data);
     return response.data;
 };
 
