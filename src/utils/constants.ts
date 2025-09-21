@@ -717,19 +717,19 @@ export const JobFilterOptions = [
 export const QuickJobs = [
     {
         image: '/images/home/ads-1.webp',
-        to: 'feature_id_1=98'
+        to: 'job-openings/直接応募できる求人'
     },
     {
         image: '/images/home/ads-2.webp',
-        to: 'feature_id_2=15'
+        to: 'job-openings/バイヤー/アパレル'
     },
     {
         image: '/images/home/ads-3.webp',
-        to: 'feature_id_2=17'
+        to: 'job-openings/ジュエリー'
     },
     {
         image: '/images/home/ads-4.webp',
-        to: 'feature_id_1=8'
+        to: 'job-openings/法人営業/土日休み'
     },
 ]
 
