@@ -196,10 +196,10 @@ export const FooterButtonList = [
         title: 'コラム一覧',
         to: '/column'
     },
-    {
-        title: 'セミナー情報',
-        to: '/seminar'
-    },
+    // {
+    //     title: 'セミナー情報',
+    //     to: '/seminar'
+    // },
     {
         title: '会社概要',
         to: '/company'
@@ -770,7 +770,7 @@ export const AboutPosts = [
 ]
 
 export const PrefectureOptions = [
-    { value: '', option: '選択してください' },
+    { value: '', option: '選択' },
     { value: '1', option: '北海道' },
     { value: '2', option: '青森県' },
     { value: '3', option: '岩手県' },

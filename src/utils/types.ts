@@ -133,9 +133,10 @@ export interface Employer {
     "zip": string,
     "prefectures": number,
     "city": string,
-    "closest_station": string,
+    "closest_station"?: string,
     "tel": string,
-    "home_page_url": string,
+    "email": string,
+    "home_page_url"?: string,
     "access"?: string,
     "director_name"?: string,
     "employee_number"?: number,
@@ -580,6 +581,15 @@ export interface JobSeekerFilterParam {
     sortOrder?: 'ASC' | 'DESC',
     prefectures?: number;
     searchTerm?: string;
+}
+
+export interface EmployerFilterParam {
+    page: number;
+    limit: number;
+    searchTerm?: string;
+    prefectures?: number;
+    sortBy?: string;
+    sortOrder?: 'ASC' | 'DESC';
 }
 
 export interface JobSeekerDetail {
