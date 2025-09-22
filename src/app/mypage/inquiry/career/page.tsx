@@ -23,29 +23,37 @@ export default function CareerInquiryList() {
   const [showDetailModal, setShowDetailModal] = useState(false);
   const [selectedInquiry, setSelectedInquiry] = useState<any>(null);
 
-  const { data: response, isLoading } = useGetCareerConsultations({
-    page: currentPage,
-    limit,
-    searchTerm,
-  });
-
-  // Fetch all consultations for CSV export
-  const { data: allConsultationsResponse } = useGetCareerConsultations({
+  // Fetch all consultations for global sorting
+  const { data: allConsultationsResponse, isLoading } = useGetCareerConsultations({
     page: 1,
     limit: 999999,
     searchTerm,
   });
 
   const [inquiries, setInquiries] = useState<any[]>([]);
+  const [allInquiries, setAllInquiries] = useState<any[]>([]);
 
   useEffect(() => {
-    if (response) {
-      const arr = response.data?.careerConsultations || response.careerConsultations || [];
-      arr.sort((a: any, b: any) => new Date(b.created).getTime() - new Date(a.created).getTime());
-      setInquiries(arr);
-      setTotalPage(response.data?.pagination?.totalPages || response.pagination?.totalPages || 1);
+    if (allConsultationsResponse) {
+      const arr = allConsultationsResponse.data?.careerConsultations || allConsultationsResponse.careerConsultations || [];
+      // Sort globally by created date (newest first)
+      const sortedArr = arr.sort((a: any, b: any) => new Date(b.created).getTime() - new Date(a.created).getTime());
+      setAllInquiries(sortedArr);
+      
+      // Calculate total pages based on all data
+      const totalItems = sortedArr.length;
+      const totalPages = Math.ceil(totalItems / limit);
+      setTotalPage(totalPages);
     }
-  }, [response]);
+  }, [allConsultationsResponse, limit]);
+
+  // Paginate the sorted data on the frontend
+  useEffect(() => {
+    const startIndex = (currentPage - 1) * limit;
+    const endIndex = startIndex + limit;
+    const paginatedData = allInquiries.slice(startIndex, endIndex);
+    setInquiries(paginatedData);
+  }, [allInquiries, currentPage, limit]);
 
   const onPageChange = (page: number) => {
     setCurrentPage(page);
@@ -68,6 +76,17 @@ export default function CareerInquiryList() {
       console.error("Error formatting date:", error);
       return dateString;
     }
+  };
+
+  const formatRequestText = (text: string) => {
+    if (!text || text.length <= 20) return text;
+    
+    // Split text into chunks of exactly 20 characters and join with line breaks
+    const chunks = [];
+    for (let i = 0; i < text.length; i += 20) {
+      chunks.push(text.slice(i, i + 20));
+    }
+    return chunks.join('\n');
   };
 
 
@@ -140,13 +159,9 @@ export default function CareerInquiryList() {
             </div>
             {/* CSV Export Button */}
             <div className="flex justify-center md:justify-end">
-              {allConsultationsResponse?.data?.careerConsultations?.length > 0 && (
+              {allInquiries.length > 0 && (
                 <CSVLink
-                  data={generateCareerConsultationCSVData(
-                    allConsultationsResponse.data.careerConsultations ||
-                    allConsultationsResponse.careerConsultations ||
-                    []
-                  )}
+                  data={generateCareerConsultationCSVData(allInquiries)}
                   filename={`キャリア相談一覧-${format(new Date(), 'yyyy年MM月dd日-HHmm')}.csv`}
                 >
                   <CButton
@@ -178,17 +193,17 @@ export default function CareerInquiryList() {
                       <span className="font-semibold">お名前: </span>
                       <span>{inq.name}</span>
                     </div>
-                    <div className="mb-2 flex items-center">
+                    <div className="mb-2 flex items-center gap-2">
                       <span className="font-semibold">メール: </span>
-                      <span className="ml-1 break-all">{inq.email}</span>
-                      <a href={`mailto:${inq.email}`} className="ml-2">
+                      <span className="flex-1 break-all">{inq.email}</span>
+                      <a href={`mailto:${inq.email}`} className="flex-shrink-0">
                         <Image src="/images/icons/email.png" alt="email" width={18} height={18} />
                       </a>
                     </div>
-                    <div className="mb-2 flex items-center">
+                    <div className="mb-2 flex items-center gap-2">
                       <span className="font-semibold">電話: </span>
-                      <span className="ml-1">{inq.telephone}</span>
-                      <a href={`tel:${inq.telephone}`} className="ml-2">
+                      <span className="flex-1">{inq.telephone}</span>
+                      <a href={`tel:${inq.telephone}`} className="flex-shrink-0">
                         <Image src="/images/icons/phone.png" alt="phone" width={18} height={18} />
                       </a>
                     </div>
@@ -214,7 +229,7 @@ export default function CareerInquiryList() {
                     </div>
                     <div className="mb-2">
                       <span className="font-semibold">ご要望: </span>
-                      <span className="break-words">{inq.request || ''}</span>
+                      <span className="whitespace-pre-line break-all">{formatRequestText(inq.request || '')}</span>
                     </div>
                     <div className="flex justify-end space-x-2 mt-4">
                       <CButton
@@ -246,8 +261,8 @@ export default function CareerInquiryList() {
                       <th scope='col' className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">経験</th>
                       <th scope='col' className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">お問い合わせ内容</th>
                       <th scope='col' className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">希望職種</th>
-                      <th scope='col' className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">ご要望</th>
-                      <th scope='col' className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">作成日時</th>
+                      <th scope='col' className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200" style={{minWidth: '200px'}}>ご要望</th>
+                      <th scope='col' className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">問い合わせ日時</th>
                       <th scope='col' className="py-3 px-4 text-center text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">操作</th>
                     </tr>
                   </thead>
@@ -261,8 +276,8 @@ export default function CareerInquiryList() {
                           {inq.name}
                         </td>
                         <td data-label="メールアドレス" className="py-2 px-4 border-b border-gray-200">
-                          <div className="flex items-center gap-2">
-                            <span className="text-left">{inq.email}</span>
+                          <div className="flex items-center gap-3">
+                            <span className="text-left flex-1 truncate pr-2">{inq.email}</span>
                             <a
                               href={`mailto:${inq.email}`}
                               target="_blank"
@@ -280,8 +295,8 @@ export default function CareerInquiryList() {
                           </div>
                         </td>
                         <td data-label="電話番号" className="py-2 px-4 border-b border-gray-200">
-                          <div className="flex items-center gap-2">
-                            <span className="text-left">{inq.telephone}</span>
+                          <div className="flex items-center gap-3">
+                            <span className="text-left flex-1 truncate pr-2">{inq.telephone}</span>
                             <a href={`tel:${inq.telephone}`} className="flex-shrink-0">
                               <Image
                                 src="/images/icons/phone.png"
@@ -308,10 +323,10 @@ export default function CareerInquiryList() {
                         <td data-label="希望職種" className="py-2 px-4 border-b border-gray-200">
                           {inq.desired_job_type || ''}
                         </td>
-                        <td data-label="ご要望" className="py-2 px-4 border-b border-gray-200">
-                          {inq.request || ''}
+                        <td data-label="ご要望" className="py-2 px-4 border-b border-gray-200" style={{minWidth: '200px'}}>
+                          <span className="whitespace-pre-line" style={{wordBreak: 'keep-all'}}>{formatRequestText(inq.request || '')}</span>
                         </td>
-                        <td data-label="作成日時" className="py-2 px-4 border-b border-gray-200">
+                        <td data-label="問合せ日時" className="py-2 px-4 border-b border-gray-200">
                           {inq.created ? formatDateTime(inq.created) : ''}
                         </td>
                         <td data-label="操作" className="!p-2 border-b border-gray-200">
@@ -392,7 +407,7 @@ export default function CareerInquiryList() {
                   <span className="ml-2">{getPrefectureName(selectedInquiry.prefectures)}</span>
                 </div>
                 <div className="mb-3">
-                  <span className="font-semibold text-md">作成日時:</span>
+                  <span className="font-semibold text-md">問合せ日時:</span>
                   <span className="ml-2">{selectedInquiry.created ? formatDateTime(selectedInquiry.created) : ''}</span>
                 </div>
               </div>
@@ -411,7 +426,7 @@ export default function CareerInquiryList() {
                 </div>
                 <div className="mb-3">
                   <span className="font-semibold text-md">ご要望:</span>
-                  <span className="ml-2 whitespace-pre-wrap">{selectedInquiry.request || ''}</span>
+                  <span className="ml-2 whitespace-pre-line break-all">{formatRequestText(selectedInquiry.request || '')}</span>
                 </div>
               </div>
             </div>
