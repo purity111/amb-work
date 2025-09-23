@@ -4,6 +4,7 @@ interface DialogProps {
     preview?: React.ReactNode;
     okButtonTitle?: string;
     okButtonColor?: string;
+    jobTypeColor?: 'blue' | 'orange';
     onPressOK: () => void;
     onPressCancel: () => void;
 }
@@ -14,6 +15,7 @@ export default function Dialog({
     preview,
     okButtonTitle = 'Yes',
     okButtonColor,
+    jobTypeColor,
     onPressOK,
     onPressCancel
 }: DialogProps) {
@@ -27,25 +29,28 @@ export default function Dialog({
                             <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
                                 <h3 className="text-[20px] md:text-[24px] font-semibold text-center text-blue" id="modal-title">{title}</h3>
                                 <div className="my-2">
-                                    <p className="text-sm text-gray-500">{description}</p>
+                                    <p className="text-sm text-gray-500" dangerouslySetInnerHTML={{ __html: description }}></p>
                                 </div>
                                 <div className="max-h-120 overflow-y-auto">
                                     {preview}
                                 </div>
                             </div>
                         </div>
-                        <div className="bg-gray-100 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
+                        <div className="bg-gray-100 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6 relative">
+                            {jobTypeColor && (
+                                <div className={`absolute top-0 left-0 right-0 h-1 ${jobTypeColor === 'blue' ? 'bg-blue' : 'bg-orange'}`}></div>
+                            )}
                             <button
                                 type="button"
                                 onClick={onPressOK}
                                 className={`
-                                    cursor-pointer inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-xs opacity-90 hover:opacity-100 sm:ml-3 sm:w-auto
+                                    cursor-pointer relative z-10 inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-xs opacity-90 hover:opacity-100 sm:ml-3 sm:w-auto
                                     ${okButtonColor || 'bg-red-600'}
                                 `}
                             >
                                 {okButtonTitle}
                             </button>
-                            <button type="button" onClick={onPressCancel} className="cursor-pointer mt-3 inline-flex w-full justify-center rounded-md bg-gray-700 px-3 py-2 text-sm font-semibold text-gray-400 shadow-xs ring-1 ring-gray-300 ring-inset hover:bg-gray-100 sm:mt-0 sm:w-auto">キャンセル</button>
+                            <button type="button" onClick={onPressCancel} className="cursor-pointer relative z-10 mt-3 inline-flex w-full justify-center rounded-md bg-gray-700 px-3 py-2 text-sm font-semibold text-gray-400 shadow-xs ring-1 ring-gray-300 ring-inset hover:bg-gray-100 sm:mt-0 sm:w-auto">キャンセル</button>
                         </div>
                     </div>
                 </div>

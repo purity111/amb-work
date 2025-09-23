@@ -254,8 +254,8 @@ export default function CareerInquiryList() {
                     <tr>
                       <th scope='col' className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">No.</th>
                       <th scope='col' className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">お名前</th>
-                      <th scope='col' className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">メールアドレス</th>
-                      <th scope='col' className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">電話番号</th>
+                      <th scope='col' className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200" style={{minWidth: '250px', maxWidth: '250px', width: '250px'}}>メールアドレス</th>
+                      <th scope='col' className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200" style={{minWidth: '150px', maxWidth: '150px', width: '150px'}}>電話番号</th>
                       <th scope='col' className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">生年月日</th>
                       <th scope='col' className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">都道府県</th>
                       <th scope='col' className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">経験</th>
@@ -275,34 +275,34 @@ export default function CareerInquiryList() {
                         <td data-label="お名前" className="py-2 px-4 border-b border-gray-200">
                           {inq.name}
                         </td>
-                        <td data-label="メールアドレス" className="py-2 px-4 border-b border-gray-200">
-                          <div className="flex items-center gap-3">
-                            <span className="text-left flex-1 truncate pr-2">{inq.email}</span>
+                        <td data-label="メールアドレス" className="py-2 px-4 border-b border-gray-200" style={{minWidth: '250px', maxWidth: '250px', width: '250px'}}>
+                          <div className="flex items-center gap-1">
+                            <span className="text-left break-all text-xs leading-tight" style={{wordBreak: 'break-all', overflowWrap: 'break-word'}}>{inq.email}</span>
                             <a
                               href={`mailto:${inq.email}`}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="flex-shrink-0"
+                              className="flex-shrink-0 mt-0.5"
                             >
                               <Image
                                 src="/images/icons/email.png"
                                 alt="email"
-                                width={18}
-                                height={18}
+                                width={16}
+                                height={16}
                                 className="cursor-pointer hover:opacity-70"
                               />
                             </a>
                           </div>
                         </td>
-                        <td data-label="電話番号" className="py-2 px-4 border-b border-gray-200">
-                          <div className="flex items-center gap-3">
-                            <span className="text-left flex-1 truncate pr-2">{inq.telephone}</span>
+                        <td data-label="電話番号" className="py-2 px-4 border-b border-gray-200" style={{minWidth: '150px', maxWidth: '150px', width: '150px'}}>
+                          <div className="flex items-center gap-1">
+                            <span className="text-left text-xs">{inq.telephone}</span>
                             <a href={`tel:${inq.telephone}`} className="flex-shrink-0">
                               <Image
                                 src="/images/icons/phone.png"
                                 alt="phone"
-                                width={18}
-                                height={18}
+                                width={16}
+                                height={16}
                                 className="cursor-pointer hover:opacity-70"
                               />
                             </a>
