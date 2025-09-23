@@ -649,7 +649,10 @@ export default function JobList({
             {applyModalShown && (
                 <Dialog
                     title="応募確認"
-                    description="この求人に本当に応募しますか。"
+                    description={selectedJobId && jobData.find(job => job.id === selectedJobId)?.job_detail_page_template_id === 1 
+                        ? "この求人に本当に応募しますか。"
+                        : `<strong>この求人に本当に応募しますか。</strong><br/><br/>こちらの求人は「転職支援サービス」を活用して企業に応募する求人となります。<br/>ご登録のメールアドレスに担当のキャリアアドバイザーからご連絡がありますので、ご確認のほど、よろしくお願いいたします。`
+                    }
                     okButtonTitle="確認"
                     okButtonColor="bg-green"
                     onPressOK={handleConfirmApply}

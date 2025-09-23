@@ -27,7 +27,7 @@ export default function Dialog({
                             <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
                                 <h3 className="text-[20px] md:text-[24px] font-semibold text-center text-blue" id="modal-title">{title}</h3>
                                 <div className="my-2">
-                                    <p className="text-sm text-gray-500">{description}</p>
+                                    <p className="text-sm text-gray-500" dangerouslySetInnerHTML={{ __html: description }}></p>
                                 </div>
                                 <div className="max-h-120 overflow-y-auto">
                                     {preview}
