@@ -655,6 +655,7 @@ export default function JobList({
                     }
                     okButtonTitle="確認"
                     okButtonColor="bg-green"
+                    jobTypeColor={selectedJobId && jobData.find(job => job.id === selectedJobId)?.job_detail_page_template_id === 1 ? 'blue' : 'orange'}
                     onPressOK={handleConfirmApply}
                     onPressCancel={() => setApplyModalShown(false)}
                 />

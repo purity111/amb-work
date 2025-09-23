@@ -538,6 +538,7 @@ export default function JobPreviewDetails() {
                     }
                     okButtonTitle="確認"
                     okButtonColor="bg-green"
+                    jobTypeColor={job.job_detail_page_template_id === 1 ? 'blue' : 'orange'}
                     onPressOK={handleConfirmApply}
                     onPressCancel={() => setApplyModalShown(false)}
                 />
