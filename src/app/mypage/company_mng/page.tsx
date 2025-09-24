@@ -198,6 +198,26 @@ export default function CompanyMngPage() {
 
   const employers = response?.data?.employers || [];
 
+  const onClickHeader = (key: string) => {
+    if (sortBy === key) {
+      if (sortOrder === 'ASC') setSortOrder('DESC');
+      else setSortOrder('ASC');
+    } else {
+      setSortBy(key);
+      setSortOrder('ASC');
+    }
+  };
+
+  const renderSortableHeader = (sortKey: string, label: string) => {
+    return (
+      <div className="flex flex-row justify-start items-center cursor-pointer select-none" onClick={() => onClickHeader(sortKey)}>
+        <span>
+          {label} {sortBy === sortKey ? (sortOrder === 'DESC' ? '▼' : '▲') : ''}
+        </span>
+      </div>
+    );
+  };
+
   return (
     <div className="flex flex-col p-3 md:p-8">
       <h1 className="text-[24px] md:text-[32px] font-bold text-center mb-6">企業管理ページ</h1>
@@ -274,14 +294,14 @@ export default function CompanyMngPage() {
           <thead className="bg-gray-50">
             <tr>
               <th scope='col' className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">No.</th>
-              <th scope='col' className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">企業名</th>
-              <th scope='col' className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">企業名（カナ）</th>
-              <th scope='col' className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">登録日</th>
-              <th scope='col' className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">郵便番号</th>
+              <th scope='col' className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">{renderSortableHeader('clinic_name', '企業名')}</th>
+              <th scope='col' className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">{renderSortableHeader('clinic_name_kana', '企業名（カナ）')}</th>
+              <th scope='col' className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">{renderSortableHeader('created', '登録日')}</th>
+              <th scope='col' className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">{renderSortableHeader('zip', '郵便番号')}</th>
               <th scope='col' className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">都道府県</th>
               <th scope='col' className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">市区町村</th>
               <th scope='col' className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">最寄り駅</th>
-              <th scope='col' className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">電話番号</th>
+              <th scope='col' className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">{renderSortableHeader('tel', '電話番号')}</th>
               <th scope='col' className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">メールアドレス</th>
               <th scope='col' className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">ホームページ</th>
               <th scope='col' className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">従業員数</th>
