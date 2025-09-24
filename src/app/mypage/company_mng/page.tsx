@@ -13,6 +13,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { toast } from 'react-toastify';
 import AddEmployerModal, { EmployerFormValues } from "@/components/modal/AddEmployerModal";
+import { format } from 'date-fns';
 
 export default function CompanyMngPage() {
   const [currentPage, setCurrentPage] = useState(1);
@@ -235,6 +236,7 @@ export default function CompanyMngPage() {
             <div className="mb-2"><span className="font-semibold">No.：</span>{index + 1}</div>
             <div className="mb-2"><span className="font-semibold">企業名：</span>{employer.clinic_name}</div>
             <div className="mb-2"><span className="font-semibold">企業名（カナ）：</span>{employer.clinic_name_kana}</div>
+            <div className="mb-2"><span className="font-semibold">登録日：</span>{employer.created ? format(new Date(employer.created), 'yyyy年MM月dd日') : '-'}</div>
             <div className="mb-2"><span className="font-semibold">郵便番号：</span>{employer.zip}</div>
             <div className="mb-2"><span className="font-semibold">都道府県：</span>{PrefectureOptions.find(p => p.value === employer.prefectures.toString())?.option || '不明'}</div>
             <div className="mb-2"><span className="font-semibold">市区町村：</span>{employer.city}</div>
@@ -274,6 +276,7 @@ export default function CompanyMngPage() {
               <th scope='col' className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">No.</th>
               <th scope='col' className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">企業名</th>
               <th scope='col' className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">企業名（カナ）</th>
+              <th scope='col' className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">登録日</th>
               <th scope='col' className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">郵便番号</th>
               <th scope='col' className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">都道府県</th>
               <th scope='col' className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">市区町村</th>
@@ -305,6 +308,9 @@ export default function CompanyMngPage() {
                 </td>
                 <td data-label="企業名（カナ）" className="py-2 px-4 border-b border-gray-200">
                   {employer.clinic_name_kana}
+                </td>
+                <td data-label="登録日" className="py-2 px-4 border-b border-gray-200">
+                  {employer.created ? format(new Date(employer.created), 'yyyy年MM月dd日') : '-'}
                 </td>
                 <td data-label="郵便番号" className="py-2 px-4 border-b border-gray-200">
                   {employer.zip}
