@@ -142,7 +142,9 @@ export interface Employer {
     "employee_number"?: number,
     "establishment_year": string,
     "business": string,
-    "capital_stock": string
+    "capital_stock": string,
+    "created"?: string,
+    "modified"?: string
 }
 
 export interface ImageDetail {
