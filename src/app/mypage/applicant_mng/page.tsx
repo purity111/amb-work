@@ -14,6 +14,9 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 import AddJobSeekerModal, { JobSeekerFormValues } from "@/components/modal/AddJobSeekerModal";
+import Modal from "@/components/common/Modal";
+import Link from "next/link";
+import { getJobSeekers } from "@/lib/api";
 
 export default function ApplicantMngPage() {
   const [currentPage, setCurrentPage] = useState(1);
@@ -26,6 +29,11 @@ export default function ApplicantMngPage() {
   const [sortOrder, setSortOrder] = useState<'ASC' | 'DESC'>('ASC');
   const [selectedJobSeeker, setSelectedJobSeeker] = useState<JobSeekerDetail | null>(null)
   const [modalShown, setModalShown] = useState(false)
+  const [favoritesModalShown, setFavoritesModalShown] = useState(false)
+  const [appliedModalShown, setAppliedModalShown] = useState(false)
+  const [favoritesData, setFavoritesData] = useState<any[]>([])
+  const [appliedData, setAppliedData] = useState<any[]>([])
+  const [selectedApplicantName, setSelectedApplicantName] = useState('')
 
   const router = useRouter();
   const hasLoaded = useRef(false);
@@ -158,6 +166,52 @@ export default function ApplicantMngPage() {
     }
   };
 
+  const showFavorites = async (jobSeeker: JobSeekerDetail) => {
+    try {
+      setSelectedApplicantName(jobSeeker.name);
+      const response = await getJobSeekers({ 
+        page: 1, 
+        limit: 1, 
+        searchTerm: jobSeeker.email,
+        sortBy: '',
+        sortOrder: 'ASC'
+      });
+      
+      // Get the specific job seeker data with allFavoriteJobs
+      const jobSeekerData = response?.data?.jobseekers?.find((js: any) => js.id === jobSeeker.id);
+      const favorites = jobSeekerData?.allFavoriteJobs || [];
+      
+      setFavoritesData(favorites);
+      setFavoritesModalShown(true);
+    } catch (error) {
+      console.error('Error fetching favorites:', error);
+      toast.error('お気に入りの取得に失敗しました');
+    }
+  };
+
+  const showAppliedJobs = async (jobSeeker: JobSeekerDetail) => {
+    try {
+      setSelectedApplicantName(jobSeeker.name);
+      const response = await getJobSeekers({ 
+        page: 1, 
+        limit: 1, 
+        searchTerm: jobSeeker.email,
+        sortBy: '',
+        sortOrder: 'ASC'
+      });
+      
+      // Get the specific job seeker data with allJobApplications
+      const jobSeekerData = response?.data?.jobseekers?.find((js: any) => js.id === jobSeeker.id);
+      const applications = jobSeekerData?.allJobApplications || [];
+      
+      setAppliedData(applications);
+      setAppliedModalShown(true);
+    } catch (error) {
+      console.error('Error fetching applied jobs:', error);
+      toast.error('応募履歴の取得に失敗しました');
+    }
+  };
+
   const onClickHeader = (key: string) => {
     if (sortBy === key) {
       if (sortOrder === 'ASC') setSortOrder('DESC');
@@ -245,28 +299,119 @@ export default function ApplicantMngPage() {
         </div>
       </div>
       {/* Card layout for SP */}
-      <div className="block md:hidden">
-        {response?.data?.jobseekers?.map((applicant: JobSeekerDetail, index: number) => (
-          <div key={applicant.id} className="bg-white rounded-lg shadow-md mb-4 p-4 border border-gray-600">
-            <div className="mb-2"><span className="font-semibold">No.：</span>{index + 1}</div>
-            <div className="mb-2"><span className="font-semibold">名前：</span>{applicant.name}</div>
-            <div className="mb-2"><span className="font-semibold">メール：</span>{applicant.email}</div>
-            <div className="mb-2"><span className="font-semibold">電話：</span>{applicant.tel}</div>
-            {/* Add more fields as needed */}
-            <div className="flex gap-2 mt-2 justify-end">
-              <CButton
-                onClick={() => handleEdit(applicant)}
-                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 text-xs flex items-center"
-                text="編集"
-              />
-              <CButton
-                onClick={() => handleDelete(applicant)}
-                className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 text-xs flex items-center"
-                text="削除"
-              />
-            </div>
-          </div>
-        ))}
+      <div className="block md:hidden overflow-x-auto">
+        <table className="min-w-full whitespace-nowrap border-collapse border border-gray-200">
+          <thead className="bg-gray-50">
+            <tr>
+              <th scope='col' className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">No.</th>
+              <th scope='col' className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">{renderSortableheader('name', '氏名')}</th>
+              <th scope='col' className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">{renderSortableheader('name_kana', '氏名（カナ）')}</th>
+              <th scope='col' className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">{renderSortableheader('birthdate', '生年月日')}</th>
+              <th scope='col' className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">{renderSortableheader('sex', '性別')}</th>
+              <th scope='col' className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">{renderSortableheader('zip', '郵便番号')}</th>
+              <th scope='col' className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">都道府県</th>
+              <th scope='col' className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">{renderSortableheader('tel', '電話番号')}</th>
+              <th scope='col' className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">メールアドレス</th>
+              <th scope='col' className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">{renderSortableheader('service_content', '転職サポート希望')}</th>
+              <th scope='col' className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">{renderSortableheader('created', '登録日')}</th>
+              <th scope='col' className="py-3 px-4 text-center text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">求人関連データ</th>
+              <th scope='col' className="py-3 px-4 text-center text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">操作</th>
+            </tr>
+          </thead>
+          <tbody>
+            {isLoading && (
+              <tr>
+                <td className="py-8 px-4 text-center text-gray-500" colSpan={12}>
+                  読み込み中...
+                </td>
+              </tr>
+            )}
+            {!response?.data?.jobseekers?.length && !isLoading && (
+              <tr>
+                <td className="py-8 px-4 text-center text-gray-500" colSpan={12}>
+                  結果なし
+                </td>
+              </tr>
+            )}
+            {response?.data?.jobseekers.map((jobseeker: JobSeekerDetail, index: number) => (
+              <tr key={jobseeker.id} className={index % 2 === 0 ? "bg-gray-50" : "bg-white"}>
+                <td data-label="No." className="py-2 px-4 border-b border-gray-200">
+                  {(currentPage - 1) * limit + index + 1}
+                </td>
+                <td data-label="Name" className="py-2 px-4 border-b border-gray-200">
+                  {jobseeker.name}
+                </td>
+                <td data-label="Name(kana)" className="py-2 px-4 border-b border-gray-200">
+                  {jobseeker.name_kana}
+                </td>
+                <td data-label="DOB" className="py-2 px-4 border-b border-gray-200">
+                  {format(new Date(jobseeker.birthdate), 'yyyy年MM月dd日')}
+                </td>
+                <td data-label="Sex" className="py-2 px-4 border-b border-gray-200">
+                  {jobseeker.sex === 1 ? '男' : '女'}
+                </td>
+                <td data-label="ZipCode" className="py-2 px-4 border-b border-gray-200">
+                  {jobseeker.zip}
+                </td>
+                <td data-label="Prefectures" className="py-2 px-4 border-b border-gray-200">
+                  {PrefectureOptions.find(p => p.value === jobseeker.prefectures.toString())?.option || '?'}
+                </td>
+                <td data-label="PhoneNumber" className="py-2 px-4 border-b border-gray-200">
+                  {jobseeker.tel}
+                </td>
+                <td data-label="Email" className="py-2 px-4 border-b border-gray-200">
+                  {jobseeker.email}
+                </td>
+                <td data-label="ServiceContent" className="py-2 px-4 border-b border-gray-200">
+                  {jobseeker.service_content ? '有' : '無'}
+                </td>
+                <td data-label="CreatedAt" className="py-2 px-4 border-b border-gray-200">
+                  {format(new Date(jobseeker.created), 'yyyy年MM月dd日HH:mm:ss')}
+                </td>
+                <td data-label="JobRelatedData" className="py-2 px-4 border-b border-gray-200">
+                  <div className="flex flex-col gap-1 text-xs">
+                    <button 
+                      className="text-blue-600 cursor-pointer underline hover:text-blue-800" 
+                      onClick={() => showFavorites(jobseeker)}
+                    >
+                      お気に入り
+                    </button>
+                    <button 
+                      className="text-green-600 cursor-pointer underline hover:text-green-800" 
+                      onClick={() => showAppliedJobs(jobseeker)}
+                    >
+                      応募履歴
+                    </button>
+                  </div>
+                </td>
+                <td data-label="Actions" className="!p-2 border-b border-gray-200">
+                  <div className="flex gap-1 sm:gap-2 sm:space-x-2 justify-center items-center">
+                    <CButton
+                      onClick={() => handleEdit(jobseeker)}
+                      className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 text-xs flex items-center"
+                      text="編集"
+                      leftIcon={(
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                        </svg>
+                      )}
+                    />
+                    <CButton
+                      onClick={() => handleDelete(jobseeker)}
+                      className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 text-xs flex items-center"
+                      text="削除"
+                      leftIcon={(
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                        </svg>
+                      )}
+                    />
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
       <div className="hidden md:block overflow-x-auto">
         <table className="min-w-full whitespace-nowrap border-collapse border border-gray-200">
@@ -283,6 +428,7 @@ export default function ApplicantMngPage() {
               <th scope='col' className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">メールアドレス</th>
               <th scope='col' className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">{renderSortableheader('service_content', '転職サポート希望')}</th>
               <th scope='col' className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">{renderSortableheader('created', '登録日')}</th>
+              <th scope='col' className="py-3 px-4 text-center text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">求人関連データ</th>
               <th scope='col' className="py-3 px-4 text-center text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">操作</th>
             </tr>
           </thead>
@@ -308,7 +454,7 @@ export default function ApplicantMngPage() {
                   {format(new Date(jobseeker.birthdate), 'yyyy年MM月dd日')}
                 </td>
                 <td data-label="Sex" className="py-2 px-4 border-b border-gray-200">
-                  {jobseeker.sex === 1 ? 'M' : 'F'}
+                  {jobseeker.sex === 1 ? '男' : '女'}
                 </td>
                 <td data-label="ZipCode" className="py-2 px-4 border-b border-gray-200">
                   {jobseeker.zip}
@@ -327,6 +473,22 @@ export default function ApplicantMngPage() {
                 </td>
                 <td data-label="CreatedAt" className="py-2 px-4 border-b border-gray-200">
                   {format(new Date(jobseeker.created), 'yyyy年MM月dd日HH:mm:ss')}
+                </td>
+                <td data-label="JobRelatedData" className="py-2 px-4 border-b border-gray-200">
+                  <div className="flex flex-col gap-1 text-xs">
+                    <button 
+                      className="text-blue-600 cursor-pointer underline hover:text-blue-800" 
+                      onClick={() => showFavorites(jobseeker)}
+                    >
+                      お気に入り
+                    </button>
+                    <button 
+                      className="text-green-600 cursor-pointer underline hover:text-green-800" 
+                      onClick={() => showAppliedJobs(jobseeker)}
+                    >
+                      応募履歴
+                    </button>
+                  </div>
                 </td>
                 <td data-label="Actions" className="!p-2 border-b border-gray-200">
                   <div className="flex gap-1 sm:gap-2 sm:space-x-2 justify-center items-center">
@@ -375,6 +537,114 @@ export default function ApplicantMngPage() {
           onClose={onCloseModal}
           onSubmit={onSubmitForm}
         />
+      )}
+
+      {/* Favorites Modal */}
+      {favoritesModalShown && (
+        <Modal isOpen={favoritesModalShown} onClose={() => setFavoritesModalShown(false)}>
+          <div className="max-w-5xl max-h-[85vh] overflow-hidden flex flex-col p-3">
+            <h3 className="text-xl font-bold mb-6 text-center">
+              <span className="text-red-600">{selectedApplicantName}</span>様のお気に入り一覧
+            </h3>
+            <div className="flex-1 overflow-auto">
+              <table className="min-w-full border-collapse border border-gray-200">
+                <thead className="bg-gray-50 sticky top-0">
+                  <tr>
+                    <th className="py-4 px-6 text-left text-sm font-medium border-b border-gray-200">求人URL</th>
+                    <th className="py-4 px-6 text-left text-sm font-medium border-b border-gray-200">お気に入り日時</th>
+                    <th className="py-4 px-6 text-left text-sm font-medium border-b border-gray-200">求人タイトル</th>
+                    <th className="py-4 px-6 text-left text-sm font-medium border-b border-gray-200">求人タイプ</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {favoritesData.map((item: any, index: number) => (
+                    <tr key={`${item.id}-${index}`} className={index % 2 === 0 ? "bg-white" : "bg-gray-50"}>
+                      <td className="py-3 px-6 border-b border-gray-200 whitespace-nowrap">
+                        <Link 
+                          href={`https://reuse-tenshoku.com/job-openings/recruit/${item.id}`} 
+                          target="_blank"
+                          className="text-blue-600 hover:text-blue-800 underline"
+                        >
+                          https://reuse-tenshoku.com/job-openings/recruit/{item.id}
+                        </Link>
+                      </td>
+                      <td className="py-3 px-6 border-b border-gray-200 whitespace-nowrap">
+                        {item.favoriteDate ? format(new Date(item.favoriteDate), 'yyyy年MM月dd日 HH:mm:ss') : '-'}
+                      </td>
+                      <td className="py-3 px-6 border-b border-gray-200 whitespace-nowrap">
+                        {item.name || '-'}
+                      </td>
+                      <td className="py-3 px-6 border-b border-gray-200 whitespace-nowrap">
+                        {item.jobType === 'direct' ? '直接応募' : item.jobType === 'agency' ? '転職サポート' : item.jobType || '-'}
+                      </td>
+                    </tr>
+                  ))}
+                  {favoritesData.length === 0 && (
+                    <tr>
+                      <td className="py-8 px-6 text-center text-gray-500" colSpan={4}>
+                        お気に入りがありません
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </Modal>
+      )}
+
+      {/* Applied Jobs Modal */}
+      {appliedModalShown && (
+        <Modal isOpen={appliedModalShown} onClose={() => setAppliedModalShown(false)}>
+          <div className="max-w-5xl max-h-[85vh] overflow-hidden flex flex-col p-3">
+            <h3 className="text-xl font-bold mb-6 text-center">
+              <span className="text-red-600">{selectedApplicantName}</span>様の応募履歴一覧
+            </h3>
+            <div className="flex-1 overflow-auto">
+              <table className="min-w-full border-collapse border border-gray-200">
+                <thead className="bg-gray-50 sticky top-0">
+                  <tr>
+                    <th className="py-4 px-6 text-left text-sm font-medium border-b border-gray-200">求人URL</th>
+                    <th className="py-4 px-6 text-left text-sm font-medium border-b border-gray-200">応募日時</th>
+                    <th className="py-4 px-6 text-left text-sm font-medium border-b border-gray-200">求人タイトル</th>
+                    <th className="py-4 px-6 text-left text-sm font-medium border-b border-gray-200">求人タイプ</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {appliedData.map((item: any, index: number) => (
+                    <tr key={`${item.id}-${index}`} className={index % 2 === 0 ? "bg-white" : "bg-gray-50"}>
+                      <td className="py-3 px-6 border-b border-gray-200 whitespace-nowrap">
+                        <Link 
+                          href={`https://reuse-tenshoku.com/job-openings/recruit/${item.id}`} 
+                          target="_blank"
+                          className="text-blue-600 hover:text-blue-800 underline"
+                        >
+                          https://reuse-tenshoku.com/job-openings/recruit/{item.id}
+                        </Link>
+                      </td>
+                      <td className="py-3 px-6 border-b border-gray-200 whitespace-nowrap">
+                        {item.applicationDate ? format(new Date(item.applicationDate), 'yyyy年MM月dd日 HH:mm:ss') : '-'}
+                      </td>
+                      <td className="py-3 px-6 border-b border-gray-200 whitespace-nowrap">
+                        {item.name || '-'}
+                      </td>
+                      <td className="py-3 px-6 border-b border-gray-200 whitespace-nowrap">
+                        {item.jobType === 'direct' ? '直接応募' : item.jobType === 'agency' ? '転職サポート' : item.jobType || '-'}
+                      </td>
+                    </tr>
+                  ))}
+                  {appliedData.length === 0 && (
+                    <tr>
+                      <td className="py-8 px-6 text-center text-gray-500" colSpan={4}>
+                        応募履歴がありません
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </Modal>
       )}
     </div >
   );
