@@ -333,3 +333,51 @@ export const generateCareerConsultationCSVData = (data: any[]) => {
         '作成日時': item.created || '',
     }));
 }
+
+export const generateJobSeekerCSVData = (data: any[]) => {
+    // Helper to get prefecture name from value
+    const getPrefectureName = (val: any) => {
+        const found = PrefectureOptions.find(opt => opt.value === String(val));
+        return found ? found.option : '';
+    };
+
+    return data.map(item => ({
+        'ID': item.id || '',
+        '氏名': item.name || '',
+        '氏名（カナ）': item.name_kana || '',
+        '生年月日': item.birthdate || '',
+        '性別': item.sex === 1 ? '男性' : item.sex === 2 ? '女性' : 'その他',
+        '郵便番号': item.zip || '',
+        '都道府県': getPrefectureName(item.prefectures),
+        '電話番号': item.tel || '',
+        'メールアドレス': item.email || '',
+        '転職サポート希望': item.service_content ? '有' : '無',
+        '登録日': item.created || '',
+    }));
+}
+
+export const generateEmployerCSVData = (data: any[]) => {
+    // Helper to get prefecture name from value
+    const getPrefectureName = (val: any) => {
+        const found = PrefectureOptions.find(opt => opt.value === String(val));
+        return found ? found.option : '';
+    };
+
+    return data.map(item => ({
+        'ID': item.id || '',
+        '企業名': item.clinic_name || '',
+        '企業名（カナ）': item.clinic_name_kana || '',
+        '登録日': item.created || '',
+        '郵便番号': item.zip || '',
+        '都道府県': getPrefectureName(item.prefectures),
+        '市区町村': item.city || '',
+        '最寄り駅': item.closest_station || '',
+        '電話番号': item.tel || '',
+        'メールアドレス': item.email || '',
+        'ホームページ': item.home_page_url || '',
+        '従業員数': item.employee_number || '',
+        '事業内容': item.business || '',
+        '資本金': item.capital_stock || '',
+        '設立年': item.establishment_year || '',
+    }));
+}

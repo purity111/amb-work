@@ -14,6 +14,8 @@ import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { toast } from 'react-toastify';
 import AddEmployerModal, { EmployerFormValues } from "@/components/modal/AddEmployerModal";
 import { format } from 'date-fns';
+import { CSVLink } from "react-csv";
+import { generateEmployerCSVData } from "@/utils/helper";
 
 export default function CompanyMngPage() {
   const [currentPage, setCurrentPage] = useState(1);
@@ -38,6 +40,16 @@ export default function CompanyMngPage() {
     prefectures,
     sortBy,
     sortOrder
+  });
+
+  // Fetch all employers for CSV export
+  const { data: allEmployersResponse } = useGetEmployers({
+    page: 1,
+    limit: 999999,
+    searchTerm: '',
+    prefectures: 0,
+    sortBy: '',
+    sortOrder: 'ASC'
   });
 
   const deleteEmployer = useMutation({
@@ -244,6 +256,25 @@ export default function CompanyMngPage() {
             className="h-[40px]"
             width="w-50"
           />
+          {allEmployersResponse?.data?.employers?.length > 0 && (
+            <CSVLink
+              data={generateEmployerCSVData(allEmployersResponse.data.employers)}
+              filename={`企業一覧-${format(new Date(), 'yyyy年MM月dd日-HHmm')}.csv`}
+            >
+              <CButton
+                text="CSV出力"
+                className='bg-green text-white text-sm h-[40px]'
+                size="small"
+                leftIcon={
+                  <span className="mr-1 flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                  </span>
+                }
+              />
+            </CSVLink>
+          )}
         </div>
         <div className="flex justify-end flex-row justify-between md:justify-end items-center mx-auto my-2 space-x-2 w-full sm:w-[80%] md:w-full">
           <CInput

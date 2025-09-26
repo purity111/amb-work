@@ -17,6 +17,8 @@ import AddJobSeekerModal, { JobSeekerFormValues } from "@/components/modal/AddJo
 import Modal from "@/components/common/Modal";
 import Link from "next/link";
 import { getJobSeekers } from "@/lib/api";
+import { CSVLink } from "react-csv";
+import { generateJobSeekerCSVData } from "@/utils/helper";
 
 export default function ApplicantMngPage() {
   const [currentPage, setCurrentPage] = useState(1);
@@ -45,6 +47,16 @@ export default function ApplicantMngPage() {
     prefectures,
     sortBy,
     sortOrder
+  });
+
+  // Fetch all job seekers for CSV export
+  const { data: allJobSeekersResponse } = useGetJobSeekers({
+    page: 1,
+    limit: 999999,
+    searchTerm: '',
+    prefectures: 0,
+    sortBy: '',
+    sortOrder: 'ASC'
   });
 
   const deleteJobSeeker = useMutation({
@@ -281,6 +293,25 @@ export default function ApplicantMngPage() {
             className="h-[40px]"
             width="w-50"
           />
+          {allJobSeekersResponse?.data?.jobseekers?.length > 0 && (
+            <CSVLink
+              data={generateJobSeekerCSVData(allJobSeekersResponse.data.jobseekers)}
+              filename={`求職者一覧-${format(new Date(), 'yyyy年MM月dd日-HHmm')}.csv`}
+            >
+              <CButton
+                text="CSV出力"
+                className='bg-green text-white text-sm h-[40px]'
+                size="small"
+                leftIcon={
+                  <span className="mr-1 flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                  </span>
+                }
+              />
+            </CSVLink>
+          )}
         </div>
         <div className="flex justify-end flex-row justify-between md:justify-end items-center mx-auto my-2 space-x-2 w-full sm:w-[80%] md:w-full">
           <CInput
