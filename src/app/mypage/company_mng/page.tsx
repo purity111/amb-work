@@ -222,14 +222,27 @@ export default function CompanyMngPage() {
     <div className="flex flex-col p-3 md:p-8">
       <h1 className="text-[24px] md:text-[32px] font-bold text-center mb-6">企業管理ページ</h1>
       <div className="flex flex-col md:flex-row">
-        <div className="flex items-center mx-auto my-2 space-x-2 w-full">
-          <h4 className="hidden md:block">都道府県：</h4>
+        <div className="flex justify-between md:justify-start flex-row items-center mx-auto my-2 space-x-2 w-full sm:w-[80%] md:w-full">
+          <CButton
+            text="追加"
+            className='bg-blue-500 text-white text-sm h-[40px]'
+            size="small"
+            leftIcon={
+              <span className="mr-1 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 md:h-6 md:w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+                </svg>
+              </span>
+            }
+            onClick={() => setModalShown(true)}
+          />
           <CSelect
             value={prefectures.toString()}
             options={PrefectureOptions}
             placeholder="都道府県を選択"
             onChange={onChangePrefectures}
-            className="h-[40px] w-[80px] md:w-[120px]"
+            className="h-[40px]"
+            width="w-50"
           />
         </div>
         <div className="flex justify-end flex-row justify-between md:justify-end items-center mx-auto my-2 space-x-2 w-full sm:w-[80%] md:w-full">
@@ -249,45 +262,125 @@ export default function CompanyMngPage() {
         </div>
       </div>
 
-      {/* Card layout for SP */}
-      <div className="block md:hidden">
-        {employers?.map((employer: Employer, index: number) => (
-          <div key={employer.id} className="bg-white rounded-lg shadow-md mb-4 p-4 border border-gray-600">
-            <div className="mb-2"><span className="font-semibold">No.：</span>{index + 1}</div>
-            <div className="mb-2"><span className="font-semibold">企業名：</span>{employer.clinic_name}</div>
-            <div className="mb-2"><span className="font-semibold">企業名（カナ）：</span>{employer.clinic_name_kana}</div>
-            <div className="mb-2"><span className="font-semibold">登録日：</span>{employer.created ? format(new Date(employer.created), 'yyyy年MM月dd日') : '-'}</div>
-            <div className="mb-2"><span className="font-semibold">郵便番号：</span>{employer.zip}</div>
-            <div className="mb-2"><span className="font-semibold">都道府県：</span>{PrefectureOptions.find(p => p.value === employer.prefectures.toString())?.option || '不明'}</div>
-            <div className="mb-2"><span className="font-semibold">市区町村：</span>{employer.city}</div>
-            <div className="mb-2"><span className="font-semibold">最寄り駅：</span>{employer.closest_station || '-'}</div>
-            <div className="mb-2"><span className="font-semibold">電話番号：</span>{employer.tel}</div>
-            <div className="mb-2"><span className="font-semibold">メールアドレス：</span>{employer.email}</div>
-            <div className="mb-2"><span className="font-semibold">ホームページ：</span>
-              {employer.home_page_url ? (
-                <a href={employer.home_page_url} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
-                  {employer.home_page_url}
-                </a>
-              ) : '-'}
-            </div>
-            <div className="mb-2"><span className="font-semibold">従業員数：</span>{employer.employee_number || '-'}</div>
-            <div className="mb-2"><span className="font-semibold">事業内容：</span>{employer.business || '-'}</div>
-            <div className="mb-2"><span className="font-semibold">資本金：</span>{employer.capital_stock || '-'}</div>
-            <div className="mb-2"><span className="font-semibold">設立年：</span>{employer.establishment_year}</div>
-            <div className="flex gap-2 mt-2 justify-end">
-              <CButton
-                onClick={() => handleEdit(employer)}
-                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 text-xs flex items-center"
-                text="編集"
-              />
-              <CButton
-                onClick={() => handleDelete(employer)}
-                className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 text-xs flex items-center"
-                text="削除"
-              />
-            </div>
-          </div>
-        ))}
+      {/* Table layout for SP */}
+      <div className="block md:hidden overflow-x-auto">
+        <table className="min-w-full whitespace-nowrap border-collapse border border-gray-200">
+          <thead className="bg-gray-50">
+            <tr>
+              <th scope='col' className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">No.</th>
+              <th scope='col' className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">{renderSortableHeader('clinic_name', '企業名')}</th>
+              <th scope='col' className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">{renderSortableHeader('clinic_name_kana', '企業名（カナ）')}</th>
+              <th scope='col' className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">{renderSortableHeader('created', '登録日')}</th>
+              <th scope='col' className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">{renderSortableHeader('zip', '郵便番号')}</th>
+              <th scope='col' className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">都道府県</th>
+              <th scope='col' className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">市区町村</th>
+              <th scope='col' className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">最寄り駅</th>
+              <th scope='col' className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">{renderSortableHeader('tel', '電話番号')}</th>
+              <th scope='col' className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">メールアドレス</th>
+              <th scope='col' className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">ホームページ</th>
+              <th scope='col' className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">従業員数</th>
+              <th scope='col' className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">事業内容</th>
+              <th scope='col' className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">資本金</th>
+              <th scope='col' className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">設立年</th>
+              <th scope='col' className="py-3 px-4 text-center text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">操作</th>
+            </tr>
+          </thead>
+          <tbody>
+            {isLoading && (
+              <tr>
+                <td className="py-8 px-4 text-center text-gray-500" colSpan={15}>
+                  読み込み中...
+                </td>
+              </tr>
+            )}
+            {!employers?.length && !isLoading && (
+              <tr>
+                <td className="py-8 px-4 text-center text-gray-500" colSpan={15}>
+                  結果なし
+                </td>
+              </tr>
+            )}
+            {employers.map((employer: Employer, index: number) => (
+              <tr key={employer.id} className={index % 2 === 0 ? "bg-gray-50" : "bg-white"}>
+                <td data-label="No." className="py-2 px-4 border-b border-gray-200">
+                  {(currentPage - 1) * limit + index + 1}
+                </td>
+                <td data-label="企業名" className="py-2 px-4 border-b border-gray-200">
+                  {employer.clinic_name}
+                </td>
+                <td data-label="企業名（カナ）" className="py-2 px-4 border-b border-gray-200">
+                  {employer.clinic_name_kana}
+                </td>
+                <td data-label="登録日" className="py-2 px-4 border-b border-gray-200">
+                  {employer.created ? format(new Date(employer.created), 'yyyy年MM月dd日') : '-'}
+                </td>
+                <td data-label="郵便番号" className="py-2 px-4 border-b border-gray-200">
+                  {employer.zip}
+                </td>
+                <td data-label="都道府県" className="py-2 px-4 border-b border-gray-200">
+                  {PrefectureOptions.find(p => p.value === employer.prefectures.toString())?.option || '不明'}
+                </td>
+                <td data-label="市区町村" className="py-2 px-4 border-b border-gray-200">
+                  {employer.city}
+                </td>
+                <td data-label="最寄り駅" className="py-2 px-4 border-b border-gray-200">
+                  {employer.closest_station || '-'}
+                </td>
+                <td data-label="電話番号" className="py-2 px-4 border-b border-gray-200">
+                  {employer.tel}
+                </td>
+                <td data-label="メールアドレス" className="py-2 px-4 border-b border-gray-200">
+                  {employer.email}
+                </td>
+                <td data-label="ホームページ" className="py-2 px-4 border-b border-gray-200">
+                  {employer.home_page_url ? (
+                    <a href={employer.home_page_url} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline text-xs">
+                      {employer.home_page_url.length > 20 ? 'リンク' : employer.home_page_url}
+                    </a>
+                  ) : '-'}
+                </td>
+                <td data-label="従業員数" className="py-2 px-4 border-b border-gray-200">
+                  {employer.employee_number || '-'}
+                </td>
+                <td data-label="事業内容" className="py-2 px-4 border-b border-gray-200">
+                  <div className="max-w-[150px] truncate" title={employer.business}>
+                    {employer.business || '-'}
+                  </div>
+                </td>
+                <td data-label="資本金" className="py-2 px-4 border-b border-gray-200">
+                  {employer.capital_stock || '-'}
+                </td>
+                <td data-label="設立年" className="py-2 px-4 border-b border-gray-200">
+                  {employer.establishment_year}
+                </td>
+                <td data-label="操作" className="!p-2 border-b border-gray-200">
+                  <div className="flex gap-1 sm:gap-2 sm:space-x-2 justify-center items-center">
+                    <CButton
+                      onClick={() => handleEdit(employer)}
+                      className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 text-xs flex items-center"
+                      text="編集"
+                      leftIcon={(
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                        </svg>
+                      )}
+                    />
+                    <CButton
+                      onClick={() => handleDelete(employer)}
+                      className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 text-xs flex items-center"
+                      text="削除"
+                      leftIcon={(
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                        </svg>
+                      )}
+                    />
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
       <div className="hidden md:block overflow-x-auto">
         <table className="min-w-full whitespace-nowrap border-collapse border border-gray-200">
@@ -313,10 +406,18 @@ export default function CompanyMngPage() {
           </thead>
           <tbody>
             {isLoading && (
-              <p>読み込み中...</p>
+              <tr>
+                <td className="py-8 px-4 text-center text-gray-500" colSpan={15}>
+                  読み込み中...
+                </td>
+              </tr>
             )}
             {!employers?.length && !isLoading && (
-              <p>結果なし</p>
+              <tr>
+                <td className="py-8 px-4 text-center text-gray-500" colSpan={15}>
+                  結果なし
+                </td>
+              </tr>
             )}
             {employers.map((employer: Employer, index: number) => (
               <tr key={employer.id} className={index % 2 === 0 ? "bg-gray-50" : "bg-white"}>
