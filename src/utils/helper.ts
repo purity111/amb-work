@@ -341,6 +341,22 @@ export const generateJobSeekerCSVData = (data: any[]) => {
         return found ? found.option : '';
     };
 
+    // Helper to format bookmark and application data as structured format
+    const formatJobRelatedData = (data: any[] = [], dateField: string) => {
+        if (!data || data.length === 0) return 'なし';
+        
+        return data.map(item => {
+            const jobTitle = item.name || '（タイトルなし）';
+            const jobId = item.id;
+            const jobUrl = `https://reuse-tenshoku.com/job-openings/recruit/${jobId}`;
+            const formattedDate = item[dateField] ? format(new Date(item[dateField]), 'yyyy年MM月dd日 HH:mm:ss') : '不明';
+            
+            return `求人URL: ${jobUrl}
+日時: ${formattedDate}
+求人タイトル: ${jobTitle}`;
+        }).join('\n\n');
+    };
+
     return data.map(item => ({
         'ID': item.id || '',
         '氏名': item.name || '',
@@ -353,6 +369,8 @@ export const generateJobSeekerCSVData = (data: any[]) => {
         'メールアドレス': item.email || '',
         '転職サポート希望': item.service_content ? '有' : '無',
         '登録日': item.created || '',
+        'お気に入り': formatJobRelatedData(item.allFavoriteJobs, 'favoriteDate'),
+        '応募履歴': formatJobRelatedData(item.allJobApplications, 'applicationDate'),
     }));
 }
 
