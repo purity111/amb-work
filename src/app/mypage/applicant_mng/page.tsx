@@ -297,6 +297,21 @@ export default function ApplicantMngPage() {
             <CSVLink
               data={generateJobSeekerCSVData(allJobSeekersResponse.data.jobseekers)}
               filename={`求職者一覧-${format(new Date(), 'yyyy年MM月dd日-HHmm')}.csv`}
+              headers={[
+                { label: 'ID', key: 'ID' },
+                { label: '氏名', key: '氏名' },
+                { label: '氏名（カナ）', key: '氏名（カナ）' },
+                { label: '生年月日', key: '生年月日' },
+                { label: '性別', key: '性別' },
+                { label: '郵便番号', key: '郵便番号' },
+                { label: '都道府県', key: '都道府県' },
+                { label: '電話番号', key: '電話番号' },
+                { label: 'メールアドレス', key: 'メールアドレス' },
+                { label: '転職サポート希望', key: '転職サポート希望' },
+                { label: '登録日', key: '登録日' },
+                { label: 'お気に入り', key: 'お気に入り' },
+                { label: '応募履歴', key: '応募履歴' }
+              ]}
             >
               <CButton
                 text="CSV出力"

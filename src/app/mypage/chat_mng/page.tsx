@@ -205,7 +205,7 @@ export default function ChatMngPage() {
   return (
     <div className="flex flex-col p-2 md:p-5 w-[95%] max-w-[1200px] mx-auto">
       {/* <h1 className="text-2xl font-bold mb-6">チャット管理ページ</h1> */}
-      {jLoading ? <p>Loading...</p> : (
+      {jLoading ? <p>読み込む中...</p> : (
         <CSearchSelect
           options={jobList}
           value={selectedJob.toString()}
