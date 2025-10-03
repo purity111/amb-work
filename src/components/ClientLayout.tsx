@@ -23,8 +23,8 @@ export default function ClientLayout({
   // Hide FixedBottomBar in mobile mode on /job-openings page (but not on recruit pages)
   const hideFixedBottomBarInMobile = (pathname === "/job-openings" || pathname?.startsWith("/job-openings/")) && !pathname?.startsWith("/job-openings/recruit/");
   
-  // Hide Header on campaign page
-  const hideHeader = pathname?.startsWith("/recycle-tsushin-25summer_campaign");
+  // Hide Header on campaign page and landing page
+  const hideHeader = pathname?.startsWith("/recycle-tsushin-25summer_campaign") || pathname === "/landing" || pathname?.startsWith("/landing/");
 
   return (
     <QueryClientProvider client={queryClient}>
