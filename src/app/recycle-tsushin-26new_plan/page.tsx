@@ -14,12 +14,12 @@ export default function LandingPage() {
         tel: '',
         free5: ''
     });
-    const [errors, setErrors] = useState<{[key: string]: string}>({});
+    const [errors, setErrors] = useState<{ [key: string]: string }>({});
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     const validateForm = () => {
-        const newErrors: {[key: string]: string} = {};
-        
+        const newErrors: { [key: string]: string } = {};
+
         if (!formData.company.trim()) {
             newErrors.company = '会社名は必須です';
         }
@@ -42,7 +42,7 @@ export default function LandingPage() {
         } else if (!/^[\d\-\(\)\+\s]+$/.test(formData.tel)) {
             newErrors.tel = '有効な電話番号を入力してください';
         }
-        
+
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
     };
@@ -50,7 +50,7 @@ export default function LandingPage() {
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
         setFormData(prev => ({ ...prev, [name]: value }));
-        
+
         // Clear error when user starts typing
         if (errors[name]) {
             setErrors(prev => ({ ...prev, [name]: '' }));
@@ -59,13 +59,13 @@ export default function LandingPage() {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        
+
         if (!validateForm()) {
             return;
         }
-        
+
         setIsSubmitting(true);
-        
+
         // Submit the form (the external form handler will take over)
         const form = e.target as HTMLFormElement;
         form.submit();
@@ -113,22 +113,41 @@ export default function LandingPage() {
                 {/* Right Side - Image and CTA */}
                 <div>
                     <img
-                        src="/images/landing/pc/header.png"
+                        src="/images/landing/pc/header-bg.png"
                         alt="リソコース・リユーズ"
                         className="h-auto w-full hidden md:block"
                     />
                     <img
-                        src="/images/landing/sp/header.png"
+                        src="/images/landing/sp/header-bg.png"
                         alt="リソコース・リユーズ"
                         className="h-auto w-full md:hidden"
                     />
                 </div>
+                <div className="hidden md:block absolute bottom-65 left-[455px]">
+                    <a
+                        href="#price"
+                        aria-label="申請ボタン"
+                        className="w-[421px] h-[84px] bg-[url('/images/landing/pc/seePlanBtn.png')] bg-[length:100%_100%] bg-no-repeat bg-center active:scale-95 block"
+                    >
+                        <span className="sr-only">申請ボタン</span>
+                    </a>
+                </div>
+                <div className="md:hidden absolute bottom-52 left-[37px]">
+                    <a
+                        href="#price"
+                        aria-label="申請ボタン"
+                        className="w-[218px] h-[31px] bg-[url('/images/landing/sp/seePlanBtn.png')] bg-[length:100%_100%] bg-no-repeat bg-center active:scale-95 block"
+                    >
+                        <span className="sr-only">申請ボタン</span>
+                    </a>
+                </div>
                 <div className="gap-4 hidden md:flex absolute bottom-6 inset-x-0 mx-auto w-fit">
-                    <img
-                        src="/images/landing/pc/button1.png"
-                        alt="申請ボタン"
-                        className="w-[609px] h-[84px]"
-                    />
+                    <a
+                        href="#jinjai"
+                        aria-label="申請ボタン"
+                        className="block w-[609px] h-[84px] bg-[url('/images/landing/pc/button1.png')] bg-[length:100%_100%] bg-no-repeat bg-center active:scale-95"
+                    >
+                    </a>
                     <a
                         href="#form"
                         aria-label="申請ボタン"
@@ -137,11 +156,12 @@ export default function LandingPage() {
                     </a>
                 </div>
                 <div className="gap-4 md:hidden absolute bottom-5 inset-x-0 mx-auto w-fit">
-                    <img
-                        src="/images/landing/pc/button1.png"
-                        alt="申請ボタン"
-                        className="w-[335px] h-[44px] mb-2"
-                    />
+                    <a
+                        href="#jinjai"
+                        aria-label="申請ボタン"
+                        className="block w-[335px] h-[44px] bg-[url('/images/landing/pc/button1.png')] bg-[length:100%_100%] bg-no-repeat bg-center active:scale-95"
+                    >
+                    </a>
                     <a
                         href="#form"
                         aria-label="申請ボタン"
@@ -207,7 +227,7 @@ export default function LandingPage() {
             <ToInquiryCta />
 
             {/* Use-case Section */}
-            <section className="relative">
+            <section className="relative" id="price">
                 {/* Right Side - Image and CTA */}
                 <div>
                     <img
@@ -264,7 +284,7 @@ export default function LandingPage() {
                     <TestimonialCard className='mt-[56px] md:mt-[136px]' />
                 </div>
             </section>
-            
+
             {/* flow Section */}
             <section className="relative">
                 {/* Right Side - Image and CTA */}
@@ -346,257 +366,255 @@ export default function LandingPage() {
                         }
                     `}</style>
 
-                        <div className="content_form" style={{ 
-                            display: 'block', 
-                            visibility: 'visible', 
-                            opacity: '1',
-                            backgroundColor: 'white',
-                        }}>
-                            <form onSubmit={handleSubmit} action="https://my183p.com/p/r/kCvr10zJ" encType="multipart/form-data" id="UserItemForm" className="myForm" method="post" acceptCharset="utf-8">
-                                <input type="hidden" name="_method" value="POST" />
+                    <div className="content_form" style={{
+                        display: 'block',
+                        visibility: 'visible',
+                        opacity: '1',
+                        backgroundColor: 'white',
+                    }}>
+                        <form onSubmit={handleSubmit} action="https://my183p.com/p/r/kCvr10zJ" encType="multipart/form-data" id="UserItemForm" className="myForm" method="post" acceptCharset="utf-8">
+                            <input type="hidden" name="_method" value="POST" />
 
-
-
-                                {/* 会社名 */}
-                                <div className="input text input_unit required" style={{ display: 'flex', alignItems: 'flex-start' }}>
-                                    <div className="my_column my_left" style={{ width: '30%' }}>
-                                        <div className="label_frame">
-                                            <label htmlFor="Usercompany" className="form_input_label required" style={{ fontWeight: 'bold', color: '#333' }}>会社名</label>
-                                        </div>
+                            {/* 会社名 */}
+                            <div className="input text input_unit required" style={{ display: 'flex', alignItems: 'flex-start' }}>
+                                <div className="my_column my_left" style={{ width: '30%' }}>
+                                    <div className="label_frame">
+                                        <label htmlFor="Usercompany" className="form_input_label required" style={{ fontWeight: 'bold', color: '#333' }}>会社名</label>
                                     </div>
-                                    <div className="my_column my_right" style={{ width: '70%' }}>
-                                        <input 
-                                            name="company" 
-                                            id="Usercompany" 
-                                            value={formData.company}
+                                </div>
+                                <div className="my_column my_right" style={{ width: '70%' }}>
+                                    <input
+                                        name="company"
+                                        id="Usercompany"
+                                        value={formData.company}
+                                        onChange={handleInputChange}
+                                        className={`required ${errors.company ? 'border-red-500' : ''}`}
+                                        type="text"
+                                        style={{
+                                            width: '100%',
+                                            padding: '10px',
+                                            border: '1px solid #ccc',
+                                            borderRadius: '4px',
+                                            fontSize: '16px',
+                                            backgroundColor: '#fff'
+                                        }}
+                                    />
+                                    {errors.company && <div className="text-red-500 text-sm mt-1">{errors.company}</div>}
+                                </div>
+                            </div>
+
+
+                            {/* 部署名 */}
+                            <div className="input text input_unit required" style={{ display: 'flex', alignItems: 'flex-start' }}>
+                                <div className="my_column my_left" style={{ width: '30%' }}>
+                                    <div className="label_frame">
+                                        <label htmlFor="Username1" className="form_input_label required" style={{ fontWeight: 'bold', color: '#333' }}>部署名</label>
+                                    </div>
+                                </div>
+                                <div className="my_column my_right" style={{ width: '70%' }}>
+                                    <input
+                                        name="name1"
+                                        id="Username1"
+                                        value={formData.name1}
+                                        onChange={handleInputChange}
+                                        className={`required ${errors.name1 ? 'border-red-500' : ''}`}
+                                        type="text"
+                                        style={{
+                                            width: '100%',
+                                            padding: '10px',
+                                            border: '1px solid #ccc',
+                                            borderRadius: '4px',
+                                            fontSize: '16px',
+                                            backgroundColor: '#fff'
+                                        }}
+                                    />
+                                    {errors.name1 && <div className="text-red-500 text-sm mt-1">{errors.name1}</div>}
+                                </div>
+                            </div>
+
+
+                            {/* 姓 */}
+                            <div className="input text input_unit required" style={{ display: 'flex', alignItems: 'flex-start' }}>
+                                <div className="my_column my_left" style={{ width: '30%' }}>
+                                    <div className="label_frame">
+                                        <label htmlFor="Username2" className="form_input_label required" style={{ fontWeight: 'bold', color: '#333' }}>姓</label>
+                                    </div>
+                                </div>
+                                <div className="my_column my_right" style={{ width: '70%' }}>
+                                    <input
+                                        name="name2"
+                                        id="Username2"
+                                        value={formData.name2}
+                                        onChange={handleInputChange}
+                                        className={`required ${errors.name2 ? 'border-red-500' : ''}`}
+                                        type="text"
+                                        style={{
+                                            width: '100%',
+                                            padding: '10px',
+                                            border: '1px solid #ccc',
+                                            borderRadius: '4px',
+                                            fontSize: '16px',
+                                            backgroundColor: '#fff'
+                                        }}
+                                    />
+                                    {errors.name2 && <div className="text-red-500 text-sm mt-1">{errors.name2}</div>}
+                                </div>
+                            </div>
+
+
+                            {/* 名 */}
+                            <div className="input text input_unit required" style={{ display: 'flex', alignItems: 'flex-start' }}>
+                                <div className="my_column my_left" style={{ width: '30%' }}>
+                                    <div className="label_frame">
+                                        <label htmlFor="Userfree10" className="form_input_label required" style={{ fontWeight: 'bold', color: '#333' }}>名</label>
+                                    </div>
+                                </div>
+                                <div className="my_column my_right" style={{ width: '70%' }}>
+                                    <input
+                                        name="free10"
+                                        id="Userfree10"
+                                        value={formData.free10}
+                                        onChange={handleInputChange}
+                                        className={`required ${errors.free10 ? 'border-red-500' : ''}`}
+                                        type="text"
+                                        style={{
+                                            width: '100%',
+                                            padding: '10px',
+                                            border: '1px solid #ccc',
+                                            borderRadius: '4px',
+                                            fontSize: '16px',
+                                            backgroundColor: '#fff'
+                                        }}
+                                    />
+                                    {errors.free10 && <div className="text-red-500 text-sm mt-1">{errors.free10}</div>}
+                                </div>
+                            </div>
+
+
+                            {/* メールアドレス */}
+                            <div className="input text input_unit required" style={{ display: 'flex', alignItems: 'flex-start' }}>
+                                <div className="my_column my_left" style={{ width: '30%' }}>
+                                    <div className="label_frame">
+                                        <label htmlFor="Usermail" className="form_input_label required" style={{ fontWeight: 'bold', color: '#333' }}>メールアドレス</label>
+                                    </div>
+                                </div>
+                                <div className="my_column my_right" style={{ width: '70%' }}>
+                                    <input
+                                        name="mail"
+                                        id="Usermail"
+                                        value={formData.mail}
+                                        onChange={handleInputChange}
+                                        className={`required ${errors.mail ? 'border-red-500' : ''}`}
+                                        type="email"
+                                        style={{
+                                            width: '100%',
+                                            padding: '10px',
+                                            border: '1px solid #ccc',
+                                            borderRadius: '4px',
+                                            fontSize: '16px',
+                                            backgroundColor: '#fff'
+                                        }}
+                                    />
+                                    {errors.mail && <div className="text-red-500 text-sm mt-1">{errors.mail}</div>}
+                                </div>
+                            </div>
+
+
+                            {/* 電話番号 */}
+                            <div className="input text input_unit required" style={{ display: 'flex', alignItems: 'flex-start' }}>
+                                <div className="my_column my_left" style={{ width: '30%' }}>
+                                    <div className="label_frame">
+                                        <label htmlFor="Usertel" className="form_input_label required" style={{ fontWeight: 'bold', color: '#333' }}>電話番号</label>
+                                    </div>
+                                </div>
+                                <div className="my_column my_right" style={{ width: '70%' }}>
+                                    <input
+                                        name="tel"
+                                        id="Usertel"
+                                        value={formData.tel}
+                                        onChange={handleInputChange}
+                                        className={`required ${errors.tel ? 'border-red-500' : ''}`}
+                                        type="tel"
+                                        style={{
+                                            width: '100%',
+                                            padding: '10px',
+                                            border: '1px solid #ccc',
+                                            borderRadius: '4px',
+                                            fontSize: '16px',
+                                            backgroundColor: '#fff'
+                                        }}
+                                    />
+                                    {errors.tel && <div className="text-red-500 text-sm mt-1">{errors.tel}</div>}
+                                </div>
+                            </div>
+
+
+                            {/* お問い合わせ内容について */}
+                            <div className="input text input_unit" style={{ display: 'flex', alignItems: 'flex-start' }}>
+                                <div className="my_column my_left" style={{ width: '30%' }}>
+                                    <div className="label_frame">
+                                        <label htmlFor="Userfree5" className="form_input_label" style={{ fontWeight: 'bold', color: '#333' }}>お問い合わせ内容について</label>
+                                    </div>
+                                </div>
+                                <div className="my_column my_right" style={{ width: '70%' }}>
+                                    <div className="textarea_frame">
+                                        <textarea
+                                            name="free5"
+                                            id="Userfree5"
+                                            value={formData.free5}
                                             onChange={handleInputChange}
-                                            className={`required ${errors.company ? 'border-red-500' : ''}`} 
-                                            type="text"
-                                            style={{ 
-                                                width: '100%', 
-                                                padding: '10px', 
-                                                border: '1px solid #ccc', 
+                                            className="form_input_input"
+                                            cols={30}
+                                            rows={5}
+                                            style={{
+                                                width: '100%',
+                                                padding: '10px',
+                                                border: '1px solid #ccc',
                                                 borderRadius: '4px',
                                                 fontSize: '16px',
-                                                backgroundColor: '#fff'
+                                                backgroundColor: '#fff',
+                                                resize: 'vertical'
                                             }}
-                                        />
-                                        {errors.company && <div className="text-red-500 text-sm mt-1">{errors.company}</div>}
+                                        ></textarea>
                                     </div>
                                 </div>
+                            </div>
+
+                            {/* お支払い金額 */}
+
+                            {/* 画像認証 */}
 
 
-                                {/* 部署名 */}
-                                <div className="input text input_unit required" style={{ display: 'flex', alignItems: 'flex-start' }}>
-                                    <div className="my_column my_left" style={{ width: '30%' }}>
-                                        <div className="label_frame">
-                                            <label htmlFor="Username1" className="form_input_label required" style={{ fontWeight: 'bold', color: '#333' }}>部署名</label>
-                                        </div>
-                                    </div>
-                                    <div className="my_column my_right" style={{ width: '70%' }}>
-                                        <input 
-                                            name="name1" 
-                                            id="Username1" 
-                                            value={formData.name1}
-                                            onChange={handleInputChange}
-                                            className={`required ${errors.name1 ? 'border-red-500' : ''}`} 
-                                            type="text"
-                                            style={{ 
-                                                width: '100%', 
-                                                padding: '10px', 
-                                                border: '1px solid #ccc', 
-                                                borderRadius: '4px',
-                                                fontSize: '16px',
-                                                backgroundColor: '#fff'
-                                            }}
-                                        />
-                                        {errors.name1 && <div className="text-red-500 text-sm mt-1">{errors.name1}</div>}
-                                    </div>
-                                </div>
+                            {/* 確認ボタン */}
+                            <div className="submit form_input_submit text-center mt-8">
+                                <button
+                                    type="submit"
+                                    disabled={isSubmitting}
+                                    className="bg-gradient-to-r from-blue-600 to-blue-800 hover:from-blue-700 hover:to-blue-900 disabled:from-gray-400 disabled:to-gray-500 text-white font-bold py-4 px-12 rounded-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 disabled:transform-none disabled:cursor-not-allowed text-lg min-w-[200px]"
+                                >
+                                    {isSubmitting ? '送信中...' : '確認する'}
+                                </button>
+                            </div>
 
+                            {/* Hidden inputs for external form handler */}
+                            <input type="hidden" name="data[User][company]" value={formData.company} />
+                            <input type="hidden" name="data[User][name1]" value={formData.name1} />
+                            <input type="hidden" name="data[User][name2]" value={formData.name2} />
+                            <input type="hidden" name="data[User][free10]" value={formData.free10} />
+                            <input type="hidden" name="data[User][mail]" value={formData.mail} />
+                            <input type="hidden" name="data[User][tel]" value={formData.tel} />
+                            <input type="hidden" name="data[User][free5]" value={formData.free5} />
 
-                                {/* 姓 */}
-                                <div className="input text input_unit required" style={{ display: 'flex', alignItems: 'flex-start' }}>
-                                    <div className="my_column my_left" style={{ width: '30%' }}>
-                                        <div className="label_frame">
-                                            <label htmlFor="Username2" className="form_input_label required" style={{ fontWeight: 'bold', color: '#333' }}>姓</label>
-                                        </div>
-                                    </div>
-                                    <div className="my_column my_right" style={{ width: '70%' }}>
-                                        <input 
-                                            name="name2" 
-                                            id="Username2" 
-                                            value={formData.name2}
-                                            onChange={handleInputChange}
-                                            className={`required ${errors.name2 ? 'border-red-500' : ''}`} 
-                                            type="text"
-                                            style={{ 
-                                                width: '100%', 
-                                                padding: '10px', 
-                                                border: '1px solid #ccc', 
-                                                borderRadius: '4px',
-                                                fontSize: '16px',
-                                                backgroundColor: '#fff'
-                                            }}
-                                        />
-                                        {errors.name2 && <div className="text-red-500 text-sm mt-1">{errors.name2}</div>}
-                                    </div>
-                                </div>
+                            <input type="hidden" id="server_url" value="https://my183p.com/" />
 
+                            {/* ▼リファラ */}
+                            <input type="hidden" name="data[User][referer_form_url]" value="" className="UserRefererFormUrl" />
+                            <input type="hidden" name="data[User][referer_url]" value="" className="UserRefererUrl" />
 
-                                {/* 名 */}
-                                <div className="input text input_unit required" style={{ display: 'flex', alignItems: 'flex-start' }}>
-                                    <div className="my_column my_left" style={{ width: '30%' }}>
-                                        <div className="label_frame">
-                                            <label htmlFor="Userfree10" className="form_input_label required" style={{ fontWeight: 'bold', color: '#333' }}>名</label>
-                                        </div>
-                                    </div>
-                                    <div className="my_column my_right" style={{ width: '70%' }}>
-                                        <input 
-                                            name="free10" 
-                                            id="Userfree10" 
-                                            value={formData.free10}
-                                            onChange={handleInputChange}
-                                            className={`required ${errors.free10 ? 'border-red-500' : ''}`} 
-                                            type="text"
-                                            style={{ 
-                                                width: '100%', 
-                                                padding: '10px', 
-                                                border: '1px solid #ccc', 
-                                                borderRadius: '4px',
-                                                fontSize: '16px',
-                                                backgroundColor: '#fff'
-                                            }}
-                                        />
-                                        {errors.free10 && <div className="text-red-500 text-sm mt-1">{errors.free10}</div>}
-                                    </div>
-                                </div>
+                            {/* ▲リファラ */}
 
-
-                                {/* メールアドレス */}
-                                <div className="input text input_unit required" style={{ display: 'flex', alignItems: 'flex-start' }}>
-                                    <div className="my_column my_left" style={{ width: '30%' }}>
-                                        <div className="label_frame">
-                                            <label htmlFor="Usermail" className="form_input_label required" style={{ fontWeight: 'bold', color: '#333' }}>メールアドレス</label>
-                                        </div>
-                                    </div>
-                                    <div className="my_column my_right" style={{ width: '70%' }}>
-                                        <input 
-                                            name="mail" 
-                                            id="Usermail" 
-                                            value={formData.mail}
-                                            onChange={handleInputChange}
-                                            className={`required ${errors.mail ? 'border-red-500' : ''}`} 
-                                            type="email"
-                                            style={{ 
-                                                width: '100%', 
-                                                padding: '10px', 
-                                                border: '1px solid #ccc', 
-                                                borderRadius: '4px',
-                                                fontSize: '16px',
-                                                backgroundColor: '#fff'
-                                            }}
-                                        />
-                                        {errors.mail && <div className="text-red-500 text-sm mt-1">{errors.mail}</div>}
-                                    </div>
-                                </div>
-
-
-                                {/* 電話番号 */}
-                                <div className="input text input_unit required" style={{ display: 'flex', alignItems: 'flex-start' }}>
-                                    <div className="my_column my_left" style={{ width: '30%' }}>
-                                        <div className="label_frame">
-                                            <label htmlFor="Usertel" className="form_input_label required" style={{ fontWeight: 'bold', color: '#333' }}>電話番号</label>
-                                        </div>
-                                    </div>
-                                    <div className="my_column my_right" style={{ width: '70%' }}>
-                                        <input 
-                                            name="tel" 
-                                            id="Usertel" 
-                                            value={formData.tel}
-                                            onChange={handleInputChange}
-                                            className={`required ${errors.tel ? 'border-red-500' : ''}`} 
-                                            type="tel"
-                                            style={{ 
-                                                width: '100%', 
-                                                padding: '10px', 
-                                                border: '1px solid #ccc', 
-                                                borderRadius: '4px',
-                                                fontSize: '16px',
-                                                backgroundColor: '#fff'
-                                            }}
-                                        />
-                                        {errors.tel && <div className="text-red-500 text-sm mt-1">{errors.tel}</div>}
-                                    </div>
-                                </div>
-
-
-                                {/* お問い合わせ内容について */}
-                                <div className="input text input_unit" style={{ display: 'flex', alignItems: 'flex-start' }}>
-                                    <div className="my_column my_left" style={{ width: '30%' }}>
-                                        <div className="label_frame">
-                                            <label htmlFor="Userfree5" className="form_input_label" style={{ fontWeight: 'bold', color: '#333' }}>お問い合わせ内容について</label>
-                                        </div>
-                                    </div>
-                                    <div className="my_column my_right" style={{ width: '70%' }}>
-                                        <div className="textarea_frame">
-                                            <textarea 
-                                                name="free5" 
-                                                id="Userfree5" 
-                                                value={formData.free5}
-                                                onChange={handleInputChange}
-                                                className="form_input_input" 
-                                                cols={30} 
-                                                rows={5}
-                                                style={{ 
-                                                    width: '100%', 
-                                                    padding: '10px', 
-                                                    border: '1px solid #ccc', 
-                                                    borderRadius: '4px',
-                                                    fontSize: '16px',
-                                                    backgroundColor: '#fff',
-                                                    resize: 'vertical'
-                                                }}
-                                            ></textarea>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* お支払い金額 */}
-
-                                {/* 画像認証 */}
-
-
-                                {/* 確認ボタン */}
-                                <div className="submit form_input_submit text-center mt-8">
-                                    <button 
-                                        type="submit" 
-                                        disabled={isSubmitting}
-                                        className="bg-gradient-to-r from-blue-600 to-blue-800 hover:from-blue-700 hover:to-blue-900 disabled:from-gray-400 disabled:to-gray-500 text-white font-bold py-4 px-12 rounded-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 disabled:transform-none disabled:cursor-not-allowed text-lg min-w-[200px]"
-                                    >
-                                        {isSubmitting ? '送信中...' : '確認する'}
-                                    </button>
-            </div>
-
-                                {/* Hidden inputs for external form handler */}
-                                <input type="hidden" name="data[User][company]" value={formData.company} />
-                                <input type="hidden" name="data[User][name1]" value={formData.name1} />
-                                <input type="hidden" name="data[User][name2]" value={formData.name2} />
-                                <input type="hidden" name="data[User][free10]" value={formData.free10} />
-                                <input type="hidden" name="data[User][mail]" value={formData.mail} />
-                                <input type="hidden" name="data[User][tel]" value={formData.tel} />
-                                <input type="hidden" name="data[User][free5]" value={formData.free5} />
-                                
-                                <input type="hidden" id="server_url" value="https://my183p.com/" />
-
-                                {/* ▼リファラ */}
-                                <input type="hidden" name="data[User][referer_form_url]" value="" className="UserRefererFormUrl" />
-                                <input type="hidden" name="data[User][referer_url]" value="" className="UserRefererUrl" />
-
-                                {/* ▲リファラ */}
-
-                            </form>
-                        </div>
+                        </form>
+                    </div>
                 </div>
             </section>
 
@@ -617,7 +635,7 @@ export default function LandingPage() {
             </footer>
 
             {/* More Section */}
-            <section className="max-w-[1154px] mx-auto px-5 pt-6 pb-8 md:px-4 md:py-16">
+            <section className="max-w-[1154px] mx-auto px-5 pt-6 pb-8 md:px-4 md:py-16" id="jinjai">
                 {/* Right Side - Image and CTA */}
                 <div className='relative'>
                     <img
