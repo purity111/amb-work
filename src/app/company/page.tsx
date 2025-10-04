@@ -76,7 +76,7 @@ export default function CompanyPage() {
                             <dt className="font-bold text-gray-700 text-[14px] md:text-[16px]">所在地</dt>
                             <dd className="mb-2 text-[14px] md:text-[16px]">
                                 〒105-0004<br />
-                                東京都港区新橋2-16-1 ニュー新橋ビル603-2<br />
+                                東京都港区新橋2-16-1 ニュー新橋ビル708<br />
                                 TEL : 080-7300-8586<br />
                             </dd>
                             <dt className="font-bold text-gray-700 text-[14px] md:text-[16px]">交通</dt>
