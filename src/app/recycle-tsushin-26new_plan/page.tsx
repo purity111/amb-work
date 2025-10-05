@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import ToInquiryCta from '@/components/pages/ToInquiryCta';
-import TestimonialCard from '@/components/TestimonialCard';
+// import TestimonialCard from '@/components/TestimonialCard';
 
 export default function LandingPage() {
     const [formData, setFormData] = useState({
