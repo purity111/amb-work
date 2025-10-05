@@ -33,7 +33,7 @@ const CategorySidebar: React.FC<CategorySidebarProps> = ({ categories, selectedC
                 {recommended.map((col, idx) => (
                     <a
                         key={col.id}
-                        href={`/column/column-${col.id}`}
+                        href={`/column/column-${col.id}/`}
                         className="relative flex items-center bg-white rounded-lg shadow p-3 pr-4 transition hover:shadow-lg min-h-[80px]"
                         style={{ minHeight: 80 }}
                     >
