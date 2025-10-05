@@ -30,7 +30,7 @@ export default function ContactCorpFinishPage() {
                                 お申込みありがとうございます
                             </h2>
                             <p className="text-lg text-gray-600 mb-8">
-                                夏の企業応援キャンペーンへのお申込みを受け付けました。
+                                お問い合わせを受け付けました。
                                 <br />
                                 ご入力いただいたメールアドレスに確認メールをお送りいたします。
                             </p>
