@@ -179,7 +179,7 @@ export default function BusinessNewPage() {
                                 こうした動きは今後さらに加速するでしょう。<br /><br />
                                 もっと詳しく↓<br />
                                 <Link
-                                    href="/column/column-30"
+                                    href="/column/column-30/"
                                     className="text-sm text-[#65B729] underline transition-colors"
                                 >
                                     リユース業界の成長を引っ張る4つのアイテム！この商品が好きな人は活躍のチャンス！？

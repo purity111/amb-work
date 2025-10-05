@@ -1946,11 +1946,11 @@ export const GLOBALIZATION_SECTION_DATA = [
         links: [
             {
                 title: "戦略がスゴい！日本の中古・リユース企業が世界に羽ばたく",
-                href: "/column/column-25-2"
+                href: "/column/column-25-2/"
             },
             {
                 title: "【最新動向】リユースに追い風！円安で越境ECが盛り上がるUsed in Japan最前線",
-                href: "/column/column-32"
+                href: "/column/column-32/"
             },
         ]
     },
