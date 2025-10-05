@@ -276,14 +276,14 @@ export default function LandingPage() {
             <ToInquiryCta />
 
             {/* Testimonial Section */}
-            <section className="py-10 md:py-25 bg-gray-50 md:bg-[#EDF7FF]">
+            {/* <section className="py-10 md:py-25 bg-gray-50 md:bg-[#EDF7FF]">
                 <h2 className='text-[24px] md:text-[38px] font-bold text-[#1F86C3] text-center'>導入事例</h2>
                 <div className="max-w-6xl mx-auto px-5">
                     <TestimonialCard className='mt-[62px] md:mt-[116px]' />
                     <TestimonialCard className='mt-[56px] md:mt-[136px]' />
                     <TestimonialCard className='mt-[56px] md:mt-[136px]' />
                 </div>
-            </section>
+            </section> */}
 
             {/* flow Section */}
             <section className="relative">
