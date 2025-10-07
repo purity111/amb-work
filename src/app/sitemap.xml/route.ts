@@ -54,7 +54,194 @@ export async function GET() {
       ...majorLocations.map(loc => ({ path: `/job-openings/${encodeURIComponent(loc)}`, priority: '0.7', changefreq: 'daily' }))
     ];
 
-    // 3. Get dynamic content
+    // 3. Location-Category combination pages
+    const locationCategoryCombinations = [
+      // 北海道 combinations
+      { location: '北海道', category: '買取' },
+      { location: '北海道', category: '買取', subcategory: 'ブランド' },
+      { location: '北海道', category: '買取', subcategory: 'アパレル' },
+      { location: '北海道', category: '買取', subcategory: 'ジュエリー' },
+      { location: '北海道', category: '買取', subcategory: '時計' },
+      { location: '北海道', category: '買取', subcategory: '未経験' },
+      { location: '北海道', category: '買取', subcategory: 'インセンティブ' },
+      { location: '北海道', category: '買取', subcategory: '正社員' },
+      { location: '北海道', category: 'バイヤー' },
+      { location: '北海道', category: 'バイヤー', subcategory: 'ブランド' },
+      { location: '北海道', category: 'バイヤー', subcategory: 'アパレル' },
+      { location: '北海道', category: 'バイヤー', subcategory: 'ジュエリー' },
+      { location: '北海道', category: 'バイヤー', subcategory: '時計' },
+      { location: '北海道', category: 'バイヤー', subcategory: '未経験' },
+      { location: '北海道', category: 'バイヤー', subcategory: 'インセンティブ' },
+      { location: '北海道', category: 'バイヤー', subcategory: '正社員' },
+      { location: '北海道', category: '鑑定士' },
+      
+      // 埼玉 combinations
+      { location: '埼玉', category: '買取' },
+      { location: '埼玉', category: '買取', subcategory: 'ブランド' },
+      { location: '埼玉', category: '買取', subcategory: 'アパレル' },
+      { location: '埼玉', category: '買取', subcategory: 'ジュエリー' },
+      { location: '埼玉', category: '買取', subcategory: '時計' },
+      { location: '埼玉', category: '買取', subcategory: '未経験' },
+      { location: '埼玉', category: '買取', subcategory: 'インセンティブ' },
+      { location: '埼玉', category: '買取', subcategory: '正社員' },
+      { location: '埼玉', category: 'バイヤー' },
+      { location: '埼玉', category: 'バイヤー', subcategory: 'ブランド' },
+      { location: '埼玉', category: 'バイヤー', subcategory: 'アパレル' },
+      { location: '埼玉', category: 'バイヤー', subcategory: 'ジュエリー' },
+      { location: '埼玉', category: 'バイヤー', subcategory: '時計' },
+      { location: '埼玉', category: 'バイヤー', subcategory: '未経験' },
+      { location: '埼玉', category: 'バイヤー', subcategory: 'インセンティブ' },
+      { location: '埼玉', category: 'バイヤー', subcategory: '正社員' },
+      { location: '埼玉', category: '鑑定士' },
+      
+      // 千葉 combinations
+      { location: '千葉', category: '買取' },
+      { location: '千葉', category: '買取', subcategory: 'ブランド' },
+      { location: '千葉', category: '買取', subcategory: 'アパレル' },
+      { location: '千葉', category: '買取', subcategory: 'ジュエリー' },
+      { location: '千葉', category: '買取', subcategory: '時計' },
+      { location: '千葉', category: '買取', subcategory: '未経験' },
+      { location: '千葉', category: '買取', subcategory: 'インセンティブ' },
+      { location: '千葉', category: '買取', subcategory: '正社員' },
+      { location: '千葉', category: 'バイヤー' },
+      { location: '千葉', category: 'バイヤー', subcategory: 'ブランド' },
+      { location: '千葉', category: 'バイヤー', subcategory: 'アパレル' },
+      { location: '千葉', category: 'バイヤー', subcategory: 'ジュエリー' },
+      { location: '千葉', category: 'バイヤー', subcategory: '時計' },
+      { location: '千葉', category: 'バイヤー', subcategory: '未経験' },
+      { location: '千葉', category: 'バイヤー', subcategory: 'インセンティブ' },
+      { location: '千葉', category: 'バイヤー', subcategory: '正社員' },
+      { location: '千葉', category: '鑑定士' },
+      
+      // 東京 combinations
+      { location: '東京', category: '買取' },
+      { location: '東京', category: '買取', subcategory: 'ブランド' },
+      { location: '東京', category: '買取', subcategory: 'アパレル' },
+      { location: '東京', category: '買取', subcategory: 'ジュエリー' },
+      { location: '東京', category: '買取', subcategory: '時計' },
+      { location: '東京', category: '買取', subcategory: '未経験' },
+      { location: '東京', category: '買取', subcategory: 'インセンティブ' },
+      { location: '東京', category: '買取', subcategory: '正社員' },
+      { location: '東京', category: 'バイヤー' },
+      { location: '東京', category: 'バイヤー', subcategory: 'ブランド' },
+      { location: '東京', category: 'バイヤー', subcategory: 'アパレル' },
+      { location: '東京', category: 'バイヤー', subcategory: 'ジュエリー' },
+      { location: '東京', category: 'バイヤー', subcategory: '時計' },
+      { location: '東京', category: 'バイヤー', subcategory: '未経験' },
+      { location: '東京', category: 'バイヤー', subcategory: 'インセンティブ' },
+      { location: '東京', category: 'バイヤー', subcategory: '正社員' },
+      { location: '東京', category: '鑑定士' },
+      
+      // 神奈川 combinations
+      { location: '神奈川', category: '買取' },
+      { location: '神奈川', category: '買取', subcategory: 'ブランド' },
+      { location: '神奈川', category: '買取', subcategory: 'アパレル' },
+      { location: '神奈川', category: '買取', subcategory: 'ジュエリー' },
+      { location: '神奈川', category: '買取', subcategory: '時計' },
+      { location: '神奈川', category: '買取', subcategory: '未経験' },
+      { location: '神奈川', category: '買取', subcategory: 'インセンティブ' },
+      { location: '神奈川', category: '買取', subcategory: '正社員' },
+      { location: '神奈川', category: 'バイヤー' },
+      { location: '神奈川', category: 'バイヤー', subcategory: 'ブランド' },
+      { location: '神奈川', category: 'バイヤー', subcategory: 'アパレル' },
+      { location: '神奈川', category: 'バイヤー', subcategory: 'ジュエリー' },
+      { location: '神奈川', category: 'バイヤー', subcategory: '時計' },
+      { location: '神奈川', category: 'バイヤー', subcategory: '未経験' },
+      { location: '神奈川', category: 'バイヤー', subcategory: 'インセンティブ' },
+      { location: '神奈川', category: 'バイヤー', subcategory: '正社員' },
+      { location: '神奈川', category: '鑑定士' },
+      
+      // 愛知 combinations
+      { location: '愛知', category: '買取' },
+      { location: '愛知', category: '買取', subcategory: 'ブランド' },
+      { location: '愛知', category: '買取', subcategory: 'アパレル' },
+      { location: '愛知', category: '買取', subcategory: 'ジュエリー' },
+      { location: '愛知', category: '買取', subcategory: '時計' },
+      { location: '愛知', category: '買取', subcategory: '未経験' },
+      { location: '愛知', category: '買取', subcategory: 'インセンティブ' },
+      { location: '愛知', category: '買取', subcategory: '正社員' },
+      { location: '愛知', category: 'バイヤー' },
+      { location: '愛知', category: 'バイヤー', subcategory: 'ブランド' },
+      { location: '愛知', category: 'バイヤー', subcategory: 'アパレル' },
+      { location: '愛知', category: 'バイヤー', subcategory: 'ジュエリー' },
+      { location: '愛知', category: 'バイヤー', subcategory: '時計' },
+      { location: '愛知', category: 'バイヤー', subcategory: '未経験' },
+      { location: '愛知', category: 'バイヤー', subcategory: 'インセンティブ' },
+      { location: '愛知', category: 'バイヤー', subcategory: '正社員' },
+      { location: '愛知', category: '鑑定士' },
+      
+      // 大阪 combinations
+      { location: '大阪', category: '買取' },
+      { location: '大阪', category: '買取', subcategory: 'ブランド' },
+      { location: '大阪', category: '買取', subcategory: 'アパレル' },
+      { location: '大阪', category: '買取', subcategory: 'ジュエリー' },
+      { location: '大阪', category: '買取', subcategory: '時計' },
+      { location: '大阪', category: '買取', subcategory: '未経験' },
+      { location: '大阪', category: '買取', subcategory: 'インセンティブ' },
+      { location: '大阪', category: '買取', subcategory: '正社員' },
+      { location: '大阪', category: 'バイヤー' },
+      { location: '大阪', category: 'バイヤー', subcategory: 'ブランド' },
+      { location: '大阪', category: 'バイヤー', subcategory: 'アパレル' },
+      { location: '大阪', category: 'バイヤー', subcategory: 'ジュエリー' },
+      { location: '大阪', category: 'バイヤー', subcategory: '時計' },
+      { location: '大阪', category: 'バイヤー', subcategory: '未経験' },
+      { location: '大阪', category: 'バイヤー', subcategory: 'インセンティブ' },
+      { location: '大阪', category: 'バイヤー', subcategory: '正社員' },
+      { location: '大阪', category: '鑑定士' },
+      
+      // 福岡 combinations
+      { location: '福岡', category: '買取' },
+      { location: '福岡', category: '買取', subcategory: 'ブランド' },
+      { location: '福岡', category: '買取', subcategory: 'アパレル' },
+      { location: '福岡', category: '買取', subcategory: 'ジュエリー' },
+      { location: '福岡', category: '買取', subcategory: '時計' },
+      { location: '福岡', category: '買取', subcategory: '未経験' },
+      { location: '福岡', category: '買取', subcategory: 'インセンティブ' },
+      { location: '福岡', category: '買取', subcategory: '正社員' },
+      { location: '福岡', category: 'バイヤー' },
+      { location: '福岡', category: 'バイヤー', subcategory: 'ブランド' },
+      { location: '福岡', category: 'バイヤー', subcategory: 'アパレル' },
+      { location: '福岡', category: 'バイヤー', subcategory: 'ジュエリー' },
+      { location: '福岡', category: 'バイヤー', subcategory: '時計' },
+      { location: '福岡', category: 'バイヤー', subcategory: '未経験' },
+      { location: '福岡', category: 'バイヤー', subcategory: 'インセンティブ' },
+      { location: '福岡', category: 'バイヤー', subcategory: '正社員' },
+      { location: '福岡', category: '鑑定士' }
+    ];
+
+    const locationCategoryPages = locationCategoryCombinations.map(combo => {
+      let path = `/job-openings/${encodeURIComponent(combo.location)}/${encodeURIComponent(combo.category)}`;
+      if (combo.subcategory) {
+        path += `/${encodeURIComponent(combo.subcategory)}`;
+      }
+      return {
+        path,
+        priority: '0.8',
+        changefreq: 'daily'
+      };
+    });
+
+    // 4. General category pages (without location)
+    const generalCategoryPages = [
+      { path: '/job-openings/買取/ブランド', priority: '0.7', changefreq: 'daily' },
+      { path: '/job-openings/買取/アパレル', priority: '0.7', changefreq: 'daily' },
+      { path: '/job-openings/買取/ジュエリー', priority: '0.7', changefreq: 'daily' },
+      { path: '/job-openings/買取/時計', priority: '0.7', changefreq: 'daily' },
+      { path: '/job-openings/買取/未経験', priority: '0.7', changefreq: 'daily' },
+      { path: '/job-openings/買取/インセンティブ', priority: '0.7', changefreq: 'daily' },
+      { path: '/job-openings/買取/正社員', priority: '0.7', changefreq: 'daily' },
+      { path: '/job-openings/バイヤー/ブランド', priority: '0.7', changefreq: 'daily' },
+      { path: '/job-openings/バイヤー/アパレル', priority: '0.7', changefreq: 'daily' },
+      { path: '/job-openings/バイヤー/ジュエリー', priority: '0.7', changefreq: 'daily' },
+      { path: '/job-openings/バイヤー/時計', priority: '0.7', changefreq: 'daily' },
+      { path: '/job-openings/バイヤー/未経験', priority: '0.7', changefreq: 'daily' },
+      { path: '/job-openings/バイヤー/インセンティブ', priority: '0.7', changefreq: 'daily' },
+      { path: '/job-openings/バイヤー/正社員', priority: '0.7', changefreq: 'daily' },
+      { path: '/job-openings/鑑定士/未経験', priority: '0.7', changefreq: 'daily' },
+      { path: '/job-openings/鑑定士/インセンティブ', priority: '0.7', changefreq: 'daily' }
+    ];
+
+    // 6. Get dynamic content
     let jobPages: any[] = [];
     let columnPages: any[] = [];
     let interviewPages: any[] = [];
@@ -104,10 +291,10 @@ export async function GET() {
       console.error('Error fetching interviews for sitemap:', error);
     }
 
-    // 4. Combine all pages
-    const allPages = [...staticPages, ...categoryPages, ...jobPages, ...columnPages, ...interviewPages];
+    // 5. Combine all pages
+    const allPages = [...staticPages, ...categoryPages, ...locationCategoryPages, ...generalCategoryPages, ...jobPages, ...columnPages, ...interviewPages];
 
-    // 5. Generate comprehensive XML sitemap
+    // 7. Generate comprehensive XML sitemap
     const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   ${allPages.map(page => `
