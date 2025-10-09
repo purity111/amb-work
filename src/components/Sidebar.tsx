@@ -1,8 +1,10 @@
 import { useAuthContext } from '@/hooks/useAuthContext';
 import { useUnsavedChangesPrompt } from '@/hooks/useUnsavedChangesWarning';
+import { useNotificationContext } from '@/hooks/useNotificationContext';
 import { usePathname } from 'next/navigation';
 import { useMemo, useState, useEffect } from 'react';
 import Dialog from './Dialog';
+import NotificationBadge from './NotificationBadge';
 
 // Export MenuItem type
 export type MenuItem = {
@@ -63,6 +65,7 @@ interface SidebarProps {
 
 export default function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
   const { profile, isAuthenticated, logout } = useAuthContext();
+  const { counts, clearApplicationCount } = useNotificationContext();
   const pathname = usePathname();
   const [isMounted, setIsMounted] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
@@ -103,6 +106,13 @@ export default function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
   }
 
   const goNavigation = (url: string) => {
+    // Clear badges when clicking on menu items that have notifications
+    if (url === '/mypage/application_mng') {
+      clearApplicationCount();
+    }
+    // Note: We don't clear message count here anymore
+    // It will be updated dynamically in chat_mng page based on actual unread counts
+    
     navigate(url);
     if (isMobile) setIsOpen(false)
   }
@@ -219,20 +229,36 @@ export default function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
                     </ul>
                   </div>
                 ) : (
-                  <p
-                    onClick={() => goNavigation(item.path as string)}
-                    className={`cursor-pointer flex items-center p-2 rounded-lg transition-colors text-base md:text-[18px] ${pathname === item.path ? 'bg-blue-200 text-blue-800' : 'text-gray-700 hover:bg-gray-200'}`}
-                  >
-                    {/* Icon placeholder */}
-                    {item.icon && (
-                      <img
-                        src={`/images/icons/${item.icon}`}
-                        alt={item.label}
-                        className="w-6 h-6 mr-3"
+                  <div className="relative">
+                    <p
+                      onClick={() => goNavigation(item.path as string)}
+                      className={`cursor-pointer flex items-center p-2 rounded-lg transition-colors text-base md:text-[18px] ${pathname === item.path ? 'bg-blue-200 text-blue-800' : 'text-gray-700 hover:bg-gray-200'}`}
+                    >
+                      {/* Icon placeholder */}
+                      {item.icon && (
+                        <img
+                          src={`/images/icons/${item.icon}`}
+                          alt={item.label}
+                          className="w-6 h-6 mr-3"
+                        />
+                      )}
+                      {item.label}
+                    </p>
+                    {/* Add notification badge for application management */}
+                    {item.path === '/mypage/application_mng' && (
+                      <NotificationBadge 
+                        count={counts.applications} 
+                        type="application"
                       />
                     )}
-                    {item.label}
-                  </p>
+                    {/* Add notification badge for chat management */}
+                    {item.path === '/mypage/chat_mng' && (
+                      <NotificationBadge 
+                        count={counts.messages} 
+                        type="message"
+                      />
+                    )}
+                  </div>
                 )}
               </li>
             ))}

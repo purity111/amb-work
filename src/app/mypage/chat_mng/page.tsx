@@ -1,7 +1,8 @@
 "use client";
 
-import { io, Socket } from 'socket.io-client';
 import { useAuthContext } from "@/hooks/useAuthContext";
+import { useNotificationCleanup } from "@/hooks/useNotificationCleanup";
+import { useNotificationContext } from "@/hooks/useNotificationContext";
 import CInput from "@/components/common/Input";
 import { useGetChats } from "@/hooks/useGetChats";
 import { useGetJobs } from "@/hooks/useGetJobs";
@@ -15,8 +16,7 @@ import ChatBox from "@/components/ChatBox";
 import { useRouter, useSearchParams } from "next/navigation";
 import useWindowSize from '@/hooks/useWindowSize';
 import CSearchSelect from '@/components/common/SearchSelect';
-
-const socket: Socket = io(process.env.NEXT_PUBLIC_SOCKET_URL || 'http://172.20.1.185:3000');
+import { getGlobalSocket } from "@/lib/globalSocket";
 
 export default function ChatMngPage() {
   const [nameSearch, setNameSearch] = useState('');
@@ -24,6 +24,10 @@ export default function ChatMngPage() {
   const [selectedJob, setSelectedJob] = useState<number>(0)
   const [leftPaneExpanded, setLeftPaneExpanded] = useState(false);
   const { profile } = useAuthContext();
+  const { updateMessageCount } = useNotificationContext();
+
+  // Clear application count (if on application page)
+  useNotificationCleanup();
 
   const searchParams = useSearchParams();
   const [width] = useWindowSize();
@@ -55,22 +59,42 @@ export default function ChatMngPage() {
 
   useEffect(() => {
     if (!profile) return;
+    
+    // Get the global socket instance
+    const socket = getGlobalSocket();
+    
     const roomId = profile.role === 'admin' ? 'chat_admin' : `${isJobSeeker ? 1 : 2}_${profile.id}`;
-    // Join the room
+    // Join the room (global notifications already joins, but this ensures it)
     socket.emit('notify_join', roomId);
-    // Define the handler
+    
+    // Define the handler - just refetch (notifications are handled by useGlobalNotifications)
     const handleNewMessage = (message: Message) => {
-      console.log('notify', { message });
+      console.log('ChatMng: New message received, refetching chats:', message);
       refetch();
     };
+    
     // Remove any existing listener (precaution)
     socket.off('newMessage', handleNewMessage);
     socket.on('newMessage', handleNewMessage);
+    
     // Cleanup
     return () => {
       socket.off('newMessage', handleNewMessage);
     };
   }, [profile, isJobSeeker]);
+
+  // Update message count badge based on actual unread counts in chats (only when page loads)
+  useEffect(() => {
+    if (!chats?.data) return;
+    
+    const totalUnreadCount = chats.data.reduce((total: number, chat: ChatItem) => {
+      return total + (chat.unreadCount || 0);
+    }, 0);
+    
+    console.log('Initial message count from chat_mng page:', totalUnreadCount);
+    // Only update the count when page first loads, real-time updates are handled by global notifications
+    updateMessageCount(totalUnreadCount);
+  }, [chats?.data, updateMessageCount]);
 
   useEffect(() => {
     const params = new URLSearchParams(searchParams.toString());

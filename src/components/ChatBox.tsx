@@ -1,5 +1,4 @@
 import React, { RefObject, useEffect, useMemo, useRef, useState } from "react";
-import { io, Socket } from 'socket.io-client';
 import CInput from "./common/Input";
 import CButton from "./common/Button";
 import { ChatItem, Message } from "@/utils/types";
@@ -16,6 +15,7 @@ import Dialog from "./Dialog";
 import { useMutation } from "@tanstack/react-query";
 import { uploadChatFile } from "@/lib/api";
 import { toast } from "react-toastify";
+import { getGlobalSocket } from "@/lib/globalSocket";
 
 interface ChatBoxProps {
     data: ChatItem;
@@ -24,8 +24,6 @@ interface ChatBoxProps {
     onChange: () => void;
     onToggleHidden?: () => void;
 }
-
-const socket: Socket = io(process.env.NEXT_PUBLIC_SOCKET_URL || 'http://172.20.1.185:3000');
 
 export default function ChatBox({ data, hasHideButton = false, isHidden, onToggleHidden, onChange }: ChatBoxProps) {
     const [messages, setMessages] = useState<Message[]>([]);
@@ -70,22 +68,32 @@ export default function ChatBox({ data, hasHideButton = false, isHidden, onToggl
     }, [chats, containerRef.current], containerRef as RefObject<HTMLElement>)
 
     useEffect(() => {
+        // Get the global socket instance
+        const socket = getGlobalSocket();
+        
         // :white_check_mark: Join the chat room
         socket.emit('join', data.id);
+        
         // :white_check_mark: Listen for new messages
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        socket.on('newMessage', (message: Message) => {
+        const handleNewMessage = (message: Message) => {
+            console.log('ChatBox: New message received:', message);
             refetch()
             onChange()
-        });
+        };
+        
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        socket.on('messageUpdated', (message: Message) => {
+        const handleMessageUpdated = (message: Message) => {
             refetch()
             onChange()
-        });
+        };
+        
+        socket.on('newMessage', handleNewMessage);
+        socket.on('messageUpdated', handleMessageUpdated);
+        
         // :white_check_mark: Scroll to latest message
         return () => {
-            socket.off('newMessage');
+            socket.off('newMessage', handleNewMessage);
+            socket.off('messageUpdated', handleMessageUpdated);
         };
     }, [data]);
 
@@ -111,6 +119,10 @@ export default function ChatBox({ data, hasHideButton = false, isHidden, onToggl
 
     const handleSend = async () => {
         if (!text.trim() && !attached) return;
+        
+        // Get the global socket instance
+        const socket = getGlobalSocket();
+        
         if (isEditing) {
             if (!editMessage) return;
             socket.emit('editMessage', {
@@ -186,6 +198,9 @@ export default function ChatBox({ data, hasHideButton = false, isHidden, onToggl
 
     const onConfirmDeleteMessage = () => {
         if (!deleteMessage) return;
+        
+        // Get the global socket instance
+        const socket = getGlobalSocket();
         socket.emit('deleteMessage', { messageId: deleteMessage.id, notifyTo: notifyToId });
         setDeleteMessage(null);
         refetch();

@@ -17,6 +17,8 @@ import { CSVLink } from "react-csv";
 import { format } from 'date-fns';
 import { useGetApplicants } from '@/hooks/useGetApplicants';
 import { useAuthContext } from '@/hooks/useAuthContext';
+import { useNotificationCleanup } from '@/hooks/useNotificationCleanup';
+import { useApplicationResponse } from '@/hooks/useApplicationResponse';
 
 function ApplicationMngContent() {
   const [currentPage, setCurrentPage] = useState(1);
@@ -30,7 +32,11 @@ function ApplicationMngContent() {
 
   const router = useRouter();
   const { profile, isAdmin } = useAuthContext();
+  const { simulateMultipleResponses } = useApplicationResponse();
   const searchParams = useSearchParams();
+
+  // Clear notification count when visiting this page
+  useNotificationCleanup();
 
   const hasLoaded = useRef(false);
 
@@ -200,6 +206,15 @@ function ApplicationMngContent() {
               size="small"
               onClick={onConfirmSearchTerm}
             />
+            {/* Test button for job seekers to simulate application responses */}
+            {profile?.role === 'JobSeeker' && (
+              <CButton
+                text="応募結果テスト"
+                className='bg-green text-white w-30 h-[40px] ml-2'
+                size="small"
+                onClick={simulateMultipleResponses}
+              />
+            )}
           </div>
         </div>
         <div className="">
