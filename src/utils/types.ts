@@ -774,3 +774,13 @@ export interface FeatureParams {
     conditions: number[];
     employmentTypes: number[];
 }
+
+export interface TestimonialSectionProps {
+    image: string;
+    description1: string;
+    description2: string;
+    sections: Array<{
+        title: string;
+        description: string;
+    }>;
+}

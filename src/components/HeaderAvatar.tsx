@@ -3,6 +3,8 @@ import Image from "next/image";
 import { useState, useEffect } from "react";
 import useGetCurrentUser from "@/hooks/useGetCurrentUser";
 import { UPLOADS_BASE_URL } from "@/utils/config";
+import { CombinedNotificationBadge } from "./NotificationBadge";
+import { useNotificationContext } from "@/hooks/useNotificationContext";
 
 interface Props {
     data: any
@@ -10,12 +12,13 @@ interface Props {
 
 export default function HeaderAvatar({ data }: Props) {
     const [menuShown, setMenuShown] = useState(false);
-    const { logout } = useAuthContext();
+    const { logout, profile } = useAuthContext();
     const [isMounted, setIsMounted] = useState(false);
     const { data: currentUserData } = useGetCurrentUser({
         refetchOnWindowFocus: false,
         staleTime: 5 * 60 * 1000,
     });
+    const {clearAllCounts} = useNotificationContext();
 
     useEffect(() => {
         setIsMounted(true);
@@ -26,6 +29,13 @@ export default function HeaderAvatar({ data }: Props) {
             logout()
         }
     }
+
+
+    const clearAllNotifications = () => {
+        if (profile?.role === 'employer' || profile?.role === 'admin' || profile?.role === 'subadmin') {
+            clearAllCounts();
+        }
+    };
 
     // Use currentUserData if available, otherwise fall back to props data
     const userData = currentUserData?.success ? currentUserData.data : data;
@@ -49,6 +59,8 @@ export default function HeaderAvatar({ data }: Props) {
                     sizes="30vw"
                     fill
                 />
+                {/* Combined notification badge for when outside mypage */}
+                <CombinedNotificationBadge />
             </div>
             <div
                 className={`
@@ -64,6 +76,10 @@ export default function HeaderAvatar({ data }: Props) {
                 <a href="/mypage" className="text-base w-1/1">
                     <p className="p-2 hover:bg-gray-800">マイページ</p>
                 </a>
+                {/* Clear notifications button for employers only (not for admin) */}
+                {(profile?.role === 'employer' || profile?.role === 'subadmin') && (
+                    <p className="p-2 font-md cursor-pointer hover:bg-gray-800" onClick={clearAllNotifications}>Clear All Notifications</p>
+                )}
                 <p className="p-2 font-md cursor-pointer hover:bg-gray-800" onClick={onClickLogout}>LogOut</p>
             </div>
         </div>

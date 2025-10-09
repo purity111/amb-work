@@ -7,6 +7,15 @@ import Header from "@/components/Header";
 import FixedBottomBar from "@/components/FixedBottomBar";
 import { usePathname } from "next/navigation";
 import { AuthProvider } from "@/hooks/useAuthContext";
+import { NotificationProvider } from "@/hooks/useNotificationContext";
+import { useGlobalNotifications } from "@/hooks/useGlobalNotifications";
+
+// Component to handle global notifications
+function GlobalNotificationHandler() {
+  console.log('GlobalNotificationHandler: Component rendered');
+  useGlobalNotifications();
+  return null;
+}
 
 export default function ClientLayout({
   children,
@@ -31,10 +40,27 @@ export default function ClientLayout({
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
-        {!hideHeader && <Header />}
-        {children}
-        {!hideFixedBottomBar && <FixedBottomBar hideInMobile={hideFixedBottomBarInMobile} />}
-        <ToastContainer hideProgressBar={true} />
+        <NotificationProvider>
+          <GlobalNotificationHandler />
+          {!hideHeader && <Header />}
+          {children}
+          {!hideFixedBottomBar && <FixedBottomBar hideInMobile={hideFixedBottomBarInMobile} />}
+          <ToastContainer 
+            position="top-right"
+            autoClose={5000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            style={{
+              zIndex: 9999,
+              fontSize: '14px'
+            }}
+          />
+        </NotificationProvider>
       </AuthProvider>
     </QueryClientProvider>
   );

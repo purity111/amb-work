@@ -296,6 +296,10 @@ export default function JobPreviewDetails() {
                 toast.success('応募が完了しました。');
                 setJobseekerApplications(prev => [...prev, selectedJobId]);
                 
+                // Note: Application notifications should be handled by the employer's side
+                // This is just for the jobseeker's confirmation - no notification needed here
+                // The actual notification to the employer should come from the server/WebSocket
+                
                 // Send schedule adjustment email for career counseling service jobs
                 if (job && job.job_detail_page_template_id === 2 && jobSeekerEmail && jobSeekerName) {
                     try {
