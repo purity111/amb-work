@@ -96,8 +96,8 @@ export default function LandingPage() {
         },
         {
             image: "/images/landing/pc/case2.png",
-            description1: "株式会社ABC様",
-            description2: "販売スタッフ採用",
+            description1: "株式会社2nd Village様",
+            description2: "買取営業採用",
             sections: [
                 {
                     title: "【導入前の課題】",
@@ -115,8 +115,8 @@ export default function LandingPage() {
         },
         {
             image: "/images/landing/pc/case3.png",
-            description1: "株式会社XYZ様",
-            description2: "店舗マネージャー採用",
+            description1: "株式会社リサイクルリンク様",
+            description2: "EC運営採用",
             sections: [
                 {
                     title: "【導入前の課題】",
