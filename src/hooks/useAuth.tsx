@@ -1,6 +1,6 @@
 // hooks/useAuth.ts
 import api from '@/lib/axios';
-import { usePathname, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
 
 export interface Profile {
@@ -46,7 +46,6 @@ export function useAuth() {
     const [formIsDirty, setFormIsDirty] = useState(false);
 
     const router = useRouter();
-    const pathname = usePathname();
 
     useEffect(() => {
         if (typeof window === 'undefined') return;
@@ -55,9 +54,6 @@ export function useAuth() {
         const savedProfile = localStorage.getItem('profile');
 
         setToken(savedToken);
-        if (!savedToken && pathname.includes('/mypage')) {
-            router.push(`/?auth=login&redirectTo=${pathname}`)
-        }
 
         if (savedProfile) {
             try {
@@ -104,6 +100,8 @@ export function useAuth() {
 
     // Logout function
     const logout = () => {
+        // Set flag to prevent redirectTo parameter when logging out from protected pages
+        sessionStorage.setItem('isLoggingOut', 'true');
         localStorage.removeItem('token');
         localStorage.removeItem('profile');
         delete api.defaults.headers.common['Authorization'];

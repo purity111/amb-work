@@ -32,8 +32,12 @@ export default function MyPageLayout({
   useEffect(() => {
     if (!mounted) return;
     if (!isAuthenticated) {
-      const currentUrl = typeof window !== 'undefined' ? (window.location.pathname + window.location.search) : '/mypage';
-      router.replace(`/?auth=login&redirectTo=${encodeURIComponent(currentUrl)}`);
+      // Check if user is actively logging out
+      const isLoggingOut = typeof window !== 'undefined' ? sessionStorage.getItem('isLoggingOut') : null;
+      if (!isLoggingOut) {
+        const currentUrl = typeof window !== 'undefined' ? (window.location.pathname + window.location.search) : '/mypage';
+        router.replace(`/?auth=login&redirectTo=${encodeURIComponent(currentUrl)}`);
+      }
     }
   }, [mounted, isAuthenticated, router]);
 

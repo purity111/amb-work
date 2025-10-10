@@ -20,13 +20,17 @@ export default function ProtectedRoute({ children }: ProtectedRouteProps) {
 
   useEffect(() => {
     if (isMounted && !isAuthenticated) {
-      // Set the redirect URL in the URL parameters
-      if (typeof window !== 'undefined') {
-        const currentUrl = window.location.pathname + window.location.search;
-        const loginUrl = `/?auth=login&redirectTo=${encodeURIComponent(currentUrl)}`;
-        window.history.replaceState(null, '', loginUrl);
+      // Check if user is actively logging out
+      const isLoggingOut = typeof window !== 'undefined' ? sessionStorage.getItem('isLoggingOut') : null;
+      if (!isLoggingOut) {
+        // Set the redirect URL in the URL parameters
+        if (typeof window !== 'undefined') {
+          const currentUrl = window.location.pathname + window.location.search;
+          const loginUrl = `/?auth=login&redirectTo=${encodeURIComponent(currentUrl)}`;
+          window.history.replaceState(null, '', loginUrl);
+        }
+        setShowLoginModal(true);
       }
-      setShowLoginModal(true);
     }
   }, [isMounted, isAuthenticated]);
 
